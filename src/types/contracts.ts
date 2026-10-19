@@ -35,6 +35,17 @@ export const SCENARIO_IDS = ["co", "dis", "sup"] as const;
 export const ScenarioIdSchema = z.enum(SCENARIO_IDS);
 export type ScenarioId = z.infer<typeof ScenarioIdSchema>;
 
+/** Occupation cluster id: key into scenarios.demand_by_cluster and occupations.cluster. */
+export const CLUSTER_IDS = [
+  "ai_digital",
+  "data_analytics",
+  "green_sustainability",
+  "human_care",
+  "routine_clerical",
+] as const;
+export const ClusterIdSchema = z.enum(CLUSTER_IDS);
+export type ClusterId = z.infer<typeof ClusterIdSchema>;
+
 /**
  * Pathway cost tags, in the section 07 ordering: free, then subsidised,
  * then HRD Corp claimable, then paid.
@@ -113,6 +124,12 @@ export type ImpactInterest = z.infer<typeof ImpactInterestSchema>;
 
 /** Interview asks at most this many questions, then stops (section 03). */
 export const MAX_INTERVIEW_TURNS = 5;
+
+/** Embedding width for occupations.embedding and skills.embedding (vector(768)). */
+export const EMBEDDING_DIMENSIONS = 768;
+
+/** Gemini embedding model. Calls must set outputDimensionality: 768 to match vector(768). */
+export const EMBEDDING_MODEL = "gemini-embedding-001";
 
 /** Task shares on a complete Slots object must add up to 1 within this tolerance. */
 const TASK_SHARE_TOLERANCE = 0.02;
@@ -310,7 +327,7 @@ export type RoleResult = z.infer<typeof RoleResultSchema>;
 export const SignalReadingSchema = z
   .strictObject({
     skillId: z.string().min(1),
-    source: z.string().min(1),
+    source: z.literal("arXiv"),
     metric: z.string().min(1),
     value: z.number(),
     windowStart: IsoDateSchema,

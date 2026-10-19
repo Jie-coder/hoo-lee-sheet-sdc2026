@@ -10,7 +10,7 @@ There is no login and no CV file. Profiles are anonymous sessions: no `user_id`,
 
 | Table | One line | Contract |
 |---|---|---|
-| `occupations` | ESCO occupation, cluster, and a Gemini `vector(768)` embedding. | `RoleResult.occupationId` |
+| `occupations` | ESCO occupation, cluster (`ClusterId`), and a Gemini `vector(768)` embedding. | `RoleResult.occupationId` |
 | `skills` | ESCO skill, green flag, base importance, and a `vector(768)` embedding. | `GapSkill.skillId`, `Course.skillIds` |
 | `occupation_skills` | Essential or optional skill on an occupation. | Gap uses `relation = 'essential'` |
 | `tasks` | Task text plus automation and augmentation shares, with `source` and `as_of`. | Exposure inputs in section 05 |
@@ -19,17 +19,18 @@ There is no login and no CV file. Profiles are anonymous sessions: no `user_id`,
 | `sdg_links` | One SDG claim. `subject_kind` is `occupation` or `skill`, with exactly one of those foreign keys set. | `SdgLink` (`subject`, `kind`, `tier`, `target`, `Source`) |
 | `courses` | Curated course. `languages` is a non-empty list of `en`, `ms`, `zh`. | `Course` |
 | `programs` | Government programme. `eligibility` is the section 07 object and `cost_type` is shared with courses. | `Programme` (`PlanStep.kind` is `program`) |
-| `profiles` | Anonymous session: consent, UI `locale` (`en`/`ms`), `parsed`, `slots`. | `ParsedCV`, `PartialSlots` |
+| `profiles` | Anonymous session: consent, `parsed`, `slots`. UI is English only, so there is no `locale` column. | `ParsedCV`, `PartialSlots` |
 | `results` | One row per profile, scenario, and occupation. `exposure`/`augmentation`/`fit`/`demand`/`ranking` are the brief's E/G/F/D/R. | `RoleResult` (three rows make `byScenario`) |
 | `pathways` | Saved steps for one profile and occupation. | `PathwayPlan` / `PlanStep` |
 
 ## Notes the contracts file does not show yet
 
-- Study languages are `courses.languages` and `profiles.slots.languages`: `en`, `ms`, and `zh`, at least one when the slot is present. There is no `both`. UI `profiles.locale` stays `en` or `ms`.
+- Study languages live in `courses.languages` and `profiles.slots.languages`: `en`, `ms`, and `zh`, at least one when the slot is present. There is no `both`. The UI itself is English only, so there is no separate UI locale anywhere in the schema.
 - `sdg_links` is one table, not two. `SdgLink.subject` is a single discriminator (`occupation` or `skill`), and the other columns (`target`, `kind`, `tier`, `confidence`, `reason`, source) are the same for both. A check constraint requires the matching foreign key and forbids the other. `kind` is still `role` or `transition`.
-- `signals.source` is only `arXiv` for now. `value` may be negative. Rows are unique per skill, metric, window, and `as_of`.
+- `signals` rows are unique per skill, metric, window, and `as_of`. `value` may be negative.
+- `occupations.cluster` is `not null` with a check constraint restricting it to the five `ClusterId` values: `ai_digital`, `data_analytics`, `green_sustainability`, `human_care`, `routine_clerical`.
 - `courses.skill_ids` is a text array, matching `Course.skillIds`. Postgres cannot foreign-key an array; the importer must use `skills.id`.
 - Deleting a profile cascades to `results` and `pathways` (the delete-my-data path). There is no CV object to remove.
 - Catalogue tables are world-readable by the `anon` key and not writable by it. `profiles`, `results`, and `pathways` have RLS on and no `anon` grant, so the Data API cannot touch them. Server route handlers use the service role, which bypasses RLS.
 
-HNSW indexes use cosine (`vector_cosine_ops`) on `occupations.embedding` and `skills.embedding`.
+HNSW indexes use cosine (`vector_cosine_ops`) on `occupations.embedding` and `skills.embedding`. Both columns are `vector(768)`, matching `EMBEDDING_DIMENSIONS` in `contracts.ts`. Calls to the Gemini embedding model (`EMBEDDING_MODEL`, `gemini-embedding-001`) must set `outputDimensionality: 768` so the returned vector fits the column.
