@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { formatBandScore, formatSourceDate } from "@/lib/display";
 import { rankRoles } from "@/lib/rank-roles";
-import { scoreBand } from "@/types/contracts";
+import { MAX_INTERVIEW_TURNS, scoreBand } from "@/types/contracts";
 import { AISYAH_RESULTS } from "./aisyah";
 
 describe("Aisyah example results", () => {
@@ -9,6 +9,7 @@ describe("Aisyah example results", () => {
     for (const example of Object.values(AISYAH_RESULTS)) {
       expect(example.example).toBe(true);
       expect(example.persona.detail).toContain("Aisyah");
+      expect(example.persona.basis).toContain(`${MAX_INTERVIEW_TURNS} interview answers`);
       for (const role of example.response.roles) {
         expect(role.signalsAsOf).toBe(example.response.signalsAsOf);
         expect(role.sdg.length).toBeGreaterThan(0);

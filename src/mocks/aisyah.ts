@@ -1,6 +1,7 @@
 // Example results for the synthetic persona Aisyah. Not a measurement.
 import {
   AnalyzeResponseSchema,
+  MAX_INTERVIEW_TURNS,
   SdgLinkSchema,
   type AnalyzeResponse,
   type GapSkill,
@@ -68,7 +69,7 @@ export type ResultsExample = {
 const persona = {
   detail: "Aisyah, 23 · Admin clerk · Penang",
   headline: "AI can amplify most of your work",
-  basis: "Based on your CV and 6 interview answers about how you spend your week.",
+  basis: `Based on your CV and ${MAX_INTERVIEW_TURNS} interview answers about how you spend your week.`,
 };
 
 function source(dataset: string, releaseDate: IsoDate, url: string, asOf: IsoDate): Source {
