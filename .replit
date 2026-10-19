@@ -2,6 +2,10 @@
 # Docs: https://docs.replit.com/features/project-setup/configuration
 #       https://docs.replit.com/features/project-setup/ports
 
+# File opened by default in the Replit editor (the official SDC template sets
+# entrypoint too; ours points at the Next.js home page instead of src/main.py).
+entrypoint = "src/app/page.tsx"
+
 # Node.js 24 LTS, matching .nvmrc and "engines" in package.json.
 modules = ["nodejs-24"]
 

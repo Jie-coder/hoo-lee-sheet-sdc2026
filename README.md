@@ -1,5 +1,7 @@
 # Hoo Lee Sheet: SDC Hackathon 2026
 
+> _One-sentence description of what our project does and who it is for. To be written once we pick our idea (rule 8.5.2)._
+
 Competition repository for team **Hoo Lee Sheet** (SDC Hackathon 2026,
 Domain 1: Aiversecity Future-Ready Workforce).
 
@@ -14,6 +16,107 @@ Domain 1: Aiversecity Future-Ready Workforce).
   structured output, and a **mock mode** so a demo never depends on a live API.
 - Supabase, used **server-side only** with the service role key.
 - Runs on **Replit** (our compulsory sponsor platform), with Vercel as a backup.
+
+This README follows the structure of the organisers' official **SDC Hackathon
+Submission Template (GitHub)**. Sections marked _TBD_ are filled in once we
+have chosen our idea.
+
+---
+
+## Team Information
+
+| Field                  | Details                                       |
+| ---------------------- | --------------------------------------------- |
+| **Team Name**          | Hoo Lee Sheet                                 |
+| **Team Domain**        | Domain 1: Aiversecity Future-Ready Workforce  |
+| **SDG Track (1–17)**   | _TBD_                                         |
+| **Team Leader**        | _TBD_                                         |
+| **University**         | _TBD_                                         |
+| **Number of Members**  | _TBD_                                         |
+
+## Links
+
+| Resource          | Link                                                        |
+| ----------------- | ----------------------------------------------------------- |
+| GitHub Repository | https://github.com/Jie-coder/hoo-lee-sheet-sdc2026          |
+| Replit Project    | _TBD (Replit project link)_                                 |
+| Live Demo         | _TBD (`https://….replit.app` deployment URL)_               |
+| RunPod Endpoint   | _TBD, only if we use RunPod_                                |
+| Slide Deck        | _TBD_                                                       |
+| Demo Video        | _TBD_                                                       |
+
+---
+
+## Overview
+
+### Problem
+
+_TBD: the real-world problem we are solving in 2–4 sentences. Who is affected, and why does it matter?_
+
+### Solution
+
+_TBD: how the project uses AI to solve the problem and what makes it valuable._
+
+### Key Features
+
+- _TBD_
+
+### Tech Stack
+
+| Layer         | Technology                                                              |
+| ------------- | ----------------------------------------------------------------------- |
+| Frontend      | Next.js (App Router, React, TypeScript), Tailwind CSS, shadcn/ui        |
+| Backend       | Next.js API routes (server-side only)                                   |
+| Database      | Supabase (Postgres), server-side with the service role key              |
+| AI / Compute  | Google Gemini via the Vercel AI SDK (default); RunPod GPU (optional)    |
+| Hosting / Dev | Replit (official, Autoscale deployment); Vercel as a backup             |
+
+---
+
+## Project Structure
+
+```
+.
+├── docs/                    # Screenshots, diagrams (from the official template)
+├── public/                  # Static assets
+├── runpod/
+│   └── handler.py           # RunPod serverless handler (official template, Python)
+├── src/                     # The Next.js app
+│   ├── app/                 # Pages (/, /demo, /status) and API routes (/api/*)
+│   ├── components/          # UI components (shadcn/ui in components/ui)
+│   ├── fixtures/            # sample-response.json used in mock mode
+│   └── lib/                 # ai.ts, env.ts, health.ts, schema.ts, supabase.ts
+├── submission/              # Required submission documents (official template)
+│   ├── REPLIT PROOF OF USE.pdf
+│   ├── RUNPOD PROOF OF USE.pdf
+│   └── Submission Template SDC Hackathon.pdf
+├── supabase/
+│   └── schema.sql           # Documents the items test table
+├── .env.example             # Example environment variables (empty values)
+├── .gitignore
+├── .replit                  # Replit run and deployment configuration
+├── DECLARATION.md           # Pre-existing work declaration (rule 8.2)
+├── LICENSE                  # Apache License 2.0
+├── package.json             # Node.js dependencies and scripts
+├── requirements.txt         # Python dependencies for runpod/handler.py
+└── README.md
+```
+
+The official template is a Python sample (`src/main.py`, `src/utils.py`,
+`tests/`). Our app is the Next.js app in `src/`, so those placeholder Python
+files are not included. The template's `runpod/handler.py` and
+`requirements.txt` are kept as they were for a custom RunPod Serverless
+endpoint.
+
+### Architecture
+
+```
+User ──► Replit (Next.js app + API routes) ──► Google Gemini API (default)
+                │                          └─► RunPod endpoint (optional, GPU model)
+                └──► Supabase (Postgres, server-side only)
+```
+
+---
 
 ## Pre-existing code declaration (rule 8.2)
 
@@ -39,7 +142,52 @@ starter only and is intentionally left unchanged. Things added during the
 hackathon so far: the Apache 2.0 licence, Replit support (`.replit`), the
 optional RunPod provider (`@ai-sdk/openai-compatible`) and this README.
 
-## Run it locally (Windows, Mac, Linux)
+---
+
+## How to Run
+
+### Option 1: Run on Replit (recommended, compulsory sponsor platform)
+
+Replit is compulsory. The proof we submit is the **live Replit deployment URL**
+(or the Replit project link). The project lives in **Bing Jie's own Replit
+account**.
+
+The repo already contains a [`.replit`](./.replit) file, so nothing needs to be
+configured by hand:
+
+| Setting in `.replit` | What it does |
+|---|---|
+| `entrypoint` | Opens `src/app/page.tsx` in the editor by default. |
+| `modules = ["nodejs-24"]` | Uses Node.js 24, same as `.nvmrc` and `engines`. |
+| `run` | The **Run** button runs `npm install`, then `next dev` on `0.0.0.0:3000` so the Replit preview can reach it. |
+| `[[ports]]` 3000 → 80 | Maps the app's port 3000 to the public URL. Autoscale allows only one external port. |
+| `[deployment]` | **Autoscale** deployment: build with `npm ci && npm run build`, run with `npm run start` on `0.0.0.0:3000`. |
+
+`next.config.ts` also allows the `*.replit.dev` preview domain in dev mode
+(`allowedDevOrigins`), otherwise Next.js blocks hot reload in the Replit preview.
+
+#### Steps
+
+1. Sign in to Replit with Bing Jie's account → **Create App** → **Import from
+   GitHub** → pick `Jie-coder/hoo-lee-sheet-sdc2026` (authorise the Replit
+   GitHub app for this private repo if asked).
+2. Open the **Secrets** tool and add the variables from the
+   [environment variables](#environment-variables) table (at least
+   `AI_PROVIDER=google`, `GOOGLE_GENERATIVE_AI_API_KEY`, `SUPABASE_URL`,
+   `SUPABASE_SERVICE_ROLE_KEY`). Secrets are the only place keys go on Replit:
+   never commit a `.env` file and never put keys in `.replit`.
+3. Press **Run**. The preview should show the home page; open `/status` to check
+   every integration is green.
+4. Press **Deploy** / **Publish**, choose **Autoscale**, and make sure the
+   secrets are available to the deployment as well (check the deployment's
+   secrets or environment settings).
+5. Open the deployed `https://….replit.app` URL, check `/status` again, and save
+   that URL. It goes into the submission form as our Replit proof.
+
+To get new commits onto Replit, pull from GitHub in Replit's **Git** tool and
+then redeploy.
+
+### Option 2: Run locally (Windows, Mac, Linux)
 
 Prerequisites: **Node.js 24 LTS** (see [`.nvmrc`](./.nvmrc); run `nvm use` if you
 use nvm) and git.
@@ -72,7 +220,7 @@ The app runs with an empty `.env.local`: `/status` just shows red checks for
 whatever is missing instead of crashing. Ask Bing Jie for the real keys. Never
 paste them into chat, code, issues or commits.
 
-### Supabase note
+#### Supabase note
 
 The team's Supabase project already has the `items` table created, with Row
 Level Security enabled (see [`supabase/schema.sql`](./supabase/schema.sql)
@@ -84,47 +232,19 @@ in `.env.local`.
 recreate it if a new Supabase project is ever needed: paste its contents into
 the Supabase SQL editor for the new project.
 
-## Replit (compulsory sponsor platform)
+### Run checks
 
-Replit is compulsory. The proof we submit is the **live Replit deployment URL**
-(or the Replit project link). The project lives in **Bing Jie's own Replit
-account**.
+There are no unit tests yet. Before every push or PR, run:
 
-The repo already contains a [`.replit`](./.replit) file, so nothing needs to be
-configured by hand:
+```bash
+npm run lint
+npm run build
+```
 
-| Setting in `.replit` | What it does |
-|---|---|
-| `modules = ["nodejs-24"]` | Uses Node.js 24, same as `.nvmrc` and `engines`. |
-| `run` | The **Run** button runs `npm install`, then `next dev` on `0.0.0.0:3000` so the Replit preview can reach it. |
-| `[[ports]]` 3000 → 80 | Maps the app's port 3000 to the public URL. Autoscale allows only one external port. |
-| `[deployment]` | **Autoscale** deployment: build with `npm ci && npm run build`, run with `npm run start` on `0.0.0.0:3000`. |
+(In PowerShell, set `$env:AI_MOCK="true"` first if you have no keys; in
+bash use `AI_MOCK=true npm run build`.)
 
-`next.config.ts` also allows the `*.replit.dev` preview domain in dev mode
-(`allowedDevOrigins`), otherwise Next.js blocks hot reload in the Replit preview.
-
-### Steps
-
-1. Sign in to Replit with Bing Jie's account → **Create App** → **Import from
-   GitHub** → pick `Jie-coder/hoo-lee-sheet-sdc2026` (authorise the Replit
-   GitHub app for this private repo if asked).
-2. Open the **Secrets** tool and add the variables from the
-   [environment variables](#environment-variables) table (at least
-   `AI_PROVIDER=google`, `GOOGLE_GENERATIVE_AI_API_KEY`, `SUPABASE_URL`,
-   `SUPABASE_SERVICE_ROLE_KEY`). Secrets are the only place keys go on Replit:
-   never commit a `.env` file and never put keys in `.replit`.
-3. Press **Run**. The preview should show the home page; open `/status` to check
-   every integration is green.
-4. Press **Deploy** / **Publish**, choose **Autoscale**, and make sure the
-   secrets are available to the deployment as well (check the deployment's
-   secrets or environment settings).
-5. Open the deployed `https://….replit.app` URL, check `/status` again, and save
-   that URL. It goes into the submission form as our Replit proof.
-
-To get new commits onto Replit, pull from GitHub in Replit's **Git** tool and
-then redeploy.
-
-## Vercel (backup only)
+### Backup: Vercel
 
 Vercel is a backup in case Replit has problems on demo day; Replit stays the
 official platform.
@@ -134,9 +254,49 @@ official platform.
 2. Add the same environment variables in the project settings.
 3. Deploy, then check `/status` on the deployed URL.
 
-## Optional: RunPod (self-hosted model)
+---
 
-RunPod is **optional and off by default**. Gemini stays the default provider,
+## How We Use Replit *(Required)*
+
+- **Development:** the GitHub repo is imported into Bing Jie's Replit account
+  and run with the **Run** button (`.replit`).
+- **Hosting:** the app is published with a Replit **Autoscale** deployment at
+  the Live Demo link above.
+- **Secrets:** API keys are stored in Replit Secrets, never in the code.
+
+📄 Proof of use: [`submission/REPLIT PROOF OF USE.pdf`](submission/REPLIT%20PROOF%20OF%20USE.pdf)
+(currently the organisers' *example* file; replace it with our own proof
+before submission).
+
+## How We Use RunPod *(marked Required in the official template)*
+
+> The official template marks this section as required, but our team's
+> understanding is that RunPod is optional. **Confirm with the organisers.**
+> Until then, RunPod stays off by default in the app.
+
+There are two ways to use RunPod in this repo:
+
+1. **vLLM endpoint (used by the app):** set `AI_PROVIDER=runpod` and the app
+   calls the model through RunPod's OpenAI-compatible API (see the setup below).
+2. **Custom handler (from the official template):** deploy
+   [`runpod/handler.py`](./runpod/handler.py) (Python, dependencies in
+   `requirements.txt`) as a RunPod Serverless endpoint and call it with
+   `RUNPOD_ENDPOINT_ID`:
+
+```bash
+curl -X POST https://api.runpod.ai/v2/$RUNPOD_ENDPOINT_ID/runsync \
+  -H "Authorization: Bearer $RUNPOD_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"input": {"prompt": "Hello"}}'
+```
+
+📄 Proof of use: [`submission/RUNPOD PROOF OF USE.pdf`](submission/RUNPOD%20PROOF%20OF%20USE.pdf)
+(currently the organisers' *example* file; replace it with our own proof
+if we use RunPod).
+
+### Setup: RunPod vLLM endpoint for the app
+
+In the app, RunPod is **optional and off by default**. Gemini stays the default provider,
 and `AI_MOCK=true` still skips every AI call, whichever provider is set.
 
 How it works: RunPod's vLLM workers expose an **OpenAI-compatible API**, so
@@ -161,6 +321,8 @@ To switch back to Gemini, set `AI_PROVIDER=google` (or leave it empty).
 > or delete the endpoint). Never leave a GPU running overnight or unattended,
 > and never commit `RUNPOD_API_KEY`.
 
+---
+
 ## Environment variables
 
 Copy [`.env.example`](./.env.example) to `.env.local` (git-ignored) for local
@@ -177,6 +339,7 @@ them are read server-side only; none are exposed to the browser.
 | `SUPABASE_SERVICE_ROLE_KEY` | Yes | Supabase service role key. Server-side only and full database access, so treat it like a password. |
 | `RUNPOD_BASE_URL` | Only if `AI_PROVIDER=runpod` | `https://api.runpod.ai/v2/<ENDPOINT_ID>/openai/v1` |
 | `RUNPOD_API_KEY` | Only if `AI_PROVIDER=runpod` | RunPod API key. |
+| `RUNPOD_ENDPOINT_ID` | No | Only for calling the template's `runpod/handler.py` endpoint (`/runsync`) with curl. The app does not read it. |
 
 ## Mock mode
 
@@ -381,3 +544,39 @@ The pre-existing starter was generated with AI coding assistance under human
 supervision. See [DECLARATION.md](./DECLARATION.md). Work done during the
 hackathon may also use AI assistance, and the team reviews everything before it
 is merged.
+
+---
+
+## Challenges & Learnings
+
+- _TBD_
+
+## Future Improvements
+
+- [ ] _TBD_
+
+## Team
+
+| Name   | Role  | GitHub                                                     |
+| ------ | ----- | ---------------------------------------------------------- |
+| Bing Jie Tan | _TBD_ | [@Jie-coder](https://github.com/Jie-coder)           |
+| _TBD_  | _TBD_ | [@henrywwawesome-wq](https://github.com/henrywwawesome-wq) |
+| _TBD_  | _TBD_ | [@Tiffany06yek](https://github.com/Tiffany06yek)           |
+
+---
+
+## Submission Checklist
+
+- [ ] Team name, domain (Domain 1 / Domain 2) and SDG track filled in
+- [ ] Slide deck link added
+- [ ] Demo video link added
+- [ ] Replit used, with proof of use in `submission/`
+- [ ] RunPod used, with proof of use in `submission/`
+- [ ] Submission template completed in `submission/`
+- [ ] "How to Run" steps verified
+- [ ] No API keys or secrets committed to the repository
+- [ ] Repo made **public** and committee GitHub accounts added as collaborators
+
+## License
+
+This project is licensed under the [Apache License 2.0](LICENSE).
