@@ -46,3 +46,13 @@ next-env.d.ts
 /.cache
 /.upm
 /.config
+
+# python (runpod/handler.py from the official SDC template)
+__pycache__/
+*.py[cod]
+venv/
+.venv/
+
+# editors
+.vscode/
+.idea/
