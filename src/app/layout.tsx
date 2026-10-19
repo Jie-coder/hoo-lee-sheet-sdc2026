@@ -4,6 +4,7 @@ import { Geist_Mono, Inter, Newsreader, Noto_Sans_SC } from "next/font/google";
 import { SiteHeader } from "@/components/site-header";
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import { FlowProvider } from "@/context/flow-context";
 import "./globals.css";
 
 const inter = Inter({
@@ -59,11 +60,13 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       className={`${inter.variable} ${newsreader.variable} ${notoSansSc.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="flex min-h-full flex-col">
-        <TooltipProvider>
-          <SiteHeader />
-          <main className="flex flex-1 flex-col">{children}</main>
-          <Toaster />
-        </TooltipProvider>
+        <FlowProvider>
+          <TooltipProvider>
+            <SiteHeader />
+            <main className="flex flex-1 flex-col">{children}</main>
+            <Toaster />
+          </TooltipProvider>
+        </FlowProvider>
       </body>
     </html>
   );

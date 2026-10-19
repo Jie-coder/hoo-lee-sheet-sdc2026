@@ -23,9 +23,13 @@ const COURSE_LANGUAGES = [
 
 type CourseLanguageId = (typeof COURSE_LANGUAGES)[number]["id"];
 
+function currentStepIndex(pathname: string): number {
+  return STEPS.findIndex((step) => pathname.startsWith(`/${step.id}`));
+}
+
 export function SiteHeader() {
   const pathname = usePathname();
-  const onResults = pathname.startsWith("/results");
+  const currentIndex = currentStepIndex(pathname);
   const [courseLanguage, setCourseLanguage] = useState<CourseLanguageId>("ms");
 
   return (
@@ -43,8 +47,8 @@ export function SiteHeader() {
         >
           {STEPS.map((step, index) => {
             const number = index + 1;
-            const complete = onResults && number < 3;
-            const current = onResults && step.id === "results";
+            const complete = currentIndex >= 0 && index < currentIndex;
+            const current = index === currentIndex;
             return (
               <div key={step.id} className="flex items-center gap-1.5 lg:gap-3">
                 {index > 0 && <span className="h-px w-4 shrink-0 bg-line lg:w-10" />}

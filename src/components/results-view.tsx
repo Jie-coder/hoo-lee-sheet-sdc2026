@@ -1,10 +1,12 @@
 // Results screen: scenario re-rank, signal-date swap, and a mock refresh.
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { LayoutGroup } from "framer-motion";
 import { Hand, Info } from "lucide-react";
 import { toast } from "sonner";
+import { useFlow } from "@/context/flow-context";
 import { EstimateFooter } from "@/components/estimate-footer";
 import { RefreshButton } from "@/components/refresh-button";
 import { RoleCard } from "@/components/role-card";
@@ -25,6 +27,8 @@ import { AISYAH_RESULTS, EXAMPLE_AS_OF, fetchAisyahResults, type ResultsExample 
 import type { RoleResult, ScenarioId, SdgLink } from "@/types/contracts";
 
 export function ResultsView({ initial }: { initial: ResultsExample }) {
+  const router = useRouter();
+  const { hydrated, consent, setChosenRoleId } = useFlow();
   const [signal, setSignal] = useState<SignalDate>("today");
   const [scenario, setScenario] = useState<ScenarioId>("co");
   const [snapshot, setSnapshot] = useState(initial);
@@ -32,6 +36,10 @@ export function ResultsView({ initial }: { initial: ResultsExample }) {
   const [refreshedOn, setRefreshedOn] = useState(EXAMPLE_AS_OF);
   const [chosenId, setChosenId] = useState<string | null>(null);
   const [flaggedIds, setFlaggedIds] = useState<Set<string>>(() => new Set());
+
+  useEffect(() => {
+    if (hydrated && !consent) router.replace("/");
+  }, [hydrated, consent, router]);
 
   const ranked = rankRoles(snapshot.response.roles, scenario);
   const chosen = ranked.find((role) => role.occupationId === chosenId) ?? null;
@@ -57,9 +65,9 @@ export function ResultsView({ initial }: { initial: ResultsExample }) {
   }
 
   function handleChoose(role: RoleResult) {
-    if (chosenId === role.occupationId) return;
     setChosenId(role.occupationId);
-    toast.success(`You chose ${role.title}. Your pathway is built from this choice.`);
+    setChosenRoleId(role.occupationId);
+    router.push(`/pathway?role=${role.occupationId}`);
   }
 
   function handleFlag(link: SdgLink) {
