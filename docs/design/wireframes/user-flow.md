@@ -72,6 +72,6 @@ Header course-language pill (EN / BM / 中文) is a **multi-select course-langua
 | More than one future scenario | 04 Results (3 WEF futures, re-rank, robust badge) · robust note on 05 Pathway |
 
 ## Open points spotted while drawing
-- `results-reference.html` says "Based on your CV and **6** interview answers"; the decision is 5 questions max. Change to "5" when the results page is built.
+- The results summary says "Based on your CV and **5** interview answers", matching `MAX_INTERVIEW_TURNS`.
 - The project brief (sections 03/08) says the interview stops at 8 questions and CVs are kept 24 h in a private bucket; the current decisions are 5 questions and "nothing stored". The wireframes follow the decisions.
 - The official logo mark uses `#4F7F64`, which is not the system sage `#2F7D5B`. It sits next to sage UI elements; consider aligning one to the other.
