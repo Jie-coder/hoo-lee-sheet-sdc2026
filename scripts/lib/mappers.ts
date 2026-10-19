@@ -112,11 +112,17 @@ export function mapCourseRow(raw: Record<string, string>, row: number): CourseRo
   issues.push(...checkEscoUris(file, row, "skill_uris", skillUris));
 
   const hours = parseNumber(raw.hours ?? "");
-  if (!hours.ok) issues.push(cellIssue(file, row, "hours", raw.hours ?? "", hours.error));
+  if (!hours.ok) {
+    issues.push(
+      cellIssue(file, row, "hours", raw.hours ?? "", hours.error, "enter the course length in hours as a plain number, e.g. 12")
+    );
+  }
 
   const certificate = parseYesNo(raw.certificate ?? "");
   if (!certificate.ok) {
-    issues.push(cellIssue(file, row, "certificate", raw.certificate ?? "", certificate.error));
+    issues.push(
+      cellIssue(file, row, "certificate", raw.certificate ?? "", certificate.error, 'use "yes" or "no"')
+    );
   }
 
   if (isBlank(raw.sdg_reason)) {
@@ -165,12 +171,20 @@ export function mapProgrammeRow(raw: Record<string, string>, row: number): MapRe
   const issues: Issue[] = [];
 
   const ageMin = parseIntOrBlank(raw.age_min ?? "");
-  if (!ageMin.ok) issues.push(cellIssue(file, row, "age_min", raw.age_min ?? "", ageMin.error));
+  if (!ageMin.ok) {
+    issues.push(cellIssue(file, row, "age_min", raw.age_min ?? "", ageMin.error, "enter a whole number, or leave blank"));
+  }
   const ageMax = parseIntOrBlank(raw.age_max ?? "");
-  if (!ageMax.ok) issues.push(cellIssue(file, row, "age_max", raw.age_max ?? "", ageMax.error));
+  if (!ageMax.ok) {
+    issues.push(cellIssue(file, row, "age_max", raw.age_max ?? "", ageMax.error, "enter a whole number, or leave blank"));
+  }
 
   const citizen = parseYesNoOrBlank(raw.citizen ?? "");
-  if (!citizen.ok) issues.push(cellIssue(file, row, "citizen", raw.citizen ?? "", citizen.error));
+  if (!citizen.ok) {
+    issues.push(
+      cellIssue(file, row, "citizen", raw.citizen ?? "", citizen.error, 'use "yes", "no", or leave blank')
+    );
+  }
 
   const perkesoContributor = parseYesNoOrBlank(raw.perkeso_contributor ?? "");
   if (!perkesoContributor.ok) {
@@ -180,7 +194,8 @@ export function mapProgrammeRow(raw: Record<string, string>, row: number): MapRe
         row,
         "perkeso_contributor",
         raw.perkeso_contributor ?? "",
-        perkesoContributor.error
+        perkesoContributor.error,
+        'use "yes", "no", or leave blank'
       )
     );
   }
@@ -287,7 +302,8 @@ export function mapKeywordRow(raw: Record<string, string>, row: number): Keyword
         row,
         "count_last_90d",
         raw.count_last_90d ?? "",
-        !countLast90d.ok ? countLast90d.error : "count_last_90d is required"
+        !countLast90d.ok ? countLast90d.error : "count_last_90d is required",
+        "enter a whole number (0 or more)"
       )
     );
   }
@@ -299,7 +315,8 @@ export function mapKeywordRow(raw: Record<string, string>, row: number): Keyword
         row,
         "count_prev_90d",
         raw.count_prev_90d ?? "",
-        !countPrev90d.ok ? countPrev90d.error : "count_prev_90d is required"
+        !countPrev90d.ok ? countPrev90d.error : "count_prev_90d is required",
+        "enter a whole number (0 or more)"
       )
     );
   }
@@ -366,7 +383,16 @@ export function mapExposureRow(raw: Record<string, string>, row: number): MapRes
   const issues: Issue[] = [];
   const exposureValue = parseNumber(raw.exposure_value ?? "");
   if (!exposureValue.ok) {
-    issues.push(cellIssue(file, row, "exposure_value", raw.exposure_value ?? "", exposureValue.error));
+    issues.push(
+      cellIssue(
+        file,
+        row,
+        "exposure_value",
+        raw.exposure_value ?? "",
+        exposureValue.error,
+        "copy the number as published, e.g. 0.62"
+      )
+    );
   } else {
     candidate.exposureValue = exposureValue.value;
   }
@@ -413,7 +439,9 @@ export function mapOccupationRow(raw: Record<string, string>, row: number): MapR
 
   const isEmerging = parseYesNo(raw.is_emerging ?? "");
   if (!isEmerging.ok) {
-    issues.push(cellIssue(file, row, "is_emerging", raw.is_emerging ?? "", isEmerging.error));
+    issues.push(
+      cellIssue(file, row, "is_emerging", raw.is_emerging ?? "", isEmerging.error, 'use "yes" or "no"')
+    );
   }
 
   const candidate = {
@@ -431,21 +459,23 @@ export function mapOccupationRow(raw: Record<string, string>, row: number): MapR
 
   const parsed = OccupationRowSchema.safeParse(candidate);
   if (!parsed.success) {
-    issues.push(
-      ...zodErrorToIssues(parsed.error, {
-        file,
-        row,
-        raw,
-        columnOverrides: {
-          escoUri: "esco_uri",
-          iscoCode: "isco_code",
-          titleEn: "title_en",
-          titleMs: "title_ms",
-          isEmerging: "is_emerging",
-          lastChecked: "last_checked",
-        },
-      })
-    );
+    const zodIssues = zodErrorToIssues(parsed.error, {
+      file,
+      row,
+      raw,
+      columnOverrides: {
+        escoUri: "esco_uri",
+        iscoCode: "isco_code",
+        titleEn: "title_en",
+        titleMs: "title_ms",
+        isEmerging: "is_emerging",
+        lastChecked: "last_checked",
+      },
+    });
+    // The manual ESCO-format check above already reported this cell with a
+    // more specific hint; drop zod's generic "Invalid URL" for the same cell.
+    const hasManualEscoUriIssue = issues.some((issue) => issue.column === "esco_uri");
+    issues.push(...zodIssues.filter((issue) => !(hasManualEscoUriIssue && issue.column === "esco_uri")));
   }
 
   return { issues, value: issues.length === 0 && parsed.success ? parsed.data : null };

@@ -14,12 +14,15 @@ import {
   mapProgrammeRow,
   mapSourceRow,
 } from "./lib/mappers";
-import { runCrossChecks, type CrossCheckInput } from "./lib/cross-checks";
+import { duplicateIssues, runCrossChecks, type CrossCheckInput } from "./lib/cross-checks";
 import { exitCodeFor, formatReport, type FileReport, type FullReport, type Issue } from "./lib/report";
-import { readEnvLocal, requireApplyEnv, type ApplyEnv } from "./lib/env";
-import { createEmbedderFor, createSupabaseClientFor, type Embedder } from "./lib/clients";
+import { ENV_LOCAL_MISSING_MESSAGE, readEnvLocal, requireApplyEnv, type ApplyEnv } from "./lib/env";
 import { applyImport, type ApplyInput, type ApplyResult, type SkillRecord } from "./lib/apply";
+// Type-only: must not pull in @supabase/supabase-js or @ai-sdk/google at
+// runtime just for a dry run. The real module is loaded with a dynamic
+// import() below, only once --apply has actually been requested.
 import type { SupabaseClient } from "@supabase/supabase-js";
+import type { Embedder } from "./lib/clients";
 import type { Course, Programme } from "../src/types/contracts";
 import type { OccupationRow } from "./lib/row-schemas";
 
@@ -56,6 +59,56 @@ function zipHeader(header: string[], row: string[]): Record<string, string> {
   });
   return record;
 }
+
+/**
+ * Runs the within-file duplicate-key check, and returns which rows to keep
+ * (the earlier occurrence of each key) along with the recount of valid vs.
+ * invalid rows: a later duplicate counts as invalid even if it otherwise
+ * parsed cleanly.
+ */
+function finalizeDuplicates<T extends { row: number; valid: boolean }>(
+  file: string,
+  column: string,
+  dedupeKey: (record: T) => string,
+  records: T[]
+): { issues: Issue[]; validRows: number; invalidRows: number; kept: T[] } {
+  const dupIssues = duplicateIssues(
+    file,
+    column,
+    records.map((record) => ({ row: record.row, key: dedupeKey(record) }))
+  );
+  const dupRows = new Set(dupIssues.map((issue) => issue.row as number));
+  const kept = records.filter((record) => !dupRows.has(record.row));
+  const validRows = kept.filter((record) => record.valid).length;
+  return { issues: dupIssues, validRows, invalidRows: records.length - validRows, kept };
+}
+
+type CourseRecord = {
+  row: number;
+  id: string;
+  valid: boolean;
+  value: Course | null;
+  skills: string[];
+  skillUris: string[];
+};
+type ProgrammeRecord = { row: number; id: string; valid: boolean; value: Programme | null };
+type SourceRecord = { row: number; name: string; valid: boolean };
+type KeywordRecord = {
+  row: number;
+  keyword: string;
+  valid: boolean;
+  skills: string[];
+  skillUris: string[];
+};
+type OccupationRecord = {
+  row: number;
+  id: string;
+  valid: boolean;
+  value: OccupationRow | null;
+  escoUri: string | null;
+  iscoCode: string | null;
+  titleEn: string;
+};
 
 function runFile(key: FileKey, dir: string): FileRunOutcome {
   const spec = FILE_SPECS[key];
@@ -104,24 +157,13 @@ function runFile(key: FileKey, dir: string): FileRunOutcome {
     });
   }
 
-  let validRows = 0;
-  let invalidRows = 0;
-  const validCourses: Course[] = [];
-  const validProgrammes: Programme[] = [];
-  const validOccupations: OccupationRow[] = [];
-  const skillPairs: { skills: string[]; skillUris: string[] }[] = [];
-  const courseCross: { row: number; id: string; skills: string[]; skillUris: string[] }[] = [];
-  const programmeCross: { row: number; id: string }[] = [];
-  const sourceCross: { row: number; name: string }[] = [];
-  const keywordCross: { row: number; keyword: string; skills: string[]; skillUris: string[] }[] = [];
+  const courseRecords: CourseRecord[] = [];
+  const programmeRecords: ProgrammeRecord[] = [];
+  const sourceRecords: SourceRecord[] = [];
+  const keywordRecords: KeywordRecord[] = [];
   const exposureCross: { row: number; occupation: string; code: string; sourceName: string }[] = [];
-  const occupationCross: {
-    row: number;
-    id: string;
-    escoUri: string | null;
-    iscoCode: string | null;
-    titleEn: string;
-  }[] = [];
+  let exposureValidRows = 0;
+  const occupationRecords: OccupationRecord[] = [];
 
   rows.forEach((row, index) => {
     const rowNumber = index + 2;
@@ -130,38 +172,37 @@ function runFile(key: FileKey, dir: string): FileRunOutcome {
     if (key === "courses") {
       const result = mapCourseRow(raw, rowNumber);
       issues.push(...result.issues);
-      courseCross.push({ row: rowNumber, id: raw.id ?? "", skills: result.skills, skillUris: result.skillUris });
-      if (result.value) {
-        validCourses.push(result.value);
-        skillPairs.push({ skills: result.skills, skillUris: result.skillUris });
-      }
-      if (result.value) validRows++;
-      else invalidRows++;
-    } else if (key === "programmes") {
-      const result = mapProgrammeRow(raw, rowNumber);
-      issues.push(...result.issues);
-      programmeCross.push({ row: rowNumber, id: raw.id ?? "" });
-      if (result.value) validProgrammes.push(result.value);
-      if (result.value) validRows++;
-      else invalidRows++;
-    } else if (key === "sources") {
-      const result = mapSourceRow(raw, rowNumber);
-      issues.push(...result.issues);
-      sourceCross.push({ row: rowNumber, name: raw.name ?? "" });
-      if (result.value) validRows++;
-      else invalidRows++;
-    } else if (key === "keywords") {
-      const result = mapKeywordRow(raw, rowNumber);
-      issues.push(...result.issues, ...result.warnings);
-      keywordCross.push({
+      courseRecords.push({
         row: rowNumber,
-        keyword: raw.keyword ?? "",
+        id: raw.id ?? "",
+        valid: result.value !== null,
+        value: result.value,
         skills: result.skills,
         skillUris: result.skillUris,
       });
-      if (result.value) skillPairs.push({ skills: result.skills, skillUris: result.skillUris });
-      if (result.value) validRows++;
-      else invalidRows++;
+    } else if (key === "programmes") {
+      const result = mapProgrammeRow(raw, rowNumber);
+      issues.push(...result.issues);
+      programmeRecords.push({
+        row: rowNumber,
+        id: raw.id ?? "",
+        valid: result.value !== null,
+        value: result.value,
+      });
+    } else if (key === "sources") {
+      const result = mapSourceRow(raw, rowNumber);
+      issues.push(...result.issues);
+      sourceRecords.push({ row: rowNumber, name: raw.name ?? "", valid: result.value !== null });
+    } else if (key === "keywords") {
+      const result = mapKeywordRow(raw, rowNumber);
+      issues.push(...result.issues, ...result.warnings);
+      keywordRecords.push({
+        row: rowNumber,
+        keyword: raw.keyword ?? "",
+        valid: result.value !== null,
+        skills: result.skills,
+        skillUris: result.skillUris,
+      });
     } else if (key === "exposure") {
       const result = mapExposureRow(raw, rowNumber);
       issues.push(...result.issues);
@@ -171,23 +212,92 @@ function runFile(key: FileKey, dir: string): FileRunOutcome {
         code: raw.code ?? "",
         sourceName: raw.source_name ?? "",
       });
-      if (result.value) validRows++;
-      else invalidRows++;
+      if (result.value) exposureValidRows += 1;
     } else if (key === "occupations") {
       const result = mapOccupationRow(raw, rowNumber);
       issues.push(...result.issues);
-      occupationCross.push({
+      occupationRecords.push({
         row: rowNumber,
         id: raw.id ?? "",
+        valid: result.value !== null,
+        value: result.value,
         escoUri: isBlankCell(raw.esco_uri) ? null : raw.esco_uri ?? null,
         iscoCode: isBlankCell(raw.isco_code) ? null : raw.isco_code ?? null,
         titleEn: raw.title_en ?? "",
       });
-      if (result.value) validOccupations.push(result.value);
-      if (result.value) validRows++;
-      else invalidRows++;
     }
   });
+
+  let validRows = 0;
+  let invalidRows = 0;
+  let validCourses: Course[] = [];
+  let validProgrammes: Programme[] = [];
+  let validOccupations: OccupationRow[] = [];
+  let skillPairs: { skills: string[]; skillUris: string[] }[] = [];
+  let cross: Partial<CrossCheckInput> = {};
+
+  if (key === "courses") {
+    const dup = finalizeDuplicates("courses.csv", "id", (r) => r.id, courseRecords);
+    issues.push(...dup.issues);
+    validRows = dup.validRows;
+    invalidRows = dup.invalidRows;
+    validCourses = dup.kept.filter((r) => r.value).map((r) => r.value as Course);
+    skillPairs = dup.kept
+      .filter((r) => r.value)
+      .map((r) => ({ skills: r.skills, skillUris: r.skillUris }));
+    cross = {
+      courses: courseRecords.map((r) => ({ row: r.row, id: r.id, skills: r.skills, skillUris: r.skillUris })),
+    };
+  } else if (key === "programmes") {
+    const dup = finalizeDuplicates("programmes.csv", "id", (r) => r.id, programmeRecords);
+    issues.push(...dup.issues);
+    validRows = dup.validRows;
+    invalidRows = dup.invalidRows;
+    validProgrammes = dup.kept.filter((r) => r.value).map((r) => r.value as Programme);
+  } else if (key === "sources") {
+    const dup = finalizeDuplicates("sources.csv", "name", (r) => r.name, sourceRecords);
+    issues.push(...dup.issues);
+    validRows = dup.validRows;
+    invalidRows = dup.invalidRows;
+    cross = { sources: sourceRecords.map((r) => ({ row: r.row, name: r.name })) };
+  } else if (key === "keywords") {
+    const dup = finalizeDuplicates("keywords.csv", "keyword", (r) => r.keyword, keywordRecords);
+    issues.push(...dup.issues);
+    validRows = dup.validRows;
+    invalidRows = dup.invalidRows;
+    skillPairs = dup.kept
+      .filter((r) => r.valid)
+      .map((r) => ({ skills: r.skills, skillUris: r.skillUris }));
+    cross = {
+      keywords: keywordRecords.map((r) => ({
+        row: r.row,
+        keyword: r.keyword,
+        skills: r.skills,
+        skillUris: r.skillUris,
+      })),
+    };
+  } else if (key === "exposure") {
+    // exposure.csv has no id-like column that must be unique: the same
+    // occupation can legitimately appear with figures from several sources.
+    validRows = exposureValidRows;
+    invalidRows = rows.length - validRows;
+    cross = { exposure: exposureCross };
+  } else {
+    const dup = finalizeDuplicates("occupations.csv", "id", (r) => r.id, occupationRecords);
+    issues.push(...dup.issues);
+    validRows = dup.validRows;
+    invalidRows = dup.invalidRows;
+    validOccupations = dup.kept.filter((r) => r.value).map((r) => r.value as OccupationRow);
+    cross = {
+      occupations: occupationRecords.map((r) => ({
+        row: r.row,
+        id: r.id,
+        escoUri: r.escoUri,
+        iscoCode: r.iscoCode,
+        titleEn: r.titleEn,
+      })),
+    };
+  }
 
   return {
     fileReport: {
@@ -198,18 +308,7 @@ function runFile(key: FileKey, dir: string): FileRunOutcome {
       invalidRows,
       issues,
     },
-    cross:
-      key === "courses"
-        ? { courses: courseCross }
-        : key === "programmes"
-          ? { programmes: programmeCross }
-          : key === "sources"
-            ? { sources: sourceCross }
-            : key === "keywords"
-              ? { keywords: keywordCross }
-              : key === "exposure"
-                ? { exposure: exposureCross }
-                : { occupations: occupationCross },
+    cross,
     validCourses,
     validProgrammes,
     validOccupations,
@@ -271,8 +370,15 @@ export async function runImport(options: RunOptions): Promise<RunResult> {
     return result;
   }
 
-  const createSupabaseClient = options.createSupabaseClient ?? createSupabaseClientFor;
-  const createEmbedder = options.createEmbedder ?? createEmbedderFor;
+  let createSupabaseClient = options.createSupabaseClient;
+  let createEmbedder = options.createEmbedder;
+  if (!createSupabaseClient || !createEmbedder) {
+    // Deferred so a dry run never pulls in @supabase/supabase-js or the
+    // Gemini SDK (and never prints their startup warnings).
+    const clients = await import("./lib/clients");
+    createSupabaseClient = createSupabaseClient ?? clients.createSupabaseClientFor;
+    createEmbedder = createEmbedder ?? clients.createEmbedderFor;
+  }
   const supabase = createSupabaseClient(envResult.env);
   const embedder = createEmbedder(envResult.env);
 
@@ -312,42 +418,86 @@ function parseArgs(argv: string[]): { dir: string; only?: string; apply: boolean
   return { dir, only, apply };
 }
 
-async function main() {
-  const args = parseArgs(process.argv.slice(2));
-  const env = args.apply ? { ...process.env, ...readEnvLocal(process.cwd()) } : process.env;
+export type CliOutput = { stdout: string[]; stderr: string[]; exitCode: number };
 
-  const result = await runImport({ dir: args.dir, only: args.only, apply: args.apply, env });
+/**
+ * The CLI's logic with all I/O factored out: takes argv and a cwd, returns
+ * what to print and the exit code, so it is testable without a subprocess.
+ * --apply reads secrets only from <cwd>/.env.local, never from process.env,
+ * so ambient shell exports (e.g. a key exported for another project) can
+ * never be used silently.
+ */
+export async function runCli(
+  argv: string[],
+  cwd: string,
+  overrides?: {
+    createSupabaseClient?: (env: ApplyEnv) => SupabaseClient;
+    createEmbedder?: (env: ApplyEnv) => Embedder;
+  }
+): Promise<CliOutput> {
+  const args = parseArgs(argv);
+  const stdout: string[] = [];
+  const stderr: string[] = [];
 
-  if (result.argError) {
-    console.error(result.argError);
-    process.exit(1);
+  let env: Record<string, string | undefined> = process.env;
+  let envLocalMissing = false;
+  if (args.apply) {
+    const envLocal = readEnvLocal(cwd);
+    env = envLocal.vars;
+    envLocalMissing = !envLocal.exists;
   }
 
-  console.log(formatReport(result.report));
+  const result = await runImport({
+    dir: args.dir,
+    only: args.only,
+    apply: args.apply,
+    env,
+    createSupabaseClient: overrides?.createSupabaseClient,
+    createEmbedder: overrides?.createEmbedder,
+  });
+
+  if (result.argError) {
+    stderr.push(result.argError);
+    return { stdout, stderr, exitCode: 1 };
+  }
+
+  stdout.push(formatReport(result.report));
 
   if (args.apply) {
+    if (envLocalMissing) {
+      stderr.push(`\napply: ${ENV_LOCAL_MISSING_MESSAGE}`);
+      return { stdout, stderr, exitCode: 1 };
+    }
     if (result.applyError) {
-      console.error(`\napply: ${result.applyError}`);
-      process.exit(1);
+      stderr.push(`\napply: ${result.applyError}`);
+      return { stdout, stderr, exitCode: 1 };
     }
     if (result.applyResult) {
-      console.log("\napply:");
+      const applyLines = ["\napply:"];
       for (const table of result.applyResult.tables) {
-        console.log(
+        applyLines.push(
           table.error
             ? `  ${table.table}: FAILED — ${table.error}`
             : `  ${table.table}: upserted ${table.upserted} row(s)`
         );
       }
       for (const skipped of result.applyResult.skipped) {
-        console.log(`  ${skipped.file}: skipped — ${skipped.reason}`);
+        applyLines.push(`  ${skipped.file}: skipped — ${skipped.reason}`);
       }
+      stdout.push(applyLines.join("\n"));
       const failed = result.applyResult.tables.some((table) => table.error);
-      if (failed) process.exit(1);
+      if (failed) return { stdout, stderr, exitCode: 1 };
     }
   }
 
-  process.exit(result.exitCode);
+  return { stdout, stderr, exitCode: result.exitCode };
+}
+
+async function main() {
+  const { stdout, stderr, exitCode } = await runCli(process.argv.slice(2), process.cwd());
+  for (const line of stdout) console.log(line);
+  for (const line of stderr) console.error(line);
+  process.exit(exitCode);
 }
 
 const isMain = process.argv[1] && import.meta.url === `file://${process.argv[1]}`;

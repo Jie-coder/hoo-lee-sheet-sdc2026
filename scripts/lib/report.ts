@@ -46,8 +46,9 @@ export function exitCodeFor(report: FullReport): number {
   return issueCount(report, "error") > 0 ? 1 : 0;
 }
 
-function formatIssue(issue: Issue): string {
+function formatIssue(issue: Issue, options: { includeFile?: boolean } = {}): string {
   const location = [
+    options.includeFile ? issue.file : null,
     issue.row !== undefined ? `row ${issue.row}` : null,
     issue.column !== undefined ? `column "${issue.column}"` : null,
   ]
@@ -82,7 +83,7 @@ export function formatReport(report: FullReport): string {
   if (report.crossFileIssues.length > 0) {
     lines.push(`\ncross-file checks`);
     for (const issue of report.crossFileIssues) {
-      lines.push(`  ${formatIssue(issue)}`);
+      lines.push(`  ${formatIssue(issue, { includeFile: true })}`);
     }
   }
 

@@ -1,29 +1,35 @@
 import { describe, expect, it } from "vitest";
-import { runCrossChecks } from "./cross-checks";
+import { duplicateIssues, runCrossChecks } from "./cross-checks";
 
-describe("runCrossChecks", () => {
-  it("flags a duplicate course id and reports the second occurrence's row", () => {
-    const issues = runCrossChecks({
-      courses: [
-        { row: 2, id: "c001", skills: [], skillUris: [] },
-        { row: 3, id: "c001", skills: [], skillUris: [] },
-      ],
-    });
+describe("duplicateIssues", () => {
+  it("flags a duplicate key and reports the second occurrence's row", () => {
+    const issues = duplicateIssues("courses.csv", "id", [
+      { row: 2, key: "c001" },
+      { row: 3, key: "c001" },
+    ]);
     expect(issues).toEqual([
       expect.objectContaining({ file: "courses.csv", row: 3, column: "id", severity: "error" }),
     ]);
   });
 
-  it("does not flag two different ids", () => {
-    const issues = runCrossChecks({
-      courses: [
-        { row: 2, id: "c001", skills: [], skillUris: [] },
-        { row: 3, id: "c002", skills: [], skillUris: [] },
-      ],
-    });
+  it("does not flag two different keys", () => {
+    const issues = duplicateIssues("courses.csv", "id", [
+      { row: 2, key: "c001" },
+      { row: 3, key: "c002" },
+    ]);
     expect(issues).toEqual([]);
   });
 
+  it("ignores blank keys", () => {
+    const issues = duplicateIssues("courses.csv", "id", [
+      { row: 2, key: "" },
+      { row: 3, key: "" },
+    ]);
+    expect(issues).toEqual([]);
+  });
+});
+
+describe("runCrossChecks", () => {
   it("warns when the same skill URI is used with two different names", () => {
     const issues = runCrossChecks({
       courses: [{ row: 2, id: "c001", skills: ["Data analysis"], skillUris: ["https://data.europa.eu/esco/skill/x"] }],

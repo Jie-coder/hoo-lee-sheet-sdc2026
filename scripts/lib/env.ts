@@ -1,7 +1,7 @@
 // Tiny .env.local reader for --apply. Deliberately separate from
 // src/lib/env.ts (which reads process.env for the Next.js app): this script
 // runs outside Next.js and must never print a secret value, only names.
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 
 /** Parses .env file syntax: KEY=value, '#' comments, blank lines, optional quotes. */
@@ -25,14 +25,22 @@ export function parseEnvFile(content: string): Record<string, string> {
   return result;
 }
 
-/** Reads <dir>/.env.local, or {} when the file does not exist. */
-export function readEnvLocal(dir: string): Record<string, string> {
-  try {
-    return parseEnvFile(readFileSync(join(dir, ".env.local"), "utf8"));
-  } catch {
-    return {};
-  }
+export type ReadEnvLocalResult = { exists: boolean; vars: Record<string, string> };
+
+/**
+ * Reads <dir>/.env.local. Deliberately does not fall back to process.env:
+ * --apply must only ever use secrets from this file, never an ambient
+ * shell variable exported for some other project.
+ */
+export function readEnvLocal(dir: string): ReadEnvLocalResult {
+  const path = join(dir, ".env.local");
+  if (!existsSync(path)) return { exists: false, vars: {} };
+  return { exists: true, vars: parseEnvFile(readFileSync(path, "utf8")) };
 }
+
+export const ENV_LOCAL_MISSING_MESSAGE =
+  "--apply needs .env.local with SUPABASE_URL (or NEXT_PUBLIC_SUPABASE_URL), " +
+  "SUPABASE_SERVICE_ROLE_KEY, GEMINI_API_KEY; see .env.example";
 
 export type ApplyEnv = {
   supabaseUrl: string;

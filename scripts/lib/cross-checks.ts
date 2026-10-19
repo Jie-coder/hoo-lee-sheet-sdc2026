@@ -1,10 +1,11 @@
 // Checks that span more than one row or more than one file. These never
 // block a single row from being otherwise valid; they report into their own
-// section of the output (report.crossFileIssues).
+// section of the output (report.crossFileIssues). Within-file checks (like
+// duplicate ids) are computed per file in import-data.ts so they print under
+// that file's own section instead.
 import type { Issue } from "./report";
 
 export type CourseCrossRow = { row: number; id: string; skills: string[]; skillUris: string[] };
-export type ProgrammeCrossRow = { row: number; id: string };
 export type SourceCrossRow = { row: number; name: string };
 export type KeywordCrossRow = { row: number; keyword: string; skills: string[]; skillUris: string[] };
 export type ExposureCrossRow = { row: number; occupation: string; code: string; sourceName: string };
@@ -18,14 +19,18 @@ export type OccupationCrossRow = {
 
 export type CrossCheckInput = {
   courses?: CourseCrossRow[];
-  programmes?: ProgrammeCrossRow[];
   sources?: SourceCrossRow[];
   keywords?: KeywordCrossRow[];
   exposure?: ExposureCrossRow[];
   occupations?: OccupationCrossRow[];
 };
 
-function duplicateIssues(
+/**
+ * Flags every row after the first whose `key` repeats an earlier row's.
+ * Exported for import-data.ts, which runs this per file so duplicate-id
+ * issues print under that file's own section rather than cross-file checks.
+ */
+export function duplicateIssues(
   file: string,
   column: string,
   rows: { row: number; key: string }[]
@@ -52,55 +57,9 @@ function duplicateIssues(
   return issues;
 }
 
-/** Runs every cross-row / cross-file check and returns the combined issue list. */
+/** Runs every genuinely cross-file check and returns the combined issue list. */
 export function runCrossChecks(input: CrossCheckInput): Issue[] {
   const issues: Issue[] = [];
-
-  if (input.courses) {
-    issues.push(
-      ...duplicateIssues(
-        "courses.csv",
-        "id",
-        input.courses.map((row) => ({ row: row.row, key: row.id }))
-      )
-    );
-  }
-  if (input.programmes) {
-    issues.push(
-      ...duplicateIssues(
-        "programmes.csv",
-        "id",
-        input.programmes.map((row) => ({ row: row.row, key: row.id }))
-      )
-    );
-  }
-  if (input.sources) {
-    issues.push(
-      ...duplicateIssues(
-        "sources.csv",
-        "name",
-        input.sources.map((row) => ({ row: row.row, key: row.name }))
-      )
-    );
-  }
-  if (input.keywords) {
-    issues.push(
-      ...duplicateIssues(
-        "keywords.csv",
-        "keyword",
-        input.keywords.map((row) => ({ row: row.row, key: row.keyword }))
-      )
-    );
-  }
-  if (input.occupations) {
-    issues.push(
-      ...duplicateIssues(
-        "occupations.csv",
-        "id",
-        input.occupations.map((row) => ({ row: row.row, key: row.id }))
-      )
-    );
-  }
 
   // Same skill URI mapped to different names across courses.csv and
   // keywords.csv: likely a typo in one of the names.

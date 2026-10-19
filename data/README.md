@@ -111,4 +111,13 @@ it is always safe to run.
 6. `--apply` (writes the valid rows to Supabase, and calls Gemini to embed
    occupations and skills) is for whoever holds the Supabase service-role
    key and Gemini key in their own `.env.local` — not needed for the checks
-   above, and it refuses to run at all while any file has an `[ERROR]`.
+   above, and it refuses to run at all while any file has an `[ERROR]`. It
+   reads those three secrets only from `.env.local` in the repo root (never
+   from an already-exported shell variable), so copy `.env.example` to
+   `.env.local` and fill it in first.
+
+   For `skills` specifically, `--apply` only ever sets `id`, `esco_uri`,
+   `label_en`, and `embedding` for a skill that already exists in Supabase —
+   it never overwrites `label_ms`, `is_green`, or `base_importance` once
+   someone has curated them. Those three columns are only seeded (with a
+   placeholder) the first time a skill is created.

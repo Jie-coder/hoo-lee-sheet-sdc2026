@@ -1,7 +1,13 @@
 import { describe, expect, it, vi } from "vitest";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { EMBEDDING_DIMENSIONS } from "../../src/types/contracts";
-import { applyImport, computeEmbeddingsWithReuse, type ApplyInput } from "./apply";
+import {
+  applyImport,
+  computeEmbeddingsWithReuse,
+  occupationEmbeddingText,
+  skillEmbeddingText,
+  type ApplyInput,
+} from "./apply";
 import type { Embedder } from "./clients";
 
 function vector(seed: number): number[] {
@@ -31,6 +37,10 @@ function fakeSupabase(existingByTable: Record<string, Record<string, unknown>[]>
   return { client: client as unknown as SupabaseClient, upserts };
 }
 
+const SKILL_SELECT = "id, label_en, embedding";
+const rebuildSkillText = (row: Record<string, unknown>) =>
+  skillEmbeddingText({ labelEn: String(row.label_en ?? "") });
+
 describe("computeEmbeddingsWithReuse", () => {
   it("embeds every row when the table is empty, in one batched call", async () => {
     const { client } = fakeSupabase({});
@@ -39,7 +49,8 @@ describe("computeEmbeddingsWithReuse", () => {
     const result = await computeEmbeddingsWithReuse(
       client,
       "skills",
-      "label_en",
+      SKILL_SELECT,
+      rebuildSkillText,
       [
         { id: "s1", text: "Data analysis" },
         { id: "s2", text: "Communication" },
@@ -49,8 +60,9 @@ describe("computeEmbeddingsWithReuse", () => {
 
     expect(embedder).toHaveBeenCalledTimes(1);
     expect(embedder).toHaveBeenCalledWith(["Data analysis", "Communication"]);
-    expect(result.get("s1")).toHaveLength(EMBEDDING_DIMENSIONS);
-    expect(result.get("s2")).toHaveLength(EMBEDDING_DIMENSIONS);
+    expect(result.embeddings.get("s1")).toHaveLength(EMBEDDING_DIMENSIONS);
+    expect(result.embeddings.get("s2")).toHaveLength(EMBEDDING_DIMENSIONS);
+    expect(result.existingIds.size).toBe(0);
   });
 
   it("reuses a stored embedding when the text has not changed", async () => {
@@ -63,13 +75,15 @@ describe("computeEmbeddingsWithReuse", () => {
     const result = await computeEmbeddingsWithReuse(
       client,
       "skills",
-      "label_en",
+      SKILL_SELECT,
+      rebuildSkillText,
       [{ id: "s1", text: "Data analysis" }],
       embedder
     );
 
     expect(embedder).not.toHaveBeenCalled();
-    expect(result.get("s1")).toEqual(stored);
+    expect(result.embeddings.get("s1")).toEqual(stored);
+    expect(result.existingIds).toEqual(new Set(["s1"]));
   });
 
   it("re-embeds when the text changed, even if a row already exists", async () => {
@@ -81,13 +95,61 @@ describe("computeEmbeddingsWithReuse", () => {
     const result = await computeEmbeddingsWithReuse(
       client,
       "skills",
-      "label_en",
+      SKILL_SELECT,
+      rebuildSkillText,
       [{ id: "s1", text: "New label" }],
       embedder
     );
 
     expect(embedder).toHaveBeenCalledWith(["New label"]);
-    expect(result.get("s1")).toEqual(vector(50));
+    expect(result.embeddings.get("s1")).toEqual(vector(50));
+  });
+
+  it("reuses a stored occupation embedding when title_en + description together are unchanged", async () => {
+    const stored = vector(3);
+    const { client } = fakeSupabase({
+      occupations: [
+        { id: "o1", title_en: "Data Analyst", description: "Analyses data.", embedding: stored },
+      ],
+    });
+    const embedder: Embedder = vi.fn(async (texts: string[]) => texts.map((_, i) => vector(99 + i)));
+
+    const occupation = { titleEn: "Data Analyst", description: "Analyses data." };
+    const result = await computeEmbeddingsWithReuse(
+      client,
+      "occupations",
+      "id, title_en, description, embedding",
+      (row) =>
+        occupationEmbeddingText({ titleEn: String(row.title_en ?? ""), description: String(row.description ?? "") }),
+      [{ id: "o1", text: occupationEmbeddingText(occupation) }],
+      embedder
+    );
+
+    expect(embedder).not.toHaveBeenCalled();
+    expect(result.embeddings.get("o1")).toEqual(stored);
+  });
+
+  it("re-embeds an occupation when only the description changed (title_en alone still matches)", async () => {
+    const { client } = fakeSupabase({
+      occupations: [
+        { id: "o1", title_en: "Data Analyst", description: "Old description.", embedding: vector(1) },
+      ],
+    });
+    const embedder: Embedder = vi.fn(async (texts: string[]) => texts.map((_, i) => vector(50 + i)));
+
+    const occupation = { titleEn: "Data Analyst", description: "New description." };
+    const result = await computeEmbeddingsWithReuse(
+      client,
+      "occupations",
+      "id, title_en, description, embedding",
+      (row) =>
+        occupationEmbeddingText({ titleEn: String(row.title_en ?? ""), description: String(row.description ?? "") }),
+      [{ id: "o1", text: occupationEmbeddingText(occupation) }],
+      embedder
+    );
+
+    expect(embedder).toHaveBeenCalledWith([occupationEmbeddingText(occupation)]);
+    expect(result.embeddings.get("o1")).toEqual(vector(50));
   });
 });
 
@@ -149,14 +211,51 @@ describe("applyImport", () => {
       },
     ]);
 
-    const skillsUpsert = upserts.find((u) => u.table === "skills");
-    expect(skillsUpsert?.rows[0]).toMatchObject({ id: "00000000-0000-0000-0000-000000000001", label_ms: "Data analysis" });
-    expect((skillsUpsert?.rows[0].embedding as number[]).length).toBe(EMBEDDING_DIMENSIONS);
+    // A brand-new skill: gets the placeholder defaults for the NOT NULL columns.
+    const skillsUpserts = upserts.filter((u) => u.table === "skills");
+    const newSkillRow = skillsUpserts.flatMap((u) => u.rows).find((row) => row.id === "00000000-0000-0000-0000-000000000001");
+    expect(newSkillRow).toMatchObject({ id: "00000000-0000-0000-0000-000000000001", label_ms: "Data analysis", is_green: false, base_importance: 0 });
+    expect((newSkillRow?.embedding as number[]).length).toBe(EMBEDDING_DIMENSIONS);
 
     const occupationsUpsert = upserts.find((u) => u.table === "occupations");
     expect((occupationsUpsert?.rows[0].embedding as number[]).length).toBe(EMBEDDING_DIMENSIONS);
 
     expect(result.skipped.map((s) => s.file)).toEqual(["sources.csv", "keywords.csv", "exposure.csv"]);
+  });
+
+  it("does not clobber label_ms / is_green / base_importance for a skill that already exists", async () => {
+    const { client, upserts } = fakeSupabase({
+      skills: [
+        {
+          id: "s1",
+          label_en: "Data analysis",
+          label_ms: "Analisis data",
+          is_green: true,
+          base_importance: 7,
+          embedding: vector(1),
+        },
+      ],
+    });
+    const embedder: Embedder = vi.fn(async (texts: string[]) => texts.map((_, i) => vector(i)));
+
+    const input: ApplyInput = {
+      ...EMPTY_INPUT,
+      skills: [{ id: "s1", escoUri: "https://data.europa.eu/esco/skill/s1", labelEn: "Data analysis" }],
+    };
+
+    await applyImport(input, client, embedder);
+
+    const skillsUpserts = upserts.filter((u) => u.table === "skills");
+    const existingSkillRow = skillsUpserts.flatMap((u) => u.rows).find((row) => row.id === "s1");
+    expect(existingSkillRow).toEqual({
+      id: "s1",
+      esco_uri: "https://data.europa.eu/esco/skill/s1",
+      label_en: "Data analysis",
+      embedding: vector(1),
+    });
+    expect(existingSkillRow).not.toHaveProperty("label_ms");
+    expect(existingSkillRow).not.toHaveProperty("is_green");
+    expect(existingSkillRow).not.toHaveProperty("base_importance");
   });
 
   it("reports a table error instead of throwing when Supabase rejects a row", async () => {
@@ -195,5 +294,30 @@ describe("applyImport", () => {
     const result = await applyImport(input, client, embedder);
     const coursesResult = result.tables.find((t) => t.table === "courses");
     expect(coursesResult).toMatchObject({ upserted: 0, error: "duplicate key value" });
+  });
+
+  it("chunks a large upsert into batches of 500 rows", async () => {
+    const { client, upserts } = fakeSupabase({});
+    const embedder: Embedder = vi.fn(async (texts: string[]) => texts.map((_, i) => vector(i)));
+
+    const courses = Array.from({ length: 1200 }, (_, i) => ({
+      id: `c${i}`,
+      title: "t",
+      provider: "p",
+      url: "https://example.com",
+      languages: ["en" as const],
+      hours: 1,
+      costType: "free" as const,
+      certificate: true,
+      skillIds: [],
+      lastChecked: "2026-10-01",
+    }));
+
+    const result = await applyImport({ ...EMPTY_INPUT, courses }, client, embedder);
+
+    const coursesUpserts = upserts.filter((u) => u.table === "courses");
+    expect(coursesUpserts).toHaveLength(3);
+    expect(coursesUpserts.map((u) => u.rows.length)).toEqual([500, 500, 200]);
+    expect(result.tables.find((t) => t.table === "courses")).toMatchObject({ upserted: 1200 });
   });
 });

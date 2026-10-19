@@ -1,7 +1,10 @@
-import { describe, expect, it, vi } from "vitest";
+import { mkdtempSync, rmSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { EMBEDDING_DIMENSIONS } from "../src/types/contracts";
-import { runImport } from "./import-data";
+import { runCli, runImport } from "./import-data";
 import type { Embedder } from "./lib/clients";
 
 const VALID_DIR = "scripts/fixtures/valid";
@@ -163,5 +166,92 @@ describe("runImport (--apply)", () => {
       "keywords.csv",
       "exposure.csv",
     ]);
+  });
+});
+
+describe("runCli --apply env resolution", () => {
+  const dirs: string[] = [];
+  afterEach(() => {
+    for (const dir of dirs.splice(0)) rmSync(dir, { recursive: true, force: true });
+  });
+
+  it("exits 1 with a clear message when .env.local does not exist, without touching process.env", async () => {
+    const cwd = mkdtempSync(join(tmpdir(), "laluan-cli-"));
+    dirs.push(cwd);
+
+    const previous = { ...process.env };
+    process.env.SUPABASE_URL = "https://ambient.supabase.co";
+    process.env.SUPABASE_SERVICE_ROLE_KEY = "ambient-secret";
+    process.env.GEMINI_API_KEY = "ambient-gemini-secret";
+    try {
+      const result = await runCli(["--apply", "--dir", "scripts/fixtures/valid"], cwd);
+      expect(result.exitCode).toBe(1);
+      expect(result.stderr.join("\n")).toContain(".env.local");
+      expect(result.stderr.join("\n")).toContain("SUPABASE_URL");
+      expect(result.stderr.join("\n")).not.toContain("ambient-secret");
+      expect(result.stderr.join("\n")).not.toContain("ambient-gemini-secret");
+    } finally {
+      process.env = previous;
+    }
+  });
+
+  it("lists only the missing variable names when .env.local exists but is incomplete, and never leaks a value", async () => {
+    const cwd = mkdtempSync(join(tmpdir(), "laluan-cli-"));
+    dirs.push(cwd);
+    writeFileSync(join(cwd, ".env.local"), "SUPABASE_SERVICE_ROLE_KEY=super-secret-value\n");
+
+    const result = await runCli(["--apply", "--dir", "scripts/fixtures/valid"], cwd);
+    expect(result.exitCode).toBe(1);
+    const output = result.stderr.join("\n");
+    expect(output).toContain("SUPABASE_URL");
+    expect(output).toContain("GEMINI_API_KEY");
+    expect(output).not.toContain("super-secret-value");
+  });
+
+  it("ignores process.env even when .env.local exists and is complete, using only the file's values", async () => {
+    const cwd = mkdtempSync(join(tmpdir(), "laluan-cli-"));
+    dirs.push(cwd);
+    writeFileSync(
+      join(cwd, ".env.local"),
+      "SUPABASE_URL=https://example.supabase.co\nSUPABASE_SERVICE_ROLE_KEY=file-secret\nGEMINI_API_KEY=file-gemini-secret\n"
+    );
+
+    const previous = process.env.SUPABASE_SERVICE_ROLE_KEY;
+    process.env.SUPABASE_SERVICE_ROLE_KEY = "ambient-secret-should-be-ignored";
+    const seenEnvs: unknown[] = [];
+    const createSupabaseClient = vi.fn((env: unknown) => {
+      seenEnvs.push(env);
+      return {
+        from: () => ({
+          select: () => ({ in: () => Promise.resolve({ data: [] }) }),
+          upsert: () => Promise.resolve({ error: null }),
+        }),
+      } as unknown as SupabaseClient;
+    });
+    const createEmbedder = vi.fn(() => (vi.fn(async () => []) as unknown) as Embedder);
+    try {
+      const result = await runCli(["--apply", "--dir", "scripts/fixtures/valid"], cwd, {
+        createSupabaseClient,
+        createEmbedder,
+      });
+      expect(result.stderr.join("\n")).not.toContain("missing required environment variable");
+      expect(seenEnvs).toEqual([
+        { supabaseUrl: "https://example.supabase.co", supabaseServiceRoleKey: "file-secret", geminiApiKey: "file-gemini-secret" },
+      ]);
+      expect(result.stdout.join("\n") + result.stderr.join("\n")).not.toContain(
+        "ambient-secret-should-be-ignored"
+      );
+    } finally {
+      if (previous === undefined) delete process.env.SUPABASE_SERVICE_ROLE_KEY;
+      else process.env.SUPABASE_SERVICE_ROLE_KEY = previous;
+    }
+  });
+
+  it("dry run never reaches env resolution or the clients module", async () => {
+    const cwd = mkdtempSync(join(tmpdir(), "laluan-cli-"));
+    dirs.push(cwd);
+    const result = await runCli(["--dir", "scripts/fixtures/valid"], cwd);
+    expect(result.exitCode).toBe(0);
+    expect(result.stderr).toEqual([]);
   });
 });

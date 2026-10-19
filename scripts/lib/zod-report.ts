@@ -10,7 +10,7 @@ function camelToSnake(value: string): string {
 type EnumIssue = { code: "invalid_value"; values?: unknown[] };
 type FormatIssue = { code: "invalid_format"; format?: string };
 
-function hintFor(issue: z.core.$ZodIssue): string | undefined {
+function hintFor(issue: z.core.$ZodIssue, column: string | undefined): string | undefined {
   if (issue.code === "invalid_value") {
     const values = (issue as EnumIssue).values;
     if (Array.isArray(values) && values.length > 0) {
@@ -22,7 +22,20 @@ function hintFor(issue: z.core.$ZodIssue): string | undefined {
     if (format === "date") return "use YYYY-MM-DD";
     if (format === "url") return "must be a full URL, e.g. https://example.com";
   }
-  if (issue.code === "too_small") return "value is required / too short";
+  if (issue.code === "custom") {
+    if (issue.message.includes('"any" cannot be combined')) {
+      return 'use "any" on its own, or list specific statuses';
+    }
+    if (issue.message.includes('"all" cannot be combined')) {
+      return 'use "all" on its own, or list specific states';
+    }
+  }
+  if (issue.code === "too_small") {
+    if (column === "licence") {
+      return "fill in the licence; a source with unclear or no-reuse terms can't be used for scoring";
+    }
+    return "value is required / too short";
+  }
   return undefined;
 }
 
@@ -52,7 +65,7 @@ export function zodErrorToIssues(
       column,
       value: column !== undefined ? options.raw[column] : undefined,
       message: issue.message,
-      hint: hintFor(issue),
+      hint: hintFor(issue, column),
       severity: "error" as const,
     };
   });

@@ -40,6 +40,16 @@ export const APPLY_SKIPPED_FILES: SkippedFile[] = [
   },
 ];
 
+/** The text embedded for one occupation: must match how a stored row's text is rebuilt below. */
+export function occupationEmbeddingText(occupation: { titleEn: string; description: string }): string {
+  return [occupation.titleEn, occupation.description].filter(Boolean).join(". ");
+}
+
+/** The text embedded for one skill: must match how a stored row's text is rebuilt below. */
+export function skillEmbeddingText(skill: { labelEn: string }): string {
+  return skill.labelEn;
+}
+
 function parseStoredEmbedding(value: unknown): number[] | null {
   if (Array.isArray(value)) return value as number[];
   if (typeof value === "string") {
@@ -53,42 +63,47 @@ function parseStoredEmbedding(value: unknown): number[] | null {
   return null;
 }
 
+export type EmbeddingReuseResult = {
+  embeddings: Map<string, number[]>;
+  /** Ids already present in the table, from the same select used for reuse — avoids a second query to tell new rows from existing ones. */
+  existingIds: Set<string>;
+};
+
 /**
  * Computes one embedding per row, reusing a previously stored vector when
- * the embedding text has not changed. Falls back to embedding everything
- * when the existing rows cannot be read (for example, the table is empty).
+ * the embedding text has not changed. `rebuildStoredText` must rebuild the
+ * same text a stored row would produce today (via occupationEmbeddingText /
+ * skillEmbeddingText), so the comparison is against the full embedded text,
+ * not just one column. Falls back to embedding everything when the existing
+ * rows cannot be read (for example, the table is empty).
  */
 export async function computeEmbeddingsWithReuse(
   supabase: SupabaseClient,
   table: "occupations" | "skills",
-  textColumn: "title_en" | "label_en",
+  selectColumns: string,
+  rebuildStoredText: (row: Record<string, unknown>) => string,
   rows: { id: string; text: string }[],
   embedder: Embedder
-): Promise<Map<string, number[]>> {
-  const result = new Map<string, number[]>();
-  if (rows.length === 0) return result;
+): Promise<EmbeddingReuseResult> {
+  const embeddings = new Map<string, number[]>();
+  if (rows.length === 0) return { embeddings, existingIds: new Set() };
 
   const ids = rows.map((row) => row.id);
-  const { data: existing } = await supabase
-    .from(table)
-    .select(`id, ${textColumn}, embedding`)
-    .in("id", ids);
+  const { data: existing } = (await supabase.from(table).select(selectColumns).in("id", ids)) as {
+    data: Record<string, unknown>[] | null;
+  };
 
   const existingById = new Map<string, Record<string, unknown>>(
-    (existing ?? []).map((row: Record<string, unknown>) => [String(row.id), row])
+    (existing ?? []).map((row) => [String(row.id), row])
   );
 
   const toEmbed: { id: string; text: string }[] = [];
   for (const row of rows) {
     const prior = existingById.get(row.id);
     const priorEmbedding = prior ? parseStoredEmbedding(prior.embedding) : null;
-    if (
-      prior &&
-      prior[textColumn] === row.text &&
-      priorEmbedding &&
-      priorEmbedding.length === EMBEDDING_DIMENSIONS
-    ) {
-      result.set(row.id, priorEmbedding);
+    const priorText = prior ? rebuildStoredText(prior) : null;
+    if (prior && priorText === row.text && priorEmbedding && priorEmbedding.length === EMBEDDING_DIMENSIONS) {
+      embeddings.set(row.id, priorEmbedding);
     } else {
       toEmbed.push(row);
     }
@@ -96,11 +111,14 @@ export async function computeEmbeddingsWithReuse(
 
   if (toEmbed.length > 0) {
     const vectors = await embedder(toEmbed.map((row) => row.text));
-    toEmbed.forEach((row, index) => result.set(row.id, vectors[index]));
+    toEmbed.forEach((row, index) => embeddings.set(row.id, vectors[index]));
   }
 
-  return result;
+  return { embeddings, existingIds: new Set(existingById.keys()) };
 }
+
+/** PostgREST / Supabase requests are more reliable in batches than as one giant array. */
+const UPSERT_CHUNK_SIZE = 500;
 
 async function upsert(
   supabase: SupabaseClient,
@@ -108,9 +126,21 @@ async function upsert(
   rows: Record<string, unknown>[]
 ): Promise<TableResult> {
   if (rows.length === 0) return { table, upserted: 0 };
-  const { error } = await supabase.from(table).upsert(rows, { onConflict: "id" });
-  if (error) return { table, upserted: 0, error: error.message };
-  return { table, upserted: rows.length };
+  let upserted = 0;
+  for (let i = 0; i < rows.length; i += UPSERT_CHUNK_SIZE) {
+    const chunk = rows.slice(i, i + UPSERT_CHUNK_SIZE);
+    const { error } = await supabase.from(table).upsert(chunk, { onConflict: "id" });
+    if (error) return { table, upserted, error: error.message };
+    upserted += chunk.length;
+  }
+  return { table, upserted };
+}
+
+/** Combines two upserts against the same table into one reported result. */
+function combineTableResults(table: string, results: TableResult[]): TableResult {
+  const upserted = results.reduce((total, result) => total + result.upserted, 0);
+  const failed = results.find((result) => result.error);
+  return failed ? { table, upserted, error: failed.error } : { table, upserted };
 }
 
 export async function applyImport(
@@ -120,37 +150,53 @@ export async function applyImport(
 ): Promise<ApplyResult> {
   const tables: TableResult[] = [];
 
-  const skillEmbeddings = await computeEmbeddingsWithReuse(
+  const skillEmbeddingResult = await computeEmbeddingsWithReuse(
     supabase,
     "skills",
-    "label_en",
-    input.skills.map((skill) => ({ id: skill.id, text: skill.labelEn })),
+    "id, label_en, embedding",
+    (row) => skillEmbeddingText({ labelEn: String(row.label_en ?? "") }),
+    input.skills.map((skill) => ({ id: skill.id, text: skillEmbeddingText(skill) })),
     embedder
   );
-  tables.push(
-    await upsert(
-      supabase,
-      "skills",
-      input.skills.map((skill) => ({
-        id: skill.id,
-        esco_uri: skill.escoUri,
-        label_en: skill.labelEn,
-        label_ms: skill.labelEn,
-        is_green: false,
-        base_importance: 0,
-        embedding: skillEmbeddings.get(skill.id) ?? null,
-      }))
-    )
-  );
 
-  const occupationEmbeddings = await computeEmbeddingsWithReuse(
+  // Existing skills: update only the columns this importer owns, leaving
+  // label_ms / is_green / base_importance as whoever curated them set them.
+  // New skills: also seed those NOT NULL columns with placeholder defaults.
+  const existingSkills = input.skills.filter((skill) => skillEmbeddingResult.existingIds.has(skill.id));
+  const newSkills = input.skills.filter((skill) => !skillEmbeddingResult.existingIds.has(skill.id));
+
+  const existingSkillsResult = await upsert(
+    supabase,
+    "skills",
+    existingSkills.map((skill) => ({
+      id: skill.id,
+      esco_uri: skill.escoUri,
+      label_en: skill.labelEn,
+      embedding: skillEmbeddingResult.embeddings.get(skill.id) ?? null,
+    }))
+  );
+  const newSkillsResult = await upsert(
+    supabase,
+    "skills",
+    newSkills.map((skill) => ({
+      id: skill.id,
+      esco_uri: skill.escoUri,
+      label_en: skill.labelEn,
+      label_ms: skill.labelEn,
+      is_green: false,
+      base_importance: 0,
+      embedding: skillEmbeddingResult.embeddings.get(skill.id) ?? null,
+    }))
+  );
+  tables.push(combineTableResults("skills", [existingSkillsResult, newSkillsResult]));
+
+  const occupationEmbeddingResult = await computeEmbeddingsWithReuse(
     supabase,
     "occupations",
-    "title_en",
-    input.occupations.map((occupation) => ({
-      id: occupation.id,
-      text: [occupation.titleEn, occupation.description].filter(Boolean).join(". "),
-    })),
+    "id, title_en, description, embedding",
+    (row) =>
+      occupationEmbeddingText({ titleEn: String(row.title_en ?? ""), description: String(row.description ?? "") }),
+    input.occupations.map((occupation) => ({ id: occupation.id, text: occupationEmbeddingText(occupation) })),
     embedder
   );
   tables.push(
@@ -166,7 +212,7 @@ export async function applyImport(
         description: occupation.description,
         cluster: occupation.cluster,
         is_emerging: occupation.isEmerging,
-        embedding: occupationEmbeddings.get(occupation.id) ?? null,
+        embedding: occupationEmbeddingResult.embeddings.get(occupation.id) ?? null,
       }))
     )
   );
