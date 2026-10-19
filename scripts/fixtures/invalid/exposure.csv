@@ -1,0 +1,3 @@
+occupation,code,exposure_value,scale,source_name,source_url,table_or_page,as_of,notes
+Data Analyst,2512,0.62,0-1,Contoso AI Exposure Index,https://example.com/data/ai-exposure-index,Table 3,2026/09/01,bad as_of date format on purpose
+Mystery Occupation,9999,0.40,0-1,Contoso AI Exposure Index,not-a-valid-url,Table 4,2026-09-02,bad source_url on purpose

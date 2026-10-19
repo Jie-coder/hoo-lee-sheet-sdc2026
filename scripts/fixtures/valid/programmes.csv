@@ -1,0 +1,4 @@
+id,name,agency,url,benefits,cost_type,deadline,age_min,age_max,citizen,employment,perkeso_contributor,states,last_checked,notes
+p001,Reskilling Grant,Contoso Workforce Agency,https://example.com/programmes/reskilling-grant,Covers course fees up to MYR 2000.,subsidised,2026-12-31,18,,yes,any,,all,2026-10-01,
+p002,Displaced Worker Support,Contoso Workforce Agency,https://example.com/programmes/displaced-worker-support,Monthly allowance while retraining.,free,,,,,"unemployed,underemployed",yes,"selangor,kuala_lumpur",2026-10-02,perkeso_contributor required
+p003,Self-Employed Upskilling,Contoso Workforce Agency,https://example.com/programmes/self-employed-upskilling,HRD Corp claimable course credit.,hrdcorp_claimable,,21,60,,self_employed,no,"johor,melaka",2026-10-03,age range from official FAQ

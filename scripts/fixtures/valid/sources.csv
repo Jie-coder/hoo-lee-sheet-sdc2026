@@ -1,0 +1,3 @@
+name,url,publisher,what_it_measures,update_frequency,last_updated,data_format,licence,use_for,notes
+Contoso AI Exposure Index,https://example.com/data/ai-exposure-index,Contoso Labs,Occupation-level AI exposure score,annual,2026-09-01,CSV,CC-BY-4.0,exposure,
+Contoso Skill Momentum Feed,https://example.com/data/skill-momentum,Contoso Labs,arXiv mention counts per skill keyword,weekly,2026-10-15,API,CC0-1.0,trend,refreshed every Monday

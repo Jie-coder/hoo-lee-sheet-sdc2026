@@ -57,3 +57,67 @@ Drop keywords with fewer than 20 papers in the last 90 days, and keywords that a
 `occupation, code (ISCO or ESCO), exposure_value (copied as published), scale (e.g. 0-1, %, ILO gradient 1-4), source_name, source_url, table_or_page, as_of, notes`
 
 Never invent a number. If there's no exact match, use the closest occupation and explain the match in `notes`.
+
+## Peter: occupations.csv (proposed — not finalised yet)
+
+`data/README.md` does not define this file yet; `scripts/import-data.ts` proposes the
+format below so Peter's draft occupation list has somewhere to land, and so
+`exposure.csv` rows can be checked against it. It mirrors the
+`public.occupations` table in `supabase/migrations/` and the `ClusterId` enum
+in `src/types/contracts.ts`. Open a PR against this section if the shape
+should change before Peter starts filling it in.
+
+### `occupations.csv` (proposed)
+| column | values |
+|---|---|
+| id | o001, o002, ... |
+| esco_uri | `https://data.europa.eu/esco/occupation/<uuid>`, or blank if no match yet |
+| isco_code | ISCO-08 code, or blank |
+| title_en, title_ms | as shown on the official ESCO/ISCO page |
+| description | one or two sentences in our own words |
+| cluster | ai_digital, data_analytics, green_sustainability, human_care, routine_clerical |
+| is_emerging | yes / no |
+| last_checked | YYYY-MM-DD |
+| notes | anything uncertain, including how a fuzzy exposure.csv match was chosen |
+
+## Checking your file before you hand it in
+
+`scripts/import-data.ts` reads every file above and tells you exactly which
+row and column is wrong — row 1 is the header, so "row 2" means your first
+data row. It never touches Supabase or Gemini unless you pass `--apply`, so
+it is always safe to run.
+
+1. Export your sheet as CSV and save it under `data/`, using the exact
+   filename from the table above (for example `data/courses.csv`).
+2. Once per checkout: `npm ci`.
+3. Run the check, scoped to your file:
+   ```
+   npm run import-data -- --only courses       # Tiffany: courses.csv
+   npm run import-data -- --only programmes     # Tiffany: programmes.csv
+   npm run import-data -- --only sources         # Henry: sources.csv
+   npm run import-data -- --only keywords         # Henry: keywords.csv
+   npm run import-data -- --only exposure         # Henry: exposure.csv
+   npm run import-data -- --only occupations      # Peter: occupations.csv
+   ```
+   (Leave off `--only` to check every file in `data/` at once.)
+4. Read the report top to bottom. Each `[ERROR]` line names the row, the
+   column, the value it read, and a one-line fix. `[WARNING]` lines (for
+   example a keyword under 20 papers, or an `exposure.csv` row that doesn't
+   match anything in `sources.csv`/`occupations.csv`) are worth a look but
+   don't block anything. Fix the CSV, not the script, and re-run.
+5. The command exits with a non-zero status when there are any `[ERROR]`s —
+   if you're scripting this, check the exit code; otherwise the totals line
+   at the end ("N error(s)") says the same thing.
+6. `--apply` (writes the valid rows to Supabase, and calls Gemini to embed
+   occupations and skills) is for whoever holds the Supabase service-role
+   key and Gemini key in their own `.env.local` — not needed for the checks
+   above, and it refuses to run at all while any file has an `[ERROR]`. It
+   reads those three secrets only from `.env.local` in the repo root (never
+   from an already-exported shell variable), so copy `.env.example` to
+   `.env.local` and fill it in first.
+
+   For `skills` specifically, `--apply` only ever sets `id`, `esco_uri`,
+   `label_en`, and `embedding` for a skill that already exists in Supabase —
+   it never overwrites `label_ms`, `is_green`, or `base_importance` once
+   someone has curated them. Those three columns are only seeded (with a
+   placeholder) the first time a skill is created.
