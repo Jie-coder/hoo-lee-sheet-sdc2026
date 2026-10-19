@@ -1,0 +1,21 @@
+{
+  "summary": "Sample analysis of the example input text.",
+  "category": "Example category",
+  "severity": "medium",
+  "confidence": 0.75,
+  "key_points": [
+    "First example key point",
+    "Second example key point",
+    "Third example key point"
+  ],
+  "next_steps": [
+    {
+      "action": "Review the example finding",
+      "reason": "Illustrates how next steps are structured"
+    },
+    {
+      "action": "Share the example result with the team",
+      "reason": "Demonstrates a second next step entry"
+    }
+  ]
+}
