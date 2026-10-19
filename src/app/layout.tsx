@@ -44,6 +44,12 @@ export const metadata: Metadata = {
   },
   description:
     "Laluan reads a CV, scores how AI touches the work, and supports a reskilling decision. It does not make hiring decisions.",
+  icons: {
+    icon: [
+      { url: "/brand/laluan-favicon.svg", type: "image/svg+xml" },
+      { url: "/brand/laluan-favicon.png", type: "image/png" },
+    ],
+  },
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
