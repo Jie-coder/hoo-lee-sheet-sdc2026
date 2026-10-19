@@ -14,7 +14,7 @@ Section 08 contracts (`ParsedCV`, `RoleResult`, `PlanStep`, and the analyze resp
 | `SdgTargetId` | A target id such as `"8.6"`. Goal-only labels are rejected. |
 | `ScenarioId` | `co`, `dis`, or `sup`. |
 | `CostType` | `free`, `subsidised`, `hrdcorp_claimable`, or `paid`, in that pathway order. |
-| `LanguageCode` | `en`, `ms`, or `both`. |
+| `LanguageCode` | `en`, `ms`, or `zh`. |
 | `AiUsage` | `none`, `tried`, `occasional`, or `regular`. |
 | `AgeBand` | Interview age chip. `AGE_BAND_RANGES` gives inclusive min/max for eligibility. |
 | `MalaysiaState` | State or federal territory code used by slots and eligibility. |
@@ -26,7 +26,7 @@ Section 08 contracts (`ParsedCV`, `RoleResult`, `PlanStep`, and the analyze resp
 | `ParsedCV` | CV parse: optional name, roles, skills, education, languages. |
 | `TaskShare` | A current task (`text`) plus its fraction of the week (`share` in `[0, 1]`). |
 | `PartialSlots` | Interview slots filled so far. Omitted keys are unknown. |
-| `Slots` | Complete section 03 slots. Task shares must sum to 1. `budget` is MYR (0 = none). `hours_per_week` is at most 168. |
+| `Slots` | Complete section 03 slots. Task shares must sum to 1. `languages` is one or more of `en`, `ms`, `zh`. `budget` is MYR (0 = none). `hours_per_week` is at most 168. |
 | `InterviewTurn` | Question, chips, `filled` partial slots, and `done`. |
 | `GapSkill` | Missing skill: `skillId`, label, importance. At most five on a role card. |
 | `ScenarioScores` | Ranking score `R` for `co`, `dis`, and `sup`. |
@@ -36,9 +36,9 @@ Section 08 contracts (`ParsedCV`, `RoleResult`, `PlanStep`, and the analyze resp
 | `CurrentWorkScores` | Exposure and augmentation of the user's current work, with sources. |
 | `AnalyzeResponse` | Current-work scores, role cards, and the `signalsAsOf` they were computed from. |
 | `ProgrammeEligibility` | Section 07 eligibility JSON. Null turns a rule off. `"any"` / `"all"` stand alone. |
-| `Course` | Curated course the pathway cites by id. |
+| `Course` | Curated course the pathway cites by id. `languages` lists every language it is offered in. |
 | `Programme` | Government programme, including eligibility and a cost type for ordering. |
 | `PlanStep` | ID-only step: course or `program`, 1-based weeks, skills closed, optional SDG target, why. |
 | `PathwayPlan` | Steps for one occupation. No profile id. URLs are resolved from the catalogue, not written by the model. |
 
-`MAX_INTERVIEW_TURNS` is 8. Skill-level SDG links use `SdgLink` with `subject.kind === "skill"`; they are not copied onto the gap array. A role card's `sdg` list is one to three links whose subject is that occupation.
+`MAX_INTERVIEW_TURNS` is 5. A course matches a user's language preference when the two `languages` lists intersect. Skill-level SDG links use `SdgLink` with `subject.kind === "skill"`; they are not copied onto the gap array. A role card's `sdg` list is one to three links whose subject is that occupation.

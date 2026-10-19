@@ -43,8 +43,8 @@ export const COST_TYPES = ["free", "subsidised", "hrdcorp_claimable", "paid"] as
 export const CostTypeSchema = z.enum(COST_TYPES);
 export type CostType = z.infer<typeof CostTypeSchema>;
 
-/** Study or course language. "both" means BM and English are acceptable. */
-export const LANGUAGE_CODES = ["en", "ms", "both"] as const;
+/** Study or course language: English, Bahasa Melayu, or Chinese. */
+export const LANGUAGE_CODES = ["en", "ms", "zh"] as const;
 export const LanguageCodeSchema = z.enum(LANGUAGE_CODES);
 export type LanguageCode = z.infer<typeof LanguageCodeSchema>;
 
@@ -112,7 +112,7 @@ export const ImpactInterestSchema = z.enum(IMPACT_INTERESTS);
 export type ImpactInterest = z.infer<typeof ImpactInterestSchema>;
 
 /** Interview asks at most this many questions, then stops (section 03). */
-export const MAX_INTERVIEW_TURNS = 8;
+export const MAX_INTERVIEW_TURNS = 5;
 
 /** Task shares on a complete Slots object must add up to 1 within this tolerance. */
 const TASK_SHARE_TOLERANCE = 0.02;
@@ -201,7 +201,7 @@ const slotsObject = z.strictObject({
   ai_usage: AiUsageSchema,
   hours_per_week: z.number().min(0).max(168),
   budget: z.number().nonnegative(),
-  language: LanguageCodeSchema,
+  languages: z.array(LanguageCodeSchema).min(1),
   age_band: AgeBandSchema,
   state: MalaysiaStateSchema,
   employment_status: EmploymentStatusSchema,
@@ -219,7 +219,8 @@ export type PartialSlots = z.infer<typeof PartialSlotsSchema>;
 /**
  * Complete interview slots from section 03. Keys stay snake_case, matching the
  * slot table. `budget` is MYR the user can spend (0 means none). Task shares
- * must sum to 1. `perkeso_contributor` is only true or false here; a missing
+ * must sum to 1. `languages` is one or more of en, ms, zh (multi-select).
+ * `perkeso_contributor` is only true or false here; a missing
  * answer lives on PartialSlots, not as null.
  */
 export const SlotsSchema = slotsObject
@@ -412,14 +413,17 @@ export const ProgrammeEligibilitySchema = z
   .describe("Eligibility rules stored on a programme. Null means the rule is off.");
 export type ProgrammeEligibility = z.infer<typeof ProgrammeEligibilitySchema>;
 
-/** A curated course. skillIds are ESCO ids. costType uses the shared cost union. */
+/**
+ * A curated course. skillIds are ESCO ids. costType uses the shared cost union.
+ * `languages` lists every language the course is offered in (at least one).
+ */
 export const CourseSchema = z
   .strictObject({
     id: z.string().min(1),
     title: z.string().min(1),
     provider: z.string().min(1),
     url: z.url(),
-    language: LanguageCodeSchema,
+    languages: z.array(LanguageCodeSchema).min(1),
     hours: z.number().positive(),
     costType: CostTypeSchema,
     certificate: z.boolean(),
