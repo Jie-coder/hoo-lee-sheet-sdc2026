@@ -74,7 +74,7 @@ export function ResultsView({ initial }: { initial: ResultsExample }) {
   }
 
   return (
-    <div className="bg-paper pb-24 text-ink">
+    <div className="bg-paper pb-32 text-ink sm:pb-16">
       <div className="mx-auto max-w-[1248px] px-4 sm:px-6">
         <section className="flex flex-col gap-3 pt-7 pb-5 sm:flex-row sm:items-end sm:justify-between">
           <div>

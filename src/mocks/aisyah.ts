@@ -153,7 +153,6 @@ function buildSnapshot(
     "https://export.arxiv.org/api/query?search_query=all:skills",
     asOf,
   );
-  const osdg = source("OSDG classifier", "2025-06-01", "https://www.osdg.ai/", asOf);
   const onet = source("O*NET Green", "2025-08-01", "https://www.onetonline.org/", asOf);
   const rules = source(
     "Laluan SDG transition rules",
@@ -203,8 +202,8 @@ function buildSnapshot(
           "transition",
           "supporting",
           0.61,
-          "OSDG marks this youth transition toward decent work at 0.61.",
-          osdg,
+          "Moving into this digital role as a young worker is the youth transition toward decent work that target 8.6 is about.",
+          rules,
         ),
       ],
       sources: [esco, arxiv],
@@ -242,8 +241,8 @@ function buildSnapshot(
           "transition",
           "supporting",
           0.58,
-          "OSDG links the skills this role asks for to target 4.4 at 0.58.",
-          osdg,
+          "The skills this role asks for are the practical training that target 4.4 is about.",
+          rules,
         ),
         occupationLink(
           CX,
@@ -255,7 +254,7 @@ function buildSnapshot(
           source("UN SDG target text", "2025-01-01", "https://sdgs.un.org/goals/goal10", asOf),
         ),
       ],
-      sources: [esco, osdg],
+      sources: [esco, rules],
       signalsAsOf: asOf,
       explanation: "Ranks lower when the scenario punishes customer-facing routine work.",
     },
@@ -290,8 +289,8 @@ function buildSnapshot(
           "role",
           "supporting",
           0.72,
-          "OSDG reads the occupation text as sustainability reporting, target 12.6, at 0.72.",
-          osdg,
+          "The occupation description centers on sustainability reporting, which is what target 12.6 is about.",
+          escoGreen,
         ),
         occupationLink(
           ESG,
@@ -313,12 +312,12 @@ function buildSnapshot(
     skillLink("power-query", "4.4", "direct", 0.9, "Learning this skill is the training step in target 4.4.", rules),
     skillLink("sql-basics", "4.4", "direct", 0.9, "Learning this skill is the training step in target 4.4.", rules),
     skillLink("looker-studio", "4.4", "direct", 0.88, "Learning this skill is the training step in target 4.4.", rules),
-    skillLink("check-ai-output", "4.4", "supporting", 0.62, "OSDG links checking model output to skills training at 0.62.", osdg),
-    skillLink("process-documentation", "8.2", "supporting", 0.55, "OSDG links process documentation to productivity, target 8.2, at 0.55.", osdg),
+    skillLink("check-ai-output", "4.4", "supporting", 0.62, "Checking model output builds the practical skills target 4.4 is about.", rules),
+    skillLink("process-documentation", "8.2", "supporting", 0.55, "Documenting processes well is the productivity gain target 8.2 is about.", rules),
     skillLink("crm-tools", "4.4", "direct", 0.86, "Learning this skill is the training step in target 4.4.", rules),
-    skillLink("ai-reply-drafting", "4.4", "supporting", 0.57, "OSDG links assisted writing practice to target 4.4 at 0.57.", osdg),
+    skillLink("ai-reply-drafting", "4.4", "supporting", 0.57, "Practising AI-assisted writing is the skills training target 4.4 is about.", rules),
     skillLink("complaint-handling", "8.5", "direct", 0.8, "This skill is part of delivering decent customer work, target 8.5.", rules),
-    skillLink("feedback-analysis", "8.2", "supporting", 0.54, "OSDG links feedback analysis to productivity, target 8.2, at 0.54.", osdg),
+    skillLink("feedback-analysis", "8.2", "supporting", 0.54, "Analysing customer feedback well is the productivity gain target 8.2 is about.", rules),
     skillLink(
       "accessible-service",
       "10.2",
@@ -328,8 +327,8 @@ function buildSnapshot(
       source("UN SDG target text", "2025-01-01", "https://sdgs.un.org/goals/goal10", asOf),
     ),
     skillLink("carbon-accounting", "13.3", "direct", 0.91, "This skill is climate literacy applied at work, target 13.3.", onet),
-    skillLink("bursa-reporting", "12.6", "supporting", 0.73, "OSDG links sustainability reporting practice to target 12.6 at 0.73.", osdg),
-    skillLink("esg-data-collection", "12.6", "supporting", 0.7, "OSDG links ESG data collection to reporting, target 12.6, at 0.70.", osdg),
+    skillLink("bursa-reporting", "12.6", "supporting", 0.73, "Practising sustainability reporting is what target 12.6 is about.", escoGreen),
+    skillLink("esg-data-collection", "12.6", "supporting", 0.7, "Collecting ESG data is the reporting work target 12.6 is about.", escoGreen),
     skillLink("supplier-surveys", "12.6", "direct", 0.8, "Supplier data is how this role reports, which is target 12.6.", escoGreen),
     skillLink("report-writing", "4.4", "direct", 0.84, "Practising report writing is the training step in target 4.4.", rules),
   ];
