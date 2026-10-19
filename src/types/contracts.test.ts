@@ -6,6 +6,9 @@ import {
   CourseSchema,
   GapSkillSchema,
   InterviewTurnSchema,
+  LANGUAGE_CODES,
+  LanguageCodeSchema,
+  MAX_INTERVIEW_TURNS,
   ParsedCVSchema,
   PathwayPlanSchema,
   PlanStepSchema,
@@ -63,7 +66,7 @@ const slots: Slots = {
   ai_usage: "tried",
   hours_per_week: 6,
   budget: 0,
-  language: "both",
+  languages: ["ms", "en"],
   age_band: "18-24",
   state: "pulau_pinang",
   employment_status: "underemployed",
@@ -106,6 +109,31 @@ describe("Slots", () => {
 
   it("rejects more hours than a week has", () => {
     expect(SlotsSchema.safeParse({ ...slots, hours_per_week: 200 }).success).toBe(false);
+  });
+
+  it("rejects an empty language list", () => {
+    expect(SlotsSchema.safeParse({ ...slots, languages: [] }).success).toBe(false);
+  });
+
+  it("accepts Chinese as a study language", () => {
+    expect(SlotsSchema.parse({ ...slots, languages: ["zh"] }).languages).toEqual(["zh"]);
+  });
+});
+
+describe("LanguageCode", () => {
+  it("is English, Malay, or Chinese", () => {
+    expect(LANGUAGE_CODES).toEqual(["en", "ms", "zh"]);
+    expect(LanguageCodeSchema.parse("zh")).toBe("zh");
+  });
+
+  it("rejects the removed both value", () => {
+    expect(LanguageCodeSchema.safeParse("both").success).toBe(false);
+  });
+});
+
+describe("MAX_INTERVIEW_TURNS", () => {
+  it("stops after five questions", () => {
+    expect(MAX_INTERVIEW_TURNS).toBe(5);
   });
 });
 
@@ -292,7 +320,7 @@ describe("catalogue and pathway", () => {
         title: "Excel for operations",
         provider: "HRD Corp e-LATiH",
         url: "https://elatih.hrdcorp.gov.my/course/excel",
-        language: "both",
+        languages: ["en", "ms"],
         hours: 4,
         costType: "free",
         certificate: false,
@@ -300,6 +328,36 @@ describe("catalogue and pathway", () => {
         lastChecked: "2026-10-01",
       }).costType,
     ).toBe("free");
+
+    expect(
+      CourseSchema.safeParse({
+        id: "elatih-excel",
+        title: "Excel for operations",
+        provider: "HRD Corp e-LATiH",
+        url: "https://elatih.hrdcorp.gov.my/course/excel",
+        language: "en",
+        hours: 4,
+        costType: "free",
+        certificate: false,
+        skillIds: ["spreadsheets"],
+        lastChecked: "2026-10-01",
+      }).success,
+    ).toBe(false);
+
+    expect(
+      CourseSchema.safeParse({
+        id: "zh-course",
+        title: "Excel",
+        provider: "HRD Corp e-LATiH",
+        url: "https://elatih.hrdcorp.gov.my/course/excel",
+        languages: [],
+        hours: 4,
+        costType: "free",
+        certificate: false,
+        skillIds: ["spreadsheets"],
+        lastChecked: "2026-10-01",
+      }).success,
+    ).toBe(false);
 
     expect(
       ProgrammeSchema.parse({
