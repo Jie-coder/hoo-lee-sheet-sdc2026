@@ -1,0 +1,309 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1440">
+<title>Laluan · Results (reference mockup)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js"></script>
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      colors: {
+        paper: '#FAF9F5', ink: '#141413', grey: '#5E5D59', line: '#E5E3DC',
+        alt: '#F3F2EE', btn2: '#EFEDE7',
+        sage: { DEFAULT: '#2F7D5B', dark: '#24634A', tint: '#B9CFC6', soft: '#E6EFEA', wash: '#F1F6F3' }
+      },
+      fontFamily: {
+        serif: ['Newsreader', '"Source Serif 4"', 'Georgia', 'serif'],
+        sans: ['Inter', '"Noto Sans CJK SC"', 'system-ui', 'sans-serif'],
+        mono: ['"JetBrains Mono"', 'ui-monospace', 'monospace']
+      }
+    }
+  }
+}
+</script>
+<style>
+  body { font-feature-settings: "cv11", "ss01"; -webkit-font-smoothing: antialiased; }
+  .chip-src { font-size: 11px; line-height: 16px; }
+  .lucide { stroke-width: 1.6; }
+</style>
+</head>
+<body class="bg-paper text-ink font-sans pb-16">
+
+<!-- ============ 1. HEADER ============ -->
+<header class="h-16 border-b border-line bg-paper/95">
+  <div class="max-w-[1248px] mx-auto px-6 h-full flex items-center justify-between">
+    <!-- wordmark -->
+    <div class="flex items-center gap-2.5 w-[260px]">
+      <svg width="26" height="26" viewBox="0 0 26 26" fill="none" aria-hidden="true">
+        <path d="M3 21 C 8 21, 9 13, 13 13 S 18 5, 23 5" stroke="#2F7D5B" stroke-width="2.2" stroke-linecap="round"/>
+        <circle cx="3" cy="21" r="2.2" fill="#141413"/><circle cx="23" cy="5" r="2.2" fill="#2F7D5B"/>
+      </svg>
+      <span class="font-serif text-[26px] font-semibold tracking-tight leading-none">Laluan</span>
+    </div>
+
+    <!-- steps -->
+    <nav class="flex items-center gap-3 text-[13px]">
+      <div class="flex items-center gap-2 text-grey">
+        <span class="w-6 h-6 rounded-full bg-sage-soft text-sage flex items-center justify-center"><i data-lucide="check" class="w-3.5 h-3.5"></i></span>Profile
+      </div>
+      <span class="w-10 h-px bg-line"></span>
+      <div class="flex items-center gap-2 text-grey">
+        <span class="w-6 h-6 rounded-full bg-sage-soft text-sage flex items-center justify-center"><i data-lucide="check" class="w-3.5 h-3.5"></i></span>Interview
+      </div>
+      <span class="w-10 h-px bg-line"></span>
+      <div class="flex items-center gap-2 font-medium text-ink">
+        <span class="w-6 h-6 rounded-full bg-ink text-white flex items-center justify-center text-[12px]">3</span>Results
+      </div>
+      <span class="w-10 h-px bg-line"></span>
+      <div class="flex items-center gap-2 text-grey/70">
+        <span class="w-6 h-6 rounded-full border border-line flex items-center justify-center text-[12px]">4</span>Pathway
+      </div>
+    </nav>
+
+    <!-- language pill -->
+    <div class="flex items-center justify-end gap-2.5 w-[260px]">
+      <span class="text-[12px] text-grey flex items-center gap-1.5"><i data-lucide="book-open" class="w-3.5 h-3.5"></i>Course language</span>
+      <div class="flex items-center rounded-full border border-line bg-white p-0.5 text-[12px]">
+        <span class="px-2.5 py-1 rounded-full text-grey">EN</span>
+        <span class="px-2.5 py-1 rounded-full bg-ink text-white font-medium">BM</span>
+        <span class="px-2.5 py-1 rounded-full text-grey">中文</span>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main class="max-w-[1248px] mx-auto px-6">
+
+  <!-- page title -->
+  <section class="pt-7 pb-5 flex items-end justify-between">
+    <div>
+      <p class="text-[13px] text-grey">Aisyah, 23 · Admin clerk · Penang</p>
+      <h1 class="font-serif text-[36px] leading-[1.1] font-medium tracking-tight mt-1">AI can amplify most of your work</h1>
+    </div>
+    <p class="text-[13px] text-grey max-w-[380px] text-right leading-relaxed">Based on your CV and 6 interview answers about how you spend your week.</p>
+  </section>
+
+  <!-- ============ 2. SCORE ROW ============ -->
+  <section class="grid grid-cols-12 gap-5">
+    <!-- Augmentation (hero) -->
+    <div class="col-span-7 rounded-2xl border border-line bg-white p-6 flex gap-8">
+      <div class="flex-1">
+        <div class="flex items-center justify-between">
+          <p class="text-[11px] font-semibold tracking-[0.12em] text-grey">AUGMENTATION</p>
+        </div>
+        <p class="font-serif text-[56px] leading-none font-medium text-sage mt-3 tracking-tight">High <span class="text-sage-tint">·</span> 0.71</p>
+        <p class="text-[14px] text-grey mt-3 leading-relaxed max-w-[360px]">How much AI tools can make your current tasks faster and better, with you still in charge.</p>
+        <div class="mt-4 mb-5 flex flex-wrap gap-1.5">
+          <span class="chip-src inline-flex items-center gap-1 rounded-md border border-line bg-alt px-2 py-0.5 text-grey"><i data-lucide="database" class="w-3 h-3"></i>Anthropic Economic Index · Sep 2026</span>
+        </div>
+      </div>
+      <!-- task breakdown -->
+      <div class="w-[270px] border-l border-line pl-6">
+        <p class="text-[12px] text-grey mb-2.5">Your tasks, by augmentation</p>
+        <ul class="space-y-2.5 text-[13px]">
+          <li><div class="flex justify-between"><span>Customer emails</span><span class="text-grey tabular-nums">0.84</span></div><div class="h-1.5 mt-1 rounded-full bg-alt"><div class="h-1.5 rounded-full bg-sage" style="width:84%"></div></div></li>
+          <li><div class="flex justify-between"><span>Filing reports</span><span class="text-grey tabular-nums">0.73</span></div><div class="h-1.5 mt-1 rounded-full bg-alt"><div class="h-1.5 rounded-full bg-sage" style="width:73%"></div></div></li>
+          <li><div class="flex justify-between"><span>Scheduling</span><span class="text-grey tabular-nums">0.66</span></div><div class="h-1.5 mt-1 rounded-full bg-alt"><div class="h-1.5 rounded-full bg-sage/70" style="width:66%"></div></div></li>
+          <li><div class="flex justify-between"><span>Data entry</span><span class="text-grey tabular-nums">0.58</span></div><div class="h-1.5 mt-1 rounded-full bg-alt"><div class="h-1.5 rounded-full bg-sage/70" style="width:58%"></div></div></li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Exposure -->
+    <div class="col-span-5 rounded-2xl border border-line bg-white p-6 flex flex-col">
+      <p class="text-[11px] font-semibold tracking-[0.12em] text-grey">AI EXPOSURE</p>
+      <p class="font-serif text-[40px] leading-none font-medium mt-3 tracking-tight">Medium <span class="text-grey/40">·</span> 0.48</p>
+      <p class="text-[14px] text-ink mt-3 font-medium">Exposure is not job loss.</p>
+      <p class="text-[13px] text-grey leading-relaxed">How much of your current tasks AI tools can perform or assist with.</p>
+      <!-- band scale -->
+      <div class="mt-3">
+        <div class="relative h-1.5 rounded-full flex overflow-visible">
+          <div class="flex-1 bg-alt rounded-l-full"></div><div class="flex-1 bg-line mx-0.5"></div><div class="flex-1 bg-alt rounded-r-full"></div>
+          <span class="absolute -top-[3px] w-3 h-3 rounded-full bg-ink ring-2 ring-white" style="left:calc(48% - 6px)"></span>
+        </div>
+        <div class="flex justify-between text-[11px] text-grey mt-1.5"><span>Low</span><span>Medium</span><span>High</span></div>
+      </div>
+      <div class="mt-auto pt-3 flex flex-wrap items-center gap-1.5">
+        <span class="chip-src inline-flex items-center gap-1 rounded-md border border-line bg-alt px-2 py-0.5 text-grey"><i data-lucide="database" class="w-3 h-3"></i>Anthropic Economic Index · Sep 2026</span>
+        <span class="chip-src inline-flex items-center gap-1 rounded-md border border-line bg-alt px-2 py-0.5 text-grey"><i data-lucide="database" class="w-3 h-3"></i>ILO GenAI Exposure · 2025</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 3. CONTROLS BAR ============ -->
+  <section class="mt-5 rounded-2xl border border-line bg-white px-5 py-4">
+    <div class="flex items-center justify-between gap-4">
+      <!-- scenario tabs -->
+      <div class="flex items-center gap-3">
+        <span class="text-[12px] text-grey whitespace-nowrap">Scenario</span>
+        <div class="flex items-center rounded-xl bg-alt p-1 text-[13px] whitespace-nowrap">
+          <span class="px-3.5 py-1.5 rounded-lg bg-white border border-line shadow-sm font-medium flex items-center gap-1.5"><i data-lucide="users" class="w-3.5 h-3.5 text-sage"></i>Co-Pilot Economy</span>
+          <span class="px-3.5 py-1.5 rounded-lg text-grey flex items-center gap-1.5"><i data-lucide="trending-down" class="w-3.5 h-3.5"></i>Age of Displacement</span>
+          <span class="px-3.5 py-1.5 rounded-lg text-grey flex items-center gap-1.5"><i data-lucide="zap" class="w-3.5 h-3.5"></i>Supercharged Progress</span>
+        </div>
+      </div>
+      <div class="flex items-center gap-4">
+        <!-- signal date -->
+        <div class="flex items-center gap-2">
+          <span class="text-[12px] text-grey whitespace-nowrap">Signal date</span>
+          <div class="flex items-center rounded-lg border border-line p-0.5 text-[12px] whitespace-nowrap">
+            <span class="px-2.5 py-1 rounded-md text-grey">30 days ago</span>
+            <span class="px-2.5 py-1 rounded-md bg-ink text-white font-medium">Today</span>
+          </div>
+        </div>
+        <span class="w-px h-6 bg-line"></span>
+        <!-- refresh -->
+        <div class="flex items-center gap-2.5">
+          <span class="text-[12px] text-grey whitespace-nowrap">Last refreshed 19 Oct 2026</span>
+          <button class="inline-flex items-center gap-1.5 rounded-lg bg-btn2 border border-line px-3 py-1.5 text-[13px] font-medium whitespace-nowrap"><i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i>Refresh</button>
+        </div>
+      </div>
+    </div>
+    <div class="mt-3 pt-3 border-t border-line flex items-start gap-2 text-[13px] text-grey">
+      <i data-lucide="info" class="w-4 h-4 mt-px text-sage shrink-0"></i>
+      <p><span class="text-ink font-medium">Co-Pilot Economy:</span> AI spreads steadily and mostly works alongside people. Demand grows for data and customer roles; routine clerical work shrinks slowly. <span class="text-grey/80">Scenario values are illustrative, based on WEF Jobs of Tomorrow futures.</span></p>
+    </div>
+  </section>
+
+  <!-- ============ 4. ROLE CARDS ============ -->
+  <section class="mt-5">
+    <div class="flex items-end justify-between mb-3">
+      <h2 class="font-serif text-[24px] font-medium tracking-tight">Three roles you could move into</h2>
+      <!-- legend -->
+      <div class="flex items-center gap-4 text-[12px] text-grey">
+        <span>SDG target links:</span>
+        <span class="flex items-center gap-1.5"><span class="inline-block w-7 h-4 rounded bg-sage"></span>Direct</span>
+        <span class="flex items-center gap-1.5"><span class="inline-block w-7 h-4 rounded border border-sage"></span>Supporting</span>
+        <span class="flex items-center gap-1.5"><span class="inline-block w-7 h-4 rounded border border-dashed border-sage"></span>AI-suggested</span>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-3 gap-5">
+
+      <!-- Card 1 -->
+      <article class="rounded-2xl border border-sage-tint bg-white p-6 flex flex-col ring-1 ring-sage-tint/60">
+        <div class="flex items-center justify-between">
+          <span class="inline-flex items-center gap-1.5 rounded-full bg-sage-soft text-sage-dark px-2.5 py-1 text-[12px] font-medium"><i data-lucide="shield-check" class="w-3.5 h-3.5"></i>Robust in all 3 futures</span>
+          <span class="text-[12px] text-grey">#1 of 3</span>
+        </div>
+        <h3 class="font-serif text-[24px] leading-tight font-medium mt-4">Data Operations Analyst</h3>
+        <div class="mt-3 flex items-center gap-3">
+          <span class="text-[28px] font-semibold tabular-nums leading-none">72%</span>
+          <div class="flex-1">
+            <div class="h-1.5 rounded-full bg-alt"><div class="h-1.5 rounded-full bg-ink" style="width:72%"></div></div>
+            <p class="text-[12px] text-grey mt-1">fit with your current skills</p>
+          </div>
+        </div>
+        <div class="mt-4 flex flex-wrap content-start gap-1.5 text-[12px] min-h-[50px]">
+          <span class="rounded-md bg-sage text-white px-2 py-0.5 font-medium">4.4 Skills for work</span>
+          <span class="rounded-md bg-sage text-white px-2 py-0.5 font-medium">5.5 Women in leadership</span>
+          <span class="rounded-md border border-sage text-sage-dark px-2 py-0.5">8.6 Youth in work · 0.61</span>
+        </div>
+        <p class="text-[12px] text-grey mt-5 mb-1">Top 5 skills to build</p>
+        <ul class="text-[13px] divide-y divide-line border-y border-line">
+          <li class="flex items-center justify-between py-2"><span>Data cleaning in Power Query</span><span class="text-[11px] rounded border border-line px-1.5 text-grey">4.4</span></li>
+          <li class="flex items-center justify-between py-2"><span>SQL basics</span><span class="text-[11px] rounded border border-line px-1.5 text-grey">4.4</span></li>
+          <li class="flex items-center justify-between py-2"><span>Dashboards in Looker Studio</span><span class="text-[11px] rounded border border-line px-1.5 text-grey">4.4</span></li>
+          <li class="flex items-center justify-between py-2"><span>Checking AI output for errors</span><span class="text-[11px] rounded border border-line px-1.5 text-grey">4.4</span></li>
+          <li class="flex items-center justify-between py-2"><span>Process documentation</span><span class="text-[11px] rounded border border-line px-1.5 text-grey">8.2</span></li>
+        </ul>
+        <div class="mt-4 mb-5 flex flex-wrap gap-1.5">
+          <span class="chip-src inline-flex items-center gap-1 rounded-md border border-line bg-alt px-2 py-0.5 text-grey"><i data-lucide="database" class="w-3 h-3"></i>ESCO v1.2</span>
+          <span class="chip-src inline-flex items-center gap-1 rounded-md border border-line bg-alt px-2 py-0.5 text-grey"><i data-lucide="activity" class="w-3 h-3"></i>arXiv momentum · 19 Oct 2026</span>
+        </div>
+        <button class="mt-auto w-full rounded-lg bg-ink text-white py-2.5 text-[14px] font-medium">Choose this role</button>
+      </article>
+
+      <!-- Card 2 -->
+      <article class="rounded-2xl border border-line bg-white p-6 flex flex-col">
+        <div class="flex items-center justify-between">
+          <span class="inline-flex items-center gap-1.5 rounded-full bg-alt text-grey px-2.5 py-1 text-[12px]"><i data-lucide="arrow-down-right" class="w-3.5 h-3.5"></i>Drops to #3 in Displacement</span>
+          <span class="text-[12px] text-grey">#2 of 3</span>
+        </div>
+        <h3 class="font-serif text-[24px] leading-tight font-medium mt-4">Customer Experience Specialist</h3>
+        <div class="mt-3 flex items-center gap-3">
+          <span class="text-[28px] font-semibold tabular-nums leading-none">68%</span>
+          <div class="flex-1">
+            <div class="h-1.5 rounded-full bg-alt"><div class="h-1.5 rounded-full bg-ink" style="width:68%"></div></div>
+            <p class="text-[12px] text-grey mt-1">fit with your current skills</p>
+          </div>
+        </div>
+        <div class="mt-4 flex flex-wrap content-start gap-1.5 text-[12px] min-h-[50px]">
+          <span class="rounded-md bg-sage text-white px-2 py-0.5 font-medium">8.5 Decent work</span>
+          <span class="rounded-md border border-sage text-sage-dark px-2 py-0.5">4.4 Skills for work · 0.58</span>
+          <span class="rounded-md border border-dashed border-sage text-sage-dark px-2 py-0.5">10.2 Inclusion · AI-suggested</span>
+        </div>
+        <p class="text-[12px] text-grey mt-5 mb-1">Top 5 skills to build</p>
+        <ul class="text-[13px] divide-y divide-line border-y border-line">
+          <li class="flex items-center justify-between py-2"><span>CRM tools (Zendesk, Freshdesk)</span><span class="text-[11px] rounded border border-line px-1.5 text-grey">4.4</span></li>
+          <li class="flex items-center justify-between py-2"><span>AI-assisted reply drafting</span><span class="text-[11px] rounded border border-line px-1.5 text-grey">4.4</span></li>
+          <li class="flex items-center justify-between py-2"><span>Complaint handling and de-escalation</span><span class="text-[11px] rounded border border-line px-1.5 text-grey">8.5</span></li>
+          <li class="flex items-center justify-between py-2"><span>Customer feedback analysis</span><span class="text-[11px] rounded border border-line px-1.5 text-grey">8.2</span></li>
+          <li class="flex items-center justify-between py-2"><span>Accessible service design</span><span class="text-[11px] rounded border border-line px-1.5 text-grey">10.2</span></li>
+        </ul>
+        <div class="mt-4 mb-5 flex flex-wrap gap-1.5">
+          <span class="chip-src inline-flex items-center gap-1 rounded-md border border-line bg-alt px-2 py-0.5 text-grey"><i data-lucide="database" class="w-3 h-3"></i>ESCO v1.2</span>
+          <span class="chip-src inline-flex items-center gap-1 rounded-md border border-line bg-alt px-2 py-0.5 text-grey"><i data-lucide="database" class="w-3 h-3"></i>OSDG classifier · 2025</span>
+        </div>
+        <button class="mt-auto w-full rounded-lg bg-ink text-white py-2.5 text-[14px] font-medium">Choose this role</button>
+      </article>
+
+      <!-- Card 3 -->
+      <article class="rounded-2xl border border-line bg-white p-6 flex flex-col">
+        <div class="flex items-center justify-between">
+          <span class="inline-flex items-center gap-1.5 rounded-full bg-alt text-grey px-2.5 py-1 text-[12px]"><i data-lucide="sprout" class="w-3.5 h-3.5"></i>Matches your interest: community</span>
+          <span class="text-[12px] text-grey">#3 of 3</span>
+        </div>
+        <h3 class="font-serif text-[24px] leading-tight font-medium mt-4">ESG Reporting Associate</h3>
+        <div class="mt-3 flex items-center gap-3">
+          <span class="text-[28px] font-semibold tabular-nums leading-none">54%</span>
+          <div class="flex-1">
+            <div class="h-1.5 rounded-full bg-alt"><div class="h-1.5 rounded-full bg-ink" style="width:54%"></div></div>
+            <p class="text-[12px] text-grey mt-1">fit with your current skills</p>
+          </div>
+        </div>
+        <div class="mt-4 flex flex-wrap content-start gap-1.5 text-[12px] min-h-[50px]">
+          <span class="rounded-md bg-sage text-white px-2 py-0.5 font-medium">13.3 Climate awareness</span>
+          <span class="rounded-md border border-sage text-sage-dark px-2 py-0.5">12.6 Reporting · 0.72</span>
+          <span class="rounded-md border border-dashed border-sage text-sage-dark px-2 py-0.5">11.6 Cities · AI-suggested</span>
+        </div>
+        <p class="text-[12px] text-grey mt-5 mb-1">Top 5 skills to build</p>
+        <ul class="text-[13px] divide-y divide-line border-y border-line">
+          <li class="flex items-center justify-between py-2"><span>Carbon accounting basics (Scope 1–3)</span><span class="text-[11px] rounded border border-line px-1.5 text-grey">13.3</span></li>
+          <li class="flex items-center justify-between py-2"><span>Bursa sustainability reporting</span><span class="text-[11px] rounded border border-line px-1.5 text-grey">12.6</span></li>
+          <li class="flex items-center justify-between py-2"><span>ESG data collection</span><span class="text-[11px] rounded border border-line px-1.5 text-grey">12.6</span></li>
+          <li class="flex items-center justify-between py-2"><span>Supplier survey management</span><span class="text-[11px] rounded border border-line px-1.5 text-grey">12.6</span></li>
+          <li class="flex items-center justify-between py-2"><span>Report writing (BM and English)</span><span class="text-[11px] rounded border border-line px-1.5 text-grey">4.4</span></li>
+        </ul>
+        <div class="mt-4 mb-5 flex flex-wrap gap-1.5">
+          <span class="chip-src inline-flex items-center gap-1 rounded-md border border-line bg-alt px-2 py-0.5 text-grey"><i data-lucide="database" class="w-3 h-3"></i>ESCO green skills v1.2</span>
+          <span class="chip-src inline-flex items-center gap-1 rounded-md border border-line bg-alt px-2 py-0.5 text-grey"><i data-lucide="database" class="w-3 h-3"></i>O*NET Green · 2025</span>
+        </div>
+        <button class="mt-auto w-full rounded-lg bg-ink text-white py-2.5 text-[14px] font-medium">Choose this role</button>
+      </article>
+    </div>
+
+    <p class="mt-4 text-[13px] text-grey flex items-center gap-2"><i data-lucide="hand" class="w-4 h-4"></i>You choose the role. Your reskilling pathway is built next, with courses in your chosen language.</p>
+  </section>
+
+  <!-- example-data note -->
+  <p class="mt-8 mb-6 pt-4 border-t border-line text-[11px] text-grey/80 leading-relaxed">Example data: all names, scores, fit percentages, scenario values, SDG links and source dates on this page are illustrative example data for the synthetic persona Aisyah (SDC Hackathon demo). They are not real measurements.</p>
+</main>
+
+<!-- ============ 5. FIXED FOOTER ============ -->
+<footer class="fixed bottom-0 inset-x-0 h-11 border-t border-line bg-paper/95 backdrop-blur">
+  <div class="max-w-[1248px] mx-auto px-6 h-full flex items-center justify-between text-[12px] text-grey">
+    <p class="flex items-center gap-2"><i data-lucide="scale" class="w-3.5 h-3.5"></i>All scores and forecasts are estimates. Laluan supports your decision; it does not make hiring decisions.</p>
+    <span class="rounded border border-line px-1.5 py-0.5 text-[11px]">Example data</span>
+  </div>
+</footer>
+
+<script>lucide.createIcons();</script>
+</body>
+</html>
