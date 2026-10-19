@@ -63,7 +63,7 @@ async function checkAiProvider(deep: boolean): Promise<CheckResult> {
   if (!deep) {
     // getModel() above already confirmed the provider and API key; an empty
     // AI_MODEL falls back to the default model in ai.ts.
-    const model = env.aiModel || "default model";
+    const model = `${env.aiProvider}, ${env.aiModel || "default model"}`;
     return {
       name: "AI provider",
       ok: true,
@@ -82,7 +82,7 @@ async function checkAiProvider(deep: boolean): Promise<CheckResult> {
 }
 
 // Runs all checks in parallel and returns one result per integration.
-// The live Gemini call only happens when deep is true; by default the AI check
+// The live AI call only happens when deep is true; by default the AI check
 // just confirms the key and model are configured.
 export async function runHealthChecks({ deep = false }: { deep?: boolean } = {}): Promise<CheckResult[]> {
   return Promise.all([checkEnv(), checkSupabase(), checkAiProvider(deep)]);

@@ -8,29 +8,39 @@ export type EnvReport = {
   supabaseUrl: string;
   supabaseServiceRoleKey: string;
   googleApiKey: string;
+  runpodBaseUrl: string;
+  runpodApiKey: string;
   missing: string[];
   errors: string[];
 };
 
 export function getEnv(): EnvReport {
-  const aiProvider = process.env.AI_PROVIDER ?? "";
+  // Gemini ("google") is the default; "runpod" is optional.
+  const aiProvider = process.env.AI_PROVIDER || "google";
   const aiModel = process.env.AI_MODEL ?? "";
   const aiMock = process.env.AI_MOCK === "true";
   const supabaseUrl = process.env.SUPABASE_URL ?? "";
   const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY ?? "";
   const googleApiKey = process.env.GOOGLE_GENERATIVE_AI_API_KEY ?? "";
+  const runpodBaseUrl = process.env.RUNPOD_BASE_URL ?? "";
+  const runpodApiKey = process.env.RUNPOD_API_KEY ?? "";
 
   const missing: string[] = [];
   const errors: string[] = [];
 
-  if (aiProvider !== "google") {
-    errors.push(
-      `AI_PROVIDER must be "google" (got "${aiProvider || "unset"}")`
-    );
+  if (aiProvider !== "google" && aiProvider !== "runpod") {
+    errors.push(`AI_PROVIDER must be "google" or "runpod" (got "${aiProvider}")`);
   }
 
   if (!aiMock && aiProvider === "google" && !googleApiKey) {
     missing.push("GOOGLE_GENERATIVE_AI_API_KEY");
+  }
+
+  // RunPod has no default model, so AI_MODEL is required for it.
+  if (!aiMock && aiProvider === "runpod") {
+    if (!runpodBaseUrl) missing.push("RUNPOD_BASE_URL");
+    if (!runpodApiKey) missing.push("RUNPOD_API_KEY");
+    if (!aiModel) missing.push("AI_MODEL");
   }
 
   if (!supabaseUrl) missing.push("SUPABASE_URL");
@@ -43,6 +53,8 @@ export function getEnv(): EnvReport {
     supabaseUrl,
     supabaseServiceRoleKey,
     googleApiKey,
+    runpodBaseUrl,
+    runpodApiKey,
     missing,
     errors,
   };

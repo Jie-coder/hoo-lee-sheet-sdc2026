@@ -1,7 +1,8 @@
-// Picks the AI provider/model and runs the structured "analyze" call, with a mock mode for demos.
+// Picks the AI provider (Gemini by default, RunPod optional) and runs the structured "analyze" call, with a mock mode for demos.
 import "server-only"; // keep this file out of any client-side bundle
 import { generateText, Output, type LanguageModel } from "ai";
 import { createGoogle } from "@ai-sdk/google";
+import { createOpenAICompatible } from "@ai-sdk/openai-compatible";
 import { getEnv } from "./env";
 import { AnalysisResultSchema, type AnalysisResult } from "./schema";
 import sampleResponse from "@/fixtures/sample-response.json";
@@ -28,10 +29,29 @@ type GetModelResult =
 export function getModel(): GetModelResult {
   const env = getEnv();
 
+  // Optional: a model we host ourselves on RunPod (vLLM), which speaks the
+  // same API format as OpenAI. Only used when AI_PROVIDER=runpod.
+  if (env.aiProvider === "runpod") {
+    if (!env.runpodBaseUrl || !env.runpodApiKey) {
+      return { ok: false, error: "RUNPOD_BASE_URL and RUNPOD_API_KEY must both be set." };
+    }
+    if (!env.aiModel) {
+      return { ok: false, error: "AI_MODEL must be set to the model deployed on RunPod." };
+    }
+    const runpod = createOpenAICompatible({
+      name: "runpod",
+      baseURL: env.runpodBaseUrl, // e.g. https://api.runpod.ai/v2/<ENDPOINT_ID>/openai/v1
+      apiKey: env.runpodApiKey,
+      supportsStructuredOutputs: true, // vLLM can follow our Zod/JSON schema
+    });
+    return { ok: true, model: runpod(env.aiModel) };
+  }
+
+  // Default: Google Gemini.
   if (env.aiProvider !== "google") {
     return {
       ok: false,
-      error: `Unsupported AI_PROVIDER "${env.aiProvider || "unset"}". This starter only supports "google".`,
+      error: `Unsupported AI_PROVIDER "${env.aiProvider}". Use "google" (default) or "runpod".`,
     };
   }
 
