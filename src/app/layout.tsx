@@ -1,13 +1,35 @@
-// Root layout: fonts, global styles, site header and toast notifications.
+// Root layout: Laluan fonts, paper theme, app header, and toasts.
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist_Mono, Inter, Newsreader, Noto_Sans_SC } from "next/font/google";
 import { SiteHeader } from "@/components/site-header";
 import { Toaster } from "@/components/ui/sonner";
+import { TooltipProvider } from "@/components/ui/tooltip";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const inter = Inter({
   subsets: ["latin"],
+  variable: "--font-inter",
+  display: "swap",
+});
+
+const newsreader = Newsreader({
+  subsets: ["latin"],
+  weight: ["400", "500", "600"],
+  variable: "--font-newsreader",
+  display: "swap",
+});
+
+// Chinese course names and the 中文 course-language label fall through Inter
+// to this face. Preload stays off: the CJK files are large and only needed
+// when those glyphs appear.
+const notoSansSc = Noto_Sans_SC({
+  weight: "400",
+  subsets: ["latin"],
+  display: "swap",
+  preload: false,
+  adjustFontFallback: false,
+  variable: "--font-noto-sans-sc",
+  fallback: ["Noto Sans CJK SC", "sans-serif"],
 });
 
 const geistMono = Geist_Mono({
@@ -16,20 +38,26 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "SDC Starter",
-  description: "A minimal, deployable starter with AI, database and UI infrastructure.",
+  title: {
+    default: "Laluan",
+    template: "%s · Laluan",
+  },
+  description:
+    "Laluan reads a CV, scores how AI touches the work, and supports a reskilling decision. It does not make hiring decisions.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${inter.variable} ${newsreader.variable} ${notoSansSc.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">
-        <SiteHeader />
-        <main className="flex flex-1 flex-col">{children}</main>
-        <Toaster />
+      <body className="flex min-h-full flex-col">
+        <TooltipProvider>
+          <SiteHeader />
+          <main className="flex flex-1 flex-col">{children}</main>
+          <Toaster />
+        </TooltipProvider>
       </body>
     </html>
   );
