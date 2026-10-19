@@ -13,6 +13,7 @@ Section 08 contracts (`ParsedCV`, `RoleResult`, `PlanStep`, and the analyze resp
 | `scoreBand` | Maps a unit score to Low / Medium / High using the section 05 cut points. |
 | `SdgTargetId` | A target id such as `"8.6"`. Goal-only labels are rejected. |
 | `ScenarioId` | `co`, `dis`, or `sup`. |
+| `ClusterId` | Occupation cluster: `ai_digital`, `data_analytics`, `green_sustainability`, `human_care`, or `routine_clerical`. Key into `scenarios.demand_by_cluster` and `occupations.cluster`. |
 | `CostType` | `free`, `subsidised`, `hrdcorp_claimable`, or `paid`, in that pathway order. |
 | `LanguageCode` | `en`, `ms`, or `zh`. |
 | `AiUsage` | `none`, `tried`, `occasional`, or `regular`. |
@@ -31,7 +32,7 @@ Section 08 contracts (`ParsedCV`, `RoleResult`, `PlanStep`, and the analyze resp
 | `GapSkill` | Missing skill: `skillId`, label, importance. At most five on a role card. |
 | `ScenarioScores` | Ranking score `R` for `co`, `dis`, and `sup`. |
 | `RoleResult` | Role card, including `signalsAsOf` and an optional plain-language `explanation`. |
-| `SignalReading` | One skill metric over a window. Momentum (`value`) may be negative. |
+| `SignalReading` | One skill metric over a window. Momentum (`value`) may be negative. `source` is only `"arXiv"`. |
 | `SignalSnapshot` | Readings that share one `asOf`. Compare two snapshots to re-rank cards. |
 | `CurrentWorkScores` | Exposure and augmentation of the user's current work, with sources. |
 | `AnalyzeResponse` | Current-work scores, role cards, and the `signalsAsOf` they were computed from. |
@@ -42,3 +43,5 @@ Section 08 contracts (`ParsedCV`, `RoleResult`, `PlanStep`, and the analyze resp
 | `PathwayPlan` | Steps for one occupation. No profile id. URLs are resolved from the catalogue, not written by the model. |
 
 `MAX_INTERVIEW_TURNS` is 5. A course matches a user's language preference when the two `languages` lists intersect. Skill-level SDG links use `SdgLink` with `subject.kind === "skill"`; they are not copied onto the gap array. A role card's `sdg` list is one to three links whose subject is that occupation.
+
+`EMBEDDING_DIMENSIONS` (768) and `EMBEDDING_MODEL` (`"gemini-embedding-001"`) describe the Gemini embedding stored in `occupations.embedding` and `skills.embedding` (`vector(768)`). This file does not call Gemini; a caller that does must pass `outputDimensionality: EMBEDDING_DIMENSIONS`.

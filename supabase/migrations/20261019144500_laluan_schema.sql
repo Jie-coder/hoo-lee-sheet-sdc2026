@@ -8,8 +8,9 @@
 -- (snake_case slots and eligibility, camelCase scores, gaps, sources, and
 -- plan steps) so a handler can Zod-parse a row without renaming keys.
 --
--- contracts.ts still has singular language / "both" until a separate PR.
--- This migration already stores languages as text[] of en, ms, zh.
+-- contracts.ts (src/types/contracts.ts) matches this migration: `languages`
+-- is a list of en|ms|zh (no singular `language`, no `both`), and
+-- MAX_INTERVIEW_TURNS is 5.
 
 create extension if not exists vector;
 
@@ -684,7 +685,11 @@ create table public.occupations (
   title_en text not null check (length(btrim(title_en)) > 0),
   title_ms text not null check (length(btrim(title_ms)) > 0),
   description text not null default '',
-  cluster text,
+  cluster text not null check (
+    cluster in (
+      'ai_digital', 'data_analytics', 'green_sustainability', 'human_care', 'routine_clerical'
+    )
+  ),
   is_emerging boolean not null default false,
   embedding vector(768),
   created_at timestamptz not null default now()
@@ -694,7 +699,7 @@ comment on table public.occupations is
   'ESCO occupation. id is RoleResult.occupationId. embedding is Gemini 768-d.';
 
 comment on column public.occupations.cluster is
-  'Key into scenarios.demand_by_cluster. Illustrative clusters: ai_digital, data_analytics, green_sustainability, human_care, routine_clerical.';
+  'Key into scenarios.demand_by_cluster. One of ai_digital, data_analytics, green_sustainability, human_care, routine_clerical (contracts.ts ClusterId).';
 
 create table public.skills (
   id text primary key check (length(btrim(id)) > 0),
@@ -844,7 +849,6 @@ comment on table public.programs is
 create table public.profiles (
   id uuid primary key default gen_random_uuid(),
   consent_at timestamptz,
-  locale text not null default 'en' check (locale in ('en', 'ms')),
   parsed jsonb check (internal.parsed_cv_valid(parsed)),
   slots jsonb check (internal.profile_slots_valid(slots)),
   created_at timestamptz not null default now(),
@@ -853,9 +857,6 @@ create table public.profiles (
 
 comment on table public.profiles is
   'Anonymous session. No user_id and no cv_path. parsed is ParsedCV. slots is PartialSlots, with languages as a list.';
-
-comment on column public.profiles.locale is
-  'UI language for the EN/BM toggle. Study languages live in slots.languages and may include zh.';
 
 comment on column public.profiles.slots is
   'PartialSlots. languages, when present, is a non-empty list of en, ms, zh. The singular language key is not stored.';

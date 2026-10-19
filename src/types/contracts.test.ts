@@ -2,8 +2,12 @@ import { describe, expect, it } from "vitest";
 
 import {
   AnalyzeResponseSchema,
+  CLUSTER_IDS,
+  ClusterIdSchema,
   CostTypeSchema,
   CourseSchema,
+  EMBEDDING_DIMENSIONS,
+  EMBEDDING_MODEL,
   GapSkillSchema,
   InterviewTurnSchema,
   LANGUAGE_CODES,
@@ -18,6 +22,7 @@ import {
   ScenarioIdSchema,
   scoreBand,
   SdgLinkSchema,
+  SignalReadingSchema,
   SignalSnapshotSchema,
   SlotsSchema,
   SourceSchema,
@@ -134,6 +139,30 @@ describe("LanguageCode", () => {
 describe("MAX_INTERVIEW_TURNS", () => {
   it("stops after five questions", () => {
     expect(MAX_INTERVIEW_TURNS).toBe(5);
+  });
+});
+
+describe("embeddings", () => {
+  it("matches vector(768) and the Gemini model name", () => {
+    expect(EMBEDDING_DIMENSIONS).toBe(768);
+    expect(EMBEDDING_MODEL).toBe("gemini-embedding-001");
+  });
+});
+
+describe("ClusterId", () => {
+  it("parses the five scoring clusters", () => {
+    expect(CLUSTER_IDS).toEqual([
+      "ai_digital",
+      "data_analytics",
+      "green_sustainability",
+      "human_care",
+      "routine_clerical",
+    ]);
+    expect(ClusterIdSchema.parse("ai_digital")).toBe("ai_digital");
+  });
+
+  it("rejects a cluster not in the list", () => {
+    expect(ClusterIdSchema.safeParse("retail").success).toBe(false);
   });
 });
 
@@ -309,6 +338,26 @@ describe("SignalSnapshot", () => {
 
   it("rejects a prose date", () => {
     expect(SignalSnapshotSchema.safeParse({ ...today, asOf: "today" }).success).toBe(false);
+  });
+});
+
+describe("SignalReading source", () => {
+  const reading = {
+    skillId: "spreadsheets",
+    source: "arXiv",
+    metric: "momentum",
+    value: 0.12,
+    windowStart: "2026-07-22",
+    windowEnd: "2026-10-19",
+    url: "https://export.arxiv.org/api/query?search_query=spreadsheet",
+  };
+
+  it("accepts arXiv", () => {
+    expect(SignalReadingSchema.parse(reading).source).toBe("arXiv");
+  });
+
+  it.each(["github", "ARXIV", ""])("rejects %j", (source) => {
+    expect(SignalReadingSchema.safeParse({ ...reading, source }).success).toBe(false);
   });
 });
 

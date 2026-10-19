@@ -43,6 +43,7 @@
 
 import {
   SCENARIO_IDS,
+  type ClusterId,
   type GapSkill,
   type ImpactInterest,
   type RoleResult,
@@ -72,7 +73,7 @@ export const SCORING_PARAMS = {
     green_sustainability: { co: 0.6, dis: 0.65, sup: 0.7 },
     human_care: { co: 0.7, dis: 0.55, sup: 0.6 },
     routine_clerical: { co: 0.45, dis: 0.15, sup: 0.25 },
-  },
+  } satisfies Record<ClusterId, Record<ScenarioId, number>>,
   /**
    * Goal numbers (the integer in "13.3") treated as matching each interest.
    * See the ambiguity note at the top of this file.
@@ -86,7 +87,7 @@ export const SCORING_PARAMS = {
   },
 } as const;
 
-export type RoleCluster = keyof typeof SCORING_PARAMS.demandByCluster;
+export type RoleCluster = ClusterId;
 
 export type WeightedTask = {
   share: number;
