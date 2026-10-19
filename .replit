@@ -1,0 +1,30 @@
+# Replit configuration for this Next.js app.
+# Docs: https://docs.replit.com/features/project-setup/configuration
+#       https://docs.replit.com/features/project-setup/ports
+
+# Node.js 24 LTS, matching .nvmrc and "engines" in package.json.
+modules = ["nodejs-24"]
+
+# The Run button: install packages (fast after the first time), then start the
+# Next.js dev server on 0.0.0.0:3000 so Replit's preview can reach it.
+# (Locally on Windows/Mac you still just use `npm run dev`.)
+run = ["sh", "-c", "npm install && npm run dev -- --hostname 0.0.0.0 --port 3000"]
+
+# Keep build output and installed packages out of the file tree.
+hidden = [".next", "node_modules", ".config"]
+
+[nix]
+channel = "stable-25_05"
+
+# Deploy (Publish) settings: an Autoscale deployment that installs exact
+# versions from package-lock.json, builds once, then serves the production build.
+[deployment]
+deploymentTarget = "autoscale"
+build = ["sh", "-c", "npm ci && npm run build"]
+run = ["npm", "run", "start", "--", "--hostname", "0.0.0.0", "--port", "3000"]
+
+# The app listens on port 3000 inside Replit; the public URL (port 80/443) maps to it.
+# Autoscale allows exactly one external port, so keep only this one.
+[[ports]]
+localPort = 3000
+externalPort = 80
