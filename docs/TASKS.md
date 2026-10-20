@@ -63,6 +63,14 @@ Store two arXiv readings per keyword (30 days ago and today) in `signals`. The "
 
 **Done when** switching the toggle visibly changes at least one ranking, and the date is shown.
 
+## T10b: Future Skills Radar page (Jarvis, with Claude Code; Grace designs)
+The Domain 1 brief (journey step 2) asks for a view of which skills and roles are **rising or declining**, based on dated signals.
+1. Read the `signals` table: momentum per skill, with the arXiv source and date shown.
+2. Show the top rising and declining skills and roles, labelled as estimates.
+3. Use the same "30 days ago / today" toggle as the results page, so judges can see the output change when the data changes.
+
+**Done when** the radar loads from real signals and every item shows its source and date.
+
 ## T11: deploy on Replit (Bing Jie with Peter guiding, in DM)
 1. Replit: Import → GitHub → `Jie-coder/hoo-lee-sheet-sdc2026` (allow Replit to see this private repo).
 2. Open **Secrets** and add: `GOOGLE_GENERATIVE_AI_API_KEY`, `SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`, and `AI_MODEL` if needed. Peter will say exactly which values to use.
