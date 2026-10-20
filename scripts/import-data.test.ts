@@ -74,9 +74,15 @@ describe("runImport (dry run)", () => {
   });
 
   it("reports a missing file as a note, not an error, and still exits 0", async () => {
-    const result = await runImport({ dir: "data", apply: false, env: {} });
-    expect(result.exitCode).toBe(0);
-    expect(result.report.files.every((f) => !f.present)).toBe(true);
+    // An empty temp dir, not the real data/ folder: data/ fills up as the team commits CSVs.
+    const emptyDir = mkdtempSync(join(tmpdir(), "laluan-empty-data-"));
+    try {
+      const result = await runImport({ dir: emptyDir, apply: false, env: {} });
+      expect(result.exitCode).toBe(0);
+      expect(result.report.files.every((f) => !f.present)).toBe(true);
+    } finally {
+      rmSync(emptyDir, { recursive: true, force: true });
+    }
   });
 });
 
