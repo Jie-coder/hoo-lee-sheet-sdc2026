@@ -25,6 +25,7 @@ const VALID_COURSE_ROW = {
   summary: "Hands-on spreadsheet analysis course.",
   last_checked: "2026-10-01",
   notes: "",
+  mode: "online",
 };
 
 describe("mapCourseRow", () => {
