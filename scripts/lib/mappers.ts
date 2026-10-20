@@ -131,12 +131,6 @@ export function mapCourseRow(raw: Record<string, string>, row: number): CourseRo
   if (isBlank(raw.summary)) {
     issues.push(cellIssue(file, row, "summary", raw.summary ?? "", "summary is required"));
   }
-  const mode = (raw.mode ?? "").trim().toLowerCase();
-  if (!["online", "physical", "hybrid"].includes(mode)) {
-    issues.push(
-      cellIssue(file, row, "mode", raw.mode ?? "", `mode must be online, physical, or hybrid (got "${raw.mode ?? ""}")`, 'use "online", "physical", or "hybrid"')
-    );
-  }
 
   const candidate = {
     id: raw.id ?? "",
@@ -149,6 +143,7 @@ export function mapCourseRow(raw: Record<string, string>, row: number): CourseRo
     certificate: certificate.ok ? certificate.value : false,
     skillIds: skillUris.map(escoUriToId),
     lastChecked: raw.last_checked ?? "",
+    mode: (raw.mode ?? "").trim().toLowerCase(),
   };
 
   const parsed = CourseSchema.safeParse(candidate);

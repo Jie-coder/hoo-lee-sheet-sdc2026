@@ -174,6 +174,7 @@ describe("applyImport", () => {
           certificate: true,
           skillIds: ["00000000-0000-0000-0000-000000000001"],
           lastChecked: "2026-10-01",
+          mode: "hybrid",
         },
       ],
       occupations: [
@@ -208,6 +209,7 @@ describe("applyImport", () => {
         certificate: true,
         skill_ids: ["00000000-0000-0000-0000-000000000001"],
         last_checked: "2026-10-01",
+        mode: "hybrid",
       },
     ]);
 
@@ -287,6 +289,7 @@ describe("applyImport", () => {
           certificate: true,
           skillIds: [],
           lastChecked: "2026-10-01",
+          mode: "online",
         },
       ],
     };
@@ -311,6 +314,7 @@ describe("applyImport", () => {
       certificate: true,
       skillIds: [],
       lastChecked: "2026-10-01",
+      mode: "online" as const,
     }));
 
     const result = await applyImport({ ...EMPTY_INPUT, courses }, client, embedder);
