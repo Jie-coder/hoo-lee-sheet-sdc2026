@@ -294,17 +294,19 @@ export function ProfileView() {
                 <ul className="space-y-2">
                   {profile.education.map((item, index) => (
                     <li key={index} className="flex flex-wrap items-center gap-1.5">
-                      <input
+                      <textarea
                         value={item.level}
                         onChange={(event) => updateEducation(index, { level: event.target.value })}
                         placeholder="Qualification"
-                        className="min-w-0 flex-1 rounded-md border border-line px-1.5 py-1"
+                        rows={1}
+                        className="field-sizing-content min-w-[8rem] flex-1 resize-none rounded-md border border-line px-1.5 py-1"
                       />
-                      <input
+                      <textarea
                         value={item.field}
                         onChange={(event) => updateEducation(index, { field: event.target.value })}
                         placeholder="Institution"
-                        className="min-w-0 flex-1 rounded-md border border-line px-1.5 py-1"
+                        rows={1}
+                        className="field-sizing-content min-w-[8rem] flex-1 resize-none rounded-md border border-line px-1.5 py-1"
                       />
                       <button
                         type="button"

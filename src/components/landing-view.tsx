@@ -27,6 +27,9 @@ import { formatBandScoreParts, formatDayMonthYear, formatFitPercent } from "@/li
 import { useFlow } from "@/context/flow-context";
 import { AISYAH_RESULTS, EXAMPLE_AS_OF } from "@/mocks/aisyah";
 
+/** Shortened so the band and score always fit on one line in the preview card. */
+const SHORT_BAND: Record<"Low" | "Medium" | "High", string> = { Low: "Low", Medium: "Med", High: "High" };
+
 const HOW_IT_WORKS = [
   {
     icon: UserRound,
@@ -135,14 +138,14 @@ export function LandingView() {
             <div className="mt-4 grid grid-cols-2 gap-5">
               <div>
                 <p className="text-[12px] text-grey">Augmentation</p>
-                <p className="mt-1.5 font-serif text-[36px] leading-none font-medium tracking-tight text-sage">
-                  {augmentation.band} <span className="text-sage-tint">·</span> {augmentation.value}
+                <p className="mt-1.5 font-serif text-[36px] leading-none font-medium tracking-tight text-nowrap text-sage">
+                  {SHORT_BAND[augmentation.band]} <span className="text-sage-tint">·</span> {augmentation.value}
                 </p>
               </div>
               <div className="border-l border-line pl-5">
                 <p className="text-[12px] text-grey">AI exposure</p>
-                <p className="mt-1.5 font-serif text-[36px] leading-none font-medium tracking-tight">
-                  {exposure.band} <span className="text-grey/40">·</span> {exposure.value}
+                <p className="mt-1.5 font-serif text-[36px] leading-none font-medium tracking-tight text-nowrap">
+                  {SHORT_BAND[exposure.band]} <span className="text-grey/40">·</span> {exposure.value}
                 </p>
               </div>
             </div>

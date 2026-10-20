@@ -41,9 +41,29 @@ export function SiteHeader() {
           <img src="/brand/laluan-logo.svg" alt="Laluan" className="h-8 w-auto" />
         </Link>
 
+        {currentIndex >= 0 && (
+          <div
+            role="group"
+            aria-label="Progress"
+            className="col-span-2 row-start-2 flex min-[391px]:hidden items-center justify-between gap-3 text-[12px] text-grey"
+          >
+            <span>
+              Step {currentIndex + 1} of {STEPS.length} · {STEPS[currentIndex].label}
+            </span>
+            <span className="flex shrink-0 items-center gap-1.5">
+              {STEPS.map((step, index) => (
+                <span
+                  key={step.id}
+                  className={cn("size-1.5 rounded-full", index === currentIndex ? "bg-ink" : "border border-line")}
+                />
+              ))}
+            </span>
+          </div>
+        )}
+
         <nav
           aria-label="Progress"
-          className="col-span-2 row-start-2 -mx-1 flex items-center gap-1.5 overflow-x-auto px-1 text-[12px] lg:col-span-1 lg:col-start-2 lg:row-start-1 lg:justify-center lg:gap-3 lg:text-[13px]"
+          className="col-span-2 row-start-2 -mx-1 hidden items-center gap-1.5 overflow-x-auto px-1 text-[12px] min-[391px]:flex lg:col-span-1 lg:col-start-2 lg:row-start-1 lg:justify-center lg:gap-3 lg:text-[13px]"
         >
           {STEPS.map((step, index) => {
             const number = index + 1;

@@ -385,12 +385,42 @@ export function InterviewView() {
               value={known.ageBand ?? "Unknown"}
             />
             <KnownRow done label="Course languages" note="From CV · you confirmed" value={profile.courseLanguages.join(", ").toUpperCase()} />
-            <KnownRow done={hours != null} current={turn === 1} label="Hours per week" note="Question 1" value={hours != null ? `${hours} h` : "Asked next"} />
-            <KnownRow done={budget != null} current={turn === 1} label="Budget" note="Question 1" value={budget != null ? (budget === 0 ? "Free only" : `Up to RM${budget}`) : "Asked next"} />
+            <KnownRow
+              done={hours != null}
+              current={turn === 1}
+              label="Hours per week"
+              note="Question 1"
+              value={hours != null ? `${hours} h` : turn === 1 ? "Asking now" : "Asked next"}
+            />
+            <KnownRow
+              done={budget != null}
+              current={turn === 1}
+              label="Budget"
+              note="Question 1"
+              value={budget != null ? (budget === 0 ? "Free only" : `Up to RM${budget}`) : turn === 1 ? "Asking now" : "Asked next"}
+            />
             <KnownRow done={turn > 2} current={turn === 2} label="Tasks and time share" note="Question 2" value={`${tasks.length} tasks · ${percentTotal}%`} />
-            <KnownRow done={turn > 3} current={turn === 3} label="Tools and AI use" note="Question 3" value={aiUsage ?? "Asked next"} />
-            <KnownRow done={turn > 4} current={turn === 4} label="Work status · PERKESO" note="Question 4" value={employmentStatus ?? "Asked next"} />
-            <KnownRow done={turn > 5} current={turn === 5} label="Impact you care about" note="Question 5" value={impactInterest ?? "Asked next"} />
+            <KnownRow
+              done={turn > 3}
+              current={turn === 3}
+              label="Tools and AI use"
+              note="Question 3"
+              value={aiUsage ?? (turn === 3 ? "Asking now" : "Asked next")}
+            />
+            <KnownRow
+              done={turn > 4}
+              current={turn === 4}
+              label="Work status · PERKESO"
+              note="Question 4"
+              value={employmentStatus ?? (turn === 4 ? "Asking now" : "Asked next")}
+            />
+            <KnownRow
+              done={turn > 5}
+              current={turn === 5}
+              label="Impact you care about"
+              note="Question 5"
+              value={impactInterest ?? (turn === 5 ? "Asking now" : "Asked next")}
+            />
           </ul>
         </aside>
       </section>
