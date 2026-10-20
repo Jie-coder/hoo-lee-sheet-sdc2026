@@ -59,6 +59,11 @@ export const LANGUAGE_CODES = ["en", "ms", "zh"] as const;
 export const LanguageCodeSchema = z.enum(LANGUAGE_CODES);
 export type LanguageCode = z.infer<typeof LanguageCodeSchema>;
 
+/** How a course is delivered: fully online, in person, or a mix of both. */
+export const COURSE_MODES = ["online", "physical", "hybrid"] as const;
+export const CourseModeSchema = z.enum(COURSE_MODES);
+export type CourseMode = z.infer<typeof CourseModeSchema>;
+
 /** How the user already uses AI tools. Sets a starting level, not a score. */
 export const AI_USAGE_LEVELS = ["none", "tried", "occasional", "regular"] as const;
 export const AiUsageSchema = z.enum(AI_USAGE_LEVELS);
@@ -433,6 +438,7 @@ export type ProgrammeEligibility = z.infer<typeof ProgrammeEligibilitySchema>;
 /**
  * A curated course. skillIds are ESCO ids. costType uses the shared cost union.
  * `languages` lists every language the course is offered in (at least one).
+ * `mode` is how it is delivered: online, physical, or hybrid.
  */
 export const CourseSchema = z
   .strictObject({
@@ -446,6 +452,7 @@ export const CourseSchema = z
     certificate: z.boolean(),
     skillIds: z.array(z.string().min(1)),
     lastChecked: IsoDateSchema,
+    mode: CourseModeSchema,
   })
   .describe("Curated course the pathway may cite by id.");
 export type Course = z.infer<typeof CourseSchema>;

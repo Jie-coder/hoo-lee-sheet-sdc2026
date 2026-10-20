@@ -25,6 +25,7 @@ const VALID_COURSE_ROW = {
   summary: "Hands-on spreadsheet analysis course.",
   last_checked: "2026-10-01",
   notes: "",
+  mode: "online",
 };
 
 describe("mapCourseRow", () => {
@@ -43,7 +44,20 @@ describe("mapCourseRow", () => {
         "00000000-0000-0000-0000-000000000002",
       ],
       lastChecked: "2026-10-01",
+      mode: "online",
     });
+  });
+
+  it("normalises mode and reports a bad or blank mode against the mode column", () => {
+    expect(mapCourseRow({ ...VALID_COURSE_ROW, mode: " Physical " }, 2).value?.mode).toBe("physical");
+
+    for (const mode of ["", "in-person"]) {
+      const result = mapCourseRow({ ...VALID_COURSE_ROW, mode }, 5);
+      expect(result.value).toBeNull();
+      const issue = result.issues.find((i) => i.column === "mode");
+      expect(issue).toMatchObject({ row: 5, column: "mode", value: mode, severity: "error" });
+      expect(issue?.hint).toContain("hybrid");
+    }
   });
 
   it("reports a bad cost_type against the cost_type column with the row number", () => {

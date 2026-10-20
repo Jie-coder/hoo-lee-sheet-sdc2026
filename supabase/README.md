@@ -17,7 +17,7 @@ There is no login and no CV file. Profiles are anonymous sessions: no `user_id`,
 | `signals` | One arXiv reading (`window_start`, `window_end`, `as_of`) so two dates can be stored. | `SignalReading` inside `SignalSnapshot` |
 | `scenarios` | `co`, `dis`, `sup`, assumptions, `theta`, and `demand_by_cluster`. | `ScenarioId` |
 | `sdg_links` | One SDG claim. `subject_kind` is `occupation` or `skill`, with exactly one of those foreign keys set. | `SdgLink` (`subject`, `kind`, `tier`, `target`, `Source`) |
-| `courses` | Curated course. `languages` is a non-empty list of `en`, `ms`, `zh`. | `Course` |
+| `courses` | Curated course. `languages` is a non-empty list of `en`, `ms`, `zh`. `mode` is `online`, `physical`, or `hybrid`. | `Course` |
 | `programs` | Government programme. `eligibility` is the section 07 object and `cost_type` is shared with courses. | `Programme` (`PlanStep.kind` is `program`) |
 | `profiles` | Anonymous session: consent, `parsed`, `slots`. UI is English only, so there is no `locale` column. | `ParsedCV`, `PartialSlots` |
 | `results` | One row per profile, scenario, and occupation. `exposure`/`augmentation`/`fit`/`demand`/`ranking` are the brief's E/G/F/D/R. | `RoleResult` (three rows make `byScenario`) |

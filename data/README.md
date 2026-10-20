@@ -22,6 +22,7 @@ Lists inside one cell use a comma for codes (`en,ms`) and a semicolon for names 
 | summary | one sentence in our own words (do not copy the site) |
 | last_checked | YYYY-MM-DD |
 | notes | anything uncertain |
+| mode | online, physical, or hybrid (how the course is delivered) |
 
 Language mix: at least 10 BM courses, at least 5 Chinese courses, the rest English.
 

@@ -232,6 +232,7 @@ export async function applyImport(
         certificate: course.certificate,
         skill_ids: course.skillIds,
         last_checked: course.lastChecked,
+        mode: course.mode,
       }))
     )
   );

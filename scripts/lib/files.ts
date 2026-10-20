@@ -41,6 +41,7 @@ export const FILE_SPECS: Record<FileKey, FileSpec> = {
       "summary",
       "last_checked",
       "notes",
+      "mode",
     ],
   },
   programmes: {
