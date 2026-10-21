@@ -55,6 +55,23 @@ export type CatalogueSignal = {
   checkedOn: IsoDate;
 };
 
+/** One keywords.csv row as counted on arXiv, for the Future Skills Radar. */
+export type CatalogueKeyword = {
+  keyword: string;
+  skillIds: string[];
+  recent: number;
+  previous: number;
+  direction: "up" | "down" | "flat";
+  /** ln((recent + 1) / (previous + 1)). */
+  momentum: number;
+  /** False when both windows have fewer than 20 papers: shown, but not used for scoring. */
+  enough: boolean;
+  recentWindow: { start: IsoDate; end: IsoDate };
+  previousWindow: { start: IsoDate; end: IsoDate };
+  /** arXiv API query for the recent window, so anyone can check the count. */
+  url: string;
+};
+
 /** A sample persona's CV skill, matched to an ESCO skill by hand (data/persona_skills.csv). */
 export type CataloguePersonaSkill = {
   cvSkill: string;
@@ -76,6 +93,8 @@ export type Catalogue = {
   /** The same keywords counted about 30 days earlier (data/keywords_prior.csv), or null when not collected. */
   priorSignalsAsOf: IsoDate | null;
   priorSignals: Record<string, CatalogueSignal> | null;
+  /** Every keyword's counts, per snapshot (prior is null when not collected). */
+  keywords: { today: CatalogueKeyword[]; prior: CatalogueKeyword[] | null };
   sources: Record<string, CatalogueSource>;
   courses: Course[];
   programmes: Programme[];

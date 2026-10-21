@@ -3,6 +3,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { LayoutGroup } from "framer-motion";
 import { Hand, RefreshCw } from "lucide-react";
@@ -154,7 +155,10 @@ export function ResultsView() {
                 </span>{" "}
                 {changes.length > 0
                   ? `${changes.slice(0, 3).map(describeChange).join("; ")}.`
-                  : "no role changed rank. The new arXiv counts nudged the scores, but not the order."}
+                  : "no role changed rank. The new arXiv counts nudged the scores, but not the order."}{" "}
+                <Link href="/radar" className="whitespace-nowrap text-ink underline underline-offset-4">
+                  See the Future Skills Radar
+                </Link>
               </p>
             )}
 
