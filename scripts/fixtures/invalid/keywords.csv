@@ -1,0 +1,4 @@
+keyword,arxiv_query,skills,skill_uris,direction,count_last_90d,count_prev_90d,checked_on
+mismatched skill lists,cat:cs.AI AND abs:mismatched skill lists,Data analysis;Communication,https://data.europa.eu/esco/skill/00000000-0000-0000-0000-000000000001,up,145,98,2026-10-10
+sideways trend,cat:cs.AI AND abs:sideways trend keyword,Communication,https://data.europa.eu/esco/skill/00000000-0000-0000-0000-000000000002,sideways,15,50,2026-10-11
+mismatched skill lists,cat:cs.AI AND abs:duplicate keyword,Data analysis,https://data.europa.eu/esco/skill/00000000-0000-0000-0000-000000000001,up,145,98,2026-10-12

@@ -1,0 +1,10 @@
+name,url,publisher,what_it_measures,update_frequency,last_updated,data_format,licence,use_for,notes
+Anthropic Economic Index,https://huggingface.co/datasets/Anthropic/EconomicIndex,Anthropic,Real AI usage mapped to tasks,Per release,2026-06-26,CSV,CC-BY,exposure,Hugging Face dataset; release 2026-06-26. Anthropic Economic Index page last updated 26 Jun 2026.
+ILO GenAI Exposure 2025,https://www.ilo.org/sites/default/files/2025-05/WP140_web.pdf,ILO,Exposure scores by ISCO-08,Periodic,2025-05-20,PDF,CC BY 4.0,exposure,"Table A1 (printed p.48-57): mean + SD per ISCO-08 4-digit code, gradients 1-4. Cite Gmyrek et al. 2025, doi 10.54394/HETP0387. Exposure is not job loss"
+Stanford AI Index Report,https://hai.stanford.edu/ai-index,Stanford HAI,AI capability and adoption,Annual,2026-04-15,CSV,CC BY-ND,trend,Macro level trends
+WEF Future of Jobs Report 2025,https://www.weforum.org/publications/the-future-of-jobs-report-2025/,WEF,Job creation/displacement,Biennial,2025-01-07,PDF,CC BY-NC-ND 4.0,scenario,Published 7 Jan 2025. WEF report states all rights reserved; no per-occupation exposure score.
+OECD.AI,https://oecd.ai/en/data,OECD,AI policies and labor trends,Monthly,2026-10-01,API,CC BY 4.0 (OECD default),trend,"Good for macro trends. Dataset-specific terms may differ, check each dataset. Terms: oecd.org/termsandconditions"
+arXiv API,https://arxiv.org/help/api/index,Cornell University,Research paper volume by topic,Daily,2026-10-19,API,CC0,trend,Lead indicator for emerging skills
+GitHub Innovation Graph,https://github.com/github/innovationgraph,GitHub,Developer activity by economy,Quarterly,2026-09-30,CSV,CC0,trend,Includes MY specific data
+OpenDOSM,https://open.dosm.gov.my/data-catalogue/lfs_month_sa,DOSM,Labour force stats,Monthly,2026-09-30,CSV,CC BY 4.0,trend,Malaysian labour data
+Lightcast Open Skills,https://lightcast.io/open-skills,Lightcast,Skills taxonomy and demand,Periodic,2026-05-01,API,"Proprietary, free non-profit tier",trend,"33k+ skills taxonomy. Free API only for non-profit/public-good use (approval, 50 extractions/month); commercial use needs a contract. Terms: docs.lightcast.io/lightcast-api/docs/api-access"

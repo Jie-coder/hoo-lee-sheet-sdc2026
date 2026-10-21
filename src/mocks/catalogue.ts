@@ -2,6 +2,8 @@
 // demo data, validated against the shared contracts. Every skillId here
 // matches a GapSkill.skillId from one of Aisyah's three example roles
 // (src/mocks/aisyah.ts), so a chosen role's gap can always be closed.
+// `mode` is example data: a plausible delivery mode guessed from each
+// course's provider and description, not a verified fact.
 import { CourseSchema, ProgrammeSchema, type Course, type Programme } from "@/types/contracts";
 
 const COURSE_DATA: Course[] = [
@@ -17,6 +19,7 @@ const COURSE_DATA: Course[] = [
     certificate: true,
     skillIds: ["power-query"],
     lastChecked: "2026-10-14",
+    mode: "online",
   },
   {
     id: "looker-studio-course",
@@ -29,6 +32,7 @@ const COURSE_DATA: Course[] = [
     certificate: false,
     skillIds: ["looker-studio"],
     lastChecked: "2026-10-13",
+    mode: "online",
   },
   {
     id: "google-data-analytics-course",
@@ -41,6 +45,7 @@ const COURSE_DATA: Course[] = [
     certificate: true,
     skillIds: ["sql-basics"],
     lastChecked: "2026-10-12",
+    mode: "online",
   },
   {
     id: "sop-writing-course",
@@ -53,6 +58,7 @@ const COURSE_DATA: Course[] = [
     certificate: true,
     skillIds: ["process-documentation"],
     lastChecked: "2026-10-10",
+    mode: "physical",
   },
   {
     id: "check-ai-output-course",
@@ -65,6 +71,7 @@ const COURSE_DATA: Course[] = [
     certificate: true,
     skillIds: ["check-ai-output"],
     lastChecked: "2026-10-15",
+    mode: "online",
   },
 
   // Customer Experience Specialist gap skills
@@ -79,6 +86,7 @@ const COURSE_DATA: Course[] = [
     certificate: false,
     skillIds: ["crm-tools"],
     lastChecked: "2026-10-11",
+    mode: "online",
   },
   {
     id: "ai-reply-drafting-course",
@@ -91,6 +99,7 @@ const COURSE_DATA: Course[] = [
     certificate: false,
     skillIds: ["ai-reply-drafting"],
     lastChecked: "2026-10-11",
+    mode: "online",
   },
   {
     id: "complaint-handling-course",
@@ -103,6 +112,7 @@ const COURSE_DATA: Course[] = [
     certificate: true,
     skillIds: ["complaint-handling"],
     lastChecked: "2026-10-09",
+    mode: "online",
   },
   {
     id: "feedback-analysis-course",
@@ -115,6 +125,7 @@ const COURSE_DATA: Course[] = [
     certificate: true,
     skillIds: ["feedback-analysis"],
     lastChecked: "2026-10-08",
+    mode: "online",
   },
   {
     id: "accessible-service-course",
@@ -127,6 +138,7 @@ const COURSE_DATA: Course[] = [
     certificate: false,
     skillIds: ["accessible-service"],
     lastChecked: "2026-10-07",
+    mode: "hybrid",
   },
 
   // ESG Reporting Associate gap skills
@@ -141,6 +153,7 @@ const COURSE_DATA: Course[] = [
     certificate: true,
     skillIds: ["carbon-accounting"],
     lastChecked: "2026-10-06",
+    mode: "online",
   },
   {
     id: "bursa-reporting-course",
@@ -153,6 +166,7 @@ const COURSE_DATA: Course[] = [
     certificate: true,
     skillIds: ["bursa-reporting"],
     lastChecked: "2026-10-05",
+    mode: "hybrid",
   },
   {
     id: "esg-data-collection-course",
@@ -165,6 +179,7 @@ const COURSE_DATA: Course[] = [
     certificate: false,
     skillIds: ["esg-data-collection"],
     lastChecked: "2026-10-04",
+    mode: "physical",
   },
   {
     id: "supplier-surveys-course",
@@ -177,6 +192,7 @@ const COURSE_DATA: Course[] = [
     certificate: true,
     skillIds: ["supplier-surveys"],
     lastChecked: "2026-10-03",
+    mode: "online",
   },
   {
     id: "report-writing-course",
@@ -189,6 +205,7 @@ const COURSE_DATA: Course[] = [
     certificate: false,
     skillIds: ["report-writing"],
     lastChecked: "2026-10-02",
+    mode: "online",
   },
 ];
 

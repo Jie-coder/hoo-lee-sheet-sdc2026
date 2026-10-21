@@ -1,0 +1,4 @@
+id,esco_uri,isco_code,title_en,title_ms,description,cluster,is_emerging,last_checked,notes
+o010,https://data.europa.eu/esco/occupation/00000000-0000-0000-0000-000000000101,2512,Robot Wrangler,Jurulatih Robot,Oversees a fleet of warehouse robots.,robotics,no,2026-10-01,bad cluster enum on purpose
+o011,not-an-esco-uri,5120,Line Cook,Tukang Masak Lini,Prepares food on a kitchen line.,human_care,no,2026-10-02,bad esco_uri format on purpose
+o010,https://data.europa.eu/esco/occupation/00000000-0000-0000-0000-000000000102,2513,Duplicate Occupation Id,Pekerjaan Pendua,Duplicate id row.,data_analytics,no,2026-10-03,duplicate id on purpose
