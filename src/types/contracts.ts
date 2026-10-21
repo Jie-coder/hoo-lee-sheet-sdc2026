@@ -302,7 +302,8 @@ export const RoleResultSchema = z
     title: z.string().min(1),
     fit: UnitScoreSchema,
     exposure: UnitScoreSchema,
-    augmentation: UnitScoreSchema,
+    /** Omitted until there is task-level augmentation data (Anthropic Economic Index). */
+    augmentation: UnitScoreSchema.optional(),
     byScenario: ScenarioScoresSchema,
     robust: z.boolean(),
     gap: z.array(GapSkillSchema).max(5),
@@ -366,7 +367,8 @@ export type SignalSnapshot = z.infer<typeof SignalSnapshotSchema>;
 /** Exposure and augmentation of the user's current work, with source chips. */
 export const CurrentWorkScoresSchema = z.strictObject({
   exposure: UnitScoreSchema,
-  augmentation: UnitScoreSchema,
+  /** Omitted until there is task-level augmentation data (Anthropic Economic Index). */
+  augmentation: UnitScoreSchema.optional(),
   sources: z.array(SourceSchema).min(1),
 });
 export type CurrentWorkScores = z.infer<typeof CurrentWorkScoresSchema>;

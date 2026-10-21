@@ -45,7 +45,7 @@ export function SdgBadge({
   const name = compact ? link.target : `${link.target} ${label}`.trim();
   const text =
     link.tier === "supporting"
-      ? `${name} · ${link.confidence.toFixed(2)}`
+      ? `${name} · supporting`
       : link.tier === "inferred"
         ? `${name} · AI-suggested`
         : name;

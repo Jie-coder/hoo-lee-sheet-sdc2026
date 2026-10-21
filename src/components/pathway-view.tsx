@@ -1,5 +1,5 @@
 // Pathway: the chosen role's skill gap turned into a week-by-week plan,
-// built from the mock course/programme catalogue (src/mocks/catalogue.ts).
+// built from the curated courses and programmes in data/*.csv.
 "use client";
 
 import { useEffect, useMemo } from "react";
@@ -39,9 +39,8 @@ import { InfoPopover } from "@/components/ui/info-popover";
 import { useFlow } from "@/context/flow-context";
 import { formatDayMonthYear } from "@/lib/display";
 import { buildPathwayPlan, programmeEligibilityStatus } from "@/lib/pathway";
+import { useRoles } from "@/lib/use-roles";
 import { cn } from "@/lib/utils";
-import { AISYAH_RESULTS } from "@/mocks/aisyah";
-import { COURSES, PROGRAMMES } from "@/mocks/catalogue";
 import type { Course, CostType, PlanStep, Programme } from "@/types/contracts";
 
 const COST_LABEL: Record<CostType, string> = {
@@ -67,29 +66,44 @@ const COST_ICON: Record<CostType, typeof Gift> = {
 
 const LANGUAGE_LABEL: Record<string, string> = { en: "EN", ms: "BM", zh: "中文" };
 
-export function PathwayView() {
+export function PathwayView({
+  courses,
+  programmes,
+  courseSkillGroups,
+}: {
+  courses: readonly Course[];
+  programmes: readonly Programme[];
+  /** ESCO group of each skill a course teaches, for related-course suggestions. */
+  courseSkillGroups: Readonly<Record<string, string>>;
+}) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { hydrated, consent, profile, interviewAnswers, chosenRoleId, setChosenRoleId, resetFlow } = useFlow();
+  const { state, retry } = useRoles(profile, interviewAnswers.impact_interest);
+  const data = state.status === "ready" ? state.data : null;
 
   const roleId = searchParams.get("role") ?? chosenRoleId;
-  const role = roleId ? (AISYAH_RESULTS.today.response.roles.find((item) => item.occupationId === roleId) ?? null) : null;
+  const role = roleId && data ? (data.roles.find((item) => item.occupationId === roleId) ?? null) : null;
+  const breakdown = role && data ? data.breakdown[role.occupationId] : null;
+  const targetLabels = data?.targetLabels ?? {};
   const studyLanguages = profile?.courseLanguages ?? ["en" as const];
   const hoursPerWeek = interviewAnswers.hours_per_week ?? 6;
 
   const studyLanguagesKey = studyLanguages.join(",");
   const plan = useMemo(() => {
-    if (!role) return null;
+    if (!role || !data) return null;
     return buildPathwayPlan({
       role,
-      courses: COURSES,
-      programmes: PROGRAMMES,
+      courses,
+      programmes,
       studyLanguages,
       hoursPerWeek,
-      skillLinks: AISYAH_RESULTS.today.skillLinks,
+      skillLinks: [],
+      skillGroups: { ...courseSkillGroups, ...(breakdown?.gapGroups ?? {}) },
+      groupLabels: data.groupLabels,
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps -- studyLanguagesKey is the stable form of studyLanguages
-  }, [role, studyLanguagesKey, hoursPerWeek]);
+  }, [role, data, breakdown, courses, programmes, courseSkillGroups, studyLanguagesKey, hoursPerWeek]);
 
   useEffect(() => {
     if (!hydrated) return;
@@ -108,11 +122,48 @@ export function PathwayView() {
     if (roleId && roleId !== chosenRoleId) setChosenRoleId(roleId);
   }, [roleId, chosenRoleId, setChosenRoleId]);
 
-  if (!profile || !role || !plan) return null;
+  if (!profile) return null;
+
+  if (state.status !== "ready" || !role || !plan) {
+    return (
+      <div className="bg-paper pb-32 text-ink sm:pb-16">
+        <main className="mx-auto max-w-[1248px] px-4 pt-10 sm:px-6">
+          {state.status === "loading" && (
+            <p className="text-[14px] text-grey" aria-live="polite">
+              Building your plan…
+            </p>
+          )}
+          {state.status === "error" && (
+            <div className="rounded-2xl border border-line bg-white p-6 text-[14px]" role="alert">
+              <p className="font-medium">We couldn&rsquo;t load your roles right now.</p>
+              <p className="mt-1 text-grey">{state.message}</p>
+              <button type="button" onClick={retry} className="mt-4 rounded-lg border border-line bg-btn2 px-4 py-2 font-medium">
+                Try again
+              </button>
+            </div>
+          )}
+          {state.status === "ready" && (
+            <div className="rounded-2xl border border-line bg-white p-6 text-[14px]">
+              <p className="font-medium">That role isn&rsquo;t in your results.</p>
+              <p className="mt-1 text-grey">Pick one of the roles ranked for your profile.</p>
+              <button
+                type="button"
+                onClick={() => router.push("/results")}
+                className="mt-4 inline-flex items-center gap-1.5 rounded-lg border border-line bg-btn2 px-4 py-2 font-medium"
+              >
+                <ArrowLeft className="size-4" strokeWidth={1.6} />
+                Back to roles
+              </button>
+            </div>
+          )}
+        </main>
+      </div>
+    );
+  }
 
   function resolveItem(step: PlanStep): Course | Programme | null {
-    if (step.kind === "course") return COURSES.find((course) => course.id === step.itemId) ?? null;
-    return PROGRAMMES.find((programme) => programme.id === step.itemId) ?? null;
+    if (step.kind === "course") return courses.find((course) => course.id === step.itemId) ?? null;
+    return programmes.find((programme) => programme.id === step.itemId) ?? null;
   }
 
   const totalWeeks = plan.steps.reduce((max, step) => Math.max(max, step.weekEnd), 0);
@@ -371,7 +422,7 @@ export function PathwayView() {
                           )}
                           {sdgLink && (
                             <span className="flex items-center gap-1.5">
-                              SDG <SdgBadge link={sdgLink} label={AISYAH_RESULTS.today.targetLabels[sdgLink.target] ?? sdgLink.target} />
+                              SDG <SdgBadge link={sdgLink} label={targetLabels[sdgLink.target] ?? sdgLink.target} />
                             </span>
                           )}
                         </div>
@@ -453,7 +504,7 @@ export function PathwayView() {
                     <span className="flex items-center gap-1.5">
                       <SdgBadge
                         link={role.sdg[0]}
-                        label={AISYAH_RESULTS.today.targetLabels[role.sdg[0].target] ?? role.sdg[0].target}
+                        label={targetLabels[role.sdg[0].target] ?? role.sdg[0].target}
                         plain
                       />
                       {role.sdg.length > 1 && (
@@ -468,7 +519,7 @@ export function PathwayView() {
               >
                 <div className="flex flex-wrap gap-1.5 text-[12px]">
                   {role.sdg.map((link) => (
-                    <SdgBadge key={link.target} link={link} label={AISYAH_RESULTS.today.targetLabels[link.target] ?? link.target} />
+                    <SdgBadge key={link.target} link={link} label={targetLabels[link.target] ?? link.target} />
                   ))}
                 </div>
                 <div className="mt-3">
@@ -502,7 +553,7 @@ export function PathwayView() {
                   </li>
                   <li className="flex gap-2">
                     <LinkIcon className="mt-px size-4 shrink-0 text-sage" strokeWidth={1.6} />
-                    Every link comes from our checked catalogue. AI orders the steps; it never writes a link.
+                    Every link comes from our checked catalogue. Steps are ordered by fixed rules, not by AI.
                   </li>
                 </ul>
                 {role.robust && (
@@ -546,9 +597,9 @@ export function PathwayView() {
         </section>
 
         <p className="mt-8 mb-6 border-t border-line pt-4 text-[11px] leading-relaxed text-grey/80">
-          Example data: the plan, weeks, hours, cost types, eligibility results, SDG links and last-checked dates on
-          this page are illustrative example data (SDC Hackathon demo). Course titles and programme details are
-          examples, not verified listings; always confirm on the provider&rsquo;s site.
+          Courses and programmes come from the Laluan catalogue, checked by the team on the date shown on each step.
+          Weeks are estimated from each course&rsquo;s listed hours at your weekly pace. Costs and eligibility can
+          change: always confirm on the provider&rsquo;s site before you enrol.
         </p>
       </main>
       <EstimateFooter />

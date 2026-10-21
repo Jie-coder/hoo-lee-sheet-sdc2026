@@ -1,17 +1,28 @@
 import { render, screen, within } from "@testing-library/react";
-import { describe, expect, it, vi } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import { FlowProvider } from "@/context/flow-context";
-import { AISYAH_RESULTS } from "@/mocks/aisyah";
+import { analyzeProfile } from "@/lib/analyze";
+import { CATALOGUE } from "@/lib/catalogue";
+import { resolveProfileSkills } from "@/lib/profile-skills";
+import { PERSONAS } from "@/mocks/personas";
 import { PathwayView } from "./pathway-view";
 
-// Data Operations Analyst: plan opens on the "AI Untuk Rakyat" programme
-// (step 1) and closes on "Career counselling session" (step 5) — neither
-// carries an `hours` field in the catalogue, unlike every course step.
-const role = AISYAH_RESULTS.today.response.roles[0];
+// Aisyah's real result from the curated data; the fetch to /api/roles is
+// answered with it, so the page runs the same code as in the browser.
+const persona = PERSONAS.aisyah;
+const chips = persona.parsed.skills.map((label) => ({ label, selfReported: false }));
+const resolved = resolveProfileSkills(CATALOGUE, persona.id, chips);
+const result = analyzeProfile(CATALOGUE, {
+  skills: resolved.skills,
+  currentOccupationId: persona.currentOccupationId,
+  impactInterest: "none",
+});
+const role = result.roles[0];
+let roleParam = role.occupationId;
 
 vi.mock("next/navigation", () => ({
   useRouter: () => ({ push: vi.fn(), replace: vi.fn() }),
-  useSearchParams: () => new URLSearchParams(`role=${role.occupationId}`),
+  useSearchParams: () => new URLSearchParams(`role=${roleParam}`),
 }));
 
 function seedFlowState() {
@@ -22,10 +33,10 @@ function seedFlowState() {
       consentAt: new Date().toISOString(),
       profile: {
         personaId: "aisyah",
-        name: "Aisyah",
+        name: persona.name,
         roles: [],
         education: [],
-        skills: [],
+        skills: chips.map((chip, index) => ({ id: `s${index}`, label: chip.label, matched: true, selfReported: false })),
         courseLanguages: ["en"],
       },
       interviewAnswers: { hours_per_week: 6 },
@@ -34,23 +45,47 @@ function seedFlowState() {
   );
 }
 
-describe("PathwayView", () => {
-  it("shows an hours chip on every step, placeholder for programmes that don't list hours", async () => {
-    seedFlowState();
-    render(
-      <FlowProvider>
-        <PathwayView />
-      </FlowProvider>,
-    );
+function renderPathway() {
+  vi.stubGlobal(
+    "fetch",
+    vi.fn(async () => new Response(JSON.stringify({ ...result, skillMatches: resolved.matches }), { status: 200 })),
+  );
+  seedFlowState();
+  return render(
+    <FlowProvider>
+      <PathwayView
+        courses={CATALOGUE.courses}
+        programmes={CATALOGUE.programmes}
+        courseSkillGroups={CATALOGUE.skillGroups}
+      />
+    </FlowProvider>,
+  );
+}
 
-    const aiStep = (await screen.findByRole("heading", { name: "AI Untuk Rakyat" })).closest("article");
+afterEach(() => {
+  vi.unstubAllGlobals();
+  sessionStorage.clear();
+  roleParam = role.occupationId;
+});
+
+describe("PathwayView", () => {
+  it("opens on AI untuk Rakyat (no hours listed) and only cites catalogue items", async () => {
+    renderPathway();
+
+    const aiStep = (await screen.findByRole("heading", { name: "AI untuk Rakyat Programme" })).closest("article");
     expect(within(aiStep!).getByText("Hours not listed")).toBeInTheDocument();
 
-    const counsellingStep = screen.getByRole("heading", { name: "Career counselling session" }).closest("article");
-    expect(within(counsellingStep!).getByText("Hours not listed")).toBeInTheDocument();
+    const known = new Set([...CATALOGUE.courses.map((c) => c.title), ...CATALOGUE.programmes.map((p) => p.name)]);
+    const titles = screen.getAllByRole("heading", { level: 3 }).map((heading) => heading.textContent ?? "");
+    expect(titles.length).toBeGreaterThan(0);
+    for (const title of titles) expect(known.has(title)).toBe(true);
+  });
 
-    const courseStep = screen.getByRole("heading", { name: "Data cleaning with Excel Power Query" }).closest("article");
-    expect(within(courseStep!).getByText("6 h")).toBeInTheDocument();
-    expect(within(courseStep!).queryByText("Hours not listed")).not.toBeInTheDocument();
+  it("shows a way back instead of a blank page for a role that isn't in the results", async () => {
+    roleParam = "not-a-role";
+    renderPathway();
+
+    expect(await screen.findByText("That role isn’t in your results.")).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /Back to roles/ })).toBeInTheDocument();
   });
 });

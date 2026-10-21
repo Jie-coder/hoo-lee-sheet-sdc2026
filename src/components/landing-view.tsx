@@ -25,7 +25,7 @@ import { SdgBadge } from "@/components/sdg-badge";
 import { SourceChip } from "@/components/source-chip";
 import { formatBandScoreParts, formatDayMonthYear, formatFitPercent } from "@/lib/display";
 import { useFlow } from "@/context/flow-context";
-import { AISYAH_RESULTS, EXAMPLE_AS_OF } from "@/mocks/aisyah";
+import type { LandingPreview } from "@/lib/landing-preview";
 
 /** Shortened so the band and score always fit on one line in the preview card. */
 const SHORT_BAND: Record<"Low" | "Medium" | "High", string> = { Low: "Low", Medium: "Med", High: "High" };
@@ -62,23 +62,21 @@ const HOW_IT_WORKS = [
 ] as const;
 
 const BUILT_ON = [
-  "ESCO v1.2",
-  "O*NET 31.0",
-  "Anthropic Economic Index · Sep 2026",
-  "ILO GenAI Exposure · 2025",
-  "arXiv momentum · daily",
-  "WEF Four Futures · 2026",
+  "ESCO v1.2.1 · skills per job",
+  "ILO GenAI Exposure · May 2025",
+  "arXiv paper counts · 90-day windows",
+  "HRD Corp e-LATiH, Coursera and 10 more course providers",
+  "Scenario demand · illustrative (SDC brief)",
 ];
 
-export function LandingView() {
+export function LandingView({ preview }: { preview: LandingPreview }) {
   const router = useRouter();
   const { consent, setConsent } = useFlow();
   const consentRef = useRef<HTMLDivElement>(null);
 
-  const previewRole = AISYAH_RESULTS.today.response.roles[0];
-  const previewWork = AISYAH_RESULTS.today.response.currentWork;
-  const augmentation = formatBandScoreParts(previewWork.augmentation);
-  const exposure = formatBandScoreParts(previewWork.exposure);
+  const previewRole = preview.role;
+  const exposure = formatBandScoreParts(preview.currentExposure);
+  const roleExposure = formatBandScoreParts(previewRole.exposure);
 
   function handleHeroStart() {
     if (consent) {
@@ -133,44 +131,52 @@ export function LandingView() {
           <div className="rounded-2xl border border-line bg-white p-6">
             <div className="flex items-center justify-between">
               <p className="text-[11px] font-semibold tracking-[0.12em] text-grey">WHAT YOU GET</p>
-              <span className="rounded border border-line px-1.5 py-0.5 text-[11px] text-grey">Example result</span>
+              <span className="rounded border border-line px-1.5 py-0.5 text-[11px] text-grey">Sample profile: {preview.personaName.split(" ")[0]}</span>
             </div>
             <div className="mt-4 grid grid-cols-2 gap-5">
               <div>
-                <p className="text-[12px] text-grey">Augmentation</p>
-                <p className="mt-1.5 font-serif text-[36px] leading-none font-medium tracking-tight text-nowrap text-sage">
-                  {SHORT_BAND[augmentation.band]} <span className="text-sage-tint">·</span> {augmentation.value}
-                </p>
-              </div>
-              <div className="border-l border-line pl-5">
-                <p className="text-[12px] text-grey">AI exposure</p>
+                <p className="text-[12px] text-grey">AI exposure today</p>
                 <p className="mt-1.5 font-serif text-[36px] leading-none font-medium tracking-tight text-nowrap">
                   {SHORT_BAND[exposure.band]} <span className="text-grey/40">·</span> {exposure.value}
                 </p>
+                <p className="mt-1 text-[12px] text-grey capitalize">{preview.currentTitle}</p>
+              </div>
+              <div className="border-l border-line pl-5">
+                <p className="text-[12px] text-grey">AI exposure after the move</p>
+                <p className="mt-1.5 font-serif text-[36px] leading-none font-medium tracking-tight text-nowrap text-sage">
+                  {SHORT_BAND[roleExposure.band]} <span className="text-sage-tint">·</span> {roleExposure.value}
+                </p>
+                <p className="mt-1 text-[12px] text-grey capitalize">{previewRole.title}</p>
               </div>
             </div>
             <p className="mt-3 text-[13px] font-medium text-ink">Exposure is not job loss.</p>
             <div className="mt-4 border-t border-line pt-4">
               <div className="flex items-center justify-between">
-                <span className="inline-flex items-center gap-1.5 rounded-full bg-sage-soft px-2.5 py-1 text-[12px] font-medium text-sage-dark">
+                <span
+                  className={
+                    preview.robust
+                      ? "inline-flex items-center gap-1.5 rounded-full bg-sage-soft px-2.5 py-1 text-[12px] font-medium text-sage-dark"
+                      : "inline-flex items-center gap-1.5 rounded-full bg-alt px-2.5 py-1 text-[12px] text-grey"
+                  }
+                >
                   <ShieldCheck className="size-3.5" strokeWidth={1.6} />
-                  Robust in all 3 futures
+                  {preview.statusLabel}
                 </span>
                 <span className="text-[12px] text-grey">{formatFitPercent(previewRole.fit)} fit</span>
               </div>
-              <p className="mt-3 font-serif text-[22px] leading-tight font-medium">{previewRole.title}</p>
+              <p className="mt-3 font-serif text-[22px] leading-tight font-medium capitalize">{previewRole.title}</p>
               <div className="mt-2.5 flex flex-wrap gap-1.5 text-[12px]">
                 {previewRole.sdg.map((link) => (
                   <SdgBadge
                     key={link.target}
                     link={link}
-                    label={AISYAH_RESULTS.today.targetLabels[link.target] ?? link.target}
+                    label={preview.targetLabels[link.target] ?? link.target}
                   />
                 ))}
               </div>
               <p className="mt-3 flex items-center gap-1.5 text-[13px] text-grey">
                 <RouteIcon className="size-4" strokeWidth={1.6} />
-                12-week plan · 6 h/week · mostly free
+                {preview.planWeeks}-week plan · {preview.planHoursPerWeek} h/week · {preview.mostlyFree ? "mostly free" : "mixed cost"}
               </p>
             </div>
             <div className="mt-4 flex flex-wrap gap-1.5">
@@ -294,15 +300,16 @@ export function LandingView() {
           </div>
           <p className="mt-auto flex items-center gap-1.5 pt-4 text-[12px] text-grey">
             <RefreshCw className="size-3.5" strokeWidth={1.6} />
-            Trend signal last refreshed {formatDayMonthYear(EXAMPLE_AS_OF)}
+            Trend signal checked {formatDayMonthYear(preview.signalsAsOf)}
           </p>
         </div>
       </section>
 
-      {/* example-data note */}
+      {/* data note */}
       <p className="mt-8 mb-6 border-t border-line pt-4 text-[11px] leading-relaxed text-grey/80">
-        Example data: the result preview, scores, role, SDG links and source dates on this page are illustrative
-        example data for the synthetic persona Aisyah (SDC Hackathon demo). They are not real measurements.
+        The preview is the real result for Aisyah, a synthetic sample profile (SDC Hackathon demo), computed from the
+        same public data as every result: ESCO skills, ILO exposure and arXiv trend counts. Scenario demand is an
+        illustrative assumption. Results are estimates to support your decision, not predictions.
       </p>
     </main>
   );

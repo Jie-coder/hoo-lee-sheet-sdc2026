@@ -13,7 +13,8 @@
     "lint": "eslint",
     "typecheck": "next typegen && tsc --noEmit",
     "test": "vitest run",
-    "import-data": "tsx scripts/import-data.ts"
+    "import-data": "tsx scripts/import-data.ts",
+    "build-catalogue": "tsx scripts/build-catalogue.ts"
   },
   "dependencies": {
     "@ai-sdk/google": "^4.0.99",

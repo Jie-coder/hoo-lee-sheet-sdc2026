@@ -169,7 +169,7 @@ export function ProfileView() {
               {persona && (
                 <span className="inline-flex items-center gap-1 rounded-md border border-line bg-alt px-2 py-0.5 text-[11px] leading-4 text-grey">
                   <Database className="size-3" strokeWidth={1.6} />
-                  ESCO v1.2 · {matchedCount} of {profile.skills.length} skills matched
+                  ESCO v1.2.1 · {matchedCount} of {profile.skills.length} skills matched
                 </span>
               )}
               {persona && (
@@ -354,9 +354,9 @@ export function ProfileView() {
       )}
 
       <p className="mt-8 mb-6 border-t border-line pt-4 text-[11px] leading-relaxed text-grey/80">
-        Example data: all three people and their CVs are synthetic, made for the SDC Hackathon demo. The parsed
-        skills, ESCO match counts and dates on this page are illustrative example data. They are not real
-        measurements.
+        All three people and their CVs are synthetic, made for the SDC Hackathon demo. Their CV skills were matched
+        to ESCO skills by hand (data/persona_skills.csv). A skill you add counts only when it is exactly an ESCO skill
+        name, at half weight.
       </p>
     </main>
   );

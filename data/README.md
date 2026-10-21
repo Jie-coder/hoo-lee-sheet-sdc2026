@@ -112,6 +112,47 @@ npx tsx scripts/fetch-esco-skills.ts --include-optional # also optional skills
   `(occupation_id, skill_id)`. ESCO skills that no course or keyword mentions
   are added to `public.skills` first, with their ESCO label.
 
+## `skill_groups.csv` (generated from ESCO: never edit by hand)
+`skill_uri, group_uri, group_label, source_name, as_of`
+
+Each skill's group in ESCO's own skills hierarchy (`broaderHierarchyConcept`).
+Scoring gives **half credit** when a user's skill is in the same ESCO group as
+a role's essential skill (for example "use spreadsheets software" and "perform
+data analysis" are both in "managing, gathering and storing digital data").
+The pathway also uses it to suggest a related course when no course teaches a
+gap skill. Rerun after `fetch-esco-skills.ts`:
+
+```
+npx tsx scripts/fetch-esco-skill-groups.ts
+```
+
+## `occupation_sdg.csv` (drafted by the team: Henry reviews in T18)
+`occupation_id, target, target_label, tier (direct / supporting), reason, source_url, checked_on`
+
+One to three UN SDG targets per occupation, each with a one-line reason and the
+UN goal page. `direct` means the work itself delivers the target (solar
+installer → 7.2); `supporting` means it contributes. A clerical job with no
+stronger link gets 8.5 (decent work), and the reason says so.
+
+## `persona_skills.csv` (demo only)
+`persona_id, cv_skill, esco_uri, esco_label, note`
+
+The three synthetic sample CVs' skills, matched to ESCO skills by hand (ESCO
+search candidates, checked by a person). A CV skill with no fitting ESCO skill
+has no row and shows as unmatched on the profile page. Replaced by Gemini
+matching once T06 lands.
+
+## The app reads `src/data/catalogue.json`, not these CSVs
+
+After changing anything in `data/`, rebuild it (a test fails if you forget):
+
+```
+npm run build-catalogue
+```
+
+It runs the same checks as `import-data.ts` and refuses to write if any file has
+an error. The app needs no database or API key to rank roles.
+
 ## Checking your file before you hand it in
 
 `scripts/import-data.ts` reads every file above and tells you exactly which

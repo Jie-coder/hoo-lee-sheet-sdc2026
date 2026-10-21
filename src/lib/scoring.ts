@@ -29,8 +29,8 @@
 // - The ranking image is α F + β D + γ (1 − θ E), a weighted sum whose third
 //   term is the exposure penalty. R is not clamped.
 // - The brief does not say which SDG targets match each impact_interest.
-//   impactGoals below is the small map used: environment 13–15, education 4,
-//   health 3, community 11 (SDG 11, "sustainable cities and communities").
+//   impactGoals below is the small map used: environment 6, 7, 12–15,
+//   education 4, health 3, community 1, 10, 11.
 //   "none" matches nothing. Inferred links do not count. The +0.05 is added
 //   once per role, to every scenario's R, not once per link.
 // - Top 3 is exactly min(3, n) after sorting by R descending, then
@@ -79,10 +79,12 @@ export const SCORING_PARAMS = {
    * See the ambiguity note at the top of this file.
    */
   impactGoals: {
-    environment: [13, 14, 15],
+    // 6 water, 7 energy, 12 waste and reporting, 13 climate, 14–15 ecosystems.
+    environment: [6, 7, 12, 13, 14, 15],
     education: [4],
     health: [3],
-    community: [11],
+    // 1 poverty, 10 inclusion, 11 cities and communities.
+    community: [1, 10, 11],
     none: [] as readonly number[],
   },
 } as const;
@@ -102,6 +104,8 @@ export type EssentialSkillInput = {
   baseImportance: number;
   momentum: number;
   level: number;
+  /** A catalogue course teaches it. Breaks importance ties in the gap, so gaps you can act on come first. */
+  teachable?: boolean;
 };
 
 export type SkillCandidate = {
@@ -254,18 +258,28 @@ function compareId(a: string, b: string): number {
 
 /**
  * Top gapSize missing essential skills (h_s = 0), by adjusted importance
- * descending. Equal importance breaks ties by skillId ascending.
+ * descending. Equal importance puts teachable skills first (a catalogue
+ * course closes them), then breaks ties by skillId ascending.
  */
 export function skillGap(skills: readonly EssentialSkillInput[]): GapSkill[] {
   return skills
     .filter((skill) => skill.level === SCORING_PARAMS.skillLevel.missing)
     .map((skill) => ({
-      skillId: skill.skillId,
-      label: skill.label,
-      importance: skillImportance(skill.baseImportance, skill.momentum),
+      gap: {
+        skillId: skill.skillId,
+        label: skill.label,
+        importance: skillImportance(skill.baseImportance, skill.momentum),
+      },
+      teachable: skill.teachable ? 1 : 0,
     }))
-    .sort((a, b) => b.importance - a.importance || compareId(a.skillId, b.skillId))
-    .slice(0, SCORING_PARAMS.gapSize);
+    .sort(
+      (a, b) =>
+        b.gap.importance - a.gap.importance ||
+        b.teachable - a.teachable ||
+        compareId(a.gap.skillId, b.gap.skillId),
+    )
+    .slice(0, SCORING_PARAMS.gapSize)
+    .map((item) => item.gap);
 }
 
 type PreparedRole = {

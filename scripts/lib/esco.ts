@@ -78,6 +78,43 @@ export function occupationSkillRowsFromEsco(
   return [...essential, ...optional];
 }
 
+export function escoSkillUrl(skillUri: string, version: string): string {
+  const params = new URLSearchParams({ uri: skillUri, language: "en", selectedVersion: version });
+  return `${ESCO_API_BASE}/resource/skill?${params.toString()}`;
+}
+
+/** The part of an ESCO skill response we use: its group in the ESCO skills hierarchy. */
+export type EscoSkillResponse = {
+  _links?: { broaderHierarchyConcept?: { uri?: string; title?: string }[] };
+};
+
+export type SkillGroupRow = {
+  skillUri: string;
+  groupUri: string;
+  groupLabel: string;
+  asOf: string;
+};
+
+export const SKILL_GROUPS_HEADER = ["skill_uri", "group_uri", "group_label", "source_name", "as_of"] as const;
+
+/**
+ * The skill's group in ESCO's own hierarchy (broaderHierarchyConcept), or
+ * null when ESCO lists none. The first group is used when ESCO lists several.
+ */
+export function skillGroupFromEsco(skillUri: string, response: EscoSkillResponse, asOf: string): SkillGroupRow | null {
+  const group = response._links?.broaderHierarchyConcept?.find((link) => link.uri && link.title);
+  if (!group?.uri || !group.title) return null;
+  return { skillUri, groupUri: group.uri, groupLabel: group.title.trim(), asOf };
+}
+
+export function formatSkillGroupsCsv(rows: SkillGroupRow[], sourceName = ESCO_SOURCE_NAME): string {
+  const lines = [SKILL_GROUPS_HEADER.join(",")];
+  for (const row of rows) {
+    lines.push([row.skillUri, row.groupUri, row.groupLabel, sourceName, row.asOf].map(csvCell).join(","));
+  }
+  return `${lines.join("\n")}\n`;
+}
+
 function csvCell(value: string): string {
   return /[",\r\n]/.test(value) ? `"${value.replace(/"/g, '""')}"` : value;
 }

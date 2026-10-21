@@ -1,6 +1,12 @@
 import { describe, expect, it } from "vitest";
 import type { Course, Programme } from "@/types/contracts";
-import { buildPathwayPlan, filterCoursesByLanguage, pickCourseForSkill, programmeEligibilityStatus } from "./pathway";
+import {
+  AI_READINESS_PROGRAMME_ID,
+  buildPathwayPlan,
+  filterCoursesByLanguage,
+  pickCourseForSkill,
+  programmeEligibilityStatus,
+} from "./pathway";
 
 function course(overrides: Partial<Course>): Course {
   return {
@@ -121,5 +127,69 @@ describe("buildPathwayPlan", () => {
     expect(plan.steps.map((step) => step.itemId)).toEqual(["c1", "c2"]);
     expect(plan.steps[0]).toMatchObject({ weekStart: 1, weekEnd: 1 });
     expect(plan.steps[1].weekStart).toBe(2);
+  });
+});
+
+describe("buildPathwayPlan with real-data rules", () => {
+  const role = {
+    occupationId: "role-2",
+    gap: [
+      { skillId: "s1", label: "Skill one", importance: 1 },
+      { skillId: "s2", label: "Skill two", importance: 1 },
+      { skillId: "s3", label: "Skill three", importance: 1 },
+    ],
+  } as import("@/types/contracts").RoleResult;
+
+  it("lists a course that closes two gap skills once, closing both", () => {
+    const plan = buildPathwayPlan({
+      role,
+      courses: [course({ id: "both", skillIds: ["s1", "s2"] })],
+      programmes: [],
+      studyLanguages: ["en"],
+      hoursPerWeek: 6,
+      skillLinks: [],
+    });
+    expect(plan.steps.map((step) => step.itemId)).toEqual(["both"]);
+    expect(plan.steps[0].closesSkillIds).toEqual(["s1", "s2"]);
+  });
+
+  it("suggests a same-ESCO-group course when none teaches the skill, without claiming it closes the gap", () => {
+    const plan = buildPathwayPlan({
+      role,
+      courses: [course({ id: "related", skillIds: ["other"] })],
+      programmes: [],
+      studyLanguages: ["en"],
+      hoursPerWeek: 6,
+      skillLinks: [],
+      skillGroups: { s3: "g1", other: "g1" },
+      groupLabels: { g1: "managing data" },
+    });
+    expect(plan.steps).toHaveLength(1);
+    expect(plan.steps[0]).toMatchObject({ itemId: "related", closesSkillIds: [] });
+    expect(plan.steps[0].why).toContain("managing data");
+    expect(plan.steps[0].why).toContain("Skill three");
+  });
+
+  it("opens on the AI untuk Rakyat programme (p001) when it is in the catalogue", () => {
+    const aiProgramme = {
+      id: AI_READINESS_PROGRAMME_ID,
+      name: "AI untuk Rakyat Programme",
+      agency: "Ministry of Digital",
+      url: "https://rakyatdigital.gov.my/en/literacy-hub",
+      benefits: "Free AI basics.",
+      eligibility: { age_min: null, age_max: null, citizen: true, employment: ["any"], perkeso_contributor: null, states: ["all"] },
+      costType: "free",
+      deadline: null,
+      lastChecked: "2026-10-20",
+    } satisfies Programme;
+    const plan = buildPathwayPlan({
+      role,
+      courses: [],
+      programmes: [aiProgramme],
+      studyLanguages: ["en"],
+      hoursPerWeek: 6,
+      skillLinks: [],
+    });
+    expect(plan.steps.map((step) => step.itemId)).toEqual(["p001"]);
   });
 });

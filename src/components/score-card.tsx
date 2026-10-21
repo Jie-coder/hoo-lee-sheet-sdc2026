@@ -1,75 +1,34 @@
-// Current-work scores: augmentation is the hero, exposure sits beside it.
-// The long definitions move into an info popover beside each heading;
-// "Exposure is not job loss." always stays visible.
+// Current-work card: the AI exposure of the user's current job, from the
+// ILO GenAI exposure study. "Exposure is not job loss." always stays visible.
+// Augmentation is not shown: there is no task-level augmentation data yet.
 import { InfoPopover } from "@/components/ui/info-popover";
 import { SourcesDisclosure } from "@/components/sources-disclosure";
-import { augmentationSummary, formatBandScoreParts } from "@/lib/display";
-import type { CurrentWorkScores, UnitScore } from "@/types/contracts";
+import { formatBandScoreParts } from "@/lib/display";
+import type { Source } from "@/types/contracts";
 
-export type TaskAugmentation = {
-  label: string;
-  augmentation: UnitScore;
+export type CurrentWork = {
+  title: string;
+  exposure: number;
+  /** ISCO-08 has no code for this exact job, so the figure is for a wider occupation group. */
+  groupEstimate: boolean;
+  sources: Source[];
 };
 
-export function ScoreCard({
-  currentWork,
-  tasks,
-}: {
-  currentWork: CurrentWorkScores;
-  tasks: readonly TaskAugmentation[];
-}) {
-  const augmentation = formatBandScoreParts(currentWork.augmentation);
+export function ScoreCard({ currentWork }: { currentWork: CurrentWork }) {
   const exposure = formatBandScoreParts(currentWork.exposure);
   const exposurePercent = Math.round(currentWork.exposure * 100);
-  const augmentationSources = currentWork.sources.slice(0, 1);
 
   return (
-    <section className="grid grid-cols-1 gap-5 lg:grid-cols-12">
-      <div className="rounded-2xl border border-line bg-white p-5 sm:p-6 lg:col-span-7 lg:flex lg:gap-8">
-        <div className="flex-1">
-          <div className="flex items-center gap-1.5">
-            <p className="text-[11px] font-semibold tracking-[0.12em] text-grey">AUGMENTATION</p>
-            <InfoPopover label="What augmentation means">
-              How much AI tools can make your current tasks faster and better, with you still in charge.
-            </InfoPopover>
-          </div>
-          <p className="mt-3 font-serif text-5xl leading-none font-medium tracking-tight text-sage tabular-nums sm:text-[60px]">
-            {augmentation.band} <span className="text-sage-tint">·</span> {augmentation.value}
-          </p>
-          <p className="mt-3 text-[14px] text-grey">{augmentationSummary(currentWork.augmentation)}</p>
-          <div className="mt-4">
-            <SourcesDisclosure sources={augmentationSources} />
-          </div>
-        </div>
-        <div className="mt-6 pt-5 lg:mt-0 lg:w-[270px] lg:shrink-0 lg:pt-0">
-          <p className="mb-2.5 text-[12px] text-grey">Your tasks, by augmentation</p>
-          <ul className="space-y-2.5 text-[13px]">
-            {tasks.map((task) => (
-              <li key={task.label}>
-                <div className="flex justify-between gap-3">
-                  <span>{task.label}</span>
-                  <span className="text-grey tabular-nums">{task.augmentation.toFixed(2)}</span>
-                </div>
-                <div className="mt-1 h-1.5 rounded-full bg-alt">
-                  <div
-                    className={task.augmentation > 0.66 ? "h-1.5 rounded-full bg-sage" : "h-1.5 rounded-full bg-sage/70"}
-                    style={{ width: `${Math.round(task.augmentation * 100)}%` }}
-                  />
-                </div>
-              </li>
-            ))}
-          </ul>
-        </div>
-      </div>
-
-      <div className="flex flex-col rounded-2xl border border-line bg-white p-5 sm:p-6 lg:col-span-5">
+    <section className="rounded-2xl border border-line bg-white p-5 sm:p-6 lg:flex lg:items-start lg:gap-10">
+      <div className="lg:w-[420px] lg:shrink-0">
         <div className="flex items-center gap-1.5">
-          <p className="text-[11px] font-semibold tracking-[0.12em] text-grey">AI EXPOSURE</p>
+          <p className="text-[11px] font-semibold tracking-[0.12em] text-grey">AI EXPOSURE OF YOUR CURRENT JOB</p>
           <InfoPopover label="What AI exposure means">
-            How much of your current tasks AI tools can perform or assist with.
+            The share of a job&rsquo;s tasks that generative AI could perform or assist with, scored 0 to 1 by the ILO
+            from task descriptions. It describes the job, not you.
           </InfoPopover>
         </div>
-        <p className="mt-3 font-serif text-[44px] leading-none font-medium tracking-tight tabular-nums">
+        <p className="mt-3 font-serif text-5xl leading-none font-medium tracking-tight tabular-nums sm:text-[56px]">
           {exposure.band} <span className="text-grey/40">·</span> {exposure.value}
         </p>
         <p className="mt-3 text-[14px] font-medium text-ink">Exposure is not job loss.</p>
@@ -89,7 +48,17 @@ export function ScoreCard({
             <span>High</span>
           </div>
         </div>
-        <div className="mt-auto pt-3">
+      </div>
+      <div className="mt-5 text-[14px] leading-relaxed text-grey lg:mt-0 lg:flex-1">
+        <p>
+          Figure for <span className="font-medium text-ink capitalize">{currentWork.title}</span>
+          {currentWork.groupEstimate ? ", using the closest ILO occupation group (no exact code exists)." : "."}
+        </p>
+        <p className="mt-2">
+          Medium or high exposure usually means parts of the job change, so the roles below favour work where your
+          skills carry over and AI exposure is lower.
+        </p>
+        <div className="mt-4">
           <SourcesDisclosure sources={currentWork.sources} />
         </div>
       </div>
