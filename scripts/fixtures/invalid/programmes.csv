@@ -1,0 +1,4 @@
+id,name,agency,url,benefits,cost_type,deadline,age_min,age_max,citizen,employment,perkeso_contributor,states,last_checked,notes
+p020,Any Plus Employed Grant,Contoso Workforce Agency,https://example.com/programmes/any-plus-employed,Test benefits text.,subsidised,,,,,"any,employed",,all,2026-10-01,any mixed with other employment values on purpose
+p021,All Plus Johor Grant,Contoso Workforce Agency,https://example.com/programmes/all-plus-johor,Test benefits text.,freemium,,,,,employed,,"all,johor",2026-10-02,bad cost_type and all mixed with a state on purpose
+p020,Duplicate Programme Id,Contoso Workforce Agency,https://example.com/programmes/duplicate,Test benefits text.,free,,,,,any,,all,2026-10-03,duplicate id on purpose

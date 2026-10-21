@@ -5,6 +5,7 @@ import {
   CLUSTER_IDS,
   ClusterIdSchema,
   CostTypeSchema,
+  CourseModeSchema,
   CourseSchema,
   EMBEDDING_DIMENSIONS,
   EMBEDDING_MODEL,
@@ -362,6 +363,12 @@ describe("SignalReading source", () => {
 });
 
 describe("catalogue and pathway", () => {
+  it("accepts only online, physical, or hybrid as a course mode", () => {
+    expect(CourseModeSchema.options).toEqual(["online", "physical", "hybrid"]);
+    expect(CourseModeSchema.safeParse("physical").success).toBe(true);
+    expect(CourseModeSchema.safeParse("in-person").success).toBe(false);
+  });
+
   it("parses a course, a programme, and a plan", () => {
     expect(
       CourseSchema.parse({
@@ -375,6 +382,7 @@ describe("catalogue and pathway", () => {
         certificate: false,
         skillIds: ["spreadsheets"],
         lastChecked: "2026-10-01",
+        mode: "online",
       }).costType,
     ).toBe("free");
 
@@ -390,6 +398,7 @@ describe("catalogue and pathway", () => {
         certificate: false,
         skillIds: ["spreadsheets"],
         lastChecked: "2026-10-01",
+        mode: "online",
       }).success,
     ).toBe(false);
 
@@ -405,6 +414,7 @@ describe("catalogue and pathway", () => {
         certificate: false,
         skillIds: ["spreadsheets"],
         lastChecked: "2026-10-01",
+        mode: "online",
       }).success,
     ).toBe(false);
 

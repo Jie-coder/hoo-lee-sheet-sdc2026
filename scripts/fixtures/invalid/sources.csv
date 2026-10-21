@@ -1,0 +1,4 @@
+name,url,publisher,what_it_measures,update_frequency,last_updated,data_format,licence,use_for,notes
+Contoso Missing Licence Index,https://example.com/data/missing-licence,Contoso Labs,Occupation-level AI exposure score,annual,2026-09-01,CSV,,exposure,missing licence on purpose
+Contoso Bad Format Feed,https://example.com/data/bad-format,Contoso Labs,arXiv mention counts per skill keyword,weekly,2026-10-15,Excel,CC0-1.0,trend,bad data_format on purpose
+Contoso Missing Licence Index,https://example.com/data/missing-licence-2,Contoso Labs,Occupation-level AI exposure score,annual,2026-09-02,CSV,CC0-1.0,exposure,duplicate name on purpose
