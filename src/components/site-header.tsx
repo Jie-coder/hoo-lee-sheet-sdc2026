@@ -1,11 +1,14 @@
-// App header: Laluan wordmark, flow steps, and course-language preference.
+// App header: Laluan wordmark, the four steps drawn as stations on one
+// route line (the laluan), and the course-language preference pill.
 "use client";
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
-import { BookOpen, Check } from "lucide-react";
+import { motion, useReducedMotion } from "framer-motion";
+import { Check } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { EASE_OUT } from "@/components/motion";
 
 const STEPS = [
   { id: "profile", label: "Profile" },
@@ -29,83 +32,78 @@ function currentStepIndex(pathname: string): number {
 
 export function SiteHeader() {
   const pathname = usePathname();
+  const reduce = useReducedMotion();
   const currentIndex = currentStepIndex(pathname);
   const [courseLanguage, setCourseLanguage] = useState<CourseLanguageId>("ms");
+  const onFlow = currentIndex >= 0;
+  // The sage line reaches the centre of the current station.
+  const fill = onFlow ? currentIndex / (STEPS.length - 1) : 0;
 
   return (
-    <header className="border-b border-line bg-paper/95">
-      <div className="mx-auto grid max-w-[1248px] grid-cols-[1fr_auto] items-center gap-x-3 gap-y-3 px-4 py-3 sm:px-6 lg:h-16 lg:grid-cols-[260px_1fr_260px] lg:py-0">
-        <Link href="/" className="col-start-1 row-start-1 justify-self-start">
+    <header className="sticky top-0 z-40 border-b border-line/80 bg-paper/90 backdrop-blur-md">
+      <div className="mx-auto flex h-16 max-w-[1248px] items-center justify-between gap-4 px-4 sm:px-6">
+        <Link href="/" className="shrink-0" aria-label="Laluan home">
           {/* Official wordmark. next/image refuses SVG without extra config. */}
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/brand/laluan-logo.svg" alt="Laluan" className="h-8 w-auto" />
+          <img src="/brand/laluan-logo.svg" alt="Laluan" className="h-7 w-auto" />
         </Link>
 
-        {currentIndex >= 0 && (
-          <div
-            role="group"
-            aria-label="Progress"
-            className="col-span-2 row-start-2 flex min-[391px]:hidden items-center justify-between gap-3 text-[12px] text-grey"
-          >
-            <span>
-              Step {currentIndex + 1} of {STEPS.length} · {STEPS[currentIndex].label}
-            </span>
-            <span className="flex shrink-0 items-center gap-1.5">
-              {STEPS.map((step, index) => (
-                <span
-                  key={step.id}
-                  className={cn("size-1.5 rounded-full", index === currentIndex ? "bg-ink" : "border border-line")}
-                />
-              ))}
-            </span>
-          </div>
+        {onFlow && (
+          <nav aria-label="Progress" className="hidden min-w-0 flex-1 justify-center md:flex">
+            <ol className="relative grid w-full max-w-[420px] grid-cols-4">
+              {/* guide + fill, drawn between the first and last station centres */}
+              <span aria-hidden className="absolute top-[7px] right-[12.5%] left-[12.5%] h-px bg-line" />
+              <motion.span
+                aria-hidden
+                className="absolute top-[7px] left-[12.5%] h-px origin-left bg-sage"
+                style={{ width: "75%" }}
+                initial={reduce ? { scaleX: fill } : { scaleX: 0 }}
+                animate={{ scaleX: fill }}
+                transition={{ duration: reduce ? 0 : 0.9, ease: EASE_OUT }}
+              />
+              {STEPS.map((step, index) => {
+                const complete = index < currentIndex;
+                const current = index === currentIndex;
+                return (
+                  <li
+                    key={step.id}
+                    className="relative flex flex-col items-center gap-1.5"
+                    aria-current={current ? "step" : undefined}
+                  >
+                    <motion.span
+                      className={cn(
+                        "flex size-[15px] items-center justify-center rounded-full border-2 bg-paper",
+                        complete && "border-sage bg-sage text-paper",
+                        current && "border-ink bg-ink",
+                        !complete && !current && "border-line",
+                      )}
+                      initial={reduce ? false : { scale: 0.6 }}
+                      animate={{ scale: 1 }}
+                      transition={{ type: "spring", stiffness: 420, damping: 24, delay: reduce ? 0 : 0.25 + index * 0.12 }}
+                    >
+                      {complete && <Check className="size-2.5" strokeWidth={3} />}
+                    </motion.span>
+                    <span className={cn("text-[11px] tracking-wide", current ? "font-medium text-ink" : "text-grey")}>
+                      {step.label}
+                    </span>
+                  </li>
+                );
+              })}
+            </ol>
+          </nav>
         )}
 
-        <nav
-          aria-label="Progress"
-          className="col-span-2 row-start-2 -mx-1 hidden items-center gap-1.5 overflow-x-auto px-1 text-[12px] min-[391px]:flex lg:col-span-1 lg:col-start-2 lg:row-start-1 lg:justify-center lg:gap-3 lg:text-[13px]"
-        >
-          {STEPS.map((step, index) => {
-            const number = index + 1;
-            const complete = currentIndex >= 0 && index < currentIndex;
-            const current = index === currentIndex;
-            return (
-              <div key={step.id} className="flex items-center gap-1.5 lg:gap-3">
-                {index > 0 && <span className="h-px w-4 shrink-0 bg-line lg:w-10" />}
-                <div
-                  className={cn(
-                    "flex shrink-0 items-center gap-2",
-                    current ? "font-medium text-ink" : "text-grey",
-                    !current && !complete && "text-grey/70",
-                  )}
-                  aria-current={current ? "step" : undefined}
-                >
-                  <span
-                    className={cn(
-                      "flex size-6 items-center justify-center rounded-full text-[12px]",
-                      complete && "bg-sage-soft text-sage",
-                      current && "bg-ink text-white",
-                      !complete && !current && "border border-line text-grey",
-                    )}
-                  >
-                    {complete ? <Check className="size-3.5" strokeWidth={1.6} /> : number}
-                  </span>
-                  {step.label}
-                </div>
-              </div>
-            );
-          })}
-        </nav>
-
-        <div className="col-start-2 row-start-1 flex items-center justify-end gap-2.5 lg:col-start-3">
-          <span className="hidden items-center gap-1.5 text-[12px] text-grey sm:flex">
-            <BookOpen className="size-3.5" strokeWidth={1.6} />
-            Course language
-          </span>
+        <div className="flex items-center gap-3">
+          {onFlow && (
+            <span className="text-[12px] text-grey md:hidden">
+              {currentIndex + 1}/{STEPS.length} {STEPS[currentIndex].label}
+            </span>
+          )}
           <div
             role="group"
             aria-label="Course language"
-            className="flex items-center rounded-full border border-line bg-white p-0.5 text-[12px]"
+            title="Language of the courses in your pathway"
+            className="relative flex items-center rounded-full border border-line bg-white p-0.5 text-[12px]"
           >
             {COURSE_LANGUAGES.map((language) => {
               const selected = courseLanguage === language.id;
@@ -115,11 +113,15 @@ export function SiteHeader() {
                   type="button"
                   aria-pressed={selected}
                   onClick={() => setCourseLanguage(language.id)}
-                  className={cn(
-                    "rounded-full px-2.5 py-1",
-                    selected ? "bg-ink font-medium text-white" : "text-grey",
-                  )}
+                  className={cn("relative z-10 rounded-full px-2.5 py-1 transition-colors", selected ? "text-paper" : "text-grey hover:text-ink")}
                 >
+                  {selected && (
+                    <motion.span
+                      layoutId="course-language-pill"
+                      className="absolute inset-0 -z-10 rounded-full bg-ink"
+                      transition={{ type: "spring", stiffness: 500, damping: 40 }}
+                    />
+                  )}
                   {language.label}
                 </button>
               );

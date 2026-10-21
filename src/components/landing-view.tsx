@@ -1,258 +1,84 @@
-// Landing: hero, how-it-works strip, privacy/consent gate, and dated sources.
+// Landing: one hero (the laluan drawn from today's job to the next role) with
+// the consent gate, then one strip with the four stops and what we promise.
 // Consent must be ticked before "Start" continues to /profile.
 "use client";
 
 import { useRouter } from "next/navigation";
 import { useRef } from "react";
-import {
-  ArrowRight,
-  Check,
-  Clock3,
-  Database,
-  Gauge,
-  HardDrive,
-  LockKeyhole,
-  MessagesSquare,
-  RefreshCw,
-  Route as RouteIcon,
-  ShieldCheck,
-  Timer,
-  Trash2,
-  UserRound,
-  UserX,
-} from "lucide-react";
-import { SdgBadge } from "@/components/sdg-badge";
-import { SourceChip } from "@/components/source-chip";
-import { formatBandScoreParts, formatDayMonthYear, formatFitPercent } from "@/lib/display";
+import { motion, useReducedMotion } from "framer-motion";
+import { ArrowRight, Check, Database, HardDrive, ShieldCheck, UserX } from "lucide-react";
+import { CountUp, EASE_OUT, Reveal, RouteDot, RouteLine, Stagger, StaggerItem } from "@/components/motion";
+import { bandLabel, formatDayMonthYear } from "@/lib/display";
 import { useFlow } from "@/context/flow-context";
 import type { LandingPreview } from "@/lib/landing-preview";
 
-/** Shortened so the band and score always fit on one line in the preview card. */
-const SHORT_BAND: Record<"Low" | "Medium" | "High", string> = { Low: "Low", Medium: "Med", High: "High" };
-
-const HOW_IT_WORKS = [
-  {
-    icon: UserRound,
-    step: "Step 1",
-    title: "Profile",
-    body: "Pick a sample CV. We read your roles, tasks and skills, and you can edit them.",
-    time: "About 1 min",
-  },
-  {
-    icon: MessagesSquare,
-    step: "Step 2",
-    title: "Interview",
-    body: "Five quick questions with tap-to-answer chips, only about what the CV can't tell us.",
-    time: "About 2 min",
-  },
-  {
-    icon: Gauge,
-    step: "Step 3",
-    title: "Results",
-    body: "AI exposure and augmentation from dated public data, and three roles ranked under three possible futures.",
-    time: "Scores + 3 roles",
-  },
-  {
-    icon: RouteIcon,
-    step: "Step 4",
-    title: "Pathway",
-    body: "You pick a role. We build a week-by-week plan from free courses and government programmes.",
-    time: "Free items first",
-  },
+const STOPS = [
+  { title: "Profile", body: "Pick a sample CV. Check the skills we read." },
+  { title: "Interview", body: "Five quick questions, tap to answer." },
+  { title: "Results", body: "AI exposure today, three roles under three futures." },
+  { title: "Pathway", body: "Your week-by-week route, free courses first." },
 ] as const;
 
-const BUILT_ON = [
-  "ESCO v1.2.1 · skills per job",
-  "ILO GenAI Exposure · May 2025",
-  "arXiv paper counts · 90-day windows",
-  "HRD Corp e-LATiH, Coursera and 10 more course providers",
-  "Scenario demand · illustrative (SDC brief)",
-];
+const PROMISES = [
+  { icon: UserX, text: "Synthetic CVs only" },
+  { icon: HardDrive, text: "Nothing stored, no login" },
+  { icon: Database, text: "Public data, every score dated" },
+] as const;
+
+const BUILT_ON = ["ESCO v1.2.1", "ILO GenAI Exposure 2025", "arXiv 90-day counts", "HRD Corp e-LATiH + 11 providers"];
 
 export function LandingView({ preview }: { preview: LandingPreview }) {
   const router = useRouter();
+  const reduce = useReducedMotion();
   const { consent, setConsent } = useFlow();
-  const consentRef = useRef<HTMLDivElement>(null);
+  const consentRef = useRef<HTMLLabelElement>(null);
 
-  const previewRole = preview.role;
-  const exposure = formatBandScoreParts(preview.currentExposure);
-  const roleExposure = formatBandScoreParts(previewRole.exposure);
-
-  function handleHeroStart() {
+  function handleStart() {
     if (consent) {
       router.push("/profile");
       return;
     }
-    consentRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
+    consentRef.current?.focus();
+    consentRef.current?.animate(
+      [{ transform: "translateX(0)" }, { transform: "translateX(-4px)" }, { transform: "translateX(4px)" }, { transform: "translateX(0)" }],
+      { duration: 260 },
+    );
   }
 
-  function handleConsentStart() {
-    if (!consent) return;
-    router.push("/profile");
-  }
+  const rise = (delay: number) => ({
+    initial: reduce ? false : { opacity: 0, y: 16 },
+    animate: { opacity: 1, y: 0 },
+    transition: { duration: 0.7, delay, ease: EASE_OUT },
+  });
 
   return (
-    <main className="mx-auto max-w-[1248px] px-4 sm:px-6">
-      {/* 1. Hero */}
-      <section className="grid grid-cols-1 items-center gap-8 pt-10 pb-10 md:grid-cols-12 md:gap-10 md:pt-16">
-        <div className="md:col-span-7">
-          <p className="text-[11px] font-semibold tracking-[0.12em] text-grey">FOR MALAYSIAN WORKERS · FREE · NO LOGIN</p>
-          <h1 className="mt-3 font-serif text-[40px] leading-[1.05] font-medium tracking-tight md:text-[56px]">
-            See how AI changes your work <span className="text-grey/50">—</span> and the free path forward
-          </h1>
-          <p className="mt-5 max-w-[560px] text-[16px] leading-relaxed text-grey">
-            Laluan reads a CV, asks five quick questions, and shows which of your tasks AI can amplify. Then you
-            choose a future role and get a week-by-week plan built from free courses and government programmes.
-          </p>
-          <div className="mt-7 flex flex-wrap items-center gap-3">
-            <button
-              type="button"
-              onClick={handleHeroStart}
-              className="inline-flex items-center gap-2 rounded-lg bg-ink px-5 py-3 text-[15px] font-medium text-white"
-            >
+    <div className="mx-auto max-w-[1248px] px-4 sm:px-6">
+      {/* Hero: copy left, the laluan right */}
+      <section className="grid grid-cols-1 items-center gap-10 pt-12 pb-16 md:grid-cols-12 md:gap-8 md:pt-20 md:pb-24">
+        <div className="md:col-span-6">
+          <motion.p {...rise(0)} className="text-[12px] font-medium tracking-[0.14em] text-sage uppercase">
+            Free, 3 minutes, no login
+          </motion.p>
+          <motion.h1
+            {...rise(0.08)}
+            className="mt-4 font-serif text-[42px] leading-[1.02] font-medium tracking-tight text-balance sm:text-[56px] md:text-[64px]"
+          >
+            Your route through AI at work.
+          </motion.h1>
+          <motion.p {...rise(0.16)} className="mt-5 max-w-[46ch] text-[17px] leading-relaxed text-grey">
+            Laluan reads a CV, scores how much AI touches your tasks, and draws a free week-by-week path to a role
+            that fits.
+          </motion.p>
+          <motion.div {...rise(0.24)} className="mt-8 flex flex-col gap-4">
+            <button type="button" onClick={handleStart} className="btn-primary self-start px-6 py-3 text-[15px]">
               Start
-              <ArrowRight className="size-4" strokeWidth={1.6} />
+              <ArrowRight className="size-4" strokeWidth={1.8} />
             </button>
-            <a
-              href="#how"
-              className="inline-flex items-center gap-2 rounded-lg border border-line bg-btn2 px-4 py-3 text-[14px] font-medium"
+            <label
+              ref={consentRef}
+              tabIndex={-1}
+              className="flex max-w-[520px] cursor-pointer items-start gap-2.5 text-[13px] leading-relaxed text-grey outline-none"
             >
-              How it works
-            </a>
-            <span className="flex items-center gap-1.5 text-[13px] text-grey">
-              <Timer className="size-4" strokeWidth={1.6} />
-              Takes about 3 minutes
-            </span>
-          </div>
-        </div>
-
-        {/* example result preview */}
-        <div className="md:col-span-5">
-          <div className="rounded-2xl border border-line bg-white p-6">
-            <div className="flex items-center justify-between">
-              <p className="text-[11px] font-semibold tracking-[0.12em] text-grey">WHAT YOU GET</p>
-              <span className="rounded border border-line px-1.5 py-0.5 text-[11px] text-grey">Sample profile: {preview.personaName.split(" ")[0]}</span>
-            </div>
-            <div className="mt-4 grid grid-cols-2 gap-5">
-              <div>
-                <p className="text-[12px] text-grey">AI exposure today</p>
-                <p className="mt-1.5 font-serif text-[36px] leading-none font-medium tracking-tight text-nowrap">
-                  {SHORT_BAND[exposure.band]} <span className="text-grey/40">·</span> {exposure.value}
-                </p>
-                <p className="mt-1 text-[12px] text-grey capitalize">{preview.currentTitle}</p>
-              </div>
-              <div className="border-l border-line pl-5">
-                <p className="text-[12px] text-grey">AI exposure after the move</p>
-                <p className="mt-1.5 font-serif text-[36px] leading-none font-medium tracking-tight text-nowrap text-sage">
-                  {SHORT_BAND[roleExposure.band]} <span className="text-sage-tint">·</span> {roleExposure.value}
-                </p>
-                <p className="mt-1 text-[12px] text-grey capitalize">{previewRole.title}</p>
-              </div>
-            </div>
-            <p className="mt-3 text-[13px] font-medium text-ink">Exposure is not job loss.</p>
-            <div className="mt-4 border-t border-line pt-4">
-              <div className="flex items-center justify-between">
-                <span
-                  className={
-                    preview.robust
-                      ? "inline-flex items-center gap-1.5 rounded-full bg-sage-soft px-2.5 py-1 text-[12px] font-medium text-sage-dark"
-                      : "inline-flex items-center gap-1.5 rounded-full bg-alt px-2.5 py-1 text-[12px] text-grey"
-                  }
-                >
-                  <ShieldCheck className="size-3.5" strokeWidth={1.6} />
-                  {preview.statusLabel}
-                </span>
-                <span className="text-[12px] text-grey">{formatFitPercent(previewRole.fit)} fit</span>
-              </div>
-              <p className="mt-3 font-serif text-[22px] leading-tight font-medium capitalize">{previewRole.title}</p>
-              <div className="mt-2.5 flex flex-wrap gap-1.5 text-[12px]">
-                {previewRole.sdg.map((link) => (
-                  <SdgBadge
-                    key={link.target}
-                    link={link}
-                    label={preview.targetLabels[link.target] ?? link.target}
-                  />
-                ))}
-              </div>
-              <p className="mt-3 flex items-center gap-1.5 text-[13px] text-grey">
-                <RouteIcon className="size-4" strokeWidth={1.6} />
-                {preview.planWeeks}-week plan · {preview.planHoursPerWeek} h/week · {preview.mostlyFree ? "mostly free" : "mixed cost"}
-              </p>
-            </div>
-            <div className="mt-4 flex flex-wrap gap-1.5">
-              {previewRole.sources.map((source) => (
-                <SourceChip key={`${source.dataset}-${source.releaseDate}`} source={source} />
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* 2. How it works */}
-      <section id="how" className="pt-4">
-        <div className="mb-3 flex flex-wrap items-end justify-between gap-2">
-          <h2 className="font-serif text-[24px] font-medium tracking-tight">How it works</h2>
-          <p className="text-[13px] text-grey">Four steps. The same four you will see at the top of every screen.</p>
-        </div>
-        <ol className="grid grid-cols-1 gap-5 sm:grid-cols-2 md:grid-cols-4">
-          {HOW_IT_WORKS.map((item) => (
-            <li key={item.title} className="flex flex-col rounded-2xl border border-line bg-white p-5">
-              <div className="flex items-center justify-between">
-                <span className="flex size-8 items-center justify-center rounded-full bg-sage-soft text-sage">
-                  <item.icon className="size-4" strokeWidth={1.6} />
-                </span>
-                <span className="text-[12px] tabular-nums text-grey">{item.step}</span>
-              </div>
-              <h3 className="mt-4 font-serif text-[22px] leading-tight font-medium">{item.title}</h3>
-              <p className="mt-1.5 text-[13px] leading-relaxed text-grey">{item.body}</p>
-              <p className="mt-auto flex items-center gap-1.5 pt-4 text-[12px] text-ink">
-                <Clock3 className="size-3.5 text-grey" strokeWidth={1.6} />
-                {item.time}
-              </p>
-            </li>
-          ))}
-        </ol>
-      </section>
-
-      {/* 3. Privacy + consent */}
-      <section className="mt-5 grid grid-cols-1 gap-5 md:grid-cols-12">
-        <div ref={consentRef} className="rounded-2xl border border-line bg-white p-6 md:col-span-8">
-          <div className="flex items-center gap-2">
-            <LockKeyhole className="size-4 text-sage" strokeWidth={1.6} />
-            <p className="text-[11px] font-semibold tracking-[0.12em] text-grey">PRIVACY AND CONSENT</p>
-          </div>
-          <h2 className="mt-2 font-serif text-[24px] font-medium tracking-tight">Before you start</h2>
-          <ul className="mt-4 grid grid-cols-1 gap-5 sm:grid-cols-3">
-            <li>
-              <p className="flex items-center gap-2 text-[14px] font-medium">
-                <UserX className="size-4 text-sage" strokeWidth={1.6} />
-                Synthetic data only
-              </p>
-              <p className="mt-1 text-[13px] leading-relaxed text-grey">
-                This demo uses made-up sample CVs. Please do not upload a real CV or real personal details.
-              </p>
-            </li>
-            <li>
-              <p className="flex items-center gap-2 text-[14px] font-medium">
-                <HardDrive className="size-4 text-sage" strokeWidth={1.6} />
-                Nothing stored
-              </p>
-              <p className="mt-1 text-[13px] leading-relaxed text-grey">
-                No login and no account. Your profile, answers and plan live only in this browser session.
-              </p>
-            </li>
-            <li>
-              <p className="flex items-center gap-2 text-[14px] font-medium">
-                <Trash2 className="size-4 text-sage" strokeWidth={1.6} />
-                Delete anytime
-              </p>
-              <p className="mt-1 text-[13px] leading-relaxed text-grey">
-                One click clears everything from this session. Closing the tab does the same.
-              </p>
-            </li>
-          </ul>
-          <div className="mt-5 flex flex-col justify-between gap-4 border-t border-line pt-4 sm:flex-row sm:items-center">
-            <label className="flex max-w-[520px] items-start gap-2.5 text-[13px] leading-relaxed">
               <button
                 type="button"
                 role="checkbox"
@@ -260,57 +86,142 @@ export function LandingView({ preview }: { preview: LandingPreview }) {
                 onClick={() => setConsent(!consent)}
                 className={
                   consent
-                    ? "mt-0.5 flex size-4 shrink-0 items-center justify-center rounded border border-ink bg-ink text-white"
-                    : "mt-0.5 flex size-4 shrink-0 items-center justify-center rounded border border-line bg-white"
+                    ? "mt-0.5 flex size-4 shrink-0 items-center justify-center rounded border border-ink bg-ink text-paper transition-colors"
+                    : "mt-0.5 flex size-4 shrink-0 items-center justify-center rounded border border-grey/50 bg-white transition-colors hover:border-ink"
                 }
               >
-                {consent && <Check className="size-3" strokeWidth={1.6} />}
+                {consent && <Check className="size-3" strokeWidth={2.4} />}
               </button>
               I understand Laluan uses synthetic CVs, gives estimates, and does not make hiring decisions.
             </label>
-            <button
-              type="button"
-              disabled={!consent}
-              onClick={handleConsentStart}
-              className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-lg bg-ink px-5 py-2.5 text-[14px] font-medium text-white disabled:cursor-not-allowed disabled:opacity-40"
-            >
-              Start
-              <ArrowRight className="size-4" strokeWidth={1.6} />
-            </button>
-          </div>
+          </motion.div>
         </div>
 
-        {/* dated sources */}
-        <div className="flex flex-col rounded-2xl border border-line bg-white p-6 md:col-span-4">
-          <p className="text-[11px] font-semibold tracking-[0.12em] text-grey">BUILT ON DATED PUBLIC DATA</p>
-          <p className="mt-2 text-[13px] leading-relaxed text-grey">
-            Every score is computed by code from these sources, and each one shows its date. AI writes explanations,
-            never numbers or links.
-          </p>
-          <div className="mt-4 flex flex-wrap gap-1.5">
+        <motion.div
+          initial={reduce ? false : { opacity: 0, y: 24 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.2, ease: EASE_OUT }}
+          className="md:col-span-6 md:pl-6"
+        >
+          <PreviewRoute preview={preview} />
+        </motion.div>
+      </section>
+
+      {/* The four stops, drawn as one line */}
+      <section className="border-t border-line py-16 md:py-20">
+        <Reveal>
+          <h2 className="font-serif text-[28px] font-medium tracking-tight md:text-[32px]">Four stops. About three minutes.</h2>
+        </Reveal>
+        <div className="relative mt-10">
+          <RouteLine
+            d="M 0 1 H 1000"
+            viewBox="0 0 1000 2"
+            preserveAspectRatio="none"
+            strokeWidth={2}
+            duration={1.4}
+            className="absolute top-[7px] right-[12.5%] left-[12.5%] hidden h-[2px] w-[75%] md:block"
+          />
+          <Stagger className="grid grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-4 md:gap-6" delay={0.3} gap={0.18}>
+            {STOPS.map((stop, index) => (
+              <StaggerItem key={stop.title} className="relative flex gap-4 md:flex-col md:items-center md:text-center">
+                <span
+                  className={`mt-0.5 flex size-4 shrink-0 items-center justify-center rounded-full border-2 bg-paper ${index === 0 ? "border-sage bg-sage" : "border-sage"}`}
+                />
+                <div className="md:mt-2">
+                  <p className="text-[15px] font-medium">{stop.title}</p>
+                  <p className="mt-1 text-[13px] leading-relaxed text-grey">{stop.body}</p>
+                </div>
+              </StaggerItem>
+            ))}
+          </Stagger>
+        </div>
+
+        <Reveal delay={0.1} className="mt-16 flex flex-col gap-5 border-t border-line pt-6 md:flex-row md:items-center md:justify-between">
+          <ul className="flex flex-wrap gap-x-6 gap-y-2 text-[13px]">
+            {PROMISES.map((item) => (
+              <li key={item.text} className="flex items-center gap-2">
+                <item.icon className="size-4 text-sage" strokeWidth={1.6} />
+                {item.text}
+              </li>
+            ))}
+          </ul>
+          <div className="flex flex-wrap gap-1.5">
             {BUILT_ON.map((label) => (
-              <span
-                key={label}
-                className="inline-flex items-center gap-1 rounded-md border border-line bg-alt px-2 py-0.5 text-[11px] leading-4 text-grey"
-              >
-                <Database className="size-3" strokeWidth={1.6} />
+              <span key={label} className="tag">
                 {label}
               </span>
             ))}
           </div>
-          <p className="mt-auto flex items-center gap-1.5 pt-4 text-[12px] text-grey">
-            <RefreshCw className="size-3.5" strokeWidth={1.6} />
-            Trend signal checked {formatDayMonthYear(preview.signalsAsOf)}
-          </p>
-        </div>
+        </Reveal>
+        <p className="mt-4 text-[12px] text-grey/80">
+          Trend signal checked {formatDayMonthYear(preview.signalsAsOf)}. The preview above is the real result for
+          Aisyah, a synthetic sample profile.
+        </p>
       </section>
+    </div>
+  );
+}
 
-      {/* data note */}
-      <p className="mt-8 mb-6 border-t border-line pt-4 text-[11px] leading-relaxed text-grey/80">
-        The preview is the real result for Aisyah, a synthetic sample profile (SDC Hackathon demo), computed from the
-        same public data as every result: ESCO skills, ILO exposure and arXiv trend counts. Scenario demand is an
-        illustrative assumption. Results are estimates to support your decision, not predictions.
-      </p>
-    </main>
+/**
+ * The laluan itself: one line from today's job (bottom left) to the chosen
+ * role (top right), built from the sample persona's real result.
+ */
+function PreviewRoute({ preview }: { preview: LandingPreview }) {
+  const role = preview.role;
+  return (
+    <div className="panel relative aspect-[5/4] w-full overflow-hidden p-5 sm:p-6">
+      <RouteLine
+        d="M 40 280 C 200 280, 340 250, 362 150 S 372 70, 372 44"
+        viewBox="0 0 400 320"
+        preserveAspectRatio="none"
+        strokeWidth={3}
+        delay={0.6}
+        duration={1.8}
+        className="absolute inset-0 h-full w-full"
+      >
+        <RouteDot cx={40} cy={280} r={6} delay={0.5} />
+        <RouteDot cx={253} cy={252} r={4} delay={1.5} filled={false} />
+        <RouteDot cx={372} cy={44} r={7} delay={2.2} />
+      </RouteLine>
+
+      {/* today: sits above the first station */}
+      <div className="absolute bottom-[19%] left-[6%] max-w-[48%]">
+        <p className="text-[12px] text-grey capitalize">{preview.currentTitle}</p>
+        <p className="mt-0.5 font-serif text-[30px] leading-none font-medium tracking-tight sm:text-[36px]">
+          {bandLabel(preview.currentExposure)}{" "}
+          <span className="text-[20px] text-grey/70 sm:text-[22px]">
+            <CountUp value={preview.currentExposure} decimals={2} />
+          </span>
+        </p>
+        <p className="mt-1 text-[12px] text-grey">AI exposure today</p>
+      </div>
+
+      {/* the plan */}
+      <div className="absolute top-5 left-5 sm:top-6 sm:left-6">
+        <span className="tag bg-sage-wash text-sage-dark">
+          {preview.planWeeks} weeks, {preview.mostlyFree ? "mostly free" : "mixed cost"}
+        </span>
+      </div>
+
+      {/* the move: left of the last station */}
+      <div className="absolute top-[12%] right-[13%] max-w-[56%] text-right">
+        <p className="font-serif text-[20px] leading-tight font-medium capitalize sm:text-[24px]">{role.title}</p>
+        <p className="mt-1 font-serif text-[30px] leading-none font-medium tracking-tight text-sage sm:text-[36px]">
+          {bandLabel(role.exposure)}{" "}
+          <span className="text-[20px] text-sage/70 sm:text-[22px]">
+            <CountUp value={role.exposure} decimals={2} />
+          </span>
+        </p>
+        <p className="mt-1 text-[12px] text-grey">AI exposure after the move</p>
+        {preview.robust && (
+          <span className="mt-2 inline-flex items-center gap-1 rounded-full bg-sage-soft px-2.5 py-1 text-[11px] font-medium text-sage-dark">
+            <ShieldCheck className="size-3" strokeWidth={1.8} />
+            {preview.statusLabel}
+          </span>
+        )}
+      </div>
+
+      <p className="absolute right-5 bottom-4 text-[11px] text-grey/70 sm:right-6">Exposure is not job loss.</p>
+    </div>
   );
 }
