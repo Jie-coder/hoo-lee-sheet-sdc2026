@@ -312,7 +312,7 @@ export function PathwayView() {
                           {"hours" in item ? (
                             `${item.hours} h`
                           ) : (
-                            <span aria-label="Hours not listed">— h</span>
+                            <span className="text-xs text-grey">Hours not listed</span>
                           )}
                         </span>
                         {closedSkill && (

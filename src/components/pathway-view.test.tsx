@@ -44,13 +44,13 @@ describe("PathwayView", () => {
     );
 
     const aiStep = (await screen.findByRole("heading", { name: "AI Untuk Rakyat" })).closest("article");
-    expect(within(aiStep!).getByLabelText("Hours not listed")).toHaveTextContent("— h");
+    expect(within(aiStep!).getByText("Hours not listed")).toBeInTheDocument();
 
     const counsellingStep = screen.getByRole("heading", { name: "Career counselling session" }).closest("article");
-    expect(within(counsellingStep!).getByLabelText("Hours not listed")).toHaveTextContent("— h");
+    expect(within(counsellingStep!).getByText("Hours not listed")).toBeInTheDocument();
 
     const courseStep = screen.getByRole("heading", { name: "Data cleaning with Excel Power Query" }).closest("article");
     expect(within(courseStep!).getByText("6 h")).toBeInTheDocument();
-    expect(within(courseStep!).queryByLabelText("Hours not listed")).not.toBeInTheDocument();
+    expect(within(courseStep!).queryByText("Hours not listed")).not.toBeInTheDocument();
   });
 });
