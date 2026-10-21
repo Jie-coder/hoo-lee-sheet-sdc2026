@@ -116,7 +116,7 @@ Keep Vercel (`vercel --prod` via CLI) as the backup with the same env vars.
 ## T13: importer bug fixes (Jarvis, with Claude Code)
 Two bugs stop the import from working, even though all 158 rows pass the check.
 1. **Windows run:** `npx tsx scripts/import-data.ts` prints nothing and exits 0 on Windows. The `isMain` check at the bottom of `scripts/import-data.ts` compares `file://${process.argv[1]}` with a `file:///C:/…` URL. Use `import.meta.url === pathToFileURL(process.argv[1]).href` (from `node:url`).
-2. **Skill importance is always 0:** `buildSkillRows` in `scripts/lib/apply.ts` writes `base_importance: 0`. Fit divides by the importance total (`src/lib/scoring.ts`, `fit`), so every role would score 0% fit. Set importance from the occupation–skill relation (essential 1.0, optional 0.5), using T14's data.
+2. **Skill importance is always 0:** `buildSkillRows` in `scripts/lib/apply.ts` writes `base_importance: 0`. Fit divides by the importance total (`src/lib/scoring.ts`, `fit`), so every role would score 0% fit. Use a neutral 1 for every new skill: fit only counts essential skills, and arXiv momentum moves the weight up or down. (PR #23)
 3. Add `"typecheck": "next typegen && tsc --noEmit"` to `package.json`: plain `tsc --noEmit` fails on a fresh clone (`layout.tsx`, `LayoutProps` not found).
 
 **Done when** the dry-run prints its report and `would write:` line on the shared Windows computer, a test covers both fixes, and `npm run typecheck` passes on a fresh clone.
