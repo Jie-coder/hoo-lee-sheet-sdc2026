@@ -344,6 +344,7 @@ export function mapKeywordRow(raw: Record<string, string>, row: number): Keyword
     countLast90d: countLast90d.ok && countLast90d.value !== null ? countLast90d.value : 0,
     countPrev90d: countPrev90d.ok && countPrev90d.value !== null ? countPrev90d.value : 0,
     checkedOn: raw.checked_on ?? "",
+    notes: raw.notes ?? "",
   };
 
   const parsed = KeywordRowSchema.safeParse(candidate);

@@ -22,12 +22,14 @@ There is no login and no CV file. Profiles are anonymous sessions: no `user_id`,
 | `profiles` | Anonymous session: consent, `parsed`, `slots`. UI is English only, so there is no `locale` column. | `ParsedCV`, `PartialSlots` |
 | `results` | One row per profile, scenario, and occupation. `exposure`/`augmentation`/`fit`/`demand`/`ranking` are the brief's E/G/F/D/R. | `RoleResult` (three rows make `byScenario`) |
 | `pathways` | Saved steps for one profile and occupation. | `PathwayPlan` / `PlanStep` |
+| `sources` | Reusable dataset metadata, with a licence that allows reuse. `name` is the natural key. Added in `20261021150000_seed_sources_exposure.sql`. | `SourceRow` (`scripts/lib/row-schemas.ts`) |
+| `exposure` | One published exposure figure for one occupation, copied as published. Primary key `(occupation, source_name)`. Added in `20261021150000_seed_sources_exposure.sql`. | `ExposureRow` (`scripts/lib/row-schemas.ts`) |
 
 ## Notes the contracts file does not show yet
 
 - Study languages live in `courses.languages` and `profiles.slots.languages`: `en`, `ms`, and `zh`, at least one when the slot is present. There is no `both`. The UI itself is English only, so there is no separate UI locale anywhere in the schema.
 - `sdg_links` is one table, not two. `SdgLink.subject` is a single discriminator (`occupation` or `skill`), and the other columns (`target`, `kind`, `tier`, `confidence`, `reason`, source) are the same for both. A check constraint requires the matching foreign key and forbids the other. `kind` is still `role` or `transition`.
-- `signals` rows are unique per skill, metric, window, and `as_of`. `value` may be negative.
+- `signals` rows are unique per skill, source, metric, and `window_end` — `signals_reading_key` (added in `20261021150000_seed_sources_exposure.sql`) enforces it, and `scripts/lib/apply.ts` upserts keywords.csv onto it since `signals.id` has no natural key of its own. `value` may be negative.
 - `occupations.cluster` is `not null` with a check constraint restricting it to the five `ClusterId` values: `ai_digital`, `data_analytics`, `green_sustainability`, `human_care`, `routine_clerical`.
 - `courses.skill_ids` is a text array, matching `Course.skillIds`. Postgres cannot foreign-key an array; the importer must use `skills.id`.
 - Deleting a profile cascades to `results` and `pathways` (the delete-my-data path). There is no CV object to remove.

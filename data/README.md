@@ -49,15 +49,21 @@ Language mix: at least 10 BM courses, at least 5 Chinese courses, the rest Engli
 
 The licence must be filled in. A source with unclear or no-reuse terms can't be used for scoring.
 
+Lands in `public.sources` (migration `20261021150000_seed_sources_exposure.sql`, primary key `name`). Not yet wired into `--apply` — see `APPLY_SKIPPED_FILES` in `scripts/lib/apply.ts`.
+
 ### `keywords.csv` (about 25 arXiv keywords)
-`keyword, arxiv_query, skills, skill_uris, direction (up / down), count_last_90d, count_prev_90d, checked_on`
+`keyword, arxiv_query, skills, skill_uris, direction (up / down), count_last_90d, count_prev_90d, checked_on, notes`
 
 Drop keywords with fewer than 20 papers in the last 90 days, and keywords that are too broad.
+
+Lands in `public.signals`, via `--apply` (two rows per ESCO skill URI: the current and preceding 90-day window). This needs migration `20261021150000_seed_sources_exposure.sql` applied first — it adds `signals_reading_key`, the unique constraint on `(skill_id, source, metric, window_end)` the upsert's `onConflict` relies on, since `signals.id` has no natural key of its own. That same migration adds `signals.keywords` (`text[]`): two keywords that map to the same skill with the same `checked_on` collide on that key, and instead of one keyword's reading winning, their `count_last_90d`/`count_prev_90d` are summed into one row, with every contributing keyword recorded in `keywords`. That row's `url` ORs every contributing keyword's `arxiv_query` (each as `all:(...)`).
 
 ### `exposure.csv` (the 40 occupations; Peter sends the draft list by 20 Oct)
 `occupation, code (ISCO or ESCO), exposure_value (copied as published), scale (e.g. 0-1, %, ILO gradient 1-4), source_name, source_url, table_or_page, as_of, notes`
 
 Never invent a number. If there's no exact match, use the closest occupation and explain the match in `notes`.
+
+Lands in `public.exposure` (migration `20261021150000_seed_sources_exposure.sql`, primary key `(occupation, source_name)` — `code` alone repeats across occupations that share one ISCO code). Not yet wired into `--apply`.
 
 ## Peter: occupations.csv (proposed — not finalised yet)
 

@@ -96,6 +96,7 @@ export const FILE_SPECS: Record<FileKey, FileSpec> = {
       "count_last_90d",
       "count_prev_90d",
       "checked_on",
+      "notes",
     ],
   },
   exposure: {

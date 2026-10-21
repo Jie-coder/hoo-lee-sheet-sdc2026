@@ -17,7 +17,15 @@ import {
 import { duplicateIssues, runCrossChecks, type CrossCheckInput } from "./lib/cross-checks";
 import { exitCodeFor, formatReport, type FileReport, type FullReport, type Issue } from "./lib/report";
 import { ENV_LOCAL_MISSING_MESSAGE, readEnvLocal, requireApplyEnv, type ApplyEnv } from "./lib/env";
-import { applyImport, type ApplyInput, type ApplyResult, type SkillRecord } from "./lib/apply";
+import {
+  applyImport,
+  buildSignalRows,
+  type ApplyInput,
+  type ApplyResult,
+  type SignalRow,
+  type SignalRowInput,
+  type SkillRecord,
+} from "./lib/apply";
 // Type-only: must not pull in @supabase/supabase-js or @ai-sdk/google at
 // runtime just for a dry run. The real module is loaded with a dynamic
 // import() below, only once --apply has actually been requested.
@@ -43,13 +51,14 @@ export type RunResult = {
   applyResult?: ApplyResult;
 };
 
-type FileRunOutcome = {
+export type FileRunOutcome = {
   fileReport: FileReport;
   cross: Partial<CrossCheckInput>;
   validCourses: Course[];
   validProgrammes: Programme[];
   validOccupations: OccupationRow[];
   skillPairs: { skills: string[]; skillUris: string[] }[];
+  signalRows: SignalRow[];
 };
 
 function zipHeader(header: string[], row: string[]): Record<string, string> {
@@ -99,6 +108,7 @@ type KeywordRecord = {
   valid: boolean;
   skills: string[];
   skillUris: string[];
+  raw: Record<string, string>;
 };
 type OccupationRecord = {
   row: number;
@@ -110,7 +120,7 @@ type OccupationRecord = {
   titleEn: string;
 };
 
-function runFile(key: FileKey, dir: string): FileRunOutcome {
+export function runFile(key: FileKey, dir: string): FileRunOutcome {
   const spec = FILE_SPECS[key];
   const path = join(dir, spec.filename);
 
@@ -129,6 +139,7 @@ function runFile(key: FileKey, dir: string): FileRunOutcome {
     validProgrammes: [],
     validOccupations: [],
     skillPairs: [],
+    signalRows: [],
   };
 
   if (!existsSync(path)) return empty;
@@ -202,6 +213,7 @@ function runFile(key: FileKey, dir: string): FileRunOutcome {
         valid: result.value !== null,
         skills: result.skills,
         skillUris: result.skillUris,
+        raw,
       });
     } else if (key === "exposure") {
       const result = mapExposureRow(raw, rowNumber);
@@ -234,6 +246,7 @@ function runFile(key: FileKey, dir: string): FileRunOutcome {
   let validProgrammes: Programme[] = [];
   let validOccupations: OccupationRow[] = [];
   let skillPairs: { skills: string[]; skillUris: string[] }[] = [];
+  let signalRows: SignalRow[] = [];
   let cross: Partial<CrossCheckInput> = {};
 
   if (key === "courses") {
@@ -265,9 +278,12 @@ function runFile(key: FileKey, dir: string): FileRunOutcome {
     issues.push(...dup.issues);
     validRows = dup.validRows;
     invalidRows = dup.invalidRows;
-    skillPairs = dup.kept
-      .filter((r) => r.valid)
-      .map((r) => ({ skills: r.skills, skillUris: r.skillUris }));
+    const validKeywordRecords = dup.kept.filter((r) => r.valid);
+    skillPairs = validKeywordRecords.map((r) => ({ skills: r.skills, skillUris: r.skillUris }));
+    const signalInputs: SignalRowInput[] = validKeywordRecords.map((r) => ({ row: r.row, raw: r.raw }));
+    const signalsResult = buildSignalRows(signalInputs);
+    issues.push(...signalsResult.warnings);
+    signalRows = signalsResult.rows;
     cross = {
       keywords: keywordRecords.map((r) => ({
         row: r.row,
@@ -313,6 +329,7 @@ function runFile(key: FileKey, dir: string): FileRunOutcome {
     validProgrammes,
     validOccupations,
     skillPairs,
+    signalRows,
   };
 }
 
@@ -320,7 +337,7 @@ function isBlankCell(value: string | undefined): boolean {
   return value === undefined || value.trim().length === 0;
 }
 
-function deriveSkills(skillPairs: { skills: string[]; skillUris: string[] }[]): SkillRecord[] {
+export function deriveSkills(skillPairs: { skills: string[]; skillUris: string[] }[]): SkillRecord[] {
   const byId = new Map<string, SkillRecord>();
   for (const { skills, skillUris } of skillPairs) {
     const count = Math.min(skills.length, skillUris.length);
@@ -387,6 +404,7 @@ export async function runImport(options: RunOptions): Promise<RunResult> {
     programmes: outcomes.flatMap(({ outcome }) => outcome.validProgrammes),
     occupations: outcomes.flatMap(({ outcome }) => outcome.validOccupations),
     skills: deriveSkills(outcomes.flatMap(({ outcome }) => outcome.skillPairs)),
+    signals: outcomes.flatMap(({ outcome }) => outcome.signalRows),
   };
 
   result.applyResult = await applyImport(applyInput, supabase, embedder);

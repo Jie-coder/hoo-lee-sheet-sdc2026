@@ -167,11 +167,11 @@ describe("runImport (--apply)", () => {
       true
     );
 
-    expect(result.applyResult?.skipped.map((s) => s.file)).toEqual([
-      "sources.csv",
-      "keywords.csv",
-      "exposure.csv",
-    ]);
+    const signalsUpsert = upserts.find((u) => u.table === "signals");
+    expect(signalsUpsert?.rows.length).toBeGreaterThan(0);
+    expect(signalsUpsert?.rows.every((row) => !("id" in row))).toBe(true);
+
+    expect(result.applyResult?.skipped.map((s) => s.file)).toEqual(["sources.csv", "exposure.csv"]);
   });
 });
 

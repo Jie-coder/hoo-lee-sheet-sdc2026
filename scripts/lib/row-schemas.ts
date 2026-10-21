@@ -41,6 +41,7 @@ export const KeywordRowSchema = z
     countLast90d: z.number().int().nonnegative(),
     countPrev90d: z.number().int().nonnegative(),
     checkedOn: IsoDateSchema,
+    notes: z.string(),
   })
   .describe("keywords.csv row: arXiv keyword momentum for one or more skills.");
 export type KeywordRow = z.infer<typeof KeywordRowSchema>;

@@ -1,0 +1,601 @@
+{
+  "_source": "information_schema.columns, public schema, live project, read 2026-10-21; bigint id columns are GENERATED ALWAYS AS IDENTITY (information_schema.columns.is_identity)",
+  "tables": {
+    "courses": {
+      "id": {
+        "type": "text",
+        "nullable": false,
+        "hasDefault": false
+      },
+      "title": {
+        "type": "text",
+        "nullable": false,
+        "hasDefault": false
+      },
+      "provider": {
+        "type": "text",
+        "nullable": false,
+        "hasDefault": false
+      },
+      "url": {
+        "type": "text",
+        "nullable": false,
+        "hasDefault": false
+      },
+      "languages": {
+        "type": "_text",
+        "nullable": false,
+        "hasDefault": false
+      },
+      "hours": {
+        "type": "numeric",
+        "nullable": false,
+        "hasDefault": false
+      },
+      "cost_type": {
+        "type": "text",
+        "nullable": false,
+        "hasDefault": false
+      },
+      "certificate": {
+        "type": "bool",
+        "nullable": false,
+        "hasDefault": false
+      },
+      "skill_ids": {
+        "type": "_text",
+        "nullable": false,
+        "hasDefault": true
+      },
+      "last_checked": {
+        "type": "date",
+        "nullable": false,
+        "hasDefault": false
+      },
+      "created_at": {
+        "type": "timestamptz",
+        "nullable": false,
+        "hasDefault": true
+      },
+      "mode": {
+        "type": "text",
+        "nullable": false,
+        "hasDefault": true
+      }
+    },
+    "items": {
+      "id": {
+        "type": "uuid",
+        "nullable": false,
+        "hasDefault": true
+      },
+      "created_at": {
+        "type": "timestamptz",
+        "nullable": false,
+        "hasDefault": true
+      },
+      "title": {
+        "type": "text",
+        "nullable": false,
+        "hasDefault": false
+      },
+      "data": {
+        "type": "jsonb",
+        "nullable": true,
+        "hasDefault": false
+      }
+    },
+    "occupation_skills": {
+      "occupation_id": {
+        "type": "text",
+        "nullable": false,
+        "hasDefault": false
+      },
+      "skill_id": {
+        "type": "text",
+        "nullable": false,
+        "hasDefault": false
+      },
+      "relation": {
+        "type": "text",
+        "nullable": false,
+        "hasDefault": false
+      },
+      "created_at": {
+        "type": "timestamptz",
+        "nullable": false,
+        "hasDefault": true
+      }
+    },
+    "occupations": {
+      "id": {
+        "type": "text",
+        "nullable": false,
+        "hasDefault": false
+      },
+      "esco_uri": {
+        "type": "text",
+        "nullable": true,
+        "hasDefault": false
+      },
+      "isco_code": {
+        "type": "text",
+        "nullable": true,
+        "hasDefault": false
+      },
+      "title_en": {
+        "type": "text",
+        "nullable": false,
+        "hasDefault": false
+      },
+      "title_ms": {
+        "type": "text",
+        "nullable": false,
+        "hasDefault": false
+      },
+      "description": {
+        "type": "text",
+        "nullable": false,
+        "hasDefault": true
+      },
+      "cluster": {
+        "type": "text",
+        "nullable": false,
+        "hasDefault": false
+      },
+      "is_emerging": {
+        "type": "bool",
+        "nullable": false,
+        "hasDefault": true
+      },
+      "embedding": {
+        "type": "vector",
+        "nullable": true,
+        "hasDefault": false
+      },
+      "created_at": {
+        "type": "timestamptz",
+        "nullable": false,
+        "hasDefault": true
+      }
+    },
+    "pathways": {
+      "id": {
+        "type": "int8",
+        "nullable": false,
+        "hasDefault": true,
+        "identity": "ALWAYS"
+      },
+      "profile_id": {
+        "type": "uuid",
+        "nullable": false,
+        "hasDefault": false
+      },
+      "occupation_id": {
+        "type": "text",
+        "nullable": false,
+        "hasDefault": false
+      },
+      "steps": {
+        "type": "jsonb",
+        "nullable": false,
+        "hasDefault": false
+      },
+      "created_at": {
+        "type": "timestamptz",
+        "nullable": false,
+        "hasDefault": true
+      }
+    },
+    "profiles": {
+      "id": {
+        "type": "uuid",
+        "nullable": false,
+        "hasDefault": true
+      },
+      "consent_at": {
+        "type": "timestamptz",
+        "nullable": true,
+        "hasDefault": false
+      },
+      "parsed": {
+        "type": "jsonb",
+        "nullable": true,
+        "hasDefault": false
+      },
+      "slots": {
+        "type": "jsonb",
+        "nullable": true,
+        "hasDefault": false
+      },
+      "created_at": {
+        "type": "timestamptz",
+        "nullable": false,
+        "hasDefault": true
+      }
+    },
+    "programs": {
+      "id": {
+        "type": "text",
+        "nullable": false,
+        "hasDefault": false
+      },
+      "name": {
+        "type": "text",
+        "nullable": false,
+        "hasDefault": false
+      },
+      "agency": {
+        "type": "text",
+        "nullable": false,
+        "hasDefault": false
+      },
+      "url": {
+        "type": "text",
+        "nullable": false,
+        "hasDefault": false
+      },
+      "benefits": {
+        "type": "text",
+        "nullable": false,
+        "hasDefault": false
+      },
+      "eligibility": {
+        "type": "jsonb",
+        "nullable": false,
+        "hasDefault": false
+      },
+      "cost_type": {
+        "type": "text",
+        "nullable": false,
+        "hasDefault": false
+      },
+      "deadline": {
+        "type": "date",
+        "nullable": true,
+        "hasDefault": false
+      },
+      "last_checked": {
+        "type": "date",
+        "nullable": false,
+        "hasDefault": false
+      },
+      "created_at": {
+        "type": "timestamptz",
+        "nullable": false,
+        "hasDefault": true
+      }
+    },
+    "results": {
+      "id": {
+        "type": "int8",
+        "nullable": false,
+        "hasDefault": true,
+        "identity": "ALWAYS"
+      },
+      "profile_id": {
+        "type": "uuid",
+        "nullable": false,
+        "hasDefault": false
+      },
+      "scenario_id": {
+        "type": "text",
+        "nullable": false,
+        "hasDefault": false
+      },
+      "occupation_id": {
+        "type": "text",
+        "nullable": false,
+        "hasDefault": false
+      },
+      "exposure": {
+        "type": "numeric",
+        "nullable": false,
+        "hasDefault": false
+      },
+      "augmentation": {
+        "type": "numeric",
+        "nullable": false,
+        "hasDefault": false
+      },
+      "fit": {
+        "type": "numeric",
+        "nullable": false,
+        "hasDefault": false
+      },
+      "demand": {
+        "type": "numeric",
+        "nullable": false,
+        "hasDefault": false
+      },
+      "ranking": {
+        "type": "numeric",
+        "nullable": false,
+        "hasDefault": false
+      },
+      "gap": {
+        "type": "jsonb",
+        "nullable": false,
+        "hasDefault": false
+      },
+      "robust": {
+        "type": "bool",
+        "nullable": false,
+        "hasDefault": false
+      },
+      "sources": {
+        "type": "jsonb",
+        "nullable": false,
+        "hasDefault": false
+      },
+      "signals_as_of": {
+        "type": "date",
+        "nullable": false,
+        "hasDefault": false
+      },
+      "explanation": {
+        "type": "text",
+        "nullable": true,
+        "hasDefault": false
+      },
+      "created_at": {
+        "type": "timestamptz",
+        "nullable": false,
+        "hasDefault": true
+      }
+    },
+    "scenarios": {
+      "id": {
+        "type": "text",
+        "nullable": false,
+        "hasDefault": false
+      },
+      "name": {
+        "type": "text",
+        "nullable": false,
+        "hasDefault": false
+      },
+      "assumptions_en": {
+        "type": "text",
+        "nullable": false,
+        "hasDefault": false
+      },
+      "assumptions_ms": {
+        "type": "text",
+        "nullable": false,
+        "hasDefault": false
+      },
+      "theta": {
+        "type": "numeric",
+        "nullable": false,
+        "hasDefault": false
+      },
+      "demand_by_cluster": {
+        "type": "jsonb",
+        "nullable": false,
+        "hasDefault": false
+      },
+      "created_at": {
+        "type": "timestamptz",
+        "nullable": false,
+        "hasDefault": true
+      }
+    },
+    "sdg_links": {
+      "id": {
+        "type": "int8",
+        "nullable": false,
+        "hasDefault": true,
+        "identity": "ALWAYS"
+      },
+      "subject_kind": {
+        "type": "text",
+        "nullable": false,
+        "hasDefault": false
+      },
+      "occupation_id": {
+        "type": "text",
+        "nullable": true,
+        "hasDefault": false
+      },
+      "skill_id": {
+        "type": "text",
+        "nullable": true,
+        "hasDefault": false
+      },
+      "target": {
+        "type": "text",
+        "nullable": false,
+        "hasDefault": false
+      },
+      "kind": {
+        "type": "text",
+        "nullable": false,
+        "hasDefault": false
+      },
+      "tier": {
+        "type": "text",
+        "nullable": false,
+        "hasDefault": false
+      },
+      "confidence": {
+        "type": "numeric",
+        "nullable": false,
+        "hasDefault": false
+      },
+      "reason": {
+        "type": "text",
+        "nullable": false,
+        "hasDefault": false
+      },
+      "source_dataset": {
+        "type": "text",
+        "nullable": false,
+        "hasDefault": false
+      },
+      "source_release_date": {
+        "type": "date",
+        "nullable": false,
+        "hasDefault": false
+      },
+      "source_url": {
+        "type": "text",
+        "nullable": false,
+        "hasDefault": false
+      },
+      "source_as_of": {
+        "type": "date",
+        "nullable": false,
+        "hasDefault": false
+      },
+      "created_at": {
+        "type": "timestamptz",
+        "nullable": false,
+        "hasDefault": true
+      }
+    },
+    "signals": {
+      "id": {
+        "type": "int8",
+        "nullable": false,
+        "hasDefault": true,
+        "identity": "ALWAYS"
+      },
+      "skill_id": {
+        "type": "text",
+        "nullable": false,
+        "hasDefault": false
+      },
+      "source": {
+        "type": "text",
+        "nullable": false,
+        "hasDefault": false
+      },
+      "metric": {
+        "type": "text",
+        "nullable": false,
+        "hasDefault": false
+      },
+      "value": {
+        "type": "numeric",
+        "nullable": false,
+        "hasDefault": false
+      },
+      "window_start": {
+        "type": "date",
+        "nullable": false,
+        "hasDefault": false
+      },
+      "window_end": {
+        "type": "date",
+        "nullable": false,
+        "hasDefault": false
+      },
+      "as_of": {
+        "type": "date",
+        "nullable": false,
+        "hasDefault": false
+      },
+      "url": {
+        "type": "text",
+        "nullable": false,
+        "hasDefault": false
+      },
+      "created_at": {
+        "type": "timestamptz",
+        "nullable": false,
+        "hasDefault": true
+      }
+    },
+    "skills": {
+      "id": {
+        "type": "text",
+        "nullable": false,
+        "hasDefault": false
+      },
+      "esco_uri": {
+        "type": "text",
+        "nullable": true,
+        "hasDefault": false
+      },
+      "label_en": {
+        "type": "text",
+        "nullable": false,
+        "hasDefault": false
+      },
+      "label_ms": {
+        "type": "text",
+        "nullable": false,
+        "hasDefault": false
+      },
+      "is_green": {
+        "type": "bool",
+        "nullable": false,
+        "hasDefault": true
+      },
+      "base_importance": {
+        "type": "numeric",
+        "nullable": false,
+        "hasDefault": false
+      },
+      "embedding": {
+        "type": "vector",
+        "nullable": true,
+        "hasDefault": false
+      },
+      "created_at": {
+        "type": "timestamptz",
+        "nullable": false,
+        "hasDefault": true
+      }
+    },
+    "tasks": {
+      "id": {
+        "type": "int8",
+        "nullable": false,
+        "hasDefault": true,
+        "identity": "ALWAYS"
+      },
+      "occupation_id": {
+        "type": "text",
+        "nullable": false,
+        "hasDefault": false
+      },
+      "text": {
+        "type": "text",
+        "nullable": false,
+        "hasDefault": false
+      },
+      "onet_task_id": {
+        "type": "text",
+        "nullable": true,
+        "hasDefault": false
+      },
+      "automation": {
+        "type": "numeric",
+        "nullable": true,
+        "hasDefault": false
+      },
+      "augmentation": {
+        "type": "numeric",
+        "nullable": true,
+        "hasDefault": false
+      },
+      "source": {
+        "type": "text",
+        "nullable": false,
+        "hasDefault": false
+      },
+      "as_of": {
+        "type": "date",
+        "nullable": false,
+        "hasDefault": false
+      },
+      "created_at": {
+        "type": "timestamptz",
+        "nullable": false,
+        "hasDefault": true
+      }
+    }
+  }
+}

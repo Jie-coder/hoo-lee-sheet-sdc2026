@@ -2,6 +2,8 @@
 // so tests can assert on calls without any network access.
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { EMBEDDING_DIMENSIONS, type Course, type Programme } from "../../src/types/contracts";
+import { escoUriToId, isBlank, splitNames } from "./cells";
+import type { Issue } from "./report";
 import type { OccupationRow } from "./row-schemas";
 import type { Embedder } from "./clients";
 
@@ -12,6 +14,7 @@ export type ApplyInput = {
   programmes: Programme[];
   occupations: OccupationRow[];
   skills: SkillRecord[];
+  signals: SignalRow[];
 };
 
 export type TableResult = { table: string; upserted: number; error?: string };
@@ -26,17 +29,11 @@ export type ApplyResult = {
 export const APPLY_SKIPPED_FILES: SkippedFile[] = [
   {
     file: "sources.csv",
-    reason: "no matching table in the migrations (there is no public.sources table)",
-  },
-  {
-    file: "keywords.csv",
-    reason:
-      "public.signals needs a url and a window_start/window_end per reading; keywords.csv has neither, so mapping would mean inventing them",
+    reason: "table added in migration 20261021150000, not yet applied to live DB",
   },
   {
     file: "exposure.csv",
-    reason:
-      "no matching table in the migrations (public.results.exposure is computed per profile at runtime, not stored as seed data)",
+    reason: "table added in migration 20261021150000, not yet applied to live DB",
   },
 ];
 
@@ -117,20 +114,280 @@ export async function computeEmbeddingsWithReuse(
   return { embeddings, existingIds: new Set(existingById.keys()) };
 }
 
+/**
+ * Builds the two skills upsert row sets: existing skills only get the columns
+ * this importer owns (id, esco_uri, label_en, embedding), while a brand-new
+ * skill also seeds label_ms / is_green / base_importance — all NOT NULL with
+ * no default in the live schema — with placeholders so the insert succeeds.
+ */
+export function buildSkillRows(
+  skills: SkillRecord[],
+  existingIds: Set<string>,
+  embeddings: Map<string, number[]>
+): { existingRows: Record<string, unknown>[]; newRows: Record<string, unknown>[] } {
+  const existingRows = skills
+    .filter((skill) => existingIds.has(skill.id))
+    .map((skill) => ({
+      id: skill.id,
+      esco_uri: skill.escoUri,
+      label_en: skill.labelEn,
+      embedding: embeddings.get(skill.id) ?? null,
+    }));
+
+  const newRows = skills
+    .filter((skill) => !existingIds.has(skill.id))
+    .map((skill) => ({
+      id: skill.id,
+      esco_uri: skill.escoUri,
+      label_en: skill.labelEn,
+      label_ms: skill.labelEn,
+      is_green: false,
+      base_importance: 0,
+      embedding: embeddings.get(skill.id) ?? null,
+    }));
+
+  return { existingRows, newRows };
+}
+
+/** Builds public.occupations upsert rows. */
+export function buildOccupationRows(
+  occupations: OccupationRow[],
+  embeddings: Map<string, number[]>
+): Record<string, unknown>[] {
+  return occupations.map((occupation) => ({
+    id: occupation.id,
+    esco_uri: occupation.escoUri,
+    isco_code: occupation.iscoCode,
+    title_en: occupation.titleEn,
+    title_ms: occupation.titleMs,
+    description: occupation.description,
+    cluster: occupation.cluster,
+    is_emerging: occupation.isEmerging,
+    embedding: embeddings.get(occupation.id) ?? null,
+  }));
+}
+
+/** Builds public.courses upsert rows. */
+export function buildCourseRows(courses: Course[]): Record<string, unknown>[] {
+  return courses.map((course) => ({
+    id: course.id,
+    title: course.title,
+    provider: course.provider,
+    url: course.url,
+    languages: course.languages,
+    hours: course.hours,
+    cost_type: course.costType,
+    certificate: course.certificate,
+    skill_ids: course.skillIds,
+    last_checked: course.lastChecked,
+    mode: course.mode,
+  }));
+}
+
+/** Builds public.programs upsert rows. */
+export function buildProgramRows(programmes: Programme[]): Record<string, unknown>[] {
+  return programmes.map((programme) => ({
+    id: programme.id,
+    name: programme.name,
+    agency: programme.agency,
+    url: programme.url,
+    benefits: programme.benefits,
+    eligibility: programme.eligibility,
+    cost_type: programme.costType,
+    deadline: programme.deadline,
+    last_checked: programme.lastChecked,
+  }));
+}
+
+export type SignalRow = {
+  skill_id: string;
+  source: "arXiv";
+  metric: string;
+  value: number;
+  window_start: string;
+  window_end: string;
+  as_of: string;
+  url: string;
+  keywords: string[];
+};
+
+/** One row of keywords.csv, raw (string) cells, zipped with its header. */
+export type SignalRowInput = { row: number; raw: Record<string, string> };
+
+const DAY_MS = 24 * 60 * 60 * 1000;
+
+/** Shifts an ISO date (YYYY-MM-DD) by a whole number of days, UTC. */
+function shiftIsoDate(isoDate: string, days: number): string {
+  const date = new Date(`${isoDate}T00:00:00Z`);
+  return new Date(date.getTime() + days * DAY_MS).toISOString().slice(0, 10);
+}
+
+/** The arXiv API query URL whose search_query ORs every contributing arxiv_query value, each wrapped as all:(...), urlencoded. */
+export function arxivQueryUrl(arxivQueries: string[]): string {
+  const searchQuery = arxivQueries.map((query) => `all:(${query})`).join(" OR ");
+  return `https://export.arxiv.org/api/query?search_query=${encodeURIComponent(searchQuery)}`;
+}
+
+const SIGNAL_METRIC = "arxiv_papers_90d";
+const WINDOW_DAYS = 90;
+
+/** One keyword's contribution to one signals reading, before same-key contributions are summed. */
+type SignalContribution = {
+  skillId: string;
+  windowStart: string;
+  windowEnd: string;
+  checkedOn: string;
+  value: number;
+  keyword: string;
+  arxivQuery: string;
+};
+
+/** The columns signals_reading_key (migration 20261021150000) is unique on. */
+function signalReadingKey(signal: Pick<SignalContribution, "skillId" | "windowEnd">): string {
+  return `${signal.skillId}|arXiv|${SIGNAL_METRIC}|${signal.windowEnd}`;
+}
+
+/** Adds an item to a list already known not to contain it, preserving first-seen order. */
+function pushUnique(list: string[], item: string): void {
+  if (!list.includes(item)) list.push(item);
+}
+
+/**
+ * Builds the public.signals row shape for keywords.csv: two rows (current
+ * and preceding 90-day window) per ESCO skill URI on a keyword. Two keywords
+ * that map to the same skill and share a checked_on produce the same
+ * (skill_id, source, metric, window_end) — the signals_reading_key this
+ * importer upserts on — so their counts are summed into one row, and every
+ * contributing keyword is recorded in that row's `keywords` column.
+ */
+export function buildSignalRows(inputs: SignalRowInput[]): { rows: SignalRow[]; warnings: Issue[] } {
+  const contributions: SignalContribution[] = [];
+  const warnings: Issue[] = [];
+
+  for (const { row, raw } of inputs) {
+    const checkedOn = raw.checked_on ?? "";
+    const countLastRaw = raw.count_last_90d ?? "";
+    const countPrevRaw = raw.count_prev_90d ?? "";
+
+    if (isBlank(checkedOn) || isBlank(countLastRaw) || isBlank(countPrevRaw)) {
+      warnings.push({
+        file: "keywords.csv",
+        row,
+        message: "checked_on, count_last_90d, or count_prev_90d is blank; skipping this keyword's signals",
+        hint: "fill in all three, or this keyword contributes no signals",
+        severity: "warning",
+      });
+      continue;
+    }
+
+    const countLast90d = Number(countLastRaw);
+    const countPrev90d = Number(countPrevRaw);
+    const keyword = raw.keyword ?? "";
+    const arxivQuery = raw.arxiv_query ?? "";
+    const skillUris = splitNames(raw.skill_uris ?? "");
+
+    for (const uri of skillUris) {
+      const skillId = escoUriToId(uri);
+      contributions.push({
+        skillId,
+        windowEnd: checkedOn,
+        windowStart: shiftIsoDate(checkedOn, -WINDOW_DAYS),
+        checkedOn,
+        value: countLast90d,
+        keyword,
+        arxivQuery,
+      });
+      contributions.push({
+        skillId,
+        windowEnd: shiftIsoDate(checkedOn, -(WINDOW_DAYS + 1)),
+        windowStart: shiftIsoDate(checkedOn, -(2 * WINDOW_DAYS + 1)),
+        checkedOn,
+        value: countPrev90d,
+        keyword,
+        arxivQuery,
+      });
+    }
+  }
+
+  const groups = new Map<string, SignalContribution[]>();
+  const keyOrder: string[] = [];
+  for (const contribution of contributions) {
+    const key = signalReadingKey(contribution);
+    const group = groups.get(key);
+    if (group) {
+      group.push(contribution);
+    } else {
+      groups.set(key, [contribution]);
+      keyOrder.push(key);
+    }
+  }
+
+  const rows: SignalRow[] = keyOrder.map((key) => {
+    const group = groups.get(key) as SignalContribution[];
+    const [first] = group;
+    const keywords: string[] = [];
+    const arxivQueries: string[] = [];
+    let value = 0;
+    let asOf = first.checkedOn;
+    for (const contribution of group) {
+      value += contribution.value;
+      if (contribution.checkedOn > asOf) asOf = contribution.checkedOn;
+      pushUnique(keywords, contribution.keyword);
+      pushUnique(arxivQueries, contribution.arxivQuery);
+    }
+    return {
+      skill_id: first.skillId,
+      source: "arXiv",
+      metric: SIGNAL_METRIC,
+      value,
+      window_start: first.windowStart,
+      window_end: first.windowEnd,
+      as_of: asOf,
+      url: arxivQueryUrl(arxivQueries),
+      keywords,
+    };
+  });
+
+  return { rows, warnings };
+}
+
 /** PostgREST / Supabase requests are more reliable in batches than as one giant array. */
 const UPSERT_CHUNK_SIZE = 500;
+
+/** onConflict for the signals upsert: the columns signals_reading_key (migration 20261021150000) is unique on. */
+export const SIGNALS_ON_CONFLICT = "skill_id,source,metric,window_end";
+
+const SIGNALS_MIGRATION = "20261021150000";
+
+/** True for the Postgres error an upsert gets when its onConflict columns have no matching unique constraint yet. */
+function isMissingOnConflictConstraint(error: { code?: string; message: string }): boolean {
+  return error.code === "42P10" || /no unique or exclusion constraint/i.test(error.message);
+}
+
+/** Turns a raw Postgrest error into the message apply.ts reports for a table, adding guidance for signals specifically. */
+function describeUpsertError(table: string, error: { code?: string; message: string }): string {
+  if (table === "signals" && isMissingOnConflictConstraint(error)) {
+    return (
+      `apply migration ${SIGNALS_MIGRATION} first (it adds signals_reading_key, the unique constraint ` +
+      `this upsert's onConflict "${SIGNALS_ON_CONFLICT}" needs): ${error.message}`
+    );
+  }
+  return error.message;
+}
 
 async function upsert(
   supabase: SupabaseClient,
   table: string,
-  rows: Record<string, unknown>[]
+  rows: Record<string, unknown>[],
+  options: { onConflict?: string } = {}
 ): Promise<TableResult> {
   if (rows.length === 0) return { table, upserted: 0 };
+  const onConflict = options.onConflict ?? "id";
   let upserted = 0;
   for (let i = 0; i < rows.length; i += UPSERT_CHUNK_SIZE) {
     const chunk = rows.slice(i, i + UPSERT_CHUNK_SIZE);
-    const { error } = await supabase.from(table).upsert(chunk, { onConflict: "id" });
-    if (error) return { table, upserted, error: error.message };
+    const { error } = await supabase.from(table).upsert(chunk, { onConflict });
+    if (error) return { table, upserted, error: describeUpsertError(table, error) };
     upserted += chunk.length;
   }
   return { table, upserted };
@@ -162,32 +419,14 @@ export async function applyImport(
   // Existing skills: update only the columns this importer owns, leaving
   // label_ms / is_green / base_importance as whoever curated them set them.
   // New skills: also seed those NOT NULL columns with placeholder defaults.
-  const existingSkills = input.skills.filter((skill) => skillEmbeddingResult.existingIds.has(skill.id));
-  const newSkills = input.skills.filter((skill) => !skillEmbeddingResult.existingIds.has(skill.id));
+  const { existingRows: existingSkillRows, newRows: newSkillRows } = buildSkillRows(
+    input.skills,
+    skillEmbeddingResult.existingIds,
+    skillEmbeddingResult.embeddings
+  );
 
-  const existingSkillsResult = await upsert(
-    supabase,
-    "skills",
-    existingSkills.map((skill) => ({
-      id: skill.id,
-      esco_uri: skill.escoUri,
-      label_en: skill.labelEn,
-      embedding: skillEmbeddingResult.embeddings.get(skill.id) ?? null,
-    }))
-  );
-  const newSkillsResult = await upsert(
-    supabase,
-    "skills",
-    newSkills.map((skill) => ({
-      id: skill.id,
-      esco_uri: skill.escoUri,
-      label_en: skill.labelEn,
-      label_ms: skill.labelEn,
-      is_green: false,
-      base_importance: 0,
-      embedding: skillEmbeddingResult.embeddings.get(skill.id) ?? null,
-    }))
-  );
+  const existingSkillsResult = await upsert(supabase, "skills", existingSkillRows);
+  const newSkillsResult = await upsert(supabase, "skills", newSkillRows);
   tables.push(combineTableResults("skills", [existingSkillsResult, newSkillsResult]));
 
   const occupationEmbeddingResult = await computeEmbeddingsWithReuse(
@@ -200,59 +439,19 @@ export async function applyImport(
     embedder
   );
   tables.push(
-    await upsert(
-      supabase,
-      "occupations",
-      input.occupations.map((occupation) => ({
-        id: occupation.id,
-        esco_uri: occupation.escoUri,
-        isco_code: occupation.iscoCode,
-        title_en: occupation.titleEn,
-        title_ms: occupation.titleMs,
-        description: occupation.description,
-        cluster: occupation.cluster,
-        is_emerging: occupation.isEmerging,
-        embedding: occupationEmbeddingResult.embeddings.get(occupation.id) ?? null,
-      }))
-    )
+    await upsert(supabase, "occupations", buildOccupationRows(input.occupations, occupationEmbeddingResult.embeddings))
   );
 
-  tables.push(
-    await upsert(
-      supabase,
-      "courses",
-      input.courses.map((course) => ({
-        id: course.id,
-        title: course.title,
-        provider: course.provider,
-        url: course.url,
-        languages: course.languages,
-        hours: course.hours,
-        cost_type: course.costType,
-        certificate: course.certificate,
-        skill_ids: course.skillIds,
-        last_checked: course.lastChecked,
-        mode: course.mode,
-      }))
-    )
-  );
+  tables.push(await upsert(supabase, "courses", buildCourseRows(input.courses)));
 
+  tables.push(await upsert(supabase, "programs", buildProgramRows(input.programmes)));
+
+  // signals.id has no natural upsert key of its own; onConflict targets
+  // signals_reading_key instead, and no row here ever sets id.
   tables.push(
-    await upsert(
-      supabase,
-      "programs",
-      input.programmes.map((programme) => ({
-        id: programme.id,
-        name: programme.name,
-        agency: programme.agency,
-        url: programme.url,
-        benefits: programme.benefits,
-        eligibility: programme.eligibility,
-        cost_type: programme.costType,
-        deadline: programme.deadline,
-        last_checked: programme.lastChecked,
-      }))
-    )
+    await upsert(supabase, "signals", input.signals as unknown as Record<string, unknown>[], {
+      onConflict: SIGNALS_ON_CONFLICT,
+    })
   );
 
   return { tables, skipped: APPLY_SKIPPED_FILES };
