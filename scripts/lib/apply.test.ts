@@ -166,7 +166,8 @@ function signalRow(overrides: Partial<SignalRow> = {}): SignalRow {
     window_start: "2026-07-01",
     window_end: "2026-10-01",
     as_of: "2026-10-01",
-    url: "https://export.arxiv.org/api/query?search_query=all%3Atest",
+    url: "https://export.arxiv.org/api/query?search_query=all%3A%28test%29",
+    keywords: ["test"],
     ...overrides,
   };
 }

@@ -56,7 +56,7 @@ Lands in `public.sources` (migration `20261021150000_seed_sources_exposure.sql`,
 
 Drop keywords with fewer than 20 papers in the last 90 days, and keywords that are too broad.
 
-Lands in `public.signals`, via `--apply` (two rows per ESCO skill URI: the current and preceding 90-day window). This needs migration `20261021150000_seed_sources_exposure.sql` applied first — it adds `signals_reading_key`, the unique constraint on `(skill_id, source, metric, window_end)` the upsert's `onConflict` relies on, since `signals.id` has no natural key of its own. Two keywords that map to the same skill with the same `checked_on` collide on that key; only the first is kept, and the rest are reported as `[WARNING]`s instead of being summed.
+Lands in `public.signals`, via `--apply` (two rows per ESCO skill URI: the current and preceding 90-day window). This needs migration `20261021150000_seed_sources_exposure.sql` applied first — it adds `signals_reading_key`, the unique constraint on `(skill_id, source, metric, window_end)` the upsert's `onConflict` relies on, since `signals.id` has no natural key of its own. That same migration adds `signals.keywords` (`text[]`): two keywords that map to the same skill with the same `checked_on` collide on that key, and instead of one keyword's reading winning, their `count_last_90d`/`count_prev_90d` are summed into one row, with every contributing keyword recorded in `keywords`. That row's `url` ORs every contributing keyword's `arxiv_query` (each as `all:(...)`).
 
 ### `exposure.csv` (the 40 occupations; Peter sends the draft list by 20 Oct)
 `occupation, code (ISCO or ESCO), exposure_value (copied as published), scale (e.g. 0-1, %, ILO gradient 1-4), source_name, source_url, table_or_page, as_of, notes`

@@ -208,6 +208,7 @@ export type SignalRow = {
   window_end: string;
   as_of: string;
   url: string;
+  keywords: string[];
 };
 
 /** One row of keywords.csv, raw (string) cells, zipped with its header. */
@@ -221,17 +222,34 @@ function shiftIsoDate(isoDate: string, days: number): string {
   return new Date(date.getTime() + days * DAY_MS).toISOString().slice(0, 10);
 }
 
-/** The arXiv API query URL for one arxiv_query cell: all-fields search, urlencoded. */
-export function arxivQueryUrl(arxivQuery: string): string {
-  return `https://export.arxiv.org/api/query?search_query=${encodeURIComponent(`all:${arxivQuery}`)}`;
+/** The arXiv API query URL whose search_query ORs every contributing arxiv_query value, each wrapped as all:(...), urlencoded. */
+export function arxivQueryUrl(arxivQueries: string[]): string {
+  const searchQuery = arxivQueries.map((query) => `all:(${query})`).join(" OR ");
+  return `https://export.arxiv.org/api/query?search_query=${encodeURIComponent(searchQuery)}`;
 }
 
 const SIGNAL_METRIC = "arxiv_papers_90d";
 const WINDOW_DAYS = 90;
 
+/** One keyword's contribution to one signals reading, before same-key contributions are summed. */
+type SignalContribution = {
+  skillId: string;
+  windowStart: string;
+  windowEnd: string;
+  checkedOn: string;
+  value: number;
+  keyword: string;
+  arxivQuery: string;
+};
+
 /** The columns signals_reading_key (migration 20261021150000) is unique on. */
-function signalReadingKey(signal: Pick<SignalRow, "skill_id" | "source" | "metric" | "window_end">): string {
-  return `${signal.skill_id}|${signal.source}|${signal.metric}|${signal.window_end}`;
+function signalReadingKey(signal: Pick<SignalContribution, "skillId" | "windowEnd">): string {
+  return `${signal.skillId}|arXiv|${SIGNAL_METRIC}|${signal.windowEnd}`;
+}
+
+/** Adds an item to a list already known not to contain it, preserving first-seen order. */
+function pushUnique(list: string[], item: string): void {
+  if (!list.includes(item)) list.push(item);
 }
 
 /**
@@ -239,12 +257,11 @@ function signalReadingKey(signal: Pick<SignalRow, "skill_id" | "source" | "metri
  * and preceding 90-day window) per ESCO skill URI on a keyword. Two keywords
  * that map to the same skill and share a checked_on produce the same
  * (skill_id, source, metric, window_end) — the signals_reading_key this
- * importer upserts on — so a later row with the same key is dropped (not
- * summed: summing two different arXiv counts for the same window would be
- * meaningless) and reported as a warning instead.
+ * importer upserts on — so their counts are summed into one row, and every
+ * contributing keyword is recorded in that row's `keywords` column.
  */
 export function buildSignalRows(inputs: SignalRowInput[]): { rows: SignalRow[]; warnings: Issue[] } {
-  const built: { row: number; signal: SignalRow }[] = [];
+  const contributions: SignalContribution[] = [];
   const warnings: Issue[] = [];
 
   for (const { row, raw } of inputs) {
@@ -265,61 +282,71 @@ export function buildSignalRows(inputs: SignalRowInput[]): { rows: SignalRow[]; 
 
     const countLast90d = Number(countLastRaw);
     const countPrev90d = Number(countPrevRaw);
-    const url = arxivQueryUrl(raw.arxiv_query ?? "");
+    const keyword = raw.keyword ?? "";
+    const arxivQuery = raw.arxiv_query ?? "";
     const skillUris = splitNames(raw.skill_uris ?? "");
 
     for (const uri of skillUris) {
       const skillId = escoUriToId(uri);
-      built.push({
-        row,
-        signal: {
-          skill_id: skillId,
-          source: "arXiv",
-          metric: SIGNAL_METRIC,
-          value: countLast90d,
-          window_end: checkedOn,
-          window_start: shiftIsoDate(checkedOn, -WINDOW_DAYS),
-          as_of: checkedOn,
-          url,
-        },
+      contributions.push({
+        skillId,
+        windowEnd: checkedOn,
+        windowStart: shiftIsoDate(checkedOn, -WINDOW_DAYS),
+        checkedOn,
+        value: countLast90d,
+        keyword,
+        arxivQuery,
       });
-      built.push({
-        row,
-        signal: {
-          skill_id: skillId,
-          source: "arXiv",
-          metric: SIGNAL_METRIC,
-          value: countPrev90d,
-          window_end: shiftIsoDate(checkedOn, -(WINDOW_DAYS + 1)),
-          window_start: shiftIsoDate(checkedOn, -(2 * WINDOW_DAYS + 1)),
-          as_of: checkedOn,
-          url,
-        },
+      contributions.push({
+        skillId,
+        windowEnd: shiftIsoDate(checkedOn, -(WINDOW_DAYS + 1)),
+        windowStart: shiftIsoDate(checkedOn, -(2 * WINDOW_DAYS + 1)),
+        checkedOn,
+        value: countPrev90d,
+        keyword,
+        arxivQuery,
       });
     }
   }
 
-  const rows: SignalRow[] = [];
-  const firstRowForKey = new Map<string, number>();
-  for (const { row, signal } of built) {
-    const key = signalReadingKey(signal);
-    const firstRow = firstRowForKey.get(key);
-    if (firstRow === undefined) {
-      firstRowForKey.set(key, row);
-      rows.push(signal);
-      continue;
+  const groups = new Map<string, SignalContribution[]>();
+  const keyOrder: string[] = [];
+  for (const contribution of contributions) {
+    const key = signalReadingKey(contribution);
+    const group = groups.get(key);
+    if (group) {
+      group.push(contribution);
+    } else {
+      groups.set(key, [contribution]);
+      keyOrder.push(key);
     }
-    warnings.push({
-      file: "keywords.csv",
-      row,
-      column: "skill_uris",
-      message:
-        `duplicate signals reading for skill_id "${signal.skill_id}", metric "${signal.metric}", ` +
-        `window ending ${signal.window_end}: already produced by row ${firstRow}`,
-      hint: "two keywords map to the same ESCO skill with the same checked_on; only the first keyword's reading is kept for this window",
-      severity: "warning",
-    });
   }
+
+  const rows: SignalRow[] = keyOrder.map((key) => {
+    const group = groups.get(key) as SignalContribution[];
+    const [first] = group;
+    const keywords: string[] = [];
+    const arxivQueries: string[] = [];
+    let value = 0;
+    let asOf = first.checkedOn;
+    for (const contribution of group) {
+      value += contribution.value;
+      if (contribution.checkedOn > asOf) asOf = contribution.checkedOn;
+      pushUnique(keywords, contribution.keyword);
+      pushUnique(arxivQueries, contribution.arxivQuery);
+    }
+    return {
+      skill_id: first.skillId,
+      source: "arXiv",
+      metric: SIGNAL_METRIC,
+      value,
+      window_start: first.windowStart,
+      window_end: first.windowEnd,
+      as_of: asOf,
+      url: arxivQueryUrl(arxivQueries),
+      keywords,
+    };
+  });
 
   return { rows, warnings };
 }

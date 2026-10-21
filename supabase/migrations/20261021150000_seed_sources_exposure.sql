@@ -11,6 +11,11 @@
 -- "skill_id,source,metric,window_end"). Until this migration is applied,
 -- that upsert fails against the live DB, and apply.ts reports the failure
 -- clearly instead of aborting the rest of the run.
+--
+-- Also adds signals.keywords: two keywords.csv rows that map to the same
+-- skill_id/source/metric/window_end now collide on signals_reading_key by
+-- having their counts summed into one row (buildSignalRows in apply.ts),
+-- and this column records which keywords contributed to that sum.
 
 create table public.sources (
   name text primary key check (length(btrim(name)) > 0),
@@ -55,6 +60,12 @@ alter table public.signals
 
 comment on constraint signals_reading_key on public.signals is
   'Makes a signals row upsertable without inventing an id (signals.id has no natural key otherwise): one reading per skill, source, metric, and window_end.';
+
+alter table public.signals
+  add column if not exists keywords text[] not null default '{}';
+
+comment on column public.signals.keywords is
+  'keywords.csv keywords summed into this reading: populated when two or more keywords collide on signals_reading_key.';
 
 -- RLS: public read, no client writes. Same pattern as the catalogue tables
 -- in 20261019144600_laluan_rls.sql.

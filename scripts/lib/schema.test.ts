@@ -9,6 +9,7 @@ import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { parseCsv } from "./csv";
 import {
+  arxivQueryUrl,
   buildCourseRows,
   buildOccupationRows,
   buildProgramRows,
@@ -16,7 +17,6 @@ import {
   buildSkillRows,
   SIGNALS_ON_CONFLICT,
 } from "./apply";
-import { splitNames } from "./cells";
 import { deriveSkills, runFile } from "../import-data";
 import liveSchema from "../fixtures/live-schema.json";
 
@@ -27,10 +27,24 @@ type TableSchema = Record<string, ColumnSpec>;
 
 const TABLES = (liveSchema as { tables: Record<string, TableSchema> }).tables;
 
+/**
+ * Columns added by a migration that has not been applied to the live DB yet
+ * (so they are absent from live-schema.json's information_schema snapshot),
+ * documented here as an explicit overlay rather than edited into that
+ * snapshot. Remove an entry once scripts/fixtures/live-schema.json is
+ * re-captured after the migration applies.
+ */
+const PENDING_MIGRATION_COLUMNS: Record<string, TableSchema> = {
+  signals: {
+    // supabase/migrations/20261021150000_seed_sources_exposure.sql
+    keywords: { type: "_text", nullable: false, hasDefault: true },
+  },
+};
+
 function tableSchema(table: string): TableSchema {
   const schema = TABLES[table];
   if (!schema) throw new Error(`"${table}" is not a table in live-schema.json`);
-  return schema;
+  return { ...schema, ...PENDING_MIGRATION_COLUMNS[table] };
 }
 
 /** True when a built JS value's type matches a live-schema udt type. */
@@ -149,7 +163,7 @@ describe("built rows match scripts/fixtures/live-schema.json", () => {
     }
   });
 
-  it("keywords.csv -> public.signals, deduped on (skill_id, source, metric, window_end)", () => {
+  it("keywords.csv -> public.signals, summed on (skill_id, source, metric, window_end)", () => {
     const text = readFileSync(`${DATA_DIR}/keywords.csv`, "utf8");
     const { header, rows } = parseCsv(text);
     const inputs = rows.map((row, index) => ({
@@ -157,20 +171,18 @@ describe("built rows match scripts/fixtures/live-schema.json", () => {
       raw: Object.fromEntries(header.map((column, i) => [column, row[i] ?? ""])),
     }));
 
-    const totalSkillUriRefs = inputs.reduce(
-      (total, { raw }) => total + splitNames(raw.skill_uris ?? "").length,
-      0
-    );
-
     const { rows: signalRows, warnings } = buildSignalRows(inputs);
 
-    // Two rows (current + preceding window) are built per skill URI
-    // reference before dedupe; every one not kept must be reported instead.
-    expect(signalRows.length + warnings.length).toBe(totalSkillUriRefs * 2);
-    expect(warnings.every((issue) => issue.severity === "warning")).toBe(true);
+    // data/keywords.csv has no blank checked_on/count cells, so every
+    // collision is summed into one row instead of being reported.
+    expect(warnings).toHaveLength(0);
 
     const keys = signalRows.map((row) => `${row.skill_id}|${row.source}|${row.metric}|${row.window_end}`);
     expect(new Set(keys).size).toBe(keys.length);
+
+    for (const row of signalRows) {
+      expect(row.keywords.length).toBeGreaterThan(0);
+    }
 
     // signals.id is GENERATED ALWAYS AS IDENTITY: this importer must never set it.
     assertRowsMatchSchema("signals", signalRows);
@@ -179,28 +191,87 @@ describe("built rows match scripts/fixtures/live-schema.json", () => {
     }
   });
 
-  it("buildSignalRows dedupes a same-skill, same-window collision within a batch, keeping the first row and warning on the rest", () => {
+  it("'perform data analysis' sums all four contributing keywords' counts into two rows (current + preceding window)", () => {
+    const text = readFileSync(`${DATA_DIR}/keywords.csv`, "utf8");
+    const { header, rows } = parseCsv(text);
+    const inputs = rows.map((row, index) => ({
+      row: index + 2,
+      raw: Object.fromEntries(header.map((column, i) => [column, row[i] ?? ""])),
+    }));
+
+    const skillId = "2b92a5b2-6758-4ee3-9fb4-b6387a55cc8f";
+    const { rows: signalRows, warnings } = buildSignalRows(inputs);
+    expect(warnings).toHaveLength(0);
+
+    const skillRows = signalRows.filter((row) => row.skill_id === skillId);
+    expect(skillRows).toHaveLength(2);
+
+    const current = skillRows.find((row) => row.window_end === "2026-10-19");
+    const preceding = skillRows.find((row) => row.window_end !== "2026-10-19");
+
+    const keywords = ["sentiment analysis", "synthetic data", "anomaly detection", "time series forecasting"];
+    const arxivQueries = [
+      '"sentiment analysis"',
+      '"synthetic data generation"',
+      '"anomaly detection"',
+      '"time series forecasting"',
+    ];
+
+    expect(current).toMatchObject({
+      value: 69 + 115 + 422 + 214,
+      as_of: "2026-10-19",
+      keywords,
+      url: arxivQueryUrl(arxivQueries),
+    });
+    expect(preceding).toMatchObject({
+      value: 102 + 131 + 424 + 200,
+      as_of: "2026-10-19",
+      keywords,
+      url: arxivQueryUrl(arxivQueries),
+    });
+  });
+
+  it("buildSignalRows sums a same-skill, same-window collision within a batch, recording every contributing keyword, with no warnings", () => {
     const uri = "https://data.europa.eu/esco/skill/00000000-0000-0000-0000-000000000001";
     const inputs = [
       {
         row: 2,
-        raw: { checked_on: "2026-10-19", count_last_90d: "10", count_prev_90d: "5", arxiv_query: "a", skill_uris: uri },
+        raw: {
+          keyword: "alpha",
+          checked_on: "2026-10-19",
+          count_last_90d: "10",
+          count_prev_90d: "5",
+          arxiv_query: "a",
+          skill_uris: uri,
+        },
       },
       {
         row: 3,
-        raw: { checked_on: "2026-10-19", count_last_90d: "20", count_prev_90d: "8", arxiv_query: "b", skill_uris: uri },
+        raw: {
+          keyword: "beta",
+          checked_on: "2026-10-19",
+          count_last_90d: "20",
+          count_prev_90d: "8",
+          arxiv_query: "b",
+          skill_uris: uri,
+        },
       },
     ];
 
     const { rows, warnings } = buildSignalRows(inputs);
 
-    // Only row 2's current + preceding-window readings survive.
-    expect(rows.map((row) => row.value).sort((a, b) => a - b)).toEqual([5, 10]);
-    expect(warnings).toHaveLength(2);
-    for (const warning of warnings) {
-      expect(warning).toMatchObject({ file: "keywords.csv", row: 3, severity: "warning" });
-      expect(warning.message).toMatch(/already produced by row 2/);
-    }
+    expect(warnings).toHaveLength(0);
+    expect(rows).toHaveLength(2);
+
+    const current = rows.find((row) => row.window_end === "2026-10-19") as (typeof rows)[number];
+    const preceding = rows.find((row) => row.window_end !== "2026-10-19") as (typeof rows)[number];
+
+    expect(current.value).toBe(30);
+    expect(current.keywords).toEqual(["alpha", "beta"]);
+    expect(current.url).toBe(arxivQueryUrl(["a", "b"]));
+
+    expect(preceding.value).toBe(13);
+    expect(preceding.keywords).toEqual(["alpha", "beta"]);
   });
 
   it("applyImport's signals upsert onConflict matches signals_reading_key's columns", () => {
