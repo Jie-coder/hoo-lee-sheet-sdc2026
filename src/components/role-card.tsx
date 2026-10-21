@@ -1,11 +1,14 @@
-// One recommended role: fit, status, SDG targets, and the top skill gap.
+// One recommended role, collapsed by default: status, rank, title, fit,
+// one-line reason, the top SDG target, and 3 skills. Everything else (the
+// full "why", every SDG target and its reason, and "Flag this") lives in
+// the Details expander below — collapsed, never deleted.
 "use client";
 
-import { useId, useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
-import { ArrowDownRight, Check, ChevronDown, ShieldCheck, Sprout } from "lucide-react";
+import { ArrowDownRight, Check, Flag, ShieldCheck, Sprout } from "lucide-react";
+import { Disclosure } from "@/components/ui/disclosure";
 import { SdgBadge, sdgFlagId } from "@/components/sdg-badge";
-import { SourceChip } from "@/components/source-chip";
+import { SourcesDisclosure } from "@/components/sources-disclosure";
 import { formatFitPercent } from "@/lib/display";
 import { cn } from "@/lib/utils";
 import type { RoleResult, SdgLink } from "@/types/contracts";
@@ -17,6 +20,10 @@ const STATUS_ICON = {
   shift: ArrowDownRight,
   interest: Sprout,
 } as const;
+
+const TIER_LABEL = { direct: "Direct", supporting: "Supporting", inferred: "AI-suggested" } as const;
+
+const SKILLS_COLLAPSED = 3;
 
 export function RoleCard({
   role,
@@ -41,11 +48,20 @@ export function RoleCard({
   flaggedIds: ReadonlySet<string>;
   onFlag: (link: SdgLink) => void;
 }) {
-  const [skillsOpen, setSkillsOpen] = useState(true);
   const reduceMotion = useReducedMotion();
-  const skillsId = useId();
   const fitPercent = Math.round(role.fit * 100);
   const StatusIcon = STATUS_ICON[status.tone];
+
+  const topSdg = role.sdg[0];
+  const extraSdgCount = role.sdg.length - 1;
+  const visibleSkills = role.gap.slice(0, SKILLS_COLLAPSED);
+  const extraSkills = role.gap.slice(SKILLS_COLLAPSED);
+  const inferredLink = role.sdg.find((link) => link.tier === "inferred");
+  const inferredFlagged = inferredLink ? flaggedIds.has(sdgFlagId(inferredLink)) : false;
+
+  function skillTarget(skillId: string): SdgLink | undefined {
+    return skillLinks.find((item) => item.subject.kind === "skill" && item.subject.skillId === skillId);
+  }
 
   return (
     <motion.article
@@ -83,70 +99,101 @@ export function RoleCard({
         </div>
       </div>
 
-      <div className="mt-4 flex min-h-[50px] flex-wrap content-start gap-1.5">
-        {role.sdg.map((link) => (
-          <SdgBadge
-            key={sdgFlagId(link)}
-            link={link}
-            label={targetLabels[link.target] ?? link.target}
-            flagged={flaggedIds.has(sdgFlagId(link))}
-            onFlag={onFlag}
-          />
-        ))}
+      {role.explanation && <p className="mt-4 text-[14px] leading-relaxed text-grey">{role.explanation}</p>}
+
+      <div className="mt-4 flex items-center gap-1.5">
+        <SdgBadge link={topSdg} label={targetLabels[topSdg.target] ?? topSdg.target} plain />
+        {extraSdgCount > 0 && (
+          <span className="rounded-md bg-alt px-1.5 py-0.5 text-[12px] text-grey">+{extraSdgCount}</span>
+        )}
       </div>
 
-      <button
-        type="button"
-        className="mt-5 mb-1 flex w-full items-center justify-between text-left text-[12px] text-grey"
-        aria-expanded={skillsOpen}
-        aria-controls={skillsId}
-        onClick={() => setSkillsOpen((open) => !open)}
-      >
-        <span>Top 5 skills to build</span>
-        <ChevronDown
-          className={cn("size-3.5 transition-transform", skillsOpen && "rotate-180")}
-          strokeWidth={1.6}
-        />
-      </button>
-      {skillsOpen && (
-        <ul id={skillsId} className="divide-y divide-line border-y border-line text-[13px]">
-          {role.gap.map((skill) => {
-            const link = skillLinks.find(
-              (item) => item.subject.kind === "skill" && item.subject.skillId === skill.skillId,
-            );
-            return (
-              <li key={skill.skillId} className="flex flex-wrap items-center justify-between gap-x-3 gap-y-1 py-2">
-                <span>{skill.label}</span>
-                {link && (
-                  <SdgBadge
-                    link={link}
-                    label={targetLabels[link.target] ?? link.target}
-                    compact
-                    flagged={flaggedIds.has(sdgFlagId(link))}
-                    onFlag={onFlag}
-                  />
-                )}
-              </li>
-            );
-          })}
-        </ul>
+      <p className="mt-5 text-[12px] text-grey">Top {role.gap.length} skills to build</p>
+      <ul className="mt-1 text-[14px]">
+        {visibleSkills.map((skill) => {
+          const link = skillTarget(skill.skillId);
+          return (
+            <li key={skill.skillId} className="flex items-center justify-between gap-3 py-1.5">
+              <span>{skill.label}</span>
+              {link && <span className="text-[11px] text-grey tabular-nums">{link.target}</span>}
+            </li>
+          );
+        })}
+      </ul>
+      {extraSkills.length > 0 && (
+        <Disclosure
+          chevron={false}
+          summary={`+${extraSkills.length} more`}
+          summaryClassName="justify-start py-1.5 text-[13px] text-grey"
+        >
+          <ul className="text-[14px]">
+            {extraSkills.map((skill) => {
+              const link = skillTarget(skill.skillId);
+              return (
+                <li key={skill.skillId} className="flex items-center justify-between gap-3 py-1.5">
+                  <span>{skill.label}</span>
+                  {link && <span className="text-[11px] text-grey tabular-nums">{link.target}</span>}
+                </li>
+              );
+            })}
+          </ul>
+        </Disclosure>
       )}
 
-      <div className="mt-4 mb-5 flex flex-wrap gap-1.5">
-        {role.sources.map((source) => (
-          <SourceChip key={`${source.dataset}-${source.releaseDate}`} source={source} />
-        ))}
+      <div className="mt-5">
+        <Disclosure summary={<span className="text-[13px] font-medium">Details</span>}>
+          <div className="mt-3 space-y-4 text-[13px]">
+            <div>
+              <p className="mb-1 text-[12px] text-grey">Why this role</p>
+              <p className="leading-relaxed">
+                {status.label}
+                {role.explanation ? `. ${role.explanation}` : ""}
+              </p>
+            </div>
+            <div>
+              <p className="mb-1 text-[12px] text-grey">SDG targets and why</p>
+              <ul>
+                {role.sdg.map((link) => (
+                  <li key={link.target} className="flex items-start gap-2 py-1">
+                    <span className="shrink-0">
+                      <SdgBadge link={link} label={targetLabels[link.target] ?? link.target} plain />
+                    </span>
+                    <span className="pt-0.5 text-[12px] text-grey">
+                      {TIER_LABEL[link.tier]} · {link.reason}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+            {inferredLink && (
+              <button
+                type="button"
+                onClick={() => onFlag(inferredLink)}
+                disabled={inferredFlagged}
+                className="inline-flex items-center gap-1 text-[12px] text-grey underline underline-offset-4 disabled:no-underline"
+              >
+                <Flag className="size-3.5" strokeWidth={1.6} />
+                {inferredFlagged ? "Flagged" : "Flag this"}
+              </button>
+            )}
+          </div>
+        </Disclosure>
       </div>
 
-      <button
-        type="button"
-        aria-pressed={chosen}
-        onClick={() => onChoose(role)}
-        className="mt-auto inline-flex w-full items-center justify-center gap-2 rounded-lg bg-ink py-2.5 text-[14px] font-medium text-white"
-      >
-        {chosen && <Check className="size-4" strokeWidth={1.6} />}
-        {chosen ? "Chosen" : "Choose this role"}
-      </button>
+      <div className="mt-auto pt-5">
+        <button
+          type="button"
+          aria-pressed={chosen}
+          onClick={() => onChoose(role)}
+          className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-ink py-2.5 text-[14px] font-medium text-white"
+        >
+          {chosen && <Check className="size-4" strokeWidth={1.6} />}
+          {chosen ? "Chosen" : "Choose this role"}
+        </button>
+        <div className="pt-3">
+          <SourcesDisclosure sources={role.sources} />
+        </div>
+      </div>
     </motion.article>
   );
 }

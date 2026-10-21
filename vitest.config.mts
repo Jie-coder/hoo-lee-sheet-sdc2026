@@ -1,13 +1,16 @@
 import path from "node:path";
+import react from "@vitejs/plugin-react";
 import { defineConfig } from "vitest/config";
 
-// Schema unit tests, plus the data importer's own unit/integration tests.
-// Component tests would follow the Next.js Vitest guide (jsdom, Testing
-// Library); none of this renders anything.
+// jsdom covers schema unit tests (.test.ts) and component tests (.test.tsx,
+// React Testing Library) per the Next.js Vitest guide. The data importer's
+// own unit/integration tests under scripts/ run here too.
 export default defineConfig({
+  plugins: [react()],
   test: {
-    environment: "node",
-    include: ["src/**/*.test.ts", "scripts/**/*.test.ts"],
+    environment: "jsdom",
+    include: ["src/**/*.test.{ts,tsx}", "scripts/**/*.test.ts"],
+    setupFiles: ["src/test/setup.ts"],
   },
   resolve: {
     alias: {
