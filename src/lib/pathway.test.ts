@@ -14,6 +14,7 @@ function course(overrides: Partial<Course>): Course {
     certificate: false,
     skillIds: ["example-skill"],
     lastChecked: "2026-10-01",
+    mode: "online",
     ...overrides,
   };
 }
