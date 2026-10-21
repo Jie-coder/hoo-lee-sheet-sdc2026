@@ -108,10 +108,19 @@ export async function computeEmbeddingsWithReuse(
 }
 
 /**
+ * base_importance b_s for a newly imported skill. 1 = neutral weight: every
+ * essential skill counts the same, and arXiv momentum moves it up or down
+ * (imp_s = b_s (1 + λ tanh(m_s)), src/lib/scoring.ts). It must not be 0:
+ * fit divides by the importance total, so 0 makes every role's fit 0.
+ */
+export const DEFAULT_BASE_IMPORTANCE = 1;
+
+/**
  * Builds the two skills upsert row sets: existing skills only get the columns
  * this importer owns (id, esco_uri, label_en, embedding), while a brand-new
  * skill also seeds label_ms / is_green / base_importance — all NOT NULL with
- * no default in the live schema — with placeholders so the insert succeeds.
+ * no default in the live schema — so the insert succeeds. label_ms and
+ * is_green are placeholders; base_importance is the neutral weight above.
  */
 export function buildSkillRows(
   skills: SkillRecord[],
@@ -135,7 +144,7 @@ export function buildSkillRows(
       label_en: skill.labelEn,
       label_ms: skill.labelEn,
       is_green: false,
-      base_importance: 0,
+      base_importance: DEFAULT_BASE_IMPORTANCE,
       embedding: embeddings.get(skill.id) ?? null,
     }));
 

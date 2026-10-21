@@ -7,6 +7,8 @@ import {
   buildSourceRows,
   computeEmbeddingsWithReuse,
   computeWouldWriteCounts,
+  buildSkillRows,
+  DEFAULT_BASE_IMPORTANCE,
   occupationEmbeddingText,
   skillEmbeddingText,
   EXPOSURE_ON_CONFLICT,
@@ -17,6 +19,30 @@ import {
 } from "./apply";
 import type { Embedder } from "./clients";
 import type { ExposureRow, OccupationRow, SourceRow } from "./row-schemas";
+import { roleFitScore, skillImportance } from "../../src/lib/scoring";
+
+describe("buildSkillRows base_importance", () => {
+  it("seeds new skills with a weight that gives a non-zero fit", () => {
+    const { newRows } = buildSkillRows(
+      [
+        { id: "s1", escoUri: "http://data.europa.eu/esco/skill/s1", labelEn: "perform data analysis" },
+        { id: "s2", escoUri: "http://data.europa.eu/esco/skill/s2", labelEn: "use spreadsheets software" },
+      ],
+      new Set(),
+      new Map()
+    );
+    const base = newRows.map((row) => row.base_importance as number);
+    expect(base).toEqual([DEFAULT_BASE_IMPORTANCE, DEFAULT_BASE_IMPORTANCE]);
+
+    // A user who has one of two essential skills, with no trend momentum,
+    // should fit 50%. With base_importance 0 this was 0 for every role.
+    const fit = roleFitScore([
+      { importance: skillImportance(base[0], 0), level: 1 },
+      { importance: skillImportance(base[1], 0), level: 0 },
+    ]);
+    expect(fit).toBeCloseTo(0.5);
+  });
+});
 
 function vector(seed: number): number[] {
   return Array.from({ length: EMBEDDING_DIMENSIONS }, (_, i) => seed + i / 1000);
@@ -387,10 +413,15 @@ describe("applyImport", () => {
       },
     ]);
 
-    // A brand-new skill: gets the placeholder defaults for the NOT NULL columns.
+    // A brand-new skill: gets defaults for the NOT NULL columns (neutral importance, not 0).
     const skillsUpserts = upserts.filter((u) => u.table === "skills");
     const newSkillRow = skillsUpserts.flatMap((u) => u.rows).find((row) => row.id === "00000000-0000-0000-0000-000000000001");
-    expect(newSkillRow).toMatchObject({ id: "00000000-0000-0000-0000-000000000001", label_ms: "Data analysis", is_green: false, base_importance: 0 });
+    expect(newSkillRow).toMatchObject({
+      id: "00000000-0000-0000-0000-000000000001",
+      label_ms: "Data analysis",
+      is_green: false,
+      base_importance: DEFAULT_BASE_IMPORTANCE,
+    });
     expect((newSkillRow?.embedding as number[]).length).toBe(EMBEDDING_DIMENSIONS);
 
     const occupationsUpsert = upserts.find((u) => u.table === "occupations");

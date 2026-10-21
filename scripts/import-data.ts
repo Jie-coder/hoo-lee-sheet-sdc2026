@@ -4,6 +4,7 @@
 // for how Tiffany and Henry should use this day to day.
 import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
+import { pathToFileURL } from "node:url";
 import { parseCsv } from "./lib/csv";
 import { diffHeaders, FILE_SPECS, resolveOnly, type FileKey } from "./lib/files";
 import {
@@ -552,8 +553,18 @@ async function main() {
   process.exit(exitCode);
 }
 
-const isMain = process.argv[1] && import.meta.url === `file://${process.argv[1]}`;
-if (isMain) {
+/**
+ * True when this file is the script being run (not imported by a test).
+ * Compares file URLs, not strings: on Windows argv[1] is "C:\dev\…" while
+ * import.meta.url is "file:///C:/dev/…", so a plain `file://${argv[1]}`
+ * never matched and the script silently did nothing.
+ */
+export function isDirectRun(moduleUrl: string, scriptPath: string | undefined): boolean {
+  if (!scriptPath) return false;
+  return moduleUrl === pathToFileURL(scriptPath).href;
+}
+
+if (isDirectRun(import.meta.url, process.argv[1])) {
   main().catch((error) => {
     console.error(error instanceof Error ? error.message : error);
     process.exit(1);

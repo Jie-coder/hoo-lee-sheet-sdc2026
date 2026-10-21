@@ -4,8 +4,30 @@ import { join } from "node:path";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { EMBEDDING_DIMENSIONS } from "../src/types/contracts";
-import { runCli, runImport } from "./import-data";
+import { pathToFileURL } from "node:url";
+import { isDirectRun, runCli, runImport } from "./import-data";
 import type { Embedder } from "./lib/clients";
+
+describe("isDirectRun", () => {
+  const scriptPath = join(process.cwd(), "scripts", "import-data.ts");
+
+  it("matches when the module URL is the script path as a file URL", () => {
+    expect(isDirectRun(pathToFileURL(scriptPath).href, scriptPath)).toBe(true);
+  });
+
+  it("does not match a Windows-style path glued onto file:// (the old bug)", () => {
+    const windowsPath = "C:\\dev\\laluan\\scripts\\import-data.ts";
+    expect(isDirectRun("file:///C:/dev/laluan/scripts/import-data.ts", windowsPath)).toBe(
+      process.platform === "win32"
+    );
+    expect(`file://${windowsPath}`).not.toBe("file:///C:/dev/laluan/scripts/import-data.ts");
+  });
+
+  it("does not match when imported by another file, or with no script path", () => {
+    expect(isDirectRun(pathToFileURL(scriptPath).href, join(process.cwd(), "node_modules", "vitest", "x.js"))).toBe(false);
+    expect(isDirectRun(pathToFileURL(scriptPath).href, undefined)).toBe(false);
+  });
+});
 
 const VALID_DIR = "scripts/fixtures/valid";
 const INVALID_DIR = "scripts/fixtures/invalid";
