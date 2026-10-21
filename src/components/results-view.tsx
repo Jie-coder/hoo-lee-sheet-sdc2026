@@ -4,7 +4,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { LayoutGroup } from "framer-motion";
-import { Hand, Info } from "lucide-react";
+import { Hand } from "lucide-react";
 import { toast } from "sonner";
 import { useFlow } from "@/context/flow-context";
 import { EstimateFooter } from "@/components/estimate-footer";
@@ -21,6 +21,7 @@ import { sdgFlagId } from "@/components/sdg-badge";
 import { SdgLegend } from "@/components/sdg-legend";
 import { SignalDateToggle, type SignalDate } from "@/components/signal-date-toggle";
 import { Skeleton } from "@/components/ui/skeleton";
+import { InfoPopover } from "@/components/ui/info-popover";
 import { formatDayMonthYear } from "@/lib/display";
 import { rankRoles } from "@/lib/rank-roles";
 import { AISYAH_RESULTS, EXAMPLE_AS_OF, fetchAisyahResults, type ResultsExample } from "@/mocks/aisyah";
@@ -105,29 +106,22 @@ export function ResultsView({ initial }: { initial: ResultsExample }) {
           <ScoreCard currentWork={snapshot.response.currentWork} tasks={snapshot.tasks} />
         )}
 
-        <section className="mt-5 rounded-2xl border border-line bg-white px-4 py-4 sm:px-5">
-          <div className="flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
+        <section className="mt-12 flex flex-col gap-4 rounded-2xl border border-line bg-white px-4 py-3 sm:px-5 xl:flex-row xl:items-center xl:justify-between">
+          <div className="flex items-center gap-2">
             <ScenarioTabs value={scenario} onChange={setScenario} />
-            <div className="flex flex-wrap items-center gap-3 xl:justify-end">
-              <SignalDateToggle value={signal} onChange={handleSignal} disabled={loading} />
-              <span className="hidden h-6 w-px bg-line xl:block" />
-              <RefreshButton
-                refreshedLabel={formatDayMonthYear(refreshedOn)}
-                loading={loading}
-                onRefresh={handleRefresh}
-              />
-            </div>
-          </div>
-          <div className="mt-3 flex items-start gap-2 border-t border-line pt-3 text-[13px] text-grey">
-            <Info className="mt-px size-4 shrink-0 text-sage" strokeWidth={1.6} />
-            <p>
+            <InfoPopover label={`About the ${SCENARIO_LABEL[scenario]} scenario`}>
               <span className="font-medium text-ink">{SCENARIO_LABEL[scenario]}:</span> {SCENARIO_SUMMARY[scenario]}{" "}
               <span className="text-grey/80">{SCENARIO_ILLUSTRATIVE}</span>
-            </p>
+            </InfoPopover>
+          </div>
+          <div className="flex flex-wrap items-center gap-3 xl:justify-end">
+            <SignalDateToggle value={signal} onChange={handleSignal} disabled={loading} />
+            <span className="text-[12px] whitespace-nowrap text-grey">Refreshed {formatDayMonthYear(refreshedOn)}</span>
+            <RefreshButton loading={loading} onRefresh={handleRefresh} />
           </div>
         </section>
 
-        <section className="mt-5">
+        <section className="mt-12">
           <div className="mb-3 flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
             <h2 className="font-serif text-[24px] font-medium tracking-tight">Three roles you could move into</h2>
             <SdgLegend />

@@ -24,6 +24,14 @@ export function formatFitPercent(fit: UnitScore): string {
   return `${Math.round(fit * 100)}%`;
 }
 
+/** One line reading the augmentation band, for the always-visible spot the long definition left. */
+export function augmentationSummary(value: UnitScore): string {
+  const band = bandLabel(value);
+  if (band === "High") return "AI can speed up most of your tasks.";
+  if (band === "Medium") return "AI can speed up some of your tasks.";
+  return "AI changes little of your daily tasks.";
+}
+
 /** "Sep 2026" from an ISO date. */
 export function formatMonthYear(iso: IsoDate): string {
   const [year, month] = iso.split("-");

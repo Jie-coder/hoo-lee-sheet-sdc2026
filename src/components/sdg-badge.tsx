@@ -20,6 +20,7 @@ export function SdgBadge({
   link,
   label,
   compact = false,
+  plain = false,
   flagged = false,
   onFlag,
 }: {
@@ -27,9 +28,20 @@ export function SdgBadge({
   label: string;
   /** Target id only, for a skill row. Inferred still shows why and flag. */
   compact?: boolean;
+  /** Just the pill, target + label, no tier suffix, tooltip, or flag. For a card's
+   * collapsed "top SDG badge" display, where the full tier/reason lives in Details. */
+  plain?: boolean;
   flagged?: boolean;
   onFlag?: (link: SdgLink) => void;
 }) {
+  if (plain) {
+    return (
+      <span className={cn("inline-flex items-center rounded-md px-2 py-0.5 text-[12px] whitespace-nowrap", TIER_CLASS[link.tier])}>
+        {`${link.target} ${label}`.trim()}
+      </span>
+    );
+  }
+
   const name = compact ? link.target : `${link.target} ${label}`.trim();
   const text =
     link.tier === "supporting"
