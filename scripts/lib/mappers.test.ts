@@ -185,8 +185,8 @@ describe("mapKeywordRow", () => {
     expect(result.value).toMatchObject({ direction: "up", countLast90d: 145 });
   });
 
-  it("warns (not errors) when under the 20-papers threshold", () => {
-    const result = mapKeywordRow({ ...valid, count_last_90d: "5" }, 3);
+  it("warns (not errors) when both windows are under the 20-papers threshold", () => {
+    const result = mapKeywordRow({ ...valid, count_last_90d: "5", count_prev_90d: "4", direction: "up" }, 3);
     expect(result.value).not.toBeNull();
     expect(result.issues).toHaveLength(0);
     expect(result.warnings).toHaveLength(1);

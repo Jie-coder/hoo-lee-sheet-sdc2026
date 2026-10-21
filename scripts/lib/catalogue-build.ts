@@ -15,6 +15,7 @@ import type {
 import { SOURCE_NAMES } from "../../src/lib/catalogue";
 import { skillMomentum } from "../../src/lib/scoring";
 import { deriveSkills, runFile } from "../import-data";
+import { hasEnoughPapers } from "./arxiv";
 import { escoUriToId, isEscoUri } from "./cells";
 import { parseCsv } from "./csv";
 import { mapKeywordRow } from "./mappers";
@@ -108,7 +109,8 @@ export function buildCatalogue(dir: string): Catalogue {
   const perSkill = new Map<string, { momenta: number[]; keywords: string[]; checkedOn: string }>();
   for (const [index, raw] of readRows(dir, "keywords.csv").entries()) {
     const { value } = mapKeywordRow(raw, index + 2);
-    if (!value) continue;
+    // Too few papers in both windows to read as a trend: 1 vs 3 would look like a huge swing.
+    if (!value || !hasEnoughPapers(value.countLast90d, value.countPrev90d)) continue;
     const momentum = skillMomentum(value.countLast90d, value.countPrev90d);
     for (const uri of value.skillUris) {
       const id = escoUriToId(uri);

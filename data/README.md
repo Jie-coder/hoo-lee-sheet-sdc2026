@@ -52,9 +52,27 @@ The licence must be filled in. A source with unclear or no-reuse terms can't be 
 Lands in `public.sources` via `--apply` (migration `20261021150000_seed_sources_exposure.sql`, upserted on its primary key `name`).
 
 ### `keywords.csv` (about 25 arXiv keywords)
-`keyword, arxiv_query, skills, skill_uris, direction (up / down), count_last_90d, count_prev_90d, checked_on, notes`
+`keyword, arxiv_query, skills, skill_uris, direction (up / down / flat), count_last_90d, count_prev_90d, checked_on, notes`
 
-Drop keywords with fewer than 20 papers in the last 90 days, and keywords that are too broad.
+**Don't type the counts by hand.** Fill in `keyword`, `arxiv_query`, `skills`
+and `skill_uris`, then let the script count arXiv papers and set `direction`
+and `checked_on`:
+
+```
+npx tsx scripts/fetch-arxiv.ts                      # windows ending today
+npx tsx scripts/fetch-arxiv.ts --as-of 2026-09-19   # windows ending on a past date (T10 snapshot)
+npx tsx scripts/fetch-arxiv.ts --dry-run            # print the counts, change nothing
+```
+
+- It searches `all:(arxiv_query)` in two back-to-back 90-day windows by
+  submission date, one request every 3 seconds (arXiv's limit).
+- `direction` is `flat` when the two windows differ by 10% or less.
+- A keyword with fewer than 20 papers in **both** windows is too small to read
+  as a trend: the check warns and scoring ignores it. Use a broader query, or
+  drop it.
+- In the app, a skill's momentum is the **average** over its keywords, so one
+  busy keyword can't drown out the others. (The database `signals` rows below
+  still sum counts per skill.)
 
 Lands in `public.signals`, via `--apply` (two rows per ESCO skill URI: the current and preceding 90-day window). This needs migration `20261021150000_seed_sources_exposure.sql` applied first — it adds `signals_reading_key`, the unique constraint on `(skill_id, source, metric, window_end)` the upsert's `onConflict` relies on, since `signals.id` has no natural key of its own. That same migration adds `signals.keywords` (`text[]`): two keywords that map to the same skill with the same `checked_on` collide on that key, and instead of one keyword's reading winning, their `count_last_90d`/`count_prev_90d` are summed into one row, with every contributing keyword recorded in `keywords`. That row's `url` ORs every contributing keyword's `arxiv_query` (each as `all:(...)`).
 

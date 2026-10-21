@@ -4419,7 +4419,7 @@
    "checkedOn": "2026-10-19"
   },
   "e465a154-93f7-4973-9ce1-31659fe16dd2": {
-   "momentum": 0.03301523948473625,
+   "momentum": 0.03550272193181002,
    "keywords": [
     "AI agents",
     "prompt engineering",
@@ -4429,24 +4429,23 @@
    "checkedOn": "2026-10-19"
   },
   "2af29864-c941-40a5-ae7b-2b6c4b92c0d7": {
-   "momentum": 0.1505728584793744,
+   "momentum": 0.16480797430124633,
    "keywords": [
     "speech recognition"
    ],
    "checkedOn": "2026-10-19"
   },
   "21d2f96d-35f7-4e3f-9745-c533d2dd6e97": {
-   "momentum": -0.05927660992954019,
+   "momentum": -0.05356774570922006,
    "keywords": [
     "code generation"
    ],
    "checkedOn": "2026-10-19"
   },
   "9ff9db9d-d14b-426e-83f3-e7449af6c79f": {
-   "momentum": -0.04247405645148073,
+   "momentum": -0.11177282221346743,
    "keywords": [
     "retrieval augmented generation",
-    "robotic process automation",
     "knowledge graphs",
     "federated learning",
     "AI governance",
@@ -4462,7 +4461,7 @@
    "checkedOn": "2026-10-19"
   },
   "2b92a5b2-6758-4ee3-9fb4-b6387a55cc8f": {
-   "momentum": -0.11320733686745874,
+   "momentum": -0.11218898787668527,
    "keywords": [
     "sentiment analysis",
     "synthetic data",
@@ -4471,15 +4470,8 @@
    ],
    "checkedOn": "2026-10-19"
   },
-  "fff0e2cd-d0bd-4b02-9daf-158b79d9688a": {
-   "momentum": 0.08293266329354561,
-   "keywords": [
-    "text summarization"
-   ],
-   "checkedOn": "2026-10-19"
-  },
   "8369c2d6-c100-4cf6-bd83-9668d8678433": {
-   "momentum": -0.035363411212998,
+   "momentum": -0.027974658852377564,
    "keywords": [
     "reinforcement learning",
     "autonomous vehicles",
@@ -4489,7 +4481,7 @@
    "checkedOn": "2026-10-19"
   },
   "32a2c63d-2d13-4784-abb8-678ef2cd8a46": {
-   "momentum": 0.22314355131420976,
+   "momentum": 0.23052365861183235,
    "keywords": [
     "machine translation"
    ],
