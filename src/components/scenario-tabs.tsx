@@ -2,6 +2,7 @@
 "use client";
 
 import { useEffect, useRef, useState, type KeyboardEvent } from "react";
+import { motion } from "framer-motion";
 import { TrendingDown, Users, Zap, type LucideIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { SCENARIO_IDS, type ScenarioId } from "@/types/contracts";
@@ -24,16 +25,9 @@ export const SCENARIO_SUMMARY: Record<ScenarioId, string> = {
   sup: "AI capability jumps quickly. Demand surges for digital and data work, and green reporting grows with it.",
 };
 
-export const SCENARIO_ILLUSTRATIVE =
-  "Scenario values are illustrative, based on WEF Jobs of Tomorrow futures.";
+export const SCENARIO_ILLUSTRATIVE = "Scenario values are illustrative, based on WEF Jobs of Tomorrow futures.";
 
-export function ScenarioTabs({
-  value,
-  onChange,
-}: {
-  value: ScenarioId;
-  onChange: (scenario: ScenarioId) => void;
-}) {
+export function ScenarioTabs({ value, onChange }: { value: ScenarioId; onChange: (scenario: ScenarioId) => void }) {
   const [stacked, setStacked] = useState(false);
   const tabRefs = useRef<Record<string, HTMLButtonElement | null>>({});
 
@@ -76,42 +70,44 @@ export function ScenarioTabs({
   }
 
   return (
-    <div className="flex min-w-0 flex-col gap-2 sm:flex-row sm:items-center sm:gap-3">
-      <span className="shrink-0 text-[12px] text-grey">Scenario</span>
-      <div
-        role="tablist"
-        aria-label="Future scenario"
-        aria-orientation={stacked ? "vertical" : "horizontal"}
-        className="flex w-full flex-col items-stretch gap-0.5 rounded-xl bg-alt p-1 text-[13px] sm:w-auto sm:flex-row sm:items-center sm:overflow-x-auto"
-      >
-        {SCENARIO_IDS.map((id, index) => {
-          const selected = value === id;
-          const Icon = SCENARIO_ICON[id];
-          return (
-            <button
-              key={id}
-              ref={(node) => {
-                tabRefs.current[id] = node;
-              }}
-              type="button"
-              role="tab"
-              aria-selected={selected}
-              tabIndex={selected ? 0 : -1}
-              onClick={() => select(id)}
-              onKeyDown={(event) => handleKeyDown(event, index)}
-              className={cn(
-                "inline-flex w-full shrink-0 items-center gap-1.5 rounded-lg px-3 py-1.5 whitespace-nowrap sm:w-auto",
-                selected
-                  ? "border border-line bg-white font-medium text-ink shadow-sm"
-                  : "text-grey",
-              )}
-            >
-              <Icon className={cn("size-3.5", selected && "text-sage")} strokeWidth={1.6} />
-              {SCENARIO_LABEL[id]}
-            </button>
-          );
-        })}
-      </div>
+    <div
+      role="tablist"
+      aria-label="Future scenario"
+      aria-orientation={stacked ? "vertical" : "horizontal"}
+      className="flex w-full flex-col gap-0.5 rounded-full bg-alt p-1 text-[13px] sm:w-auto sm:flex-row sm:items-center"
+    >
+      {SCENARIO_IDS.map((id, index) => {
+        const selected = value === id;
+        const Icon = SCENARIO_ICON[id];
+        return (
+          <button
+            key={id}
+            ref={(node) => {
+              tabRefs.current[id] = node;
+            }}
+            type="button"
+            role="tab"
+            aria-selected={selected}
+            tabIndex={selected ? 0 : -1}
+            onClick={() => select(id)}
+            onKeyDown={(event) => handleKeyDown(event, index)}
+            className={cn(
+              "relative inline-flex w-full shrink-0 items-center justify-center gap-1.5 rounded-full px-3.5 py-1.5 whitespace-nowrap transition-colors sm:w-auto",
+              selected ? "font-medium text-ink" : "text-grey hover:text-ink",
+            )}
+          >
+            {selected && (
+              <motion.span
+                layoutId="scenario-pill"
+                className="absolute inset-0 rounded-full border border-line bg-white shadow-sm"
+                transition={{ type: "spring", stiffness: 500, damping: 40 }}
+              />
+            )}
+            <Icon className={cn("relative size-3.5", selected && "text-sage")} strokeWidth={1.6} />
+            <span className="relative">{SCENARIO_LABEL[id]}</span>
+          </button>
+        );
+      })}
     </div>
   );
 }

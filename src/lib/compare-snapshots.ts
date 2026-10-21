@@ -42,3 +42,10 @@ export function describeChange(change: RankChange): string {
   if (change.after == null) return `${change.title}: drops out of the list (was #${change.before})`;
   return `${change.title} #${change.before} → #${change.after}`;
 }
+
+/** Short form for one-line summaries: "Software developer new at #6", "BI manager out", "Energy assessor #6 → #5". */
+export function describeChangeShort(change: RankChange): string {
+  if (change.before == null) return `${change.title} new at #${change.after}`;
+  if (change.after == null) return `${change.title} out`;
+  return `${change.title} #${change.before} → #${change.after}`;
+}
