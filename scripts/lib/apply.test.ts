@@ -6,7 +6,9 @@ import {
   computeEmbeddingsWithReuse,
   occupationEmbeddingText,
   skillEmbeddingText,
+  SIGNALS_ON_CONFLICT,
   type ApplyInput,
+  type SignalRow,
 } from "./apply";
 import type { Embedder } from "./clients";
 
@@ -16,12 +18,12 @@ function vector(seed: number): number[] {
 
 /** A minimal fake Supabase client: just enough of .from().upsert()/.select().in() to drive apply.ts. */
 function fakeSupabase(existingByTable: Record<string, Record<string, unknown>[]> = {}) {
-  const upserts: { table: string; rows: Record<string, unknown>[] }[] = [];
+  const upserts: { table: string; rows: Record<string, unknown>[]; onConflict?: string }[] = [];
   const client = {
     from(table: string) {
       return {
-        upsert(rows: Record<string, unknown>[]) {
-          upserts.push({ table, rows });
+        upsert(rows: Record<string, unknown>[], options?: { onConflict?: string }) {
+          upserts.push({ table, rows, onConflict: options?.onConflict });
           return Promise.resolve({ error: null });
         },
         select() {
@@ -153,7 +155,21 @@ describe("computeEmbeddingsWithReuse", () => {
   });
 });
 
-const EMPTY_INPUT: ApplyInput = { courses: [], programmes: [], occupations: [], skills: [] };
+const EMPTY_INPUT: ApplyInput = { courses: [], programmes: [], occupations: [], skills: [], signals: [] };
+
+function signalRow(overrides: Partial<SignalRow> = {}): SignalRow {
+  return {
+    skill_id: "00000000-0000-0000-0000-000000000001",
+    source: "arXiv",
+    metric: "arxiv_papers_90d",
+    value: 10,
+    window_start: "2026-07-01",
+    window_end: "2026-10-01",
+    as_of: "2026-10-01",
+    url: "https://export.arxiv.org/api/query?search_query=all%3Atest",
+    ...overrides,
+  };
+}
 
 describe("applyImport", () => {
   it("upserts courses, programs, skills, and occupations with snake_case columns", async () => {
@@ -222,7 +238,7 @@ describe("applyImport", () => {
     const occupationsUpsert = upserts.find((u) => u.table === "occupations");
     expect((occupationsUpsert?.rows[0].embedding as number[]).length).toBe(EMBEDDING_DIMENSIONS);
 
-    expect(result.skipped.map((s) => s.file)).toEqual(["sources.csv", "keywords.csv", "exposure.csv"]);
+    expect(result.skipped.map((s) => s.file)).toEqual(["sources.csv", "exposure.csv"]);
   });
 
   it("does not clobber label_ms / is_green / base_importance for a skill that already exists", async () => {
@@ -323,5 +339,71 @@ describe("applyImport", () => {
     expect(coursesUpserts).toHaveLength(3);
     expect(coursesUpserts.map((u) => u.rows.length)).toEqual([500, 500, 200]);
     expect(result.tables.find((t) => t.table === "courses")).toMatchObject({ upserted: 1200 });
+  });
+
+  it("upserts signals onConflict skill_id,source,metric,window_end and never sends an id", async () => {
+    const { client, upserts } = fakeSupabase({});
+    const embedder: Embedder = vi.fn(async (texts: string[]) => texts.map((_, i) => vector(i)));
+
+    const input: ApplyInput = { ...EMPTY_INPUT, signals: [signalRow()] };
+    const result = await applyImport(input, client, embedder);
+
+    const signalsUpsert = upserts.find((u) => u.table === "signals");
+    expect(signalsUpsert?.onConflict).toBe(SIGNALS_ON_CONFLICT);
+    expect(signalsUpsert?.rows).toEqual([signalRow()]);
+    expect(signalsUpsert?.rows[0]).not.toHaveProperty("id");
+    expect(result.tables.find((t) => t.table === "signals")).toMatchObject({ upserted: 1 });
+  });
+
+  it("reports 'apply migration 20261021150000 first' when signals_reading_key doesn't exist yet, without aborting other tables", async () => {
+    const client = {
+      from(table: string) {
+        return {
+          upsert() {
+            if (table === "signals") {
+              return Promise.resolve({
+                error: {
+                  code: "42P10",
+                  message: "there is no unique or exclusion constraint matching the ON CONFLICT specification",
+                },
+              });
+            }
+            return Promise.resolve({ error: null });
+          },
+          select() {
+            return { in() { return Promise.resolve({ data: [] }); } };
+          },
+        };
+      },
+    } as unknown as SupabaseClient;
+    const embedder: Embedder = vi.fn(async (texts: string[]) => texts.map((_, i) => vector(i)));
+
+    const input: ApplyInput = {
+      ...EMPTY_INPUT,
+      signals: [signalRow()],
+      occupations: [
+        {
+          id: "o001",
+          escoUri: null,
+          iscoCode: "2512",
+          titleEn: "Data Analyst",
+          titleMs: "Penganalisis Data",
+          description: "Analyses data.",
+          cluster: "data_analytics",
+          isEmerging: false,
+          lastChecked: "2026-10-01",
+          notes: "",
+        },
+      ],
+    };
+
+    const result = await applyImport(input, client, embedder);
+
+    const signalsResult = result.tables.find((t) => t.table === "signals");
+    expect(signalsResult?.error).toMatch(/apply migration 20261021150000 first/);
+
+    // The signals upsert failing must not stop other tables from being reported.
+    const occupationsResult = result.tables.find((t) => t.table === "occupations");
+    expect(occupationsResult).toMatchObject({ upserted: 1 });
   });
 });
