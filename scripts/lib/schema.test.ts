@@ -11,10 +11,12 @@ import { parseCsv } from "./csv";
 import {
   arxivQueryUrl,
   buildCourseRows,
+  buildExposureRows,
   buildOccupationRows,
   buildProgramRows,
   buildSignalRows,
   buildSkillRows,
+  buildSourceRows,
   SIGNALS_ON_CONFLICT,
 } from "./apply";
 import { deriveSkills, runFile } from "../import-data";
@@ -27,24 +29,10 @@ type TableSchema = Record<string, ColumnSpec>;
 
 const TABLES = (liveSchema as { tables: Record<string, TableSchema> }).tables;
 
-/**
- * Columns added by a migration that has not been applied to the live DB yet
- * (so they are absent from live-schema.json's information_schema snapshot),
- * documented here as an explicit overlay rather than edited into that
- * snapshot. Remove an entry once scripts/fixtures/live-schema.json is
- * re-captured after the migration applies.
- */
-const PENDING_MIGRATION_COLUMNS: Record<string, TableSchema> = {
-  signals: {
-    // supabase/migrations/20261021150000_seed_sources_exposure.sql
-    keywords: { type: "_text", nullable: false, hasDefault: true },
-  },
-};
-
 function tableSchema(table: string): TableSchema {
   const schema = TABLES[table];
   if (!schema) throw new Error(`"${table}" is not a table in live-schema.json`);
-  return { ...schema, ...PENDING_MIGRATION_COLUMNS[table] };
+  return schema;
 }
 
 /** True when a built JS value's type matches a live-schema udt type. */
@@ -114,6 +102,8 @@ const coursesOutcome = runFile("courses", DATA_DIR);
 const occupationsOutcome = runFile("occupations", DATA_DIR);
 const programmesOutcome = runFile("programmes", DATA_DIR);
 const keywordsOutcome = runFile("keywords", DATA_DIR);
+const sourcesOutcome = runFile("sources", DATA_DIR);
+const exposureOutcome = runFile("exposure", DATA_DIR);
 
 const skills = deriveSkills([...coursesOutcome.skillPairs, ...keywordsOutcome.skillPairs]);
 const emptyEmbeddings = new Map<string, number[]>();
@@ -137,6 +127,38 @@ describe("built rows match scripts/fixtures/live-schema.json", () => {
   it("programmes.csv -> public.programs", () => {
     expect(programmesOutcome.fileReport.invalidRows).toBe(0);
     assertRowsMatchSchema("programs", buildProgramRows(programmesOutcome.validProgrammes));
+  });
+
+  it("sources.csv -> public.sources", () => {
+    expect(sourcesOutcome.fileReport.invalidRows).toBe(0);
+    assertRowsMatchSchema("sources", buildSourceRows(sourcesOutcome.validSources));
+  });
+
+  it("exposure.csv -> public.exposure", () => {
+    expect(exposureOutcome.fileReport.invalidRows).toBe(0);
+    assertRowsMatchSchema(
+      "exposure",
+      buildExposureRows(exposureOutcome.validExposures, occupationsOutcome.validOccupations)
+    );
+  });
+
+  it("every data/exposure.csv row matches exactly one data/occupations.csv row, so occupation_id is never null", () => {
+    const rows = buildExposureRows(exposureOutcome.validExposures, occupationsOutcome.validOccupations);
+    expect(rows.length).toBeGreaterThan(0);
+    for (const row of rows) {
+      expect(row.occupation_id, `no unique occupations.csv match for "${row.occupation}" (code "${row.code}")`).not.toBeNull();
+    }
+  });
+
+  it("every data/exposure.csv source_name is a name built into data/sources.csv's rows", () => {
+    const sourceNames = new Set(buildSourceRows(sourcesOutcome.validSources).map((row) => row.name));
+    const exposureRows = buildExposureRows(exposureOutcome.validExposures, occupationsOutcome.validOccupations);
+    expect(exposureRows.length).toBeGreaterThan(0);
+    for (const row of exposureRows) {
+      expect(sourceNames.has(row.source_name as string), `"${row.source_name}" is not a name in data/sources.csv`).toBe(
+        true
+      );
+    }
   });
 
   it("derived skills (from courses.csv + keywords.csv) -> public.skills", () => {

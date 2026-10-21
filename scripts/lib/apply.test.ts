@@ -3,14 +3,20 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 import { EMBEDDING_DIMENSIONS } from "../../src/types/contracts";
 import {
   applyImport,
+  buildExposureRows,
+  buildSourceRows,
   computeEmbeddingsWithReuse,
+  computeWouldWriteCounts,
   occupationEmbeddingText,
   skillEmbeddingText,
+  EXPOSURE_ON_CONFLICT,
   SIGNALS_ON_CONFLICT,
+  SOURCES_ON_CONFLICT,
   type ApplyInput,
   type SignalRow,
 } from "./apply";
 import type { Embedder } from "./clients";
+import type { ExposureRow, OccupationRow, SourceRow } from "./row-schemas";
 
 function vector(seed: number): number[] {
   return Array.from({ length: EMBEDDING_DIMENSIONS }, (_, i) => seed + i / 1000);
@@ -155,7 +161,158 @@ describe("computeEmbeddingsWithReuse", () => {
   });
 });
 
-const EMPTY_INPUT: ApplyInput = { courses: [], programmes: [], occupations: [], skills: [], signals: [] };
+const EMPTY_INPUT: ApplyInput = {
+  courses: [],
+  programmes: [],
+  occupations: [],
+  skills: [],
+  signals: [],
+  sources: [],
+  exposure: [],
+};
+
+function sourceRow(overrides: Partial<SourceRow> = {}): SourceRow {
+  return {
+    name: "ILO GenAI Exposure 2025",
+    url: "https://www.ilo.org/sites/default/files/2025-05/WP140_web.pdf",
+    publisher: "ILO",
+    whatItMeasures: "Exposure scores by ISCO-08",
+    updateFrequency: "Periodic",
+    lastUpdated: "2025-05-20",
+    dataFormat: "PDF",
+    licence: "CC BY 4.0",
+    useFor: "exposure",
+    notes: "",
+    ...overrides,
+  };
+}
+
+function exposureRow(overrides: Partial<ExposureRow> = {}): ExposureRow {
+  return {
+    occupation: "software developer",
+    code: "2512",
+    exposureValue: 0.53,
+    scale: "0-1 (mean task score)",
+    sourceName: "ILO GenAI Exposure 2025",
+    sourceUrl: "https://www.ilo.org/sites/default/files/2025-05/WP140_web.pdf",
+    tableOrPage: "Table A1, p.49",
+    asOf: "2025-05-20",
+    notes: "",
+    ...overrides,
+  };
+}
+
+function occupationRow(overrides: Partial<OccupationRow> = {}): OccupationRow {
+  return {
+    id: "o001",
+    escoUri: "http://data.europa.eu/esco/occupation/f2b15a0e-e65a-438a-affb-29b9d50b77d1",
+    iscoCode: "2512",
+    titleEn: "software developer",
+    titleMs: "pembangun perisian",
+    description: "Writes software.",
+    cluster: "ai_digital",
+    isEmerging: false,
+    lastChecked: "2026-10-20",
+    notes: "",
+    ...overrides,
+  };
+}
+
+describe("buildSourceRows", () => {
+  it("maps SourceRow camelCase fields to public.sources snake_case columns", () => {
+    expect(buildSourceRows([sourceRow()])).toEqual([
+      {
+        name: "ILO GenAI Exposure 2025",
+        url: "https://www.ilo.org/sites/default/files/2025-05/WP140_web.pdf",
+        publisher: "ILO",
+        what_it_measures: "Exposure scores by ISCO-08",
+        update_frequency: "Periodic",
+        last_updated: "2025-05-20",
+        data_format: "PDF",
+        licence: "CC BY 4.0",
+        use_for: "exposure",
+        notes: "",
+      },
+    ]);
+  });
+});
+
+describe("buildExposureRows", () => {
+  it("fills occupation_id from an exact title_en match", () => {
+    const occupations = [occupationRow()];
+    const rows = buildExposureRows([exposureRow()], occupations);
+    expect(rows[0]).toMatchObject({ occupation_id: "o001", occupation: "software developer", code: "2512" });
+  });
+
+  it("falls back to a unique isco_code match when the title doesn't match", () => {
+    const occupations = [occupationRow({ titleEn: "some other title" })];
+    const rows = buildExposureRows([exposureRow()], occupations);
+    expect(rows[0].occupation_id).toBe("o001");
+  });
+
+  it("falls back to an esco_uri match when code is an ESCO URI", () => {
+    const occupations = [occupationRow({ titleEn: "some other title", iscoCode: null })];
+    const rows = buildExposureRows(
+      [exposureRow({ code: "http://data.europa.eu/esco/occupation/f2b15a0e-e65a-438a-affb-29b9d50b77d1" })],
+      occupations
+    );
+    expect(rows[0].occupation_id).toBe("o001");
+  });
+
+  it("never invents an occupation_id when the code matches more than one occupation", () => {
+    const occupations = [
+      occupationRow({ id: "o001", titleEn: "data analyst", iscoCode: "2511" }),
+      occupationRow({ id: "o002", titleEn: "data scientist", iscoCode: "2511" }),
+    ];
+    const rows = buildExposureRows([exposureRow({ occupation: "unmatched title", code: "2511" })], occupations);
+    expect(rows[0].occupation_id).toBeNull();
+  });
+
+  it("sets occupation_id to null when nothing matches", () => {
+    const rows = buildExposureRows([exposureRow({ occupation: "nobody", code: "0000" })], [occupationRow()]);
+    expect(rows[0].occupation_id).toBeNull();
+  });
+
+  it("maps ExposureRow camelCase fields to public.exposure snake_case columns", () => {
+    const rows = buildExposureRows([exposureRow()], [occupationRow()]);
+    expect(rows).toEqual([
+      {
+        occupation_id: "o001",
+        occupation: "software developer",
+        code: "2512",
+        exposure_value: 0.53,
+        scale: "0-1 (mean task score)",
+        source_name: "ILO GenAI Exposure 2025",
+        source_url: "https://www.ilo.org/sites/default/files/2025-05/WP140_web.pdf",
+        table_or_page: "Table A1, p.49",
+        as_of: "2025-05-20",
+        notes: "",
+      },
+    ]);
+  });
+});
+
+describe("computeWouldWriteCounts", () => {
+  it("counts every target table from the same builders --apply uses, including occupation_skills as 0", () => {
+    const counts = computeWouldWriteCounts({
+      ...EMPTY_INPUT,
+      courses: [],
+      occupations: [occupationRow()],
+      sources: [sourceRow()],
+      exposure: [exposureRow()],
+    });
+    expect(counts).toEqual({
+      skills: 0,
+      occupations: 1,
+      sources: 1,
+      exposure: 1,
+      courses: 0,
+      programs: 0,
+      signals: 0,
+      occupation_skills: 0,
+    });
+  });
+});
 
 function signalRow(overrides: Partial<SignalRow> = {}): SignalRow {
   return {
@@ -239,7 +396,7 @@ describe("applyImport", () => {
     const occupationsUpsert = upserts.find((u) => u.table === "occupations");
     expect((occupationsUpsert?.rows[0].embedding as number[]).length).toBe(EMBEDDING_DIMENSIONS);
 
-    expect(result.skipped.map((s) => s.file)).toEqual(["sources.csv", "exposure.csv"]);
+    expect(result.skipped).toEqual([]);
   });
 
   it("does not clobber label_ms / is_green / base_importance for a skill that already exists", async () => {
@@ -406,5 +563,51 @@ describe("applyImport", () => {
     // The signals upsert failing must not stop other tables from being reported.
     const occupationsResult = result.tables.find((t) => t.table === "occupations");
     expect(occupationsResult).toMatchObject({ upserted: 1 });
+  });
+
+  it("upserts sources onConflict name and exposure onConflict occupation,source_name, sources before exposure", async () => {
+    const { client, upserts } = fakeSupabase({});
+    const embedder: Embedder = vi.fn(async (texts: string[]) => texts.map((_, i) => vector(i)));
+
+    const input: ApplyInput = {
+      ...EMPTY_INPUT,
+      occupations: [occupationRow()],
+      sources: [sourceRow()],
+      exposure: [exposureRow()],
+    };
+    const result = await applyImport(input, client, embedder);
+
+    const sourcesUpsertIndex = upserts.findIndex((u) => u.table === "sources");
+    const exposureUpsertIndex = upserts.findIndex((u) => u.table === "exposure");
+    expect(sourcesUpsertIndex).toBeGreaterThanOrEqual(0);
+    expect(sourcesUpsertIndex).toBeLessThan(exposureUpsertIndex);
+
+    expect(upserts[sourcesUpsertIndex].onConflict).toBe(SOURCES_ON_CONFLICT);
+    expect(upserts[exposureUpsertIndex].onConflict).toBe(EXPOSURE_ON_CONFLICT);
+    expect(upserts[exposureUpsertIndex].rows[0]).toMatchObject({ occupation_id: "o001", source_name: "ILO GenAI Exposure 2025" });
+
+    expect(result.tables.find((t) => t.table === "sources")).toMatchObject({ upserted: 1 });
+    expect(result.tables.find((t) => t.table === "exposure")).toMatchObject({ upserted: 1 });
+    expect(result.skipped).toEqual([]);
+  });
+
+  it("every exposure row's source_name is a name built into the sources rows upserted in the same call", async () => {
+    const { client, upserts } = fakeSupabase({});
+    const embedder: Embedder = vi.fn(async (texts: string[]) => texts.map((_, i) => vector(i)));
+
+    const input: ApplyInput = {
+      ...EMPTY_INPUT,
+      occupations: [occupationRow()],
+      sources: [sourceRow()],
+      exposure: [exposureRow(), exposureRow({ occupation: "web developer", code: "2513" })],
+    };
+    await applyImport(input, client, embedder);
+
+    const sourceNames = new Set(upserts.find((u) => u.table === "sources")?.rows.map((row) => row.name));
+    const exposureRows = upserts.find((u) => u.table === "exposure")?.rows ?? [];
+    expect(exposureRows.length).toBeGreaterThan(0);
+    for (const row of exposureRows) {
+      expect(sourceNames.has(row.source_name as string)).toBe(true);
+    }
   });
 });

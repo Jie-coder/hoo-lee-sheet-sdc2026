@@ -49,7 +49,7 @@ Language mix: at least 10 BM courses, at least 5 Chinese courses, the rest Engli
 
 The licence must be filled in. A source with unclear or no-reuse terms can't be used for scoring.
 
-Lands in `public.sources` (migration `20261021150000_seed_sources_exposure.sql`, primary key `name`). Not yet wired into `--apply` — see `APPLY_SKIPPED_FILES` in `scripts/lib/apply.ts`.
+Lands in `public.sources` via `--apply` (migration `20261021150000_seed_sources_exposure.sql`, upserted on its primary key `name`).
 
 ### `keywords.csv` (about 25 arXiv keywords)
 `keyword, arxiv_query, skills, skill_uris, direction (up / down), count_last_90d, count_prev_90d, checked_on, notes`
@@ -63,7 +63,7 @@ Lands in `public.signals`, via `--apply` (two rows per ESCO skill URI: the curre
 
 Never invent a number. If there's no exact match, use the closest occupation and explain the match in `notes`.
 
-Lands in `public.exposure` (migration `20261021150000_seed_sources_exposure.sql`, primary key `(occupation, source_name)` — `code` alone repeats across occupations that share one ISCO code). Not yet wired into `--apply`.
+Lands in `public.exposure` via `--apply` (migration `20261021150000_seed_sources_exposure.sql`, upserted on its primary key `(occupation, source_name)` — `code` alone repeats across occupations that share one ISCO code). `source_name` must be a row in `sources.csv` (sources are upserted first, since `exposure.source_name` references `sources.name`). `occupation_id` is filled in only when `occupation`/`code` match exactly one row in `occupations.csv` (by `title_en`, or failing that by `code` against `isco_code`/`esco_uri`); it is left `null`, never guessed, when the match is missing or ambiguous.
 
 ## Peter: occupations.csv (proposed — not finalised yet)
 
@@ -86,6 +86,18 @@ should change before Peter starts filling it in.
 | is_emerging | yes / no |
 | last_checked | YYYY-MM-DD |
 | notes | anything uncertain, including how a fuzzy exposure.csv match was chosen |
+
+## `public.occupation_skills` has no CSV yet
+
+`public.occupation_skills` (essential/optional ESCO skill per occupation — the
+gap in section 05 reads `relation = 'essential'` from it) is not wired into
+`--apply`, and `computeWouldWriteCounts` always reports it as 0. None of the
+files above collect an occupation->skill link: `courses.csv` and
+`keywords.csv` attach skills to a course or an arXiv keyword, not to an
+occupation, and `occupations.csv` has no skills column. Filling this table
+needs a new source — for example ESCO's own occupation-skill relations
+export — and a CSV + mapper + builder the same shape as the ones above. Do
+not fabricate rows here in the meantime.
 
 ## Checking your file before you hand it in
 
