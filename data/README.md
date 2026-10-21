@@ -45,9 +45,11 @@ Language mix: at least 10 BM courses, at least 5 Chinese courses, the rest Engli
 ## Henry: AI-trend signals (due: sources 20 Oct, keywords 21 Oct, exposure 22 Oct)
 
 ### `sources.csv`
-`name, url, publisher, what_it_measures, update_frequency, last_updated, data_format (API / CSV / PDF only), licence, use_for (exposure / trend / scenario / skills), notes`
+`name, url, publisher, what_it_measures, update_frequency, last_updated, data_format (API / CSV / PDF only), licence, use_for (exposure / trend / scenario / skills / demand), notes`
 
-The licence must be filled in. A source with unclear or no-reuse terms can't be used for scoring.
+Master copy: the **"Laluan – AI Signals" Google Sheet** (sources tab). This CSV is exported from it, so add or fix a source in the sheet first, then export; an edit made only here is lost on the next export.
+
+The licence must be filled in, exactly as the publisher states it. A source with unclear or no-reuse terms can't be used for scoring, with one exception: a report that is "all rights reserved" (WEF) may be **cited**, one published figure at a time with its page, never copied as a dataset (see `scenarios.csv`).
 
 Lands in `public.sources` via `--apply` (migration `20261021150000_seed_sources_exposure.sql`, upserted on its primary key `name`).
 
@@ -82,6 +84,67 @@ Lands in `public.signals`, via `--apply` (two rows per ESCO skill URI: the curre
 Never invent a number. If there's no exact match, use the closest occupation and explain the match in `notes`.
 
 Lands in `public.exposure` via `--apply` (migration `20261021150000_seed_sources_exposure.sql`, upserted on its primary key `(occupation, source_name)` — `code` alone repeats across occupations that share one ISCO code). `source_name` must be a row in `sources.csv` (sources are upserted first, since `exposure.source_name` references `sources.name`). `occupation_id` is filled in only when `occupation`/`code` match exactly one row in `occupations.csv` (by `title_en`, or failing that by `code` against `isco_code`/`esco_uri`); it is left `null`, never guessed, when the match is missing or ambiguous.
+
+## `demand.csv` (generated from OpenDOSM: never edit by hand)
+`cluster, isco_major_group, metric, value, period, prev_value, prev_period, source_name, source_url, table_or_dataset, as_of, notes`
+
+Master copy: **the script**. Malaysian employees per ISCO major group, for the
+latest year and the year before, for every major group our occupations fall in.
+It feeds D, the demand term in R = 0.5·F + 0.3·D + 0.2·(1 − θ·E).
+
+```
+npx tsx scripts/fetch-dosm-demand.ts            # download and write data/demand.csv
+npx tsx scripts/fetch-dosm-demand.ts --dry-run  # print the rows and growth, change nothing
+```
+
+- Source: OpenDOSM [`wages_occupation`](https://open.dosm.gov.my/data-catalogue/wages_occupation)
+  (Annual Salaries & Wages by Occupation & Sex, CC BY 4.0), file
+  `https://storage.dosm.gov.my/labour/wages_occupation.csv`. It is the only
+  OpenDOSM dataset split by occupation group. `value` is the number of
+  **employees who are Malaysian citizens** (thousands), so employers,
+  own-account workers and non-citizens are not counted.
+- `value` and `prev_value` are copied as published. `as_of` is the dataset
+  page's "last updated" date.
+- Cluster → major group: the first digit of each occupation's `isco_code` in
+  `occupations.csv` (MASCO-2020 uses ISCO-08's major groups). A cluster's
+  growth is the growth of its groups, weighted by how many of its occupations
+  are in each. `ai_digital` and `data_analytics` are both entirely group 2
+  (Professionals), so DOSM data alone cannot tell them apart; `scenarios.csv` does.
+- Rerun after `occupations.csv` changes, or when DOSM publishes a new year.
+
+Lands in `public.cluster_demand` via `--apply` (migration
+`20261022090000_cluster_demand.sql`, **not yet applied to the live project**;
+upserted on `(cluster, isco_major_group, metric, period)`).
+
+## `scenarios.csv` (cited WEF figures: Henry checks each row)
+`scenario_id, cluster, demand_multiplier, theta, source_name, source_url, page_or_figure, quote_or_figure, as_of, notes`
+
+Master copy: **this repo** (WEF's licence allows citing figures, not
+re-publishing them in a shared sheet). One row per scenario (`co`, `dis`,
+`sup`) and cluster: 15 rows.
+
+- Every figure is a role's **Global net growth (%, 2025-2030)** printed in a
+  WEF Future of Jobs Report 2025 profile's "Key roles for business
+  transformation" table. `page_or_figure` is the PDF page; `quote_or_figure`
+  quotes the role title and figure. WEF Figures 2.2-2.5 draw bars without
+  numbers, so they are not used for figures (never read a number off a bar).
+- Each of our occupations is matched by hand to the closest WEF role that has
+  a printed figure (the match is in `notes`; unmatched occupations are named).
+  Then **Co-Pilot** = the occupation-weighted mean of those figures,
+  **Supercharged** = the highest, **Displacement** = the lowest.
+  `demand_multiplier` = 1 + figure / 100.
+- `theta` is the brief's illustrative exposure penalty (co 1, dis 1.4, sup
+  1.2), unchanged; one value per scenario (the check enforces it).
+- Our three scenarios are those of WEF *Four Futures for Jobs in the New
+  Economy: AI and Talent in 2030* (January 2026), which gives directions only,
+  no numbers.
+
+How D is computed from `demand.csv` and this file
+(`scripts/lib/scenario-demand.ts`): index = (1 + Malaysian growth) ×
+`demand_multiplier`, divided by the largest index in any scenario, so D is
+between 0 and 1 and the three scenarios share one scale. This is our model,
+not a published statistic. Lands in `public.scenarios` (`theta`,
+`demand_by_cluster`) via `--apply`, upserted on `id`.
 
 ## Peter: occupations.csv (proposed — not finalised yet)
 
@@ -189,6 +252,7 @@ it is always safe to run.
    npm run import-data -- --only keywords         # Henry: keywords.csv
    npm run import-data -- --only exposure         # Henry: exposure.csv
    npm run import-data -- --only occupations      # Peter: occupations.csv
+   npm run import-data -- --only demand,scenarios  # demand.csv and scenarios.csv
    ```
    (Leave off `--only` to check every file in `data/` at once.)
 4. Read the report top to bottom. Each `[ERROR]` line names the row, the

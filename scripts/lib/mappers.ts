@@ -9,16 +9,20 @@ import {
   type Programme,
 } from "../../src/types/contracts";
 import {
+  DemandRowSchema,
   ExposureRowSchema,
   KeywordRowSchema,
   OccupationRowSchema,
   OccupationSkillRowSchema,
+  ScenarioRowSchema,
   SIGNAL_DIRECTIONS,
   SourceRowSchema,
+  type DemandRow,
   type ExposureRow,
   type KeywordRow,
   type OccupationRow,
   type OccupationSkillRow,
+  type ScenarioRow,
   type SourceRow,
 } from "./row-schemas";
 import {
@@ -561,6 +565,135 @@ export function mapOccupationRow(raw: Record<string, string>, row: number): MapR
     // more specific hint; drop zod's generic "Invalid URL" for the same cell.
     const hasManualEscoUriIssue = issues.some((issue) => issue.column === "esco_uri");
     issues.push(...zodIssues.filter((issue) => !(hasManualEscoUriIssue && issue.column === "esco_uri")));
+  }
+
+  return { issues, value: issues.length === 0 && parsed.success ? parsed.data : null };
+}
+
+/**
+ * Reads one required number cell. Returns NaN (and an issue) when the cell is
+ * not a plain number, so the zod check below reports nothing extra for it.
+ */
+function numberCell(
+  file: string,
+  row: number,
+  raw: Record<string, string>,
+  column: string,
+  hint: string,
+  issues: Issue[]
+): number {
+  const parsed = parseNumber(raw[column] ?? "");
+  if (parsed.ok) return parsed.value;
+  issues.push(cellIssue(file, row, column, raw[column] ?? "", parsed.error, hint));
+  return Number.NaN;
+}
+
+/** Maps one demand.csv row (written by scripts/fetch-dosm-demand.ts). */
+export function mapDemandRow(raw: Record<string, string>, row: number): MapResult<DemandRow> {
+  const file = "demand.csv";
+  const issues: Issue[] = [];
+  const hint = "regenerate this file with scripts/fetch-dosm-demand.ts";
+  const value = numberCell(file, row, raw, "value", hint, issues);
+  const prevValue = numberCell(file, row, raw, "prev_value", hint, issues);
+
+  const candidate = {
+    cluster: (raw.cluster ?? "").trim(),
+    iscoMajorGroup: (raw.isco_major_group ?? "").trim(),
+    metric: raw.metric ?? "",
+    value,
+    period: (raw.period ?? "").trim(),
+    prevValue,
+    prevPeriod: (raw.prev_period ?? "").trim(),
+    sourceName: raw.source_name ?? "",
+    sourceUrl: raw.source_url ?? "",
+    tableOrDataset: raw.table_or_dataset ?? "",
+    asOf: raw.as_of ?? "",
+    notes: raw.notes ?? "",
+  };
+
+  const parsed = DemandRowSchema.safeParse(candidate);
+  if (!parsed.success) {
+    const zodIssues = zodErrorToIssues(parsed.error, {
+      file,
+      row,
+      raw,
+      columnOverrides: {
+        iscoMajorGroup: "isco_major_group",
+        prevValue: "prev_value",
+        prevPeriod: "prev_period",
+        sourceName: "source_name",
+        sourceUrl: "source_url",
+        tableOrDataset: "table_or_dataset",
+        asOf: "as_of",
+      },
+    });
+    // A cell that already failed the number check would also fail zod (NaN).
+    const reported = new Set(issues.map((issue) => issue.column));
+    issues.push(...zodIssues.filter((issue) => !reported.has(issue.column)));
+  }
+
+  // The later period must come after the earlier one, or the growth is backwards.
+  if (parsed.success && parsed.data.prevPeriod >= parsed.data.period) {
+    issues.push(
+      cellIssue(
+        file,
+        row,
+        "prev_period",
+        raw.prev_period ?? "",
+        `prev_period "${parsed.data.prevPeriod}" is not before period "${parsed.data.period}"`,
+        hint
+      )
+    );
+  }
+
+  return { issues, value: issues.length === 0 && parsed.success ? parsed.data : null };
+}
+
+/** Maps one scenarios.csv row: one cited demand multiplier for one scenario and cluster. */
+export function mapScenarioRow(raw: Record<string, string>, row: number): MapResult<ScenarioRow> {
+  const file = "scenarios.csv";
+  const issues: Issue[] = [];
+  const demandMultiplier = numberCell(
+    file,
+    row,
+    raw,
+    "demand_multiplier",
+    "enter 1 + net growth / 100, e.g. 1.41 for +41%",
+    issues
+  );
+  const theta = numberCell(file, row, raw, "theta", "enter the exposure penalty, e.g. 1.4", issues);
+
+  const candidate = {
+    scenarioId: (raw.scenario_id ?? "").trim(),
+    cluster: (raw.cluster ?? "").trim(),
+    demandMultiplier,
+    theta,
+    sourceName: raw.source_name ?? "",
+    sourceUrl: raw.source_url ?? "",
+    pageOrFigure: raw.page_or_figure ?? "",
+    quoteOrFigure: raw.quote_or_figure ?? "",
+    asOf: raw.as_of ?? "",
+    notes: raw.notes ?? "",
+  };
+
+  const parsed = ScenarioRowSchema.safeParse(candidate);
+  if (!parsed.success) {
+    const zodIssues = zodErrorToIssues(parsed.error, {
+      file,
+      row,
+      raw,
+      columnOverrides: {
+        scenarioId: "scenario_id",
+        demandMultiplier: "demand_multiplier",
+        sourceName: "source_name",
+        sourceUrl: "source_url",
+        pageOrFigure: "page_or_figure",
+        quoteOrFigure: "quote_or_figure",
+        asOf: "as_of",
+      },
+    });
+    const reported = new Set(issues.map((issue) => issue.column));
+    issues.push(...zodIssues.filter((issue) => !reported.has(issue.column)));
   }
 
   return { issues, value: issues.length === 0 && parsed.success ? parsed.data : null };

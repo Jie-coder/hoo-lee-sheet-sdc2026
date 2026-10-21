@@ -9,14 +9,21 @@ import { parseCsv } from "./lib/csv";
 import { diffHeaders, FILE_SPECS, resolveOnly, type FileKey } from "./lib/files";
 import {
   mapCourseRow,
+  mapDemandRow,
   mapExposureRow,
   mapKeywordRow,
   mapOccupationRow,
   mapOccupationSkillRow,
   mapProgrammeRow,
+  mapScenarioRow,
   mapSourceRow,
 } from "./lib/mappers";
-import { duplicateIssues, runCrossChecks, type CrossCheckInput } from "./lib/cross-checks";
+import {
+  duplicateIssues,
+  runCrossChecks,
+  scenarioThetaIssues,
+  type CrossCheckInput,
+} from "./lib/cross-checks";
 import { exitCodeFor, formatReport, type FileReport, type FullReport, type Issue } from "./lib/report";
 import { ENV_LOCAL_MISSING_MESSAGE, readEnvLocal, requireApplyEnv, type ApplyEnv } from "./lib/env";
 import {
@@ -37,7 +44,14 @@ import {
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { Embedder } from "./lib/clients";
 import type { Course, Programme } from "../src/types/contracts";
-import type { ExposureRow, OccupationRow, OccupationSkillRow, SourceRow } from "./lib/row-schemas";
+import type {
+  DemandRow,
+  ExposureRow,
+  OccupationRow,
+  OccupationSkillRow,
+  ScenarioRow,
+  SourceRow,
+} from "./lib/row-schemas";
 
 export type RunOptions = {
   dir: string;
@@ -66,6 +80,8 @@ export type FileRunOutcome = {
   validSources: SourceRow[];
   validExposures: ExposureRow[];
   validOccupationSkills: OccupationSkillRow[];
+  validDemand: DemandRow[];
+  validScenarios: ScenarioRow[];
   skillPairs: { skills: string[]; skillUris: string[] }[];
   signalRows: SignalRow[];
 };
@@ -129,6 +145,22 @@ type OccupationSkillRecord = {
   occupationId: string;
   sourceName: string;
 };
+type DemandRecord = {
+  row: number;
+  /** cluster + isco_major_group + metric + period, for the duplicate check. */
+  key: string;
+  valid: boolean;
+  value: DemandRow | null;
+  raw: Record<string, string>;
+};
+type ScenarioRecord = {
+  row: number;
+  /** scenario_id + cluster, for the duplicate check. */
+  key: string;
+  valid: boolean;
+  value: ScenarioRow | null;
+  raw: Record<string, string>;
+};
 type OccupationRecord = {
   row: number;
   id: string;
@@ -160,6 +192,8 @@ export function runFile(key: FileKey, dir: string): FileRunOutcome {
     validSources: [],
     validExposures: [],
     validOccupationSkills: [],
+    validDemand: [],
+    validScenarios: [],
     skillPairs: [],
     signalRows: [],
   };
@@ -198,6 +232,8 @@ export function runFile(key: FileKey, dir: string): FileRunOutcome {
   const exposureRecords: ExposureRecord[] = [];
   const occupationRecords: OccupationRecord[] = [];
   const occupationSkillRecords: OccupationSkillRecord[] = [];
+  const demandRecords: DemandRecord[] = [];
+  const scenarioRecords: ScenarioRecord[] = [];
 
   rows.forEach((row, index) => {
     const rowNumber = index + 2;
@@ -276,6 +312,16 @@ export function runFile(key: FileKey, dir: string): FileRunOutcome {
         occupationId: raw.occupation_id ?? "",
         sourceName: raw.source_name ?? "",
       });
+    } else if (key === "demand") {
+      const result = mapDemandRow(raw, rowNumber);
+      issues.push(...result.issues);
+      const cells = ["cluster", "isco_major_group", "metric", "period"].map((c) => (raw[c] ?? "").trim());
+      demandRecords.push({ row: rowNumber, key: cells.join(" "), valid: result.value !== null, value: result.value, raw });
+    } else if (key === "scenarios") {
+      const result = mapScenarioRow(raw, rowNumber);
+      issues.push(...result.issues);
+      const cells = ["scenario_id", "cluster"].map((c) => (raw[c] ?? "").trim());
+      scenarioRecords.push({ row: rowNumber, key: cells.join(" "), valid: result.value !== null, value: result.value, raw });
     }
   });
 
@@ -287,6 +333,8 @@ export function runFile(key: FileKey, dir: string): FileRunOutcome {
   let validSources: SourceRow[] = [];
   let validExposures: ExposureRow[] = [];
   let validOccupationSkills: OccupationSkillRow[] = [];
+  let validDemand: DemandRow[] = [];
+  let validScenarios: ScenarioRow[] = [];
   let skillPairs: { skills: string[]; skillUris: string[] }[] = [];
   let signalRows: SignalRow[] = [];
   let cross: Partial<CrossCheckInput> = {};
@@ -366,6 +414,48 @@ export function runFile(key: FileKey, dir: string): FileRunOutcome {
         sourceName: r.sourceName,
       })),
     };
+  } else if (key === "demand") {
+    // One figure per cluster, major group, metric and period.
+    const dup = finalizeDuplicates(
+      "demand.csv",
+      "cluster + isco_major_group + metric + period",
+      (r) => r.key,
+      demandRecords
+    );
+    issues.push(...dup.issues);
+    validRows = dup.validRows;
+    invalidRows = dup.invalidRows;
+    validDemand = dup.kept.filter((r) => r.value).map((r) => r.value as DemandRow);
+    cross = {
+      demand: demandRecords.map((r) => ({
+        row: r.row,
+        cluster: (r.raw.cluster ?? "").trim(),
+        iscoMajorGroup: (r.raw.isco_major_group ?? "").trim(),
+        sourceName: r.raw.source_name ?? "",
+      })),
+    };
+  } else if (key === "scenarios") {
+    // One multiplier per scenario and cluster; one theta per scenario.
+    const dup = finalizeDuplicates("scenarios.csv", "scenario_id + cluster", (r) => r.key, scenarioRecords);
+    const thetaIssues = scenarioThetaIssues(
+      dup.kept
+        .filter((r) => r.value)
+        .map((r) => ({ row: r.row, scenarioId: (r.value as ScenarioRow).scenarioId, theta: (r.value as ScenarioRow).theta }))
+    );
+    issues.push(...dup.issues, ...thetaIssues);
+    const thetaRows = new Set(thetaIssues.map((issue) => issue.row));
+    const kept = dup.kept.filter((r) => r.value && !thetaRows.has(r.row));
+    validRows = kept.length;
+    invalidRows = scenarioRecords.length - validRows;
+    validScenarios = kept.map((r) => r.value as ScenarioRow);
+    cross = {
+      scenarios: scenarioRecords.map((r) => ({
+        row: r.row,
+        scenarioId: (r.raw.scenario_id ?? "").trim(),
+        cluster: (r.raw.cluster ?? "").trim(),
+        sourceName: r.raw.source_name ?? "",
+      })),
+    };
   } else {
     const dup = finalizeDuplicates("occupations.csv", "id", (r) => r.id, occupationRecords);
     issues.push(...dup.issues);
@@ -380,6 +470,10 @@ export function runFile(key: FileKey, dir: string): FileRunOutcome {
         iscoCode: r.iscoCode,
         titleEn: r.titleEn,
       })),
+      // Valid rows only: an invalid row has no trustworthy cluster.
+      occupationClusters: occupationRecords
+        .filter((r) => r.value)
+        .map((r) => ({ id: r.id, cluster: (r.value as OccupationRow).cluster, iscoCode: r.iscoCode })),
     };
   }
 
@@ -399,6 +493,8 @@ export function runFile(key: FileKey, dir: string): FileRunOutcome {
     validSources,
     validExposures,
     validOccupationSkills,
+    validDemand,
+    validScenarios,
     skillPairs,
     signalRows,
   };
@@ -456,6 +552,8 @@ export async function runImport(options: RunOptions): Promise<RunResult> {
     sources: outcomes.flatMap(({ outcome }) => outcome.validSources),
     exposure: outcomes.flatMap(({ outcome }) => outcome.validExposures),
     occupationSkills: outcomes.flatMap(({ outcome }) => outcome.validOccupationSkills),
+    demand: outcomes.flatMap(({ outcome }) => outcome.validDemand),
+    scenarios: outcomes.flatMap(({ outcome }) => outcome.validScenarios),
   };
   result.wouldWrite = computeWouldWriteCounts(applyInput);
 

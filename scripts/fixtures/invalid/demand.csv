@@ -1,0 +1,6 @@
+cluster,isco_major_group,metric,value,period,prev_value,prev_period,source_name,source_url,table_or_dataset,as_of,notes
+data_analytics,2,salaries_wages_recipients_thousands,1100,2025,1000,2024,Contoso Labour Survey,https://example.com/data/labour-survey.csv,"labour-survey, occupation=professionals",2026-09-21,valid row
+space_tourism,2,salaries_wages_recipients_thousands,1100,2025,1000,2024,Contoso Labour Survey,https://example.com/data/labour-survey.csv,"labour-survey, occupation=professionals",2026-09-21,bad cluster on purpose
+human_care,5,salaries_wages_recipients_thousands,about 990,2025,1000,2024,Contoso Labour Survey,https://example.com/data/labour-survey.csv,"labour-survey, occupation=service_sales",2026-09-21,value is not a number on purpose
+human_care,5,salaries_wages_recipients_thousands,990,2024,1000,2025,Contoso Labour Survey,https://example.com/data/labour-survey.csv,"labour-survey, occupation=service_sales",2026-09-21,prev_period after period on purpose
+data_analytics,2,salaries_wages_recipients_thousands,1100,2025,1000,2024,Contoso Labour Survey,https://example.com/data/labour-survey.csv,"labour-survey, occupation=professionals",2026-09-21,duplicate of row 2 on purpose

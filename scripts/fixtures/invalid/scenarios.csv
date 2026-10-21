@@ -1,0 +1,6 @@
+scenario_id,cluster,demand_multiplier,theta,source_name,source_url,page_or_figure,quote_or_figure,as_of,notes
+co,data_analytics,1.4,1,Contoso Jobs Outlook,https://example.com/reports/jobs-outlook.pdf,p.12,"""Data Analysts"": net growth +40%",2025-01-07,valid row
+co,human_care,1.1,0.5,Contoso Jobs Outlook,https://example.com/reports/jobs-outlook.pdf,p.14,"""Teachers"": net growth +10%",2025-01-07,theta differs from row 2 on purpose
+apocalypse,data_analytics,0.1,2,Contoso Jobs Outlook,https://example.com/reports/jobs-outlook.pdf,p.12,"""Data Analysts"": net growth -90%",2025-01-07,unknown scenario_id on purpose
+sup,data_analytics,lots,1.2,Contoso Jobs Outlook,https://example.com/reports/jobs-outlook.pdf,p.12,"""Big Data"": net growth +100%",2025-01-07,demand_multiplier not a number on purpose
+sup,human_care,1.1,1.2,Contoso Jobs Outlook,https://example.com/reports/jobs-outlook.pdf,,"""Teachers"": net growth +10%",2025-01-07,blank page_or_figure on purpose

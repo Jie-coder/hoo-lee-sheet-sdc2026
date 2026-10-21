@@ -198,6 +198,8 @@ const EMPTY_INPUT: ApplyInput = {
   sources: [],
   exposure: [],
   occupationSkills: [],
+  demand: [],
+  scenarios: [],
 };
 
 function sourceRow(overrides: Partial<SourceRow> = {}): SourceRow {
@@ -336,6 +338,8 @@ describe("computeWouldWriteCounts", () => {
       occupations: 1,
       sources: 1,
       exposure: 1,
+      cluster_demand: 0,
+      scenarios: 0,
       courses: 0,
       programs: 0,
       signals: 0,

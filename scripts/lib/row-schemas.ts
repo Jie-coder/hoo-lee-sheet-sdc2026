@@ -1,14 +1,16 @@
 // Row schemas for the data/README.md CSVs that have no contract in
 // src/types/contracts.ts: sources, keywords, exposure, and the occupations
-// list this script proposes. camelCase, same style as contracts.ts.
+// list this script proposes, demand and scenarios. camelCase, same style as
+// contracts.ts.
 import { z } from "zod";
-import { ClusterIdSchema, IsoDateSchema } from "../../src/types/contracts";
+import { ClusterIdSchema, IsoDateSchema, ScenarioIdSchema } from "../../src/types/contracts";
 
 export const DATA_FORMATS = ["API", "CSV", "PDF"] as const;
 export const DataFormatSchema = z.enum(DATA_FORMATS);
 
 // "skills": a skills taxonomy such as ESCO (migration 20261021190000).
-export const SOURCE_USES = ["exposure", "trend", "scenario", "skills"] as const;
+// "demand": labour-market data such as OpenDOSM (migration 20261022090000).
+export const SOURCE_USES = ["exposure", "trend", "scenario", "skills", "demand"] as const;
 export const SourceUseSchema = z.enum(SOURCE_USES);
 
 /** One row of sources.csv: a reusable dataset, with a licence Henry has checked. */
@@ -103,3 +105,52 @@ export const OccupationRowSchema = z
   })
   .describe("Proposed occupations.csv row: matches public.occupations + ClusterId.");
 export type OccupationRow = z.infer<typeof OccupationRowSchema>;
+
+/** ISCO-08 / MASCO major group: the first digit of an ISCO code (0 = armed forces). */
+export const IscoMajorGroupSchema = z.string().regex(/^[0-9]$/, "expected one digit, 0-9");
+
+/** A data period: a year (2025), a quarter (2025-Q3) or a month (2025-07). */
+export const PeriodSchema = z.string().regex(/^\d{4}(-Q[1-4]|-(0[1-9]|1[0-2]))?$/, "expected YYYY, YYYY-Q1..Q4 or YYYY-MM");
+
+/**
+ * One row of demand.csv: a published labour-market figure for one ISCO
+ * major group, as it applies to one of our clusters. Written by
+ * scripts/fetch-dosm-demand.ts; value and prev_value are copied as published.
+ */
+export const DemandRowSchema = z
+  .strictObject({
+    cluster: ClusterIdSchema,
+    iscoMajorGroup: IscoMajorGroupSchema,
+    metric: z.string().min(1),
+    value: z.number().nonnegative(),
+    period: PeriodSchema,
+    prevValue: z.number().positive(),
+    prevPeriod: PeriodSchema,
+    sourceName: z.string().min(1),
+    sourceUrl: z.url(),
+    tableOrDataset: z.string().min(1),
+    asOf: IsoDateSchema,
+    notes: z.string(),
+  })
+  .describe("demand.csv row: one published labour-market figure for an ISCO major group in a cluster.");
+export type DemandRow = z.infer<typeof DemandRowSchema>;
+
+/**
+ * One row of scenarios.csv: one cluster's demand multiplier in one scenario,
+ * with the published figure it comes from (demand_multiplier = 1 + net growth / 100).
+ */
+export const ScenarioRowSchema = z
+  .strictObject({
+    scenarioId: ScenarioIdSchema,
+    cluster: ClusterIdSchema,
+    demandMultiplier: z.number().nonnegative(),
+    theta: z.number().nonnegative(),
+    sourceName: z.string().min(1),
+    sourceUrl: z.url(),
+    pageOrFigure: z.string().min(1),
+    quoteOrFigure: z.string().min(1),
+    asOf: IsoDateSchema,
+    notes: z.string(),
+  })
+  .describe("scenarios.csv row: one cluster's cited demand multiplier in one scenario.");
+export type ScenarioRow = z.infer<typeof ScenarioRowSchema>;

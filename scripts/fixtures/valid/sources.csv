@@ -2,3 +2,5 @@ name,url,publisher,what_it_measures,update_frequency,last_updated,data_format,li
 Contoso AI Exposure Index,https://example.com/data/ai-exposure-index,Contoso Labs,Occupation-level AI exposure score,annual,2026-09-01,CSV,CC-BY-4.0,exposure,
 Contoso Skill Momentum Feed,https://example.com/data/skill-momentum,Contoso Labs,arXiv mention counts per skill keyword,weekly,2026-10-15,API,CC0-1.0,trend,refreshed every Monday
 Contoso Skills Taxonomy,https://example.com/data/skills-taxonomy,Contoso Labs,Essential skills per occupation,per release,2026-10-10,API,CC-BY-4.0,skills,
+Contoso Labour Survey,https://example.com/data/labour-survey,Contoso Statistics,Employees by occupation group,annual,2026-09-21,CSV,CC-BY-4.0,demand,
+Contoso Jobs Outlook,https://example.com/reports/jobs-outlook.pdf,Contoso Forum,Expected job growth by role,biennial,2025-01-07,PDF,All rights reserved,scenario,cite single figures only

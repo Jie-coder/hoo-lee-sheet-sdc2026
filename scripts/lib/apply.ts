@@ -1,11 +1,25 @@
 // Upsert logic for --apply. Supabase client and embedder are both injected
 // so tests can assert on calls without any network access.
 import type { SupabaseClient } from "@supabase/supabase-js";
-import { EMBEDDING_DIMENSIONS, type Course, type Programme } from "../../src/types/contracts";
+import {
+  EMBEDDING_DIMENSIONS,
+  SCENARIO_IDS,
+  type Course,
+  type Programme,
+  type ScenarioId,
+} from "../../src/types/contracts";
 import { arxivWindows } from "./arxiv";
 import { escoUriToId, isBlank, splitNames } from "./cells";
 import type { Issue } from "./report";
-import type { ExposureRow, OccupationRow, OccupationSkillRow, SourceRow } from "./row-schemas";
+import type {
+  DemandRow,
+  ExposureRow,
+  OccupationRow,
+  OccupationSkillRow,
+  ScenarioRow,
+  SourceRow,
+} from "./row-schemas";
+import { demandByScenario } from "./scenario-demand";
 import type { Embedder } from "./clients";
 
 export type SkillRecord = { id: string; escoUri: string; labelEn: string };
@@ -19,6 +33,8 @@ export type ApplyInput = {
   sources: SourceRow[];
   exposure: ExposureRow[];
   occupationSkills: OccupationSkillRow[];
+  demand: DemandRow[];
+  scenarios: ScenarioRow[];
 };
 
 export type TableResult = { table: string; upserted: number; error?: string };
@@ -269,6 +285,71 @@ export function buildProgramRows(programmes: Programme[]): Record<string, unknow
   }));
 }
 
+/** Builds public.cluster_demand upsert rows (migration 20261022090000): demand.csv copied as-is. */
+export function buildClusterDemandRows(rows: DemandRow[]): Record<string, unknown>[] {
+  return rows.map((row) => ({
+    cluster: row.cluster,
+    isco_major_group: row.iscoMajorGroup,
+    metric: row.metric,
+    value: row.value,
+    period: row.period,
+    prev_value: row.prevValue,
+    prev_period: row.prevPeriod,
+    source_name: row.sourceName,
+    source_url: row.sourceUrl,
+    table_or_dataset: row.tableOrDataset,
+    as_of: row.asOf,
+    notes: row.notes,
+  }));
+}
+
+/**
+ * Names and assumptions for public.scenarios (both NOT NULL). Our summary of
+ * WEF "Four Futures for Jobs in the New Economy: AI and Talent in 2030"
+ * (January 2026), whose scenarios these three are; no figure comes from it.
+ */
+export const SCENARIO_TEXT: Record<ScenarioId, { name: string; en: string; ms: string }> = {
+  co: {
+    name: "Co-Pilot Economy",
+    en: "AI arrives gradually and skills keep pace, so AI mostly helps people work. Demand follows the average WEF 2025-2030 outlook for each cluster's jobs.",
+    ms: "AI diterima secara beransur-ansur dan kemahiran seiring, jadi AI kebanyakannya membantu pekerja. Permintaan mengikut purata unjuran WEF 2025-2030 bagi pekerjaan setiap kelompok.",
+  },
+  dis: {
+    name: "Age of Displacement",
+    en: "AI moves faster than workers can retrain, and firms automate hard. Demand follows the weakest WEF 2025-2030 outlook among each cluster's jobs, and exposure counts more.",
+    ms: "AI bergerak lebih pantas daripada latihan semula pekerja, dan syarikat mengautomasikan secara agresif. Permintaan mengikut unjuran WEF 2025-2030 paling lemah dalam setiap kelompok, dan pendedahan AI lebih diberi berat.",
+  },
+  sup: {
+    name: "Supercharged Progress",
+    en: "AI advances fast and workers are ready, so new roles scale quickly. Demand follows the strongest WEF 2025-2030 outlook among each cluster's jobs.",
+    ms: "AI maju dengan pantas dan pekerja bersedia, jadi peranan baharu berkembang dengan cepat. Permintaan mengikut unjuran WEF 2025-2030 paling kukuh dalam setiap kelompok.",
+  },
+};
+
+/**
+ * Builds public.scenarios upsert rows: one per scenario in scenarios.csv,
+ * with demand_by_cluster computed by demandByScenario (scenario-demand.ts)
+ * from demand.csv and scenarios.csv. Needs occupations.csv for the weights,
+ * so it builds nothing when any of the three is missing.
+ */
+export function buildScenarioRows(
+  scenarios: ScenarioRow[],
+  demand: DemandRow[],
+  occupations: OccupationRow[]
+): Record<string, unknown>[] {
+  if (scenarios.length === 0 || demand.length === 0 || occupations.length === 0) return [];
+  const demandByCluster = demandByScenario(demand, scenarios, occupations);
+  return SCENARIO_IDS.filter((id) => scenarios.some((row) => row.scenarioId === id)).map((id) => ({
+    id,
+    name: SCENARIO_TEXT[id].name,
+    assumptions_en: SCENARIO_TEXT[id].en,
+    assumptions_ms: SCENARIO_TEXT[id].ms,
+    // scenarioThetaIssues (cross-checks.ts) already made theta one value per scenario.
+    theta: (scenarios.find((row) => row.scenarioId === id) as ScenarioRow).theta,
+    demand_by_cluster: demandByCluster[id],
+  }));
+}
+
 export type SignalRow = {
   skill_id: string;
   source: "arXiv";
@@ -426,10 +507,14 @@ export const EXPOSURE_ON_CONFLICT = "occupation,source_name";
 /** onConflict for the sources upsert: public.sources's primary key is name, not id. */
 export const SOURCES_ON_CONFLICT = "name";
 
+/** onConflict for the cluster_demand upsert: its primary key (migration 20261022090000). */
+export const CLUSTER_DEMAND_ON_CONFLICT = "cluster,isco_major_group,metric,period";
+
 /** onConflict for the occupation_skills upsert: its primary key (occupation_id, skill_id). */
 export const OCCUPATION_SKILLS_ON_CONFLICT = "occupation_id,skill_id";
 
 const SIGNALS_MIGRATION = "20261021150000";
+const CLUSTER_DEMAND_MIGRATION = "20261022090000";
 
 /** True for the Postgres error an upsert gets when its onConflict columns have no matching unique constraint yet. */
 function isMissingOnConflictConstraint(error: { code?: string; message: string }): boolean {
@@ -443,6 +528,10 @@ function describeUpsertError(table: string, error: { code?: string; message: str
       `apply migration ${SIGNALS_MIGRATION} first (it adds signals_reading_key, the unique constraint ` +
       `this upsert's onConflict "${SIGNALS_ON_CONFLICT}" needs): ${error.message}`
     );
+  }
+  // 42P01: relation does not exist. PGRST205: PostgREST cannot find the table.
+  if (table === "cluster_demand" && (error.code === "42P01" || error.code === "PGRST205")) {
+    return `apply migration ${CLUSTER_DEMAND_MIGRATION} first (it creates public.cluster_demand): ${error.message}`;
   }
   return error.message;
 }
@@ -523,6 +612,16 @@ export async function applyImport(
     onConflict: EXPOSURE_ON_CONFLICT,
   }));
 
+  // After sources: cluster_demand.source_name references sources.name.
+  tables.push(
+    await upsert(supabase, "cluster_demand", buildClusterDemandRows(input.demand), {
+      onConflict: CLUSTER_DEMAND_ON_CONFLICT,
+    })
+  );
+
+  // results.scenario_id references scenarios.id; nothing scenarios needs is upserted later.
+  tables.push(await upsert(supabase, "scenarios", buildScenarioRows(input.scenarios, input.demand, input.occupations)));
+
   tables.push(await upsert(supabase, "courses", buildCourseRows(input.courses)));
 
   tables.push(await upsert(supabase, "programs", buildProgramRows(input.programmes)));
@@ -551,6 +650,8 @@ export const WOULD_WRITE_TABLES = [
   "occupations",
   "sources",
   "exposure",
+  "cluster_demand",
+  "scenarios",
   "courses",
   "programs",
   "signals",
@@ -572,6 +673,8 @@ export function computeWouldWriteCounts(input: ApplyInput): WouldWriteCounts {
     occupations: buildOccupationRows(input.occupations, noEmbeddings).length,
     sources: buildSourceRows(input.sources).length,
     exposure: buildExposureRows(input.exposure, input.occupations).length,
+    cluster_demand: buildClusterDemandRows(input.demand).length,
+    scenarios: buildScenarioRows(input.scenarios, input.demand, input.occupations).length,
     courses: buildCourseRows(input.courses).length,
     programs: buildProgramRows(input.programmes).length,
     signals: input.signals.length,
