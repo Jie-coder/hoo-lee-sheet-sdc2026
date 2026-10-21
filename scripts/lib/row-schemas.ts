@@ -7,7 +7,8 @@ import { ClusterIdSchema, IsoDateSchema } from "../../src/types/contracts";
 export const DATA_FORMATS = ["API", "CSV", "PDF"] as const;
 export const DataFormatSchema = z.enum(DATA_FORMATS);
 
-export const SOURCE_USES = ["exposure", "trend", "scenario"] as const;
+// "skills": a skills taxonomy such as ESCO (migration 20261021190000).
+export const SOURCE_USES = ["exposure", "trend", "scenario", "skills"] as const;
 export const SourceUseSchema = z.enum(SOURCE_USES);
 
 /** One row of sources.csv: a reusable dataset, with a licence Henry has checked. */
@@ -61,6 +62,25 @@ export const ExposureRowSchema = z
   })
   .describe("exposure.csv row: one published exposure value, copied as-is.");
 export type ExposureRow = z.infer<typeof ExposureRowSchema>;
+
+export const SKILL_RELATIONS = ["essential", "optional"] as const;
+export const SkillRelationSchema = z.enum(SKILL_RELATIONS);
+
+/**
+ * One row of occupation_skills.csv: one ESCO skill of one occupation, copied
+ * from the ESCO API by scripts/fetch-esco-skills.ts. Never written by hand.
+ */
+export const OccupationSkillRowSchema = z
+  .strictObject({
+    occupationId: z.string().min(1),
+    skillUri: z.url(),
+    skillLabel: z.string().min(1),
+    relation: SkillRelationSchema,
+    sourceName: z.string().min(1),
+    asOf: IsoDateSchema,
+  })
+  .describe("occupation_skills.csv row: an ESCO essential/optional skill of one occupation.");
+export type OccupationSkillRow = z.infer<typeof OccupationSkillRowSchema>;
 
 /**
  * Proposed occupations.csv row (data/README.md does not define this file

@@ -1,0 +1,5 @@
+occupation_id,skill_uri,skill_label,relation,source_name,as_of
+o001,https://data.europa.eu/esco/skill/00000000-0000-0000-0000-000000000001,Data analysis,required,Contoso AI Exposure Index,2026-10-10
+o001,https://data.europa.eu/esco/occupation/00000000-0000-0000-0000-000000000101,Not a skill,essential,Contoso AI Exposure Index,2026-10-10
+o001,https://data.europa.eu/esco/skill/00000000-0000-0000-0000-000000000002,Communication,essential,Contoso AI Exposure Index,2026-10-10
+o001,https://data.europa.eu/esco/skill/00000000-0000-0000-0000-000000000002,Communication,essential,Contoso AI Exposure Index,2026-10-10

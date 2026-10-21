@@ -12,10 +12,12 @@ import {
   ExposureRowSchema,
   KeywordRowSchema,
   OccupationRowSchema,
+  OccupationSkillRowSchema,
   SourceRowSchema,
   type ExposureRow,
   type KeywordRow,
   type OccupationRow,
+  type OccupationSkillRow,
   type SourceRow,
 } from "./row-schemas";
 import {
@@ -412,6 +414,56 @@ export function mapExposureRow(raw: Record<string, string>, row: number): MapRes
           tableOrPage: "table_or_page",
           asOf: "as_of",
           exposureValue: "exposure_value",
+        },
+      })
+    );
+  }
+
+  return { issues, value: issues.length === 0 && parsed.success ? parsed.data : null };
+}
+
+export function mapOccupationSkillRow(
+  raw: Record<string, string>,
+  row: number
+): MapResult<OccupationSkillRow> {
+  const file = "occupation_skills.csv";
+  const issues: Issue[] = [];
+
+  const skillUri = raw.skill_uri ?? "";
+  if (!isBlank(skillUri) && !(isEscoUri(skillUri) && skillUri.includes("/esco/skill/"))) {
+    issues.push(
+      cellIssue(
+        file,
+        row,
+        "skill_uri",
+        skillUri,
+        "not an ESCO skill URI",
+        "regenerate this file with scripts/fetch-esco-skills.ts"
+      )
+    );
+  }
+
+  const candidate = {
+    occupationId: raw.occupation_id ?? "",
+    skillUri: skillUri.trim(),
+    skillLabel: raw.skill_label ?? "",
+    relation: raw.relation ?? "",
+    sourceName: raw.source_name ?? "",
+    asOf: raw.as_of ?? "",
+  };
+  const parsed = OccupationSkillRowSchema.safeParse(candidate);
+  if (!parsed.success) {
+    issues.push(
+      ...zodErrorToIssues(parsed.error, {
+        file,
+        row,
+        raw,
+        columnOverrides: {
+          occupationId: "occupation_id",
+          skillUri: "skill_uri",
+          skillLabel: "skill_label",
+          sourceName: "source_name",
+          asOf: "as_of",
         },
       })
     );

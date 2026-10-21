@@ -45,7 +45,7 @@ Language mix: at least 10 BM courses, at least 5 Chinese courses, the rest Engli
 ## Henry: AI-trend signals (due: sources 20 Oct, keywords 21 Oct, exposure 22 Oct)
 
 ### `sources.csv`
-`name, url, publisher, what_it_measures, update_frequency, last_updated, data_format (API / CSV / PDF only), licence, use_for (exposure / trend / scenario), notes`
+`name, url, publisher, what_it_measures, update_frequency, last_updated, data_format (API / CSV / PDF only), licence, use_for (exposure / trend / scenario / skills), notes`
 
 The licence must be filled in. A source with unclear or no-reuse terms can't be used for scoring.
 
@@ -87,17 +87,30 @@ should change before Peter starts filling it in.
 | last_checked | YYYY-MM-DD |
 | notes | anything uncertain, including how a fuzzy exposure.csv match was chosen |
 
-## `public.occupation_skills` has no CSV yet
+## `occupation_skills.csv` (generated from ESCO: never edit by hand)
+`occupation_id, skill_uri, skill_label, relation (essential / optional), source_name, as_of`
 
-`public.occupation_skills` (essential/optional ESCO skill per occupation — the
-gap in section 05 reads `relation = 'essential'` from it) is not wired into
-`--apply`, and `computeWouldWriteCounts` always reports it as 0. None of the
-files above collect an occupation->skill link: `courses.csv` and
-`keywords.csv` attach skills to a course or an arXiv keyword, not to an
-occupation, and `occupations.csv` has no skills column. Filling this table
-needs a new source — for example ESCO's own occupation-skill relations
-export — and a CSV + mapper + builder the same shape as the ones above. Do
-not fabricate rows here in the meantime.
+The skills ESCO lists for each occupation in `occupations.csv`. Scoring needs
+it: fit and the skills gap are computed over a role's **essential** skills,
+and the arXiv trend can only change a ranking through them.
+
+Regenerate it whenever `occupations.csv` changes:
+
+```
+npx tsx scripts/fetch-esco-skills.ts                    # essential skills, ESCO v1.2.1
+npx tsx scripts/fetch-esco-skills.ts --include-optional # also optional skills
+```
+
+- It reads the official ESCO API (`selectedVersion=v1.2.1`, pinned so the file
+  can be rebuilt exactly; the API's unversioned default returns a slightly
+  different list).
+- An occupation with a blank `esco_uri` is skipped and named in the output.
+- If any occupation fails to load, nothing is written.
+- Every row cites `ESCO` in `sources.csv` (`use_for: skills`, which needs
+  migration `20261021190000_sources_use_for_skills.sql` on the live database).
+- Lands in `public.occupation_skills` via `--apply`, upserted on
+  `(occupation_id, skill_id)`. ESCO skills that no course or keyword mentions
+  are added to `public.skills` first, with their ESCO label.
 
 ## Checking your file before you hand it in
 

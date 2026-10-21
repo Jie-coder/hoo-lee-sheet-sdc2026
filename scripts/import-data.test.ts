@@ -98,14 +98,15 @@ describe("runImport (dry run)", () => {
   it("computes per-table would-write counts from the same builders --apply uses", async () => {
     const result = await runImport({ dir: VALID_DIR, apply: false, env: {} });
     expect(result.wouldWrite).toEqual({
-      skills: 2,
+      // 2 from courses/keywords + 1 ESCO skill only occupation_skills.csv mentions.
+      skills: 3,
       occupations: 2,
-      sources: 2,
+      sources: 3,
       exposure: 2,
       courses: 3,
       programs: 3,
       signals: 4,
-      occupation_skills: 0,
+      occupation_skills: 2,
     });
   });
 
@@ -119,6 +120,31 @@ describe("runImport (dry run)", () => {
     } finally {
       rmSync(emptyDir, { recursive: true, force: true });
     }
+  });
+});
+
+describe("runImport: occupation_skills.csv", () => {
+  it("reports bad relation, non-skill URI, duplicate pair and unknown occupation in the invalid fixture", async () => {
+    const result = await runImport({ dir: INVALID_DIR, apply: false, env: {} });
+    const file = result.report.files.find((f) => f.file === "occupation_skills.csv");
+    expect(file).toMatchObject({ totalRows: 4, invalidRows: 3 });
+
+    const byColumn = (column: string) => file?.issues.filter((issue) => issue.column === column) ?? [];
+    expect(byColumn("relation")).toHaveLength(1);
+    expect(byColumn("skill_uri")).toHaveLength(1);
+    expect(byColumn("occupation_id + skill_uri")).toEqual([expect.objectContaining({ row: 5 })]);
+
+    // The invalid occupations.csv fixture has o010/o011 only, so o001 is unknown.
+    const unknownOccupation = result.report.crossFileIssues.filter(
+      (issue) => issue.file === "occupation_skills.csv" && issue.column === "occupation_id"
+    );
+    expect(unknownOccupation.length).toBeGreaterThan(0);
+    expect(result.exitCode).toBe(1);
+  });
+
+  it("is reachable with --only occupation-skills", async () => {
+    const result = await runImport({ dir: VALID_DIR, only: "occupation-skills", apply: false, env: {} });
+    expect(result.report.files.map((f) => f.file)).toEqual(["occupation_skills.csv"]);
   });
 });
 
@@ -303,7 +329,7 @@ describe("runCli --apply env resolution", () => {
     const result = await runCli(["--dir", "scripts/fixtures/valid"], cwd);
     const stdout = result.stdout.join("\n");
     expect(stdout).toContain(
-      "would write: skills 2, occupations 2, sources 2, exposure 2, courses 3, programs 3, signals 4, occupation_skills 0"
+      "would write: skills 3, occupations 2, sources 3, exposure 2, courses 3, programs 3, signals 4, occupation_skills 2"
     );
   });
 });

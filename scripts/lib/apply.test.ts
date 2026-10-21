@@ -8,7 +8,9 @@ import {
   computeEmbeddingsWithReuse,
   computeWouldWriteCounts,
   buildSkillRows,
+  buildOccupationSkillRows,
   DEFAULT_BASE_IMPORTANCE,
+  OCCUPATION_SKILLS_ON_CONFLICT,
   occupationEmbeddingText,
   skillEmbeddingText,
   EXPOSURE_ON_CONFLICT,
@@ -18,7 +20,7 @@ import {
   type SignalRow,
 } from "./apply";
 import type { Embedder } from "./clients";
-import type { ExposureRow, OccupationRow, SourceRow } from "./row-schemas";
+import type { ExposureRow, OccupationRow, OccupationSkillRow, SourceRow } from "./row-schemas";
 import { roleFitScore, skillImportance } from "../../src/lib/scoring";
 
 describe("buildSkillRows base_importance", () => {
@@ -195,6 +197,7 @@ const EMPTY_INPUT: ApplyInput = {
   signals: [],
   sources: [],
   exposure: [],
+  occupationSkills: [],
 };
 
 function sourceRow(overrides: Partial<SourceRow> = {}): SourceRow {
@@ -319,13 +322,14 @@ describe("buildExposureRows", () => {
 });
 
 describe("computeWouldWriteCounts", () => {
-  it("counts every target table from the same builders --apply uses, including occupation_skills as 0", () => {
+  it("counts every target table from the same builders --apply uses", () => {
     const counts = computeWouldWriteCounts({
       ...EMPTY_INPUT,
       courses: [],
       occupations: [occupationRow()],
       sources: [sourceRow()],
       exposure: [exposureRow()],
+      occupationSkills: [occupationSkillRow(), occupationSkillRow({ relation: "optional" })],
     });
     expect(counts).toEqual({
       skills: 0,
@@ -335,8 +339,58 @@ describe("computeWouldWriteCounts", () => {
       courses: 0,
       programs: 0,
       signals: 0,
-      occupation_skills: 0,
+      occupation_skills: 2,
     });
+  });
+});
+
+function occupationSkillRow(overrides: Partial<OccupationSkillRow> = {}): OccupationSkillRow {
+  return {
+    occupationId: "o001",
+    skillUri: "http://data.europa.eu/esco/skill/21D2F96D-35f7-4e3f-9745-c533d2dd6e97",
+    skillLabel: "computer programming",
+    relation: "essential",
+    sourceName: "ESCO",
+    asOf: "2026-10-21",
+    ...overrides,
+  };
+}
+
+describe("buildOccupationSkillRows", () => {
+  it("uses the same skill id as the skills table (lower-case UUID from the URI)", () => {
+    expect(buildOccupationSkillRows([occupationSkillRow()])).toEqual([
+      { occupation_id: "o001", skill_id: "21d2f96d-35f7-4e3f-9745-c533d2dd6e97", relation: "essential" },
+    ]);
+  });
+
+  it("upserts occupation_skills last, onConflict occupation_id,skill_id, after skills and occupations", async () => {
+    const { client, upserts } = fakeSupabase({});
+    const embedder: Embedder = vi.fn(async (texts: string[]) => texts.map((_, i) => vector(i)));
+
+    await applyImport(
+      {
+        ...EMPTY_INPUT,
+        occupations: [occupationRow()],
+        skills: [
+          {
+            id: "21d2f96d-35f7-4e3f-9745-c533d2dd6e97",
+            escoUri: "http://data.europa.eu/esco/skill/21d2f96d-35f7-4e3f-9745-c533d2dd6e97",
+            labelEn: "computer programming",
+          },
+        ],
+        occupationSkills: [occupationSkillRow()],
+      },
+      client,
+      embedder
+    );
+
+    const tables = upserts.map((u) => u.table);
+    const linkIndex = tables.indexOf("occupation_skills");
+    expect(linkIndex).toBe(tables.length - 1);
+    expect(tables.indexOf("skills")).toBeLessThan(linkIndex);
+    expect(tables.indexOf("occupations")).toBeLessThan(linkIndex);
+    expect(upserts[linkIndex].onConflict).toBe(OCCUPATION_SKILLS_ON_CONFLICT);
+    expect(OCCUPATION_SKILLS_ON_CONFLICT).toBe("occupation_id,skill_id");
   });
 });
 
