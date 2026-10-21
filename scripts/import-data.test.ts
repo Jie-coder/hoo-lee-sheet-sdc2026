@@ -73,6 +73,20 @@ describe("runImport (dry run)", () => {
     expect(result.report.files[0].file).toBe("programmes.csv");
   });
 
+  it("computes per-table would-write counts from the same builders --apply uses", async () => {
+    const result = await runImport({ dir: VALID_DIR, apply: false, env: {} });
+    expect(result.wouldWrite).toEqual({
+      skills: 2,
+      occupations: 2,
+      sources: 2,
+      exposure: 2,
+      courses: 3,
+      programs: 3,
+      signals: 4,
+      occupation_skills: 0,
+    });
+  });
+
   it("reports a missing file as a note, not an error, and still exits 0", async () => {
     // An empty temp dir, not the real data/ folder: data/ fills up as the team commits CSVs.
     const emptyDir = mkdtempSync(join(tmpdir(), "laluan-empty-data-"));
@@ -171,7 +185,7 @@ describe("runImport (--apply)", () => {
     expect(signalsUpsert?.rows.length).toBeGreaterThan(0);
     expect(signalsUpsert?.rows.every((row) => !("id" in row))).toBe(true);
 
-    expect(result.applyResult?.skipped.map((s) => s.file)).toEqual(["sources.csv", "exposure.csv"]);
+    expect(result.applyResult?.skipped).toEqual([]);
   });
 });
 
@@ -259,5 +273,15 @@ describe("runCli --apply env resolution", () => {
     const result = await runCli(["--dir", "scripts/fixtures/valid"], cwd);
     expect(result.exitCode).toBe(0);
     expect(result.stderr).toEqual([]);
+  });
+
+  it("dry run prints a would-write line with a count per target table", async () => {
+    const cwd = mkdtempSync(join(tmpdir(), "laluan-cli-"));
+    dirs.push(cwd);
+    const result = await runCli(["--dir", "scripts/fixtures/valid"], cwd);
+    const stdout = result.stdout.join("\n");
+    expect(stdout).toContain(
+      "would write: skills 2, occupations 2, sources 2, exposure 2, courses 3, programs 3, signals 4, occupation_skills 0"
+    );
   });
 });

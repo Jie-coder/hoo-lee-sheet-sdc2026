@@ -4,7 +4,7 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 import { EMBEDDING_DIMENSIONS, type Course, type Programme } from "../../src/types/contracts";
 import { escoUriToId, isBlank, splitNames } from "./cells";
 import type { Issue } from "./report";
-import type { OccupationRow } from "./row-schemas";
+import type { ExposureRow, OccupationRow, SourceRow } from "./row-schemas";
 import type { Embedder } from "./clients";
 
 export type SkillRecord = { id: string; escoUri: string; labelEn: string };
@@ -15,6 +15,8 @@ export type ApplyInput = {
   occupations: OccupationRow[];
   skills: SkillRecord[];
   signals: SignalRow[];
+  sources: SourceRow[];
+  exposure: ExposureRow[];
 };
 
 export type TableResult = { table: string; upserted: number; error?: string };
@@ -26,16 +28,7 @@ export type ApplyResult = {
 };
 
 /** CSVs that validate fully but have nowhere to land in the current schema. */
-export const APPLY_SKIPPED_FILES: SkippedFile[] = [
-  {
-    file: "sources.csv",
-    reason: "table added in migration 20261021150000, not yet applied to live DB",
-  },
-  {
-    file: "exposure.csv",
-    reason: "table added in migration 20261021150000, not yet applied to live DB",
-  },
-];
+export const APPLY_SKIPPED_FILES: SkippedFile[] = [];
 
 /** The text embedded for one occupation: must match how a stored row's text is rebuilt below. */
 export function occupationEmbeddingText(occupation: { titleEn: string; description: string }): string {
@@ -181,6 +174,59 @@ export function buildCourseRows(courses: Course[]): Record<string, unknown>[] {
     skill_ids: course.skillIds,
     last_checked: course.lastChecked,
     mode: course.mode,
+  }));
+}
+
+/** Builds public.sources upsert rows. */
+export function buildSourceRows(sources: SourceRow[]): Record<string, unknown>[] {
+  return sources.map((source) => ({
+    name: source.name,
+    url: source.url,
+    publisher: source.publisher,
+    what_it_measures: source.whatItMeasures,
+    update_frequency: source.updateFrequency,
+    last_updated: source.lastUpdated,
+    data_format: source.dataFormat,
+    licence: source.licence,
+    use_for: source.useFor,
+    notes: source.notes,
+  }));
+}
+
+/**
+ * Finds the one occupations.csv row an exposure.csv row refers to, by exact
+ * title_en first, falling back to code against isco_code/esco_uri only when
+ * no title matches. Returns null (never invents) when nothing matches, or
+ * when a match is not unique — isco_code repeats across occupations that
+ * share one ISCO code, so a code match alone is not always unique.
+ */
+function matchOccupationId(exposure: ExposureRow, occupations: OccupationRow[]): string | null {
+  const byUniqueMatch = (matches: (occupation: OccupationRow) => boolean): string | null => {
+    const ids = new Set(occupations.filter(matches).map((occupation) => occupation.id));
+    return ids.size === 1 ? (ids.values().next().value as string) : null;
+  };
+
+  const byTitle = byUniqueMatch((occupation) => occupation.titleEn === exposure.occupation);
+  if (byTitle) return byTitle;
+
+  return byUniqueMatch(
+    (occupation) => occupation.iscoCode === exposure.code || occupation.escoUri === exposure.code
+  );
+}
+
+/** Builds public.exposure upsert rows. occupation_id is filled in only for an unambiguous occupations.csv match. */
+export function buildExposureRows(exposures: ExposureRow[], occupations: OccupationRow[]): Record<string, unknown>[] {
+  return exposures.map((exposure) => ({
+    occupation_id: matchOccupationId(exposure, occupations),
+    occupation: exposure.occupation,
+    code: exposure.code,
+    exposure_value: exposure.exposureValue,
+    scale: exposure.scale,
+    source_name: exposure.sourceName,
+    source_url: exposure.sourceUrl,
+    table_or_page: exposure.tableOrPage,
+    as_of: exposure.asOf,
+    notes: exposure.notes,
   }));
 }
 
@@ -357,6 +403,12 @@ const UPSERT_CHUNK_SIZE = 500;
 /** onConflict for the signals upsert: the columns signals_reading_key (migration 20261021150000) is unique on. */
 export const SIGNALS_ON_CONFLICT = "skill_id,source,metric,window_end";
 
+/** onConflict for the exposure upsert: public.exposure's primary key (occupation, source_name). */
+export const EXPOSURE_ON_CONFLICT = "occupation,source_name";
+
+/** onConflict for the sources upsert: public.sources's primary key is name, not id. */
+export const SOURCES_ON_CONFLICT = "name";
+
 const SIGNALS_MIGRATION = "20261021150000";
 
 /** True for the Postgres error an upsert gets when its onConflict columns have no matching unique constraint yet. */
@@ -442,6 +494,15 @@ export async function applyImport(
     await upsert(supabase, "occupations", buildOccupationRows(input.occupations, occupationEmbeddingResult.embeddings))
   );
 
+  // sources before exposure: exposure.source_name references sources.name.
+  tables.push(
+    await upsert(supabase, "sources", buildSourceRows(input.sources), { onConflict: SOURCES_ON_CONFLICT })
+  );
+
+  tables.push(await upsert(supabase, "exposure", buildExposureRows(input.exposure, input.occupations), {
+    onConflict: EXPOSURE_ON_CONFLICT,
+  }));
+
   tables.push(await upsert(supabase, "courses", buildCourseRows(input.courses)));
 
   tables.push(await upsert(supabase, "programs", buildProgramRows(input.programmes)));
@@ -455,4 +516,39 @@ export async function applyImport(
   );
 
   return { tables, skipped: APPLY_SKIPPED_FILES };
+}
+
+/** Target tables, in the order --apply upserts them, that a dry run reports row counts for. */
+export const WOULD_WRITE_TABLES = [
+  "skills",
+  "occupations",
+  "sources",
+  "exposure",
+  "courses",
+  "programs",
+  "signals",
+  "occupation_skills",
+] as const;
+
+export type WouldWriteCounts = Record<(typeof WOULD_WRITE_TABLES)[number], number>;
+
+/**
+ * Row counts a dry run would write, built from the same functions --apply
+ * uses (minus the embedding calls, which do not change how many rows are
+ * written). occupation_skills is always 0: no data/*.csv supplies an
+ * occupation->skill relation yet — see data/README.md.
+ */
+export function computeWouldWriteCounts(input: ApplyInput): WouldWriteCounts {
+  const noEmbeddings = new Map<string, number[]>();
+  const { existingRows, newRows } = buildSkillRows(input.skills, new Set(), noEmbeddings);
+  return {
+    skills: existingRows.length + newRows.length,
+    occupations: buildOccupationRows(input.occupations, noEmbeddings).length,
+    sources: buildSourceRows(input.sources).length,
+    exposure: buildExposureRows(input.exposure, input.occupations).length,
+    courses: buildCourseRows(input.courses).length,
+    programs: buildProgramRows(input.programmes).length,
+    signals: input.signals.length,
+    occupation_skills: 0,
+  };
 }

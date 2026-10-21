@@ -1,5 +1,5 @@
 {
-  "_source": "information_schema.columns, public schema, live project, read 2026-10-21; bigint id columns are GENERATED ALWAYS AS IDENTITY (information_schema.columns.is_identity)",
+  "_source": "information_schema.columns, public schema, live project lrwepzwxoeqbcxfbelee, read 2026-10-21 after migration 20261021150000; identity columns marked hasDefault",
   "tables": {
     "courses": {
       "id": {
@@ -59,6 +59,63 @@
       },
       "mode": {
         "type": "text",
+        "nullable": false,
+        "hasDefault": true
+      }
+    },
+    "exposure": {
+      "occupation_id": {
+        "type": "text",
+        "nullable": true,
+        "hasDefault": false
+      },
+      "occupation": {
+        "type": "text",
+        "nullable": false,
+        "hasDefault": false
+      },
+      "code": {
+        "type": "text",
+        "nullable": false,
+        "hasDefault": false
+      },
+      "exposure_value": {
+        "type": "numeric",
+        "nullable": false,
+        "hasDefault": false
+      },
+      "scale": {
+        "type": "text",
+        "nullable": false,
+        "hasDefault": false
+      },
+      "source_name": {
+        "type": "text",
+        "nullable": false,
+        "hasDefault": false
+      },
+      "source_url": {
+        "type": "text",
+        "nullable": false,
+        "hasDefault": false
+      },
+      "table_or_page": {
+        "type": "text",
+        "nullable": false,
+        "hasDefault": true
+      },
+      "as_of": {
+        "type": "date",
+        "nullable": false,
+        "hasDefault": false
+      },
+      "notes": {
+        "type": "text",
+        "nullable": false,
+        "hasDefault": true
+      },
+      "created_at": {
+        "type": "timestamptz",
         "nullable": false,
         "hasDefault": true
       }
@@ -505,6 +562,11 @@
         "type": "timestamptz",
         "nullable": false,
         "hasDefault": true
+      },
+      "keywords": {
+        "type": "_text",
+        "nullable": false,
+        "hasDefault": true
       }
     },
     "skills": {
@@ -542,6 +604,63 @@
         "type": "vector",
         "nullable": true,
         "hasDefault": false
+      },
+      "created_at": {
+        "type": "timestamptz",
+        "nullable": false,
+        "hasDefault": true
+      }
+    },
+    "sources": {
+      "name": {
+        "type": "text",
+        "nullable": false,
+        "hasDefault": false
+      },
+      "url": {
+        "type": "text",
+        "nullable": false,
+        "hasDefault": false
+      },
+      "publisher": {
+        "type": "text",
+        "nullable": false,
+        "hasDefault": false
+      },
+      "what_it_measures": {
+        "type": "text",
+        "nullable": false,
+        "hasDefault": false
+      },
+      "update_frequency": {
+        "type": "text",
+        "nullable": false,
+        "hasDefault": false
+      },
+      "last_updated": {
+        "type": "date",
+        "nullable": false,
+        "hasDefault": false
+      },
+      "data_format": {
+        "type": "text",
+        "nullable": false,
+        "hasDefault": false
+      },
+      "licence": {
+        "type": "text",
+        "nullable": false,
+        "hasDefault": false
+      },
+      "use_for": {
+        "type": "text",
+        "nullable": false,
+        "hasDefault": false
+      },
+      "notes": {
+        "type": "text",
+        "nullable": false,
+        "hasDefault": true
       },
       "created_at": {
         "type": "timestamptz",

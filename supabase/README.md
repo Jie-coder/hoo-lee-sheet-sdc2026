@@ -12,7 +12,7 @@ There is no login and no CV file. Profiles are anonymous sessions: no `user_id`,
 |---|---|---|
 | `occupations` | ESCO occupation, cluster (`ClusterId`), and a Gemini `vector(768)` embedding. | `RoleResult.occupationId` |
 | `skills` | ESCO skill, green flag, base importance, and a `vector(768)` embedding. | `GapSkill.skillId`, `Course.skillIds` |
-| `occupation_skills` | Essential or optional skill on an occupation. | Gap uses `relation = 'essential'` |
+| `occupation_skills` | Essential or optional skill on an occupation. Not wired into `--apply`: no `data/*.csv` supplies an occupation->skill link yet (see `data/README.md`). | Gap uses `relation = 'essential'` |
 | `tasks` | Task text plus automation and augmentation shares, with `source` and `as_of`. | Exposure inputs in section 05 |
 | `signals` | One arXiv reading (`window_start`, `window_end`, `as_of`) so two dates can be stored. | `SignalReading` inside `SignalSnapshot` |
 | `scenarios` | `co`, `dis`, `sup`, assumptions, `theta`, and `demand_by_cluster`. | `ScenarioId` |

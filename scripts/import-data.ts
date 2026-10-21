@@ -20,11 +20,14 @@ import { ENV_LOCAL_MISSING_MESSAGE, readEnvLocal, requireApplyEnv, type ApplyEnv
 import {
   applyImport,
   buildSignalRows,
+  computeWouldWriteCounts,
+  WOULD_WRITE_TABLES,
   type ApplyInput,
   type ApplyResult,
   type SignalRow,
   type SignalRowInput,
   type SkillRecord,
+  type WouldWriteCounts,
 } from "./lib/apply";
 // Type-only: must not pull in @supabase/supabase-js or @ai-sdk/google at
 // runtime just for a dry run. The real module is loaded with a dynamic
@@ -32,7 +35,7 @@ import {
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { Embedder } from "./lib/clients";
 import type { Course, Programme } from "../src/types/contracts";
-import type { OccupationRow } from "./lib/row-schemas";
+import type { ExposureRow, OccupationRow, SourceRow } from "./lib/row-schemas";
 
 export type RunOptions = {
   dir: string;
@@ -49,6 +52,7 @@ export type RunResult = {
   argError?: string;
   applyError?: string;
   applyResult?: ApplyResult;
+  wouldWrite?: WouldWriteCounts;
 };
 
 export type FileRunOutcome = {
@@ -57,6 +61,8 @@ export type FileRunOutcome = {
   validCourses: Course[];
   validProgrammes: Programme[];
   validOccupations: OccupationRow[];
+  validSources: SourceRow[];
+  validExposures: ExposureRow[];
   skillPairs: { skills: string[]; skillUris: string[] }[];
   signalRows: SignalRow[];
 };
@@ -101,7 +107,8 @@ type CourseRecord = {
   skillUris: string[];
 };
 type ProgrammeRecord = { row: number; id: string; valid: boolean; value: Programme | null };
-type SourceRecord = { row: number; name: string; valid: boolean };
+type SourceRecord = { row: number; name: string; valid: boolean; value: SourceRow | null };
+type ExposureRecord = { row: number; valid: boolean; value: ExposureRow | null };
 type KeywordRecord = {
   row: number;
   keyword: string;
@@ -138,6 +145,8 @@ export function runFile(key: FileKey, dir: string): FileRunOutcome {
     validCourses: [],
     validProgrammes: [],
     validOccupations: [],
+    validSources: [],
+    validExposures: [],
     skillPairs: [],
     signalRows: [],
   };
@@ -173,7 +182,7 @@ export function runFile(key: FileKey, dir: string): FileRunOutcome {
   const sourceRecords: SourceRecord[] = [];
   const keywordRecords: KeywordRecord[] = [];
   const exposureCross: { row: number; occupation: string; code: string; sourceName: string }[] = [];
-  let exposureValidRows = 0;
+  const exposureRecords: ExposureRecord[] = [];
   const occupationRecords: OccupationRecord[] = [];
 
   rows.forEach((row, index) => {
@@ -203,7 +212,12 @@ export function runFile(key: FileKey, dir: string): FileRunOutcome {
     } else if (key === "sources") {
       const result = mapSourceRow(raw, rowNumber);
       issues.push(...result.issues);
-      sourceRecords.push({ row: rowNumber, name: raw.name ?? "", valid: result.value !== null });
+      sourceRecords.push({
+        row: rowNumber,
+        name: raw.name ?? "",
+        valid: result.value !== null,
+        value: result.value,
+      });
     } else if (key === "keywords") {
       const result = mapKeywordRow(raw, rowNumber);
       issues.push(...result.issues, ...result.warnings);
@@ -224,7 +238,7 @@ export function runFile(key: FileKey, dir: string): FileRunOutcome {
         code: raw.code ?? "",
         sourceName: raw.source_name ?? "",
       });
-      if (result.value) exposureValidRows += 1;
+      exposureRecords.push({ row: rowNumber, valid: result.value !== null, value: result.value });
     } else if (key === "occupations") {
       const result = mapOccupationRow(raw, rowNumber);
       issues.push(...result.issues);
@@ -245,6 +259,8 @@ export function runFile(key: FileKey, dir: string): FileRunOutcome {
   let validCourses: Course[] = [];
   let validProgrammes: Programme[] = [];
   let validOccupations: OccupationRow[] = [];
+  let validSources: SourceRow[] = [];
+  let validExposures: ExposureRow[] = [];
   let skillPairs: { skills: string[]; skillUris: string[] }[] = [];
   let signalRows: SignalRow[] = [];
   let cross: Partial<CrossCheckInput> = {};
@@ -272,6 +288,7 @@ export function runFile(key: FileKey, dir: string): FileRunOutcome {
     issues.push(...dup.issues);
     validRows = dup.validRows;
     invalidRows = dup.invalidRows;
+    validSources = dup.kept.filter((r) => r.value).map((r) => r.value as SourceRow);
     cross = { sources: sourceRecords.map((r) => ({ row: r.row, name: r.name })) };
   } else if (key === "keywords") {
     const dup = finalizeDuplicates("keywords.csv", "keyword", (r) => r.keyword, keywordRecords);
@@ -295,8 +312,9 @@ export function runFile(key: FileKey, dir: string): FileRunOutcome {
   } else if (key === "exposure") {
     // exposure.csv has no id-like column that must be unique: the same
     // occupation can legitimately appear with figures from several sources.
-    validRows = exposureValidRows;
+    validRows = exposureRecords.filter((r) => r.valid).length;
     invalidRows = rows.length - validRows;
+    validExposures = exposureRecords.filter((r) => r.value).map((r) => r.value as ExposureRow);
     cross = { exposure: exposureCross };
   } else {
     const dup = finalizeDuplicates("occupations.csv", "id", (r) => r.id, occupationRecords);
@@ -328,6 +346,8 @@ export function runFile(key: FileKey, dir: string): FileRunOutcome {
     validCourses,
     validProgrammes,
     validOccupations,
+    validSources,
+    validExposures,
     skillPairs,
     signalRows,
   };
@@ -374,6 +394,19 @@ export async function runImport(options: RunOptions): Promise<RunResult> {
   const exitCode = exitCodeFor(report);
   const result: RunResult = { report, exitCode };
 
+  // Built from the same validated rows --apply would upsert, so a dry run's
+  // row counts (result.wouldWrite) match what --apply actually writes.
+  const applyInput: ApplyInput = {
+    courses: outcomes.flatMap(({ outcome }) => outcome.validCourses),
+    programmes: outcomes.flatMap(({ outcome }) => outcome.validProgrammes),
+    occupations: outcomes.flatMap(({ outcome }) => outcome.validOccupations),
+    skills: deriveSkills(outcomes.flatMap(({ outcome }) => outcome.skillPairs)),
+    signals: outcomes.flatMap(({ outcome }) => outcome.signalRows),
+    sources: outcomes.flatMap(({ outcome }) => outcome.validSources),
+    exposure: outcomes.flatMap(({ outcome }) => outcome.validExposures),
+  };
+  result.wouldWrite = computeWouldWriteCounts(applyInput);
+
   if (!options.apply) return result;
 
   if (exitCode !== 0) {
@@ -398,14 +431,6 @@ export async function runImport(options: RunOptions): Promise<RunResult> {
   }
   const supabase = createSupabaseClient(envResult.env);
   const embedder = createEmbedder(envResult.env);
-
-  const applyInput: ApplyInput = {
-    courses: outcomes.flatMap(({ outcome }) => outcome.validCourses),
-    programmes: outcomes.flatMap(({ outcome }) => outcome.validProgrammes),
-    occupations: outcomes.flatMap(({ outcome }) => outcome.validOccupations),
-    skills: deriveSkills(outcomes.flatMap(({ outcome }) => outcome.skillPairs)),
-    signals: outcomes.flatMap(({ outcome }) => outcome.signalRows),
-  };
 
   result.applyResult = await applyImport(applyInput, supabase, embedder);
   return result;
@@ -434,6 +459,11 @@ function parseArgs(argv: string[]): { dir: string; only?: string; apply: boolean
   }
 
   return { dir, only, apply };
+}
+
+/** "would write: courses 36, programs 8, ..." — one count per WOULD_WRITE_TABLES entry, in that order. */
+export function formatWouldWriteLine(counts: WouldWriteCounts): string {
+  return `would write: ${WOULD_WRITE_TABLES.map((table) => `${table} ${counts[table]}`).join(", ")}`;
 }
 
 export type CliOutput = { stdout: string[]; stderr: string[]; exitCode: number };
@@ -480,6 +510,10 @@ export async function runCli(
   }
 
   stdout.push(formatReport(result.report));
+
+  if (!args.apply && result.wouldWrite) {
+    stdout.push(`\n${formatWouldWriteLine(result.wouldWrite)}`);
+  }
 
   if (args.apply) {
     if (envLocalMissing) {
