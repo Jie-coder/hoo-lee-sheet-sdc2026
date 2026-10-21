@@ -1,0 +1,26 @@
+keyword,arxiv_query,skills,skill_uris,direction,count_last_90d,count_prev_90d,checked_on
+document understanding,"""document understanding""",manage content metadata,http://data.europa.eu/esco/skill/9710092c-f174-4e84-95bf-2064d39ad7a0,down,45,46,2026-10-19
+AI agents,"""AI agent""",principles of artificial intelligence,http://data.europa.eu/esco/skill/e465a154-93f7-4973-9ce1-31659fe16dd2,up,711,675,2026-10-19
+speech recognition,"""speech recognition""",speech recognition,http://data.europa.eu/esco/skill/2af29864-c941-40a5-ae7b-2b6c4b92c0d7,up,278,239,2026-10-19
+code generation,"""code generation""",working with computers,http://data.europa.eu/esco/skill/243eb885-07c7-4b77-ab9c-827551d83dc4,down,523,555,2026-10-19
+retrieval augmented generation,"""retrieval augmented generation"" OR ""retrieval-augmented generation""",manage data,http://data.europa.eu/esco/skill/9ff9db9d-d14b-426e-83f3-e7449af6c79f,down,614,714,2026-10-19
+predictive maintenance,"""predictive maintenance""",predictive maintenance,http://data.europa.eu/esco/skill/334e3e49-fb02-4051-809a-f06adfdc1c40,up,40,31,2026-10-19
+sentiment analysis,"""sentiment analysis""",data analytics,http://data.europa.eu/esco/skill/97bd1c21-66b2-4b7e-ad0f-e3cda590e378,down,69,102,2026-10-19
+prompt engineering,"""prompt engineering""",principles of artificial intelligence,http://data.europa.eu/esco/skill/e465a154-93f7-4973-9ce1-31659fe16dd2,down,101,157,2026-10-19
+robotic process automation,"""robotic process automation""",manage data,http://data.europa.eu/esco/skill/9ff9db9d-d14b-426e-83f3-e7449af6c79f,up,2215,1611,2026-10-19
+text summarization,"""text summarization""",information skills,http://data.europa.eu/esco/skill/6b305973-8993-475f-bd8a-daf037c61401,up,1645,1514,2026-10-19
+knowledge graphs,"""knowledge graph""",manage data,http://data.europa.eu/esco/skill/9ff9db9d-d14b-426e-83f3-e7449af6c79f,down,448,452,2026-10-19
+reinforcement learning,"""reinforcement learning""",utilise machine learning,http://data.europa.eu/esco/skill/8369c2d6-c100-4cf6-bd83-9668d8678433,down,3260,3390,2026-10-19
+synthetic data,"""synthetic data generation""",data analytics,http://data.europa.eu/esco/skill/97bd1c21-66b2-4b7e-ad0f-e3cda590e378,down,115,131,2026-10-19
+multi-modal AI,"""multimodal AI"" OR ""multimodal model""",principles of artificial intelligence,http://data.europa.eu/esco/skill/e465a154-93f7-4973-9ce1-31659fe16dd2,down,313,342,2026-10-19
+machine translation,"""machine translation""",information skills,http://data.europa.eu/esco/skill/6b305973-8993-475f-bd8a-daf037c61401,up,134,107,2026-10-19
+autonomous vehicles,"""autonomous vehicle""",working with computers,http://data.europa.eu/esco/skill/243eb885-07c7-4b77-ab9c-827551d83dc4,down,163,206,2026-10-19
+AI ethics,"""AI ethics"" OR ""fairness in AI""",principles of artificial intelligence,http://data.europa.eu/esco/skill/e465a154-93f7-4973-9ce1-31659fe16dd2,up,54,29,2026-10-19
+federated learning,"""federated learning""",manage data,http://data.europa.eu/esco/skill/9ff9db9d-d14b-426e-83f3-e7449af6c79f,up,419,382,2026-10-19
+anomaly detection,"""anomaly detection""",data analytics,http://data.europa.eu/esco/skill/97bd1c21-66b2-4b7e-ad0f-e3cda590e378,down,422,424,2026-10-19
+few-shot learning,"""few-shot learning""",utilise machine learning,http://data.europa.eu/esco/skill/8369c2d6-c100-4cf6-bd83-9668d8678433,up,53,52,2026-10-19
+vision language models,"""vision language model"" OR ""vision-language model""",utilise machine learning,http://data.europa.eu/esco/skill/8369c2d6-c100-4cf6-bd83-9668d8678433,up,1748,1563,2026-10-19
+AI governance,"""AI governance""",manage data,http://data.europa.eu/esco/skill/9ff9db9d-d14b-426e-83f3-e7449af6c79f,down,58,93,2026-10-19
+data labeling,"""data labeling"" OR ""data annotation""",manage data,http://data.europa.eu/esco/skill/9ff9db9d-d14b-426e-83f3-e7449af6c79f,down,48,50,2026-10-19
+explainable AI,"""explainable AI"" OR ""explainable artificial intelligence""",analysing and evaluating information and data,http://data.europa.eu/esco/skill/1f2950c0-ef1e-44b4-9a55-125ccd7b78af,down,161,194,2026-10-19
+time series forecasting,"""time series forecasting""",data analytics,http://data.europa.eu/esco/skill/97bd1c21-66b2-4b7e-ad0f-e3cda590e378,up,214,200,2026-10-19
