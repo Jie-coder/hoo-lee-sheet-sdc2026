@@ -1,3 +1,5 @@
+-- Re-runnable: every statement is idempotent (if not exists / drop policy if exists).
+--
 -- Adds a home for the two Henry-collected CSVs that have nowhere to land
 -- yet: sources.csv (reusable dataset metadata) and exposure.csv (published
 -- exposure figures, copied as-is). Column names and nullability mirror
@@ -17,7 +19,7 @@
 -- having their counts summed into one row (buildSignalRows in apply.ts),
 -- and this column records which keywords contributed to that sum.
 
-create table public.sources (
+create table if not exists public.sources (
   name text primary key check (length(btrim(name)) > 0),
   url text not null check (internal.http_url(url)),
   publisher text not null check (length(btrim(publisher)) > 0),
@@ -34,7 +36,7 @@ create table public.sources (
 comment on table public.sources is
   'SourceRow: a reusable dataset, with a licence that allows reuse. name is the natural key sources.csv and exposure.csv both use.';
 
-create table public.exposure (
+create table if not exists public.exposure (
   occupation_id text references public.occupations (id) on delete set null,
   occupation text not null check (length(btrim(occupation)) > 0),
   code text not null check (length(btrim(code)) > 0),
@@ -55,8 +57,16 @@ comment on table public.exposure is
 comment on column public.exposure.occupation_id is
   'Nullable: exposure.csv is collected from Peter''s draft occupation list and may cite a code/title with no occupations row yet.';
 
-alter table public.signals
-  add constraint signals_reading_key unique (skill_id, source, metric, window_end);
+create index if not exists exposure_occupation_id_idx on public.exposure (occupation_id);
+
+do $$
+begin
+  if not exists (select 1 from pg_constraint where conname = 'signals_reading_key') then
+    alter table public.signals
+      add constraint signals_reading_key unique (skill_id, source, metric, window_end);
+  end if;
+end
+$$;
 
 comment on constraint signals_reading_key on public.signals is
   'Makes a signals row upsertable without inventing an id (signals.id has no natural key otherwise): one reading per skill, source, metric, and window_end.';
@@ -81,6 +91,11 @@ begin
       catalogue_table
     );
     execute format('grant select on table public.%I to anon', catalogue_table);
+    execute format(
+      'drop policy if exists %I on public.%I',
+      catalogue_table || '_anon_select',
+      catalogue_table
+    );
     execute format(
       'create policy %I on public.%I for select to anon using (true)',
       catalogue_table || '_anon_select',
