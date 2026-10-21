@@ -1,34 +1,46 @@
-// Signal snapshot switch: the same persona, scored 30 days apart.
+// Signal snapshot switch: the same profile, ranked with arXiv counts from two
+// dates about 30 days apart (data/keywords_prior.csv and data/keywords.csv).
 "use client";
 
+import type { SignalDate } from "@/lib/analyze";
+import { formatDayMonthYear } from "@/lib/display";
 import { cn } from "@/lib/utils";
+import type { IsoDate } from "@/types/contracts";
 
-export const SIGNAL_DATES = ["thirty-days-ago", "today"] as const;
-export type SignalDate = (typeof SIGNAL_DATES)[number];
-
-const LABELS: Record<SignalDate, string> = {
-  "thirty-days-ago": "30 days ago",
-  today: "Today",
-};
+const ORDER: SignalDate[] = ["prior", "today"];
 
 export function SignalDateToggle({
   value,
+  dates,
   onChange,
   disabled = false,
 }: {
   value: SignalDate;
+  dates: { today: IsoDate; prior: IsoDate | null };
   onChange: (value: SignalDate) => void;
   disabled?: boolean;
 }) {
+  if (!dates.prior) {
+    return (
+      <span className="text-[12px] whitespace-nowrap text-grey">
+        Trend signal: arXiv counts checked {formatDayMonthYear(dates.today)}
+      </span>
+    );
+  }
+  const label = (date: SignalDate) =>
+    date === "today"
+      ? `${formatDayMonthYear(dates.today)} · latest`
+      : `${formatDayMonthYear(dates.prior as IsoDate)} · 30 days earlier`;
+
   return (
-    <div className="flex items-center gap-2">
-      <span className="text-[12px] whitespace-nowrap text-grey">Signal date</span>
+    <div className="flex flex-wrap items-center gap-2">
+      <span className="text-[12px] whitespace-nowrap text-grey">arXiv trend signal from</span>
       <div
         role="group"
-        aria-label="Signal date"
+        aria-label="Trend signal date"
         className="flex items-center rounded-lg border border-line p-0.5 text-[12px]"
       >
-        {SIGNAL_DATES.map((date) => {
+        {ORDER.map((date) => {
           const selected = value === date;
           return (
             <button
@@ -42,7 +54,7 @@ export function SignalDateToggle({
                 selected ? "bg-ink font-medium text-white" : "text-grey",
               )}
             >
-              {LABELS[date]}
+              {label(date)}
             </button>
           );
         })}

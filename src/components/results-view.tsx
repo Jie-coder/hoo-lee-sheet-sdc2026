@@ -21,6 +21,9 @@ import { sdgFlagId } from "@/components/sdg-badge";
 import { SdgLegend } from "@/components/sdg-legend";
 import { Skeleton } from "@/components/ui/skeleton";
 import { InfoPopover } from "@/components/ui/info-popover";
+import { SignalDateToggle } from "@/components/signal-date-toggle";
+import type { SignalDate } from "@/lib/analyze";
+import { describeChange, rankChanges } from "@/lib/compare-snapshots";
 import { formatDayMonthYear } from "@/lib/display";
 import { explainRole } from "@/lib/explain";
 import { rankRoles } from "@/lib/rank-roles";
@@ -31,7 +34,11 @@ import type { RoleResult, ScenarioId, SdgLink } from "@/types/contracts";
 export function ResultsView() {
   const router = useRouter();
   const { hydrated, consent, profile, interviewAnswers, setChosenRoleId } = useFlow();
-  const { state, retry } = useRoles(profile, interviewAnswers.impact_interest);
+  const [signalDate, setSignalDate] = useState<SignalDate>("today");
+  const { state, retry } = useRoles(profile, interviewAnswers.impact_interest, signalDate);
+  // Both snapshots, so the page can say what moved between them (cached per request).
+  const todayRoles = useRoles(profile, interviewAnswers.impact_interest, "today").state;
+  const priorRoles = useRoles(profile, interviewAnswers.impact_interest, "prior").state;
   const [scenario, setScenario] = useState<ScenarioId>("co");
   const [chosenId, setChosenId] = useState<string | null>(null);
   const [flaggedIds, setFlaggedIds] = useState<Set<string>>(() => new Set());
@@ -47,6 +54,10 @@ export function ResultsView() {
   const data = state.status === "ready" ? state.data : null;
   const ranked = data ? rankRoles(data.roles, scenario) : [];
   const chosen = ranked.find((role) => role.occupationId === chosenId) ?? null;
+  const changes =
+    todayRoles.status === "ready" && priorRoles.status === "ready" && todayRoles.data.signalDates.prior
+      ? rankChanges(priorRoles.data.roles, todayRoles.data.roles, scenario)
+      : null;
   const persona = profile.personaId === "upload" ? null : PERSONAS[profile.personaId];
   const matchedCount = data?.skillMatches.filter((match) => match.escoLabels.length > 0).length ?? 0;
 
@@ -133,10 +144,19 @@ export function ResultsView() {
                   <span className="text-grey/80">{SCENARIO_ILLUSTRATIVE}</span>
                 </InfoPopover>
               </div>
-              <span className="text-[12px] whitespace-nowrap text-grey">
-                Trend signal: arXiv counts checked {formatDayMonthYear(data.signalsAsOf)}
-              </span>
+              <SignalDateToggle value={data.signalDate} dates={data.signalDates} onChange={setSignalDate} />
             </section>
+            {changes && data.signalDates.prior && (
+              <p className="mt-3 text-[13px] leading-relaxed text-grey" aria-live="polite">
+                <span className="font-medium text-ink">
+                  What changed from {formatDayMonthYear(data.signalDates.prior)} to{" "}
+                  {formatDayMonthYear(data.signalDates.today)} ({SCENARIO_LABEL[scenario]}):
+                </span>{" "}
+                {changes.length > 0
+                  ? `${changes.slice(0, 3).map(describeChange).join("; ")}.`
+                  : "no role changed rank. The new arXiv counts nudged the scores, but not the order."}
+              </p>
+            )}
 
             <section className="mt-12">
               <div className="mb-3 flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
