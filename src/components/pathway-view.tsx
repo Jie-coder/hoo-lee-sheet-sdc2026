@@ -307,12 +307,14 @@ export function PathwayView() {
                           })()}
                           {COST_LABEL[item.costType]}
                         </span>
-                        {"hours" in item && (
-                          <span className="flex items-center gap-1 text-grey">
-                            <Clock3 className="size-3.5" strokeWidth={1.6} />
-                            {item.hours} h
-                          </span>
-                        )}
+                        <span className="flex items-center gap-1 text-grey">
+                          <Clock3 className="size-3.5" strokeWidth={1.6} />
+                          {"hours" in item ? (
+                            `${item.hours} h`
+                          ) : (
+                            <span aria-label="Hours not listed">— h</span>
+                          )}
+                        </span>
                         {closedSkill && (
                           <span className="flex min-w-0 items-center gap-1.5">
                             <Target className="size-3.5 shrink-0 text-sage" strokeWidth={1.6} />
