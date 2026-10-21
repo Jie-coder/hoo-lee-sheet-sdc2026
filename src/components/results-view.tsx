@@ -159,8 +159,9 @@ export function ResultsView() {
                   How these numbers are made
                   <InfoPopover label="How these numbers are made" panelClassName="right-0 bottom-6 left-auto sm:top-auto">
                     Skills come from ESCO v1.2.1, AI exposure from the ILO GenAI exposure study (2025), and the trend
-                    signal from arXiv paper counts. Demand under each future is an illustrative assumption from the SDC
-                    brief, not a forecast. SDG targets are drafted by the Laluan team and still under review. These are
+                    signal from arXiv paper counts. Demand combines Malaysian employment growth (DOSM, 2024 to 2025) with
+                    employers&rsquo; 2025-2030 outlook by job (WEF Future of Jobs Report 2025); the three futures follow WEF&rsquo;s
+                    Four Futures for Jobs (2026). They are scenarios, not forecasts. SDG targets are drafted by the Laluan team and still under review. These are
                     estimates to support your decision, not predictions.
                   </InfoPopover>
                 </div>

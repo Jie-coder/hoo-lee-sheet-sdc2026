@@ -52,8 +52,9 @@ import {
 } from "../types/contracts";
 
 /**
- * Illustrative demo values from the brief (sections 05, 06, and 09).
- * Not fitted. The scenario table should be labelled as illustrative in the UI.
+ * Weights, theta and thresholds are illustrative demo values from the brief
+ * (sections 05, 06, and 09), not fitted. demandByCluster is computed from
+ * data (see its comment).
  */
 export const SCORING_PARAMS = {
   alpha: 0.5,
@@ -66,13 +67,22 @@ export const SCORING_PARAMS = {
   gapSize: 5,
   skillLevel: { full: 1, partial: 0.5, missing: 0 },
   theta: { co: 1.0, dis: 1.4, sup: 1.2 },
-  /** Demand D_{r,k} by role cluster and scenario. Rows follow the page 7 table. */
+  /**
+   * Demand D_{r,k} by role cluster and scenario, computed from
+   * data/demand.csv (OpenDOSM employees by ISCO major group, 2024 -> 2025)
+   * and data/scenarios.csv (WEF Future of Jobs Report 2025 net growth by
+   * role, with page numbers) by scripts/lib/scenario-demand.ts, rounded to 4
+   * decimals. Our model, not a published statistic: see data/README.md.
+   * scripts/lib/scenario-demand.test.ts fails if these drift from the CSVs.
+   * human_care is the same in every scenario: WEF prints a figure for only
+   * one of its roles (Vocational Education Teachers, +9%).
+   */
   demandByCluster: {
-    ai_digital: { co: 0.75, dis: 0.65, sup: 0.95 },
-    data_analytics: { co: 0.75, dis: 0.7, sup: 0.9 },
-    green_sustainability: { co: 0.6, dis: 0.65, sup: 0.7 },
-    human_care: { co: 0.7, dis: 0.55, sup: 0.6 },
-    routine_clerical: { co: 0.45, dis: 0.15, sup: 0.25 },
+    ai_digital: { co: 0.8593, dis: 0.7088, sup: 1.0 },
+    data_analytics: { co: 0.6978, dis: 0.5659, sup: 0.7747 },
+    green_sustainability: { co: 0.7094, dis: 0.6439, sup: 0.7531 },
+    human_care: { co: 0.5976, dis: 0.5976, sup: 0.5976 },
+    routine_clerical: { co: 0.4672, dis: 0.4035, sup: 0.5344 },
   } satisfies Record<ClusterId, Record<ScenarioId, number>>,
   /**
    * Goal numbers (the integer in "13.3") treated as matching each interest.
@@ -204,7 +214,7 @@ export function roleFitScore(
   return weighted / total;
 }
 
-/** D_{r,k} from the illustrative scenario table. */
+/** D_{r,k} from SCORING_PARAMS.demandByCluster (DOSM + WEF, see above). */
 export function scenarioDemand(cluster: RoleCluster, scenario: ScenarioId): number {
   return SCORING_PARAMS.demandByCluster[cluster][scenario];
 }

@@ -30,13 +30,7 @@ describe("SCORING_PARAMS", () => {
     expect(SCORING_PARAMS.topN).toBe(3);
     expect(SCORING_PARAMS.gapSize).toBe(5);
     expect(SCORING_PARAMS.theta).toEqual({ co: 1, dis: 1.4, sup: 1.2 });
-    expect(SCORING_PARAMS.demandByCluster.routine_clerical).toEqual({
-      co: 0.45,
-      dis: 0.15,
-      sup: 0.25,
-    });
-    expect(SCORING_PARAMS.demandByCluster.ai_digital.sup).toBe(0.95);
-    expect(SCORING_PARAMS.demandByCluster.human_care.dis).toBe(0.55);
+    // demandByCluster is checked against data/*.csv in scripts/lib/scenario-demand.test.ts.
   });
 });
 
@@ -218,10 +212,19 @@ describe("roleFitScore", () => {
 });
 
 describe("scenarioDemand", () => {
-  it("reads the page 7 table", () => {
-    expect(scenarioDemand("green_sustainability", "co")).toBe(0.6);
-    expect(scenarioDemand("data_analytics", "dis")).toBe(0.7);
-    expect(scenarioDemand("human_care", "sup")).toBe(0.6);
+  it("reads SCORING_PARAMS.demandByCluster", () => {
+    expect(scenarioDemand("green_sustainability", "co")).toBe(SCORING_PARAMS.demandByCluster.green_sustainability.co);
+    expect(scenarioDemand("data_analytics", "dis")).toBe(SCORING_PARAMS.demandByCluster.data_analytics.dis);
+  });
+
+  it("stays between 0 and 1, and Displacement is never above Co-Pilot", () => {
+    for (const byScenario of Object.values(SCORING_PARAMS.demandByCluster)) {
+      for (const value of Object.values(byScenario)) {
+        expect(value).toBeGreaterThan(0);
+        expect(value).toBeLessThanOrEqual(1);
+      }
+      expect(byScenario.dis).toBeLessThanOrEqual(byScenario.co);
+    }
   });
 });
 
@@ -350,10 +353,7 @@ describe("scoreRoles", () => {
     title: "Swap",
     cluster: "routine_clerical",
     tasks: [{ share: 1, automation: 1, augmentation: 0 }],
-    essentialSkills: [
-      { skillId: "held", label: "Held", baseImportance: 0.9, momentum: 0, level: 1 },
-      { skillId: "miss", label: "Miss", baseImportance: 0.1, momentum: 0, level: 0 },
-    ],
+    essentialSkills: [{ skillId: "held", label: "Held", baseImportance: 1, momentum: 0, level: 1 }],
     sdgLinks: [],
   });
   const weak = role({
@@ -369,11 +369,12 @@ describe("scoreRoles", () => {
   });
 
   it("marks only roles that stay in the top 3 of every scenario", () => {
-    // Hand ranks, fit = importance-weighted h, E from the single task:
-    // robust: F=1, E=0, data.  co 0.925, dis 0.91, sup 0.97
-    // steady: F=0.7, E=0, green. co 0.73, dis 0.745, sup 0.76
-    // swap: F=0.9, E=1, clerical. co 0.585, dis 0.415, sup 0.485
-    // weak: F=0.3, E=0, ai. co 0.575, dis 0.545, sup 0.635
+    // Hand ranks, fit = importance-weighted h, E from the single task, D from
+    // SCORING_PARAMS.demandByCluster (data: co / dis / sup):
+    // robust: F=1, E=0, data (0.6978 / 0.5659 / 0.7747).   co 0.9093, dis 0.8698, sup 0.9324
+    // steady: F=0.7, E=0, green (0.7094 / 0.6439 / 0.7531). co 0.7628, dis 0.7432, sup 0.7759
+    // swap: F=1, E=1, clerical (0.4672 / 0.4035 / 0.5344).  co 0.6402, dis 0.5411, sup 0.6203
+    // weak: F=0.3, E=0, ai (0.8593 / 0.7088 / 1.0).          co 0.6078, dis 0.5626, sup 0.65
     // top 3 co: robust, steady, swap. dis: robust, steady, weak. sup: robust, steady, weak.
     const scored = scoreRoles([weak, swap, robust, steady], "none");
     expect(scored.map((item) => item.occupationId)).toEqual([
@@ -387,12 +388,13 @@ describe("scoreRoles", () => {
       fit: 1,
       exposure: 0,
     });
+    const data = SCORING_PARAMS.demandByCluster.data_analytics;
     expect(scored.find((item) => item.occupationId === "robust")?.byScenario.co).toBeCloseTo(
-      0.925,
+      0.5 + 0.3 * data.co + 0.2,
       10,
     );
     expect(scored.find((item) => item.occupationId === "robust")?.byScenario.dis).toBeCloseTo(
-      0.91,
+      0.5 + 0.3 * data.dis + 0.2,
       10,
     );
     expect(scored.find((item) => item.occupationId === "steady")?.robust).toBe(true);
@@ -543,16 +545,18 @@ describe("Aisyah example", () => {
     ]);
     expect(analystScore?.gap[0]?.importance).toBeCloseTo(1.24, 8);
 
-    // R_co = 0.5 * fit + 0.3 * 0.75 + 0.2 * (1 - 1 * 0.38) + 0.05
+    // R_co = 0.5 * fit + 0.3 * D + 0.2 * (1 - 1 * 0.38) + 0.05
     const analystFit = 0.8 / 2.54;
+    const dataCo = SCORING_PARAMS.demandByCluster.data_analytics.co;
     expect(analystScore?.byScenario.co).toBeCloseTo(
-      0.5 * analystFit + 0.3 * 0.75 + 0.2 * (1 - 0.38) + 0.05,
+      0.5 * analystFit + 0.3 * dataCo + 0.2 * (1 - 0.38) + 0.05,
       8,
     );
     // Supervisor has no community goal, so no bonus.
-    // R_co = 0.5 * 0.4 + 0.3 * 0.45 + 0.2 * (1 - 1 * 0.6) = 0.415
+    // R_co = 0.5 * 0.4 + 0.3 * D + 0.2 * (1 - 1 * 0.6)
+    const clericalCo = SCORING_PARAMS.demandByCluster.routine_clerical.co;
     expect(supervisorScore?.fit).toBeCloseTo(0.4, 10);
-    expect(supervisorScore?.byScenario.co).toBeCloseTo(0.415, 10);
+    expect(supervisorScore?.byScenario.co).toBeCloseTo(0.2 + 0.3 * clericalCo + 0.08, 10);
     expect(analystScore?.byScenario.co).toBeGreaterThan(supervisorScore?.byScenario.co ?? 0);
     // Two candidates are both inside every top 3.
     expect(analystScore?.robust).toBe(true);
