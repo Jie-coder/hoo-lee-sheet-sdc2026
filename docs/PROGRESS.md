@@ -1,6 +1,6 @@
 # Laluan: progress
 
-Last updated: 20 Oct 2026, 9:20 AM (Malaysia time). Team Hoo Lee Sheet, SDC Hackathon 2026, Domain 1 (Aiversecity: future-ready workforce).
+Last updated: 21 Oct 2026 (Malaysia time). Team Hoo Lee Sheet, SDC Hackathon 2026, Domain 1 (Aiversecity: future-ready workforce).
 
 Laluan reads a CV and asks a 5-question interview. It then shows how much AI affects the user's current work, which future roles fit them under three future scenarios, the skills they're missing, and a learning pathway built from real Malaysian courses and government programmes.
 
@@ -45,6 +45,8 @@ All weights are in `SCORING_PARAMS` and labelled as demo values.
 |---|---|---|
 | Spreadsheet spec for Tiffany (courses, programmes) and Henry (sources, keywords, exposure) | `data/README.md` | #5 |
 | Import script: checks every CSV row and reports the row and column of each error; `--apply` writes to Supabase and creates embeddings | `scripts/import-data.ts` | #12 |
+| Real CSVs in `data/`: 158/158 rows valid, 0 errors | `data/` | #15, #18, #20 |
+| `--apply` now writes sources and exposure; dry-run prints per-table counts (`occupation_skills` is 0: no source yet, see T14) | `scripts/lib/apply.ts` | #21 |
 
 ### Design and pages
 | What | Where | PR |
@@ -53,24 +55,28 @@ All weights are in `SCORING_PARAMS` and labelled as demo values.
 | Laluan logo, favicon, design system, results reference | `public/brand/`, `docs/design/` | #4 |
 | Wireframes for landing, profile, interview, pathway + user flow | `docs/design/wireframes/` | #8 |
 | Results page (mock data: Aisyah), scenario tabs, signal-date toggle, SDG badges, source chips | `src/app/results/`, `src/components/` | #9, #11 |
+| Landing, profile, interview, pathway pages (mock data); decluttered results and pathway | `src/app/`, `src/components/` | #13, #19 |
 
-Tests: 169 passing on `main` (Vitest). Lint and build are clean.
+Tests: 242 passing on `main` (Vitest). Lint and build are clean.
+
+## Mock judging (21 Oct)
+Three mock judges scored the live site and repo at **about 47/100** (Innovation 16.5/30, Fit 11.7/25, Feasibility 8.8/25, Clarity 10.3/20). Main gap: every result is hand-typed mock data, so trend data → role matching is not shown working, and the mocks include invented roles and courses. The fixes are tasks T13–T21 in `docs/TASKS.md`, with a priority table at the top.
 
 ## In progress
 | What | Who | Status |
 |---|---|---|
-| PR #13: landing, profile, interview, pathway pages (mock data) | Jarvis (Claude Code) | Code passes; waiting on the mobile step-indicator fix and Grace's visual check |
-| Courses + programmes sheet | Tiffany | 30 courses + 5 programmes due 21 Oct; ~60 + 10 due 22 Oct |
-| AI signal sources / keywords / exposure | Henry | sources 20 Oct, keywords 21 Oct, exposure 22 Oct |
-| 40-occupation list with ISCO/ESCO codes and cluster | Peter | due evening of 20 Oct |
+| Courses + programmes sheet | Tiffany | 36 courses + 8 programmes in `data/`; clean-up and green courses in T17 |
+| AI signal sources / keywords / exposure | Henry | 9 sources, 25 keywords, 40 exposure rows in `data/`; fixes in T16 and T17 |
+| 40-occupation list with ISCO/ESCO codes and cluster | Peter | 40 rows in `data/occupations.csv`; skills per occupation in T14 |
 | Replit import and deploy | Bing Jie + Peter | Replit account created; import not finished yet |
 | Tools & AI declaration | Emily | draft in the Team Hub; usage amounts still TBC |
 
 ## Not started
-- T06: connect real Gemini calls (CV parsing, interview, pathway ordering) and test the Gemini-facing schemas against a live call.
-- API routes that run the full flow: CV → interview → scoring → results → pathway, saved to Supabase.
-- Importing real data once Tiffany's and Henry's CSVs are in `data/`.
-- "30 days ago / today" signal snapshot using two real arXiv readings.
+See the priority table in `docs/TASKS.md`. In short:
+- P0: T13 importer bugs, T14 occupation skills from ESCO, T15 real scoring on real data, T16 arXiv fetch script, T10 two-date snapshot.
+- P1: T10b radar, T17 data clean-up, T18 SDG links, T19 UX fixes, T20 starter code removal, T21 positioning and proposal.
+- P2: T06 real Gemini calls (moved down: the preliminary rubric scores trend → matching, not CV parsing).
+- Running `--apply` against Supabase (after T13 and T14).
 - Deploy on Replit (main) and keep Vercel as backup.
 - Pitch slides, demo video, final declaration, and making the repo public before submission (25 Oct).
 
