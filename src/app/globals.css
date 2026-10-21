@@ -144,4 +144,48 @@
   svg.lucide {
     stroke-width: 1.6;
   }
+  ::selection {
+    background: var(--color-sage-soft);
+  }
+}
+
+/* Shared controls as utilities, so pages and variants can @apply them. */
+@utility btn-base {
+  @apply inline-flex items-center justify-center gap-2 rounded-full px-5 py-2.5 text-[14px] font-medium whitespace-nowrap transition-[transform,background-color,border-color,opacity] duration-200 outline-none select-none focus-visible:ring-2 focus-visible:ring-sage/60 focus-visible:ring-offset-2 focus-visible:ring-offset-paper active:scale-[0.98] disabled:pointer-events-none disabled:opacity-40;
+}
+/* Primary action: ink pill. Secondary: white pill with a hairline. */
+@utility btn-primary {
+  @apply btn-base bg-ink text-paper hover:bg-ink/85;
+}
+@utility btn-secondary {
+  @apply btn-base border border-line bg-white text-ink hover:border-ink/40;
+}
+@utility btn-ghost {
+  @apply btn-base px-3 text-grey hover:bg-alt hover:text-ink;
+}
+/* Tap-to-answer chip; aria-pressed="true" fills it. */
+@utility chip {
+  @apply inline-flex items-center gap-1.5 rounded-full border border-line bg-white px-3.5 py-1.5 text-[13px] text-ink transition-[background-color,border-color,color,transform] duration-200 outline-none focus-visible:ring-2 focus-visible:ring-sage/60 hover:border-ink/40 active:scale-[0.97] aria-pressed:border-ink aria-pressed:bg-ink aria-pressed:text-paper;
+}
+@utility chip-sm {
+  @apply px-2.5 py-1 text-[12px];
+}
+/* A plain data tag (source, cost, language). Never clickable-looking. */
+@utility tag {
+  @apply inline-flex items-center gap-1 rounded-full bg-alt px-2.5 py-0.5 text-[11px] leading-5 text-grey;
+}
+@utility panel {
+  @apply rounded-3xl border border-line bg-white;
+}
+@utility field {
+  @apply w-full rounded-xl border border-line bg-white px-3 py-2 text-[14px] text-ink transition-colors outline-none placeholder:text-grey/60 focus:border-ink/50;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .btn-primary,
+  .btn-secondary,
+  .btn-ghost,
+  .chip {
+    transition: none;
+  }
 }

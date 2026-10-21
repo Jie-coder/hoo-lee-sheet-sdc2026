@@ -1,9 +1,8 @@
 // Multi-select course-language chips: EN / BM / 中文. Shared by Profile and
-// the "What we know so far" panel on Interview.
+// the Interview summary strip.
 "use client";
 
 import { Check } from "lucide-react";
-import { cn } from "@/lib/utils";
 import type { LanguageCode } from "@/types/contracts";
 
 const LABELS: Record<LanguageCode, string> = { en: "EN", ms: "BM", zh: "中文" };
@@ -21,17 +20,8 @@ export function CourseLanguageToggle({
       {ORDER.map((language) => {
         const selected = value.includes(language);
         return (
-          <button
-            key={language}
-            type="button"
-            aria-pressed={selected}
-            onClick={() => onToggle(language)}
-            className={cn(
-              "inline-flex items-center gap-1 rounded-md px-2.5 py-1 text-[12px] font-medium",
-              selected ? "bg-ink text-white" : "border border-line text-grey",
-            )}
-          >
-            {selected && <Check className="size-3" strokeWidth={1.6} />}
+          <button key={language} type="button" aria-pressed={selected} onClick={() => onToggle(language)} className="chip chip-sm font-medium">
+            {selected && <Check className="size-3" strokeWidth={2.2} />}
             {LABELS[language]}
           </button>
         );

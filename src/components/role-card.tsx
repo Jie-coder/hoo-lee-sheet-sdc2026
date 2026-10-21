@@ -1,11 +1,12 @@
 // One recommended role, collapsed by default: status, rank, title, fit,
 // one-line reason, the top SDG target, and 3 skills. Everything else (the
 // full "why", every SDG target and its reason, and "Flag this") lives in
-// the Details expander below — collapsed, never deleted.
+// the Details expander below, collapsed, never deleted.
 "use client";
 
 import { motion, useReducedMotion } from "framer-motion";
 import { ArrowDownRight, Check, Flag, ShieldCheck, Sprout } from "lucide-react";
+import { EASE_OUT } from "@/components/motion";
 import { Disclosure } from "@/components/ui/disclosure";
 import { SdgBadge, sdgFlagId } from "@/components/sdg-badge";
 import { SourcesDisclosure } from "@/components/sources-disclosure";
@@ -66,10 +67,13 @@ export function RoleCard({
   return (
     <motion.article
       layout
-      transition={reduceMotion ? { duration: 0 } : { type: "spring", stiffness: 420, damping: 36 }}
+      initial={reduceMotion ? false : { opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={reduceMotion ? { duration: 0 } : { layout: { type: "spring", stiffness: 420, damping: 36 }, duration: 0.55, delay: (rank - 1) * 0.08, ease: EASE_OUT }}
       className={cn(
-        "flex h-full flex-col rounded-2xl border bg-white p-5 sm:p-6",
-        role.robust ? "border-sage-tint ring-1 ring-sage-tint/60" : "border-line",
+        "panel flex h-full flex-col p-6 transition-[border-color,box-shadow] duration-300",
+        role.robust ? "border-sage/60 shadow-[0_0_0_1px_var(--color-sage-tint)]" : "",
+        chosen && "border-ink shadow-[0_0_0_1px_var(--color-ink)]",
       )}
     >
       <div className="flex items-center justify-between gap-3">
@@ -82,33 +86,37 @@ export function RoleCard({
           <StatusIcon className="size-3.5" strokeWidth={1.6} />
           {status.label}
         </span>
-        <span className="shrink-0 text-[12px] text-grey">
+        <span className="shrink-0 font-serif text-[14px] text-grey tabular-nums">
           #{rank} of {total}
         </span>
       </div>
 
-      <h3 className="mt-4 font-serif text-[24px] leading-tight font-medium">{role.title}</h3>
+      <h3 className="mt-5 font-serif text-[26px] leading-tight font-medium">{role.title}</h3>
 
-      <div className="mt-3 flex items-center gap-3">
-        <span className="text-[28px] leading-none font-semibold tabular-nums">{formatFitPercent(role.fit)}</span>
+      <div className="mt-4 flex items-center gap-3">
+        <span className="font-serif text-[30px] leading-none font-medium tabular-nums">{formatFitPercent(role.fit)}</span>
         <div className="flex-1">
-          <div className="h-1.5 rounded-full bg-alt">
-            <div className="h-1.5 rounded-full bg-ink" style={{ width: `${fitPercent}%` }} />
+          <div className="h-1 overflow-hidden rounded-full bg-alt">
+            <motion.div
+              className="h-1 rounded-full bg-ink"
+              initial={reduceMotion ? { width: `${fitPercent}%` } : { width: 0 }}
+              animate={{ width: `${fitPercent}%` }}
+              transition={{ duration: 1, ease: EASE_OUT, delay: 0.3 + (rank - 1) * 0.1 }}
+            />
           </div>
-          <p className="mt-1 text-[12px] text-grey">fit with your current skills</p>
+          <p className="mt-1 text-[12px] text-grey">fit with your skills</p>
         </div>
       </div>
 
-      {role.explanation && <p className="mt-4 text-[14px] leading-relaxed text-grey">{role.explanation}</p>}
+      {/* Two lines at a glance; the full reason is repeated under Details. */}
+      {role.explanation && <p className="mt-4 line-clamp-2 text-[14px] leading-relaxed text-grey">{role.explanation}</p>}
 
       <div className="mt-4 flex items-center gap-1.5">
         <SdgBadge link={topSdg} label={targetLabels[topSdg.target] ?? topSdg.target} plain />
-        {extraSdgCount > 0 && (
-          <span className="rounded-md bg-alt px-1.5 py-0.5 text-[12px] text-grey">+{extraSdgCount}</span>
-        )}
+        {extraSdgCount > 0 && <span className="tag">+{extraSdgCount}</span>}
       </div>
 
-      <p className="mt-5 text-[12px] text-grey">Top {role.gap.length} skills to build</p>
+      <p className="mt-5 text-[12px] text-grey">Skills to build</p>
       <ul className="mt-1 text-[14px]">
         {visibleSkills.map((skill) => {
           const link = skillTarget(skill.skillId);
@@ -124,7 +132,7 @@ export function RoleCard({
         <Disclosure
           chevron={false}
           summary={`+${extraSkills.length} more`}
-          summaryClassName="justify-start py-1.5 text-[13px] text-grey"
+          summaryClassName="justify-start py-1.5 text-[13px] text-grey hover:text-ink"
         >
           <ul className="text-[14px]">
             {extraSkills.map((skill) => {
@@ -159,7 +167,7 @@ export function RoleCard({
                       <SdgBadge link={link} label={targetLabels[link.target] ?? link.target} plain />
                     </span>
                     <span className="pt-0.5 text-[12px] text-grey">
-                      {TIER_LABEL[link.tier]} · {link.reason}
+                      {TIER_LABEL[link.tier]}: {link.reason}
                     </span>
                   </li>
                 ))}
@@ -180,14 +188,9 @@ export function RoleCard({
         </Disclosure>
       </div>
 
-      <div className="mt-auto pt-5">
-        <button
-          type="button"
-          aria-pressed={chosen}
-          onClick={() => onChoose(role)}
-          className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-ink py-2.5 text-[14px] font-medium text-white"
-        >
-          {chosen && <Check className="size-4" strokeWidth={1.6} />}
+      <div className="mt-auto pt-6">
+        <button type="button" aria-pressed={chosen} onClick={() => onChoose(role)} className="btn-primary w-full">
+          {chosen && <Check className="size-4" strokeWidth={2} />}
           {chosen ? "Chosen" : "Choose this role"}
         </button>
         <div className="pt-3">
