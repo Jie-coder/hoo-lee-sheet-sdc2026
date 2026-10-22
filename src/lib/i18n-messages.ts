@@ -476,7 +476,7 @@ export const MS: Record<MessageKey, string> = {
   "radar.tooSmallItem": "{keyword} ({recent} berbanding {previous})",
   "radar.matchYourSkills": "Padankan kemahiran anda sendiri",
   "estimateFooter.disclaimer":
-    "Semua skor adalah anggaran. Laluan menyokong keputusan anda; ia tidak membuat keputusan pengambilan pekerja.",
+    "Semua skor ialah anggaran. Laluan menyokong keputusan anda, bukan membuat keputusan pengambilan.",
   "estimateFooter.publicData": "Data awam, profil sintetik",
   "refreshButton.label": "Muat semula",
   "roleCard.tier.direct": "Terus",
