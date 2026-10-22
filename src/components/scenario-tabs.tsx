@@ -1,16 +1,17 @@
 // Three WEF futures. Selecting one asks the page to re-rank role cards.
 "use client";
 
-import { useEffect, useRef, useState, type KeyboardEvent } from "react";
+import { useRef, type KeyboardEvent } from "react";
 import { motion } from "framer-motion";
 import { TrendingDown, Users, Zap, type LucideIcon } from "lucide-react";
+import { useT, type MessageKey } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 import { SCENARIO_IDS, type ScenarioId } from "@/types/contracts";
 
-export const SCENARIO_LABEL: Record<ScenarioId, string> = {
-  co: "Co-Pilot Economy",
-  dis: "Age of Displacement",
-  sup: "Supercharged Progress",
+export const SCENARIO_LABEL: Record<ScenarioId, MessageKey> = {
+  co: "scenarioTabs.coLabel",
+  dis: "scenarioTabs.disLabel",
+  sup: "scenarioTabs.supLabel",
 };
 
 const SCENARIO_ICON: Record<ScenarioId, LucideIcon> = {
@@ -19,26 +20,17 @@ const SCENARIO_ICON: Record<ScenarioId, LucideIcon> = {
   sup: Zap,
 };
 
-export const SCENARIO_SUMMARY: Record<ScenarioId, string> = {
-  co: "AI spreads steadily and mostly works alongside people. Digital, data and green roles grow; routine clerical work shrinks.",
-  dis: "AI moves faster than people can retrain. Every field grows less, clerical work shrinks most, and AI exposure counts for more.",
-  sup: "AI advances fast and people are ready for it. Digital and data roles grow fastest.",
+export const SCENARIO_SUMMARY: Record<ScenarioId, MessageKey> = {
+  co: "scenarioTabs.coSummary",
+  dis: "scenarioTabs.disSummary",
+  sup: "scenarioTabs.supSummary",
 };
 
-export const SCENARIO_ILLUSTRATIVE =
-  "Demand uses DOSM employment (2025) and WEF Future of Jobs 2025 figures. Scenarios follow WEF Four Futures (2026).";
+export const SCENARIO_ILLUSTRATIVE: MessageKey = "scenarioTabs.illustrative";
 
 export function ScenarioTabs({ value, onChange }: { value: ScenarioId; onChange: (scenario: ScenarioId) => void }) {
-  const [stacked, setStacked] = useState(false);
+  const { t } = useT();
   const tabRefs = useRef<Record<string, HTMLButtonElement | null>>({});
-
-  useEffect(() => {
-    const mql = window.matchMedia("(max-width: 639px)");
-    const update = () => setStacked(mql.matches);
-    update();
-    mql.addEventListener("change", update);
-    return () => mql.removeEventListener("change", update);
-  }, []);
 
   function select(id: ScenarioId) {
     onChange(id);
@@ -71,44 +63,46 @@ export function ScenarioTabs({ value, onChange }: { value: ScenarioId; onChange:
   }
 
   return (
-    <div
-      role="tablist"
-      aria-label="Future scenario"
-      aria-orientation={stacked ? "vertical" : "horizontal"}
-      className="flex w-full flex-col gap-0.5 rounded-full bg-alt p-1 text-[13px] sm:w-auto sm:flex-row sm:items-center"
-    >
-      {SCENARIO_IDS.map((id, index) => {
-        const selected = value === id;
-        const Icon = SCENARIO_ICON[id];
-        return (
-          <button
-            key={id}
-            ref={(node) => {
-              tabRefs.current[id] = node;
-            }}
-            type="button"
-            role="tab"
-            aria-selected={selected}
-            tabIndex={selected ? 0 : -1}
-            onClick={() => select(id)}
-            onKeyDown={(event) => handleKeyDown(event, index)}
-            className={cn(
-              "relative inline-flex w-full shrink-0 items-center justify-center gap-1.5 rounded-full px-3.5 py-1.5 whitespace-nowrap transition-colors sm:w-auto",
-              selected ? "font-medium text-ink" : "text-grey hover:text-ink",
-            )}
-          >
-            {selected && (
-              <motion.span
-                layoutId="scenario-pill"
-                className="absolute inset-0 rounded-full border border-line bg-white shadow-sm"
-                transition={{ type: "spring", stiffness: 500, damping: 40 }}
-              />
-            )}
-            <Icon className={cn("relative size-3.5", selected && "text-sage")} strokeWidth={1.6} />
-            <span className="relative">{SCENARIO_LABEL[id]}</span>
-          </button>
-        );
-      })}
+    <div className="w-full overflow-x-auto [scrollbar-width:none] sm:w-auto [&::-webkit-scrollbar]:hidden">
+      <div
+        role="tablist"
+        aria-label={t("scenarioTabs.ariaLabel")}
+        aria-orientation="horizontal"
+        className="inline-flex w-max flex-row items-center gap-0.5 rounded-full bg-alt p-1 text-[13px]"
+      >
+        {SCENARIO_IDS.map((id, index) => {
+          const selected = value === id;
+          const Icon = SCENARIO_ICON[id];
+          return (
+            <button
+              key={id}
+              ref={(node) => {
+                tabRefs.current[id] = node;
+              }}
+              type="button"
+              role="tab"
+              aria-selected={selected}
+              tabIndex={selected ? 0 : -1}
+              onClick={() => select(id)}
+              onKeyDown={(event) => handleKeyDown(event, index)}
+              className={cn(
+                "relative inline-flex shrink-0 items-center justify-center gap-1.5 rounded-full px-3.5 py-1.5 whitespace-nowrap transition-colors",
+                selected ? "font-medium text-ink" : "text-grey hover:text-ink",
+              )}
+            >
+              {selected && (
+                <motion.span
+                  layoutId="scenario-pill"
+                  className="absolute inset-0 rounded-full border border-line bg-white shadow-sm"
+                  transition={{ type: "spring", stiffness: 500, damping: 40 }}
+                />
+              )}
+              <Icon className={cn("relative size-3.5", selected && "text-sage")} strokeWidth={1.6} />
+              <span className="relative">{t(SCENARIO_LABEL[id])}</span>
+            </button>
+          );
+        })}
+      </div>
     </div>
   );
 }

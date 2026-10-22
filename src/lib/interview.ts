@@ -3,6 +3,7 @@
 // "slot filling" is scripted, matching docs/design/wireframes/user-flow.md.
 import { MAX_INTERVIEW_TURNS } from "@/types/contracts";
 import type { AiUsage, EmploymentStatus, ImpactInterest } from "@/types/contracts";
+import type { MessageKey } from "@/lib/i18n-messages";
 
 /** True once `turnsAnswered` has reached the hard cap (section 03 / contracts). */
 export function isInterviewDone(turnsAnswered: number): boolean {
@@ -16,73 +17,84 @@ export function clampTurn(turn: number): number {
 
 export const HOURS_PER_WEEK_CHIPS = [4, 6, 10, 15] as const;
 
-export const BUDGET_CHIPS = [
-  { label: "Free only", value: 0 },
-  { label: "Up to RM200", value: 200 },
-  { label: "Up to RM500", value: 500 },
-  { label: "No limit", value: 2000 },
-] as const;
-
-/** Quick-reply percentages for a task's time share, as fractions of the week. */
-export const TASK_SHARE_CHIPS = [
-  { label: "~10%", value: 0.1 },
-  { label: "~25%", value: 0.25 },
-  { label: "~40%", value: 0.4 },
-  { label: "50%+", value: 0.5 },
-] as const;
-
-export const AI_USAGE_CHIPS: ReadonlyArray<{ value: AiUsage; label: string }> = [
-  { value: "none", label: "Never used it" },
-  { value: "tried", label: "Tried it a few times" },
-  { value: "occasional", label: "Use it sometimes" },
-  { value: "regular", label: "Use it weekly" },
+export const BUDGET_CHIPS: ReadonlyArray<{ labelKey: MessageKey; value: number }> = [
+  { labelKey: "interview.budgetFreeOnly", value: 0 },
+  { labelKey: "interview.budgetUpTo200", value: 200 },
+  { labelKey: "interview.budgetUpTo500", value: 500 },
+  { labelKey: "interview.budgetNoLimit", value: 2000 },
 ];
 
-export const EMPLOYMENT_STATUS_CHIPS: ReadonlyArray<{ value: EmploymentStatus; label: string }> = [
-  { value: "employed", label: "Employed" },
-  { value: "underemployed", label: "Underemployed (fewer hours/pay than I want)" },
-  { value: "unemployed", label: "Unemployed" },
-  { value: "student", label: "Student" },
-  { value: "self_employed", label: "Self-employed" },
+/** Three-level choices for how much time a non-main task takes. */
+export const TASK_WEIGHT_LEVELS: ReadonlyArray<{ value: string; labelKey: MessageKey; weight: number }> = [
+  { value: "lot", labelKey: "interview.weightLot", weight: 0.6 },
+  { value: "some", labelKey: "interview.weightSome", weight: 0.35 },
+  { value: "little", labelKey: "interview.weightLittle", weight: 0.15 },
 ];
 
-export const PERKESO_CHIPS: ReadonlyArray<{ label: string; value: boolean | undefined }> = [
-  { label: "Yes", value: true },
-  { label: "No", value: false },
-  { label: "Not sure", value: undefined },
+/** Multi-select tools that can be picked in turn 3. */
+export const TOOL_CHIPS: ReadonlyArray<{ value: string; labelKey: MessageKey }> = [
+  { value: "Microsoft Office", labelKey: "interview.toolMicrosoftOffice" },
+  { value: "Google Workspace", labelKey: "interview.toolGoogleWorkspace" },
+  { value: "Excel/Sheets", labelKey: "interview.toolExcelSheets" },
+  { value: "Canva", labelKey: "interview.toolCanva" },
+  { value: "ChatGPT/Claude/Gemini", labelKey: "interview.toolChatGpt" },
+  { value: "Zoom/Teams", labelKey: "interview.toolZoomTeams" },
+  { value: "Accounting software", labelKey: "interview.toolAccounting" },
+  { value: "Other", labelKey: "interview.toolOther" },
 ];
 
-export const IMPACT_INTEREST_CHIPS: ReadonlyArray<{ value: ImpactInterest; label: string }> = [
-  { value: "environment", label: "Environment" },
-  { value: "education", label: "Education" },
-  { value: "health", label: "Health" },
-  { value: "community", label: "Community" },
-  { value: "none", label: "No particular cause" },
+export const AI_USAGE_CHIPS: ReadonlyArray<{ value: AiUsage; labelKey: MessageKey }> = [
+  { value: "none", labelKey: "interview.aiUsageNone" },
+  { value: "tried", labelKey: "interview.aiUsageTried" },
+  { value: "occasional", labelKey: "interview.aiUsageOccasional" },
+  { value: "regular", labelKey: "interview.aiUsageRegular" },
 ];
 
-export type InterviewQuestionCopy = { title: string; subtitle?: string; why: string };
+export const EMPLOYMENT_STATUS_CHIPS: ReadonlyArray<{ value: EmploymentStatus; labelKey: MessageKey }> = [
+  { value: "employed", labelKey: "interview.employmentEmployed" },
+  { value: "underemployed", labelKey: "interview.employmentUnderemployed" },
+  { value: "unemployed", labelKey: "interview.employmentUnemployed" },
+  { value: "student", labelKey: "interview.employmentStudent" },
+  { value: "self_employed", labelKey: "interview.employmentSelfEmployed" },
+];
+
+export const PERKESO_CHIPS: ReadonlyArray<{ labelKey: MessageKey; value: boolean | undefined }> = [
+  { labelKey: "interview.perkesoYes", value: true },
+  { labelKey: "interview.perkesoNo", value: false },
+  { labelKey: "interview.perkesoNotSure", value: undefined },
+];
+
+export const IMPACT_INTEREST_CHIPS: ReadonlyArray<{ value: ImpactInterest; labelKey: MessageKey }> = [
+  { value: "environment", labelKey: "interview.impactEnvironment" },
+  { value: "education", labelKey: "interview.impactEducation" },
+  { value: "health", labelKey: "interview.impactHealth" },
+  { value: "community", labelKey: "interview.impactCommunity" },
+  { value: "none", labelKey: "interview.impactNone" },
+];
+
+export type InterviewQuestionCopy = { titleKey: MessageKey; subtitleKey?: MessageKey; whyKey: MessageKey };
 
 export const INTERVIEW_QUESTIONS: Readonly<Record<number, InterviewQuestionCopy>> = {
   1: {
-    title: "How many hours a week can you spend learning, and what can you spend on courses?",
-    why: "Sets the pace and budget for your pathway plan.",
+    titleKey: "interview.q1.title",
+    whyKey: "interview.q1.why",
   },
   2: {
-    title: "Roughly how much of your week goes to each task?",
-    subtitle: "I found these tasks in your CV. A rough guess is fine.",
-    why: "The time you spend on each task weights your AI exposure and augmentation scores.",
+    titleKey: "interview.q2.title",
+    subtitleKey: "interview.q2.subtitle",
+    whyKey: "interview.q2.why",
   },
   3: {
-    title: "Which tools do you use, and how much have you used AI tools like ChatGPT?",
-    why: "Shows your starting point so the plan doesn't repeat what you already know.",
+    titleKey: "interview.q3.title",
+    whyKey: "interview.q3.why",
   },
   4: {
-    title: "What's your current work status, and are you registered with PERKESO?",
-    why: "Some free government programmes are only open to certain groups.",
+    titleKey: "interview.q4.title",
+    whyKey: "interview.q4.why",
   },
   5: {
-    title: "Is there a cause you'd like your next role to support?",
-    why: "Links your pathway to the UN Sustainable Development Goals it can advance.",
+    titleKey: "interview.q5.title",
+    whyKey: "interview.q5.why",
   },
 };
 
@@ -100,4 +112,17 @@ export function normalizeTaskShares(shares: readonly number[]): number[] {
   const total = shares.reduce((sum, value) => sum + value, 0);
   if (total <= 0) return splitTaskSharesEvenly(shares.length);
   return shares.map((value) => value / total);
+}
+
+/**
+ * Task shares from a main task plus a weight level for each other task.
+ * The main task weighs 1.0; others use their level weight, then normalise.
+ */
+export function taskSharesFromLevels(mainIndex: number, levels: string[]): number[] {
+  const shares = levels.map((level, index) => {
+    if (index === mainIndex) return 1;
+    const match = TASK_WEIGHT_LEVELS.find((entry) => entry.value === level);
+    return match?.weight ?? 0.35;
+  });
+  return normalizeTaskShares(shares);
 }

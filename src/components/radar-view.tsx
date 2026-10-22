@@ -14,23 +14,32 @@ import { InfoPopover } from "@/components/ui/info-popover";
 import type { SignalDate } from "@/lib/analyze";
 import type { CatalogueKeyword } from "@/lib/catalogue";
 import { formatDayMonthYear, formatShortDate } from "@/lib/display";
+import { useT } from "@/lib/i18n";
 import { percentChange, type Radar, type RadarRole, type RadarSkill } from "@/lib/radar";
 import { cn } from "@/lib/utils";
 import type { IsoDate } from "@/types/contracts";
 
 /** One arXiv keyword as a tag that re-runs its count on arXiv. */
 function KeywordTag({ keyword }: { keyword: CatalogueKeyword }) {
+  const { t } = useT();
   return (
     <a
       href={keyword.url}
       target="_blank"
       rel="noreferrer"
-      title={`${keyword.recent} papers in the last 90 days vs ${keyword.previous} before. Opens the arXiv query.`}
+      title={t("radar.keywordTitle", {
+        recent: String(keyword.recent),
+        previous: String(keyword.previous),
+      })}
       className="tag transition-colors hover:text-ink"
     >
       {keyword.keyword}
       <span className="text-grey/80 tabular-nums">
-        {keyword.recent} vs {keyword.previous} · {percentChange(keyword)}
+        {t("radar.keywordDelta", {
+          recent: String(keyword.recent),
+          previous: String(keyword.previous),
+          change: percentChange(keyword),
+        })}
       </span>
     </a>
   );
@@ -96,6 +105,7 @@ function SkillColumn({
 }
 
 function RoleRows({ roles, empty }: { roles: RadarRole[]; empty: string }) {
+  const { t } = useT();
   if (roles.length === 0) return <p className="mt-3 text-[14px] text-grey">{empty}</p>;
   return (
     <ul className="mt-2 divide-y divide-line">
@@ -104,7 +114,10 @@ function RoleRows({ roles, empty }: { roles: RadarRole[]; empty: string }) {
           <span className="font-medium">{role.title}</span>
           <span className="flex items-center gap-2">
             <span className="tag" title={role.signalSkills.map((skill) => skill.label).join(", ")}>
-              {role.signalSkills.length} of {role.essentialSkills} skills
+              {t("radar.skillsCount", {
+                count: String(role.signalSkills.length),
+                total: String(role.essentialSkills),
+              })}
             </span>
             <span className="w-12 text-right text-[13px] text-grey tabular-nums">
               {role.momentum > 0 ? "+" : "−"}
@@ -129,11 +142,12 @@ export function RadarView({
   totalRoles: number;
 }) {
   const reduce = useReducedMotion();
+  const { t } = useT();
   const [signalDate, setSignalDate] = useState<SignalDate>("today");
   const radar = signalDate === "prior" && prior ? prior : today;
 
   return (
-    <div className="pb-32 sm:pb-20">
+    <div className="pb-16 sm:pb-20">
       <div className="mx-auto max-w-[1248px] px-4 sm:px-6">
         <motion.section
           initial={reduce ? false : { opacity: 0, y: 14 }}
@@ -142,19 +156,15 @@ export function RadarView({
           className="flex flex-col gap-5 pt-10 pb-8 md:flex-row md:items-end md:justify-between"
         >
           <div>
-            <p className="text-[13px] text-grey">Future Skills Radar</p>
+            <p className="text-[13px] text-grey">{t("radar.eyebrow")}</p>
             <h1 className="mt-1 font-serif text-[34px] leading-[1.05] font-medium tracking-tight md:text-[44px]">
-              Which skills are moving
+              {t("radar.heading")}
             </h1>
             <div className="mt-2 flex items-center gap-1 text-[15px] text-grey">
               {radar
-                ? `arXiv papers, last 90 days vs the 90 before. Checked ${formatDayMonthYear(radar.asOf)}.`
-                : "No trend data yet."}
-              <InfoPopover label="How the radar is measured">
-                Momentum = ln((papers in the last 90 days + 1) / (papers in the 90 days before + 1)), averaged over the
-                arXiv keywords mapped to each ESCO skill. Within ±10% counts as steady. A research signal, not a job
-                forecast.
-              </InfoPopover>
+                ? t("radar.summary", { date: formatDayMonthYear(radar.asOf, t) })
+                : t("radar.noTrendData")}
+              <InfoPopover label={t("radar.howMeasuredLabel")}>{t("radar.howMeasuredBody")}</InfoPopover>
             </div>
           </div>
           <SignalDateToggle
@@ -173,13 +183,23 @@ export function RadarView({
             transition={{ duration: 0.45, ease: EASE_OUT }}
           >
             <section className="grid grid-cols-1 gap-10 border-t border-line pt-10 lg:grid-cols-2">
-              <SkillColumn title="Rising" tone="up" skills={radar.rising} empty="Nothing rose by more than 10%." />
-              <SkillColumn title="Falling" tone="down" skills={radar.declining} empty="Nothing fell by more than 10%." />
+              <SkillColumn
+                title={t("radar.rising")}
+                tone="up"
+                skills={radar.rising}
+                empty={t("radar.risingEmpty")}
+              />
+              <SkillColumn
+                title={t("radar.falling")}
+                tone="down"
+                skills={radar.declining}
+                empty={t("radar.fallingEmpty")}
+              />
             </section>
 
             {radar.steady.length > 0 && (
               <div className="mt-8 flex flex-wrap items-center gap-1.5">
-                <span className="mr-1 text-[13px] text-grey">Steady</span>
+                <span className="mr-1 text-[13px] text-grey">{t("radar.steady")}</span>
                 {radar.steady.map((skill) => (
                   <span key={skill.skillId} className="tag first-letter:uppercase">
                     {skill.label}
@@ -190,42 +210,59 @@ export function RadarView({
 
             <section className="panel mt-12 p-6 sm:p-8">
               <div className="flex items-center gap-1.5">
-                <h2 className="font-serif text-[28px] font-medium tracking-tight">Roles it touches</h2>
-                <InfoPopover label="How roles are rated">
-                  A role&rsquo;s trend is the average of its ESCO essential skills that have a signal. Our keywords cover
-                  only a few skills, so {radar.rolesWithoutSignal} of {totalRoles} roles have no signal yet and each role
-                  here rests on very few skills. Hints, not ratings.
+                <h2 className="font-serif text-[28px] font-medium tracking-tight">{t("radar.rolesTouches")}</h2>
+                <InfoPopover label={t("radar.howRolesRatedLabel")}>
+                  {t("radar.howRolesRatedBody", {
+                    withoutSignal: String(radar.rolesWithoutSignal),
+                    totalRoles: String(totalRoles),
+                  })}
                 </InfoPopover>
               </div>
               <div className="mt-4 grid grid-cols-1 gap-8 md:grid-cols-2">
                 <div>
-                  <p className="text-[13px] text-grey">Rising</p>
-                  <RoleRows roles={radar.risingRoles} empty="No role is rising in this snapshot." />
+                  <p className="text-[13px] text-grey">{t("radar.rising")}</p>
+                  <RoleRows roles={radar.risingRoles} empty={t("radar.noRisingRole")} />
                 </div>
                 <div>
-                  <p className="text-[13px] text-grey">Falling</p>
-                  <RoleRows roles={radar.decliningRoles} empty="No role is falling in this snapshot." />
+                  <p className="text-[13px] text-grey">{t("radar.falling")}</p>
+                  <RoleRows roles={radar.decliningRoles} empty={t("radar.noFallingRole")} />
                 </div>
               </div>
             </section>
 
             <div className="mt-10 flex flex-col gap-5 border-t border-line pt-6 sm:flex-row sm:items-center sm:justify-between">
               <div className="flex flex-wrap items-center gap-1.5 text-[12px] text-grey">
-                Source: arXiv API · {formatShortDate(radar.window.recent.start)}–
-                {formatDayMonthYear(radar.window.recent.end)}
+                {t("radar.source", {
+                  range: `${formatShortDate(radar.window.recent.start, t)}–${formatDayMonthYear(
+                    radar.window.recent.end,
+                    t,
+                  )}`,
+                })}
                 {radar.tooSmall.length > 0 && (
                   <>
                     <span>·</span>
-                    {radar.tooSmall.length} keyword{radar.tooSmall.length === 1 ? "" : "s"} too small to use
-                    <InfoPopover label="Keywords too small to use" panelClassName="bottom-6 sm:top-auto">
-                      Fewer than 20 papers in both windows, so they are left out:{" "}
-                      {radar.tooSmall.map((keyword) => `${keyword.keyword} (${keyword.recent} vs ${keyword.previous})`).join(", ")}.
+                    {t(
+                      radar.tooSmall.length === 1 ? "radar.tooSmallOne" : "radar.tooSmallOther",
+                      { count: String(radar.tooSmall.length) },
+                    )}
+                    <InfoPopover label={t("radar.tooSmallLabel")} panelClassName="bottom-6 sm:top-auto">
+                      {t("radar.tooSmallBody", {
+                        list: radar.tooSmall
+                          .map((keyword) =>
+                            t("radar.tooSmallItem", {
+                              keyword: keyword.keyword,
+                              recent: String(keyword.recent),
+                              previous: String(keyword.previous),
+                            }),
+                          )
+                          .join(", "),
+                      })}
                     </InfoPopover>
                   </>
                 )}
               </div>
               <Link href="/" className="btn-primary self-start sm:self-auto">
-                Match your own skills
+                {t("radar.matchYourSkills")}
                 <ArrowRight className="size-4" strokeWidth={1.6} />
               </Link>
             </div>

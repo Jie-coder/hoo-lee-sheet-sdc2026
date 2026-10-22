@@ -4,27 +4,18 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import { Check } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { EASE_OUT } from "@/components/motion";
+import { SITE_LOCALES, useT } from "@/lib/i18n";
 
 const STEPS = [
-  { id: "profile", label: "Profile" },
-  { id: "interview", label: "Interview" },
-  { id: "results", label: "Results" },
-  { id: "pathway", label: "Pathway" },
+  { id: "profile" },
+  { id: "interview" },
+  { id: "results" },
+  { id: "pathway" },
 ] as const;
-
-/** Course language for later pathway filtering. The interface stays English. */
-const COURSE_LANGUAGES = [
-  { id: "en", label: "EN" },
-  { id: "ms", label: "BM" },
-  { id: "zh", label: "中文" },
-] as const;
-
-type CourseLanguageId = (typeof COURSE_LANGUAGES)[number]["id"];
 
 function currentStepIndex(pathname: string): number {
   return STEPS.findIndex((step) => pathname.startsWith(`/${step.id}`));
@@ -33,23 +24,23 @@ function currentStepIndex(pathname: string): number {
 export function SiteHeader() {
   const pathname = usePathname();
   const reduce = useReducedMotion();
+  const { locale, setLocale, t } = useT();
   const currentIndex = currentStepIndex(pathname);
-  const [courseLanguage, setCourseLanguage] = useState<CourseLanguageId>("ms");
   const onFlow = currentIndex >= 0;
   // The sage line reaches the centre of the current station.
   const fill = onFlow ? currentIndex / (STEPS.length - 1) : 0;
 
   return (
-    <header className="sticky top-0 z-40 border-b border-line/80 bg-paper/90 backdrop-blur-md">
+    <header className="sticky top-0 z-50 border-b border-line/80 bg-paper/90 backdrop-blur-md">
       <div className="mx-auto flex h-16 max-w-[1248px] items-center justify-between gap-4 px-4 sm:px-6">
-        <Link href="/" className="shrink-0" aria-label="Laluan home">
+        <Link href="/" className="shrink-0" aria-label={t("header.homeAria")}>
           {/* Official wordmark. next/image refuses SVG without extra config. */}
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/brand/laluan-logo.svg" alt="Laluan" className="h-7 w-auto" />
+          <img src="/brand/laluan-logo.svg" alt={t("header.logoAlt")} className="h-7 w-auto" />
         </Link>
 
         {onFlow && (
-          <nav aria-label="Progress" className="hidden min-w-0 flex-1 justify-center md:flex">
+          <nav aria-label={t("header.progressAria")} className="hidden min-w-0 flex-1 justify-center md:flex">
             <ol className="relative grid w-full max-w-[420px] grid-cols-4">
               {/* guide + fill, drawn between the first and last station centres */}
               <span aria-hidden className="absolute top-[7px] right-[12.5%] left-[12.5%] h-px bg-line" />
@@ -84,7 +75,7 @@ export function SiteHeader() {
                       {complete && <Check className="size-2.5" strokeWidth={3} />}
                     </motion.span>
                     <span className={cn("text-[11px] tracking-wide", current ? "font-medium text-ink" : "text-grey")}>
-                      {step.label}
+                      {t(`nav.${step.id}`)}
                     </span>
                   </li>
                 );
@@ -96,28 +87,27 @@ export function SiteHeader() {
         <div className="flex items-center gap-3">
           {onFlow && (
             <span className="text-[12px] text-grey md:hidden">
-              {currentIndex + 1}/{STEPS.length} {STEPS[currentIndex].label}
+              {currentIndex + 1}/{STEPS.length} {t(`nav.${STEPS[currentIndex].id}`)}
             </span>
           )}
           <div
             role="group"
-            aria-label="Course language"
-            title="Language of the courses in your pathway"
+            aria-label={t("lang.label")}
             className="relative flex items-center rounded-full border border-line bg-white p-0.5 text-[12px]"
           >
-            {COURSE_LANGUAGES.map((language) => {
-              const selected = courseLanguage === language.id;
+            {SITE_LOCALES.map((language) => {
+              const selected = locale === language.id;
               return (
                 <button
                   key={language.id}
                   type="button"
                   aria-pressed={selected}
-                  onClick={() => setCourseLanguage(language.id)}
+                  onClick={() => setLocale(language.id)}
                   className={cn("relative z-10 rounded-full px-2.5 py-1 transition-colors", selected ? "text-paper" : "text-grey hover:text-ink")}
                 >
                   {selected && (
                     <motion.span
-                      layoutId="course-language-pill"
+                      layoutId="site-language-pill"
                       className="absolute inset-0 -z-10 rounded-full bg-ink"
                       transition={{ type: "spring", stiffness: 500, damping: 40 }}
                     />

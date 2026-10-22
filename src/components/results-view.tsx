@@ -13,7 +13,7 @@ import { EstimateFooter } from "@/components/estimate-footer";
 import { EASE_OUT } from "@/components/motion";
 import { RoleCard } from "@/components/role-card";
 import { ScenarioTabs, SCENARIO_ILLUSTRATIVE, SCENARIO_LABEL, SCENARIO_SUMMARY } from "@/components/scenario-tabs";
-import { ScoreCard } from "@/components/score-card";
+import { ExposurePendingCard, ScoreCard } from "@/components/score-card";
 import { sdgFlagId } from "@/components/sdg-badge";
 import { SdgLegend } from "@/components/sdg-legend";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -23,6 +23,7 @@ import type { SignalDate } from "@/lib/analyze";
 import { describeChangeShort, rankChanges } from "@/lib/compare-snapshots";
 import { formatDayMonthYear, formatShortDate } from "@/lib/display";
 import { explainRole } from "@/lib/explain";
+import { useT } from "@/lib/i18n";
 import { rankRoles } from "@/lib/rank-roles";
 import { useRoles } from "@/lib/use-roles";
 import { PERSONAS } from "@/mocks/personas";
@@ -31,6 +32,7 @@ import type { RoleResult, ScenarioId, SdgLink } from "@/types/contracts";
 export function ResultsView() {
   const router = useRouter();
   const reduce = useReducedMotion();
+  const { t } = useT();
   const { hydrated, consent, profile, interviewAnswers, setChosenRoleId } = useFlow();
   const [signalDate, setSignalDate] = useState<SignalDate>("today");
   const { state, retry } = useRoles(profile, interviewAnswers.impact_interest, signalDate);
@@ -56,6 +58,7 @@ export function ResultsView() {
       ? rankChanges(priorRoles.data.roles, todayRoles.data.roles, scenario)
       : null;
   const persona = profile.personaId === "upload" ? null : PERSONAS[profile.personaId];
+  const firstName = profile.name?.trim().split(/\s+/)[0];
   const matchedCount = data?.skillMatches.filter((match) => match.escoLabels.length > 0).length ?? 0;
 
   function handleChoose(role: RoleResult) {
@@ -72,11 +75,11 @@ export function ResultsView() {
       next.add(id);
       return next;
     });
-    toast(`Flagged target ${link.target} for a person to review.`);
+    toast(t("results.flagToast", { target: link.target }));
   }
 
   return (
-    <div className="pb-32 sm:pb-20">
+    <div className="pb-16 sm:pb-20">
       <div className="mx-auto max-w-[1248px] px-4 sm:px-6">
         <motion.section
           initial={reduce ? false : { opacity: 0, y: 14 }}
@@ -84,26 +87,30 @@ export function ResultsView() {
           transition={{ duration: 0.6, ease: EASE_OUT }}
           className="pt-10 pb-8"
         >
-          <p className="text-[13px] text-grey">
-            {[profile.name || "Your profile", persona?.jobTitle, persona?.location].filter(Boolean).join(", ")}
-          </p>
-          <h1 className="mt-1 font-serif text-[34px] leading-[1.05] font-medium tracking-tight md:text-[44px]">
-            Where your skills can take you
+          <h1 className="font-serif text-[34px] leading-[1.05] font-medium tracking-tight md:text-[44px]">
+            {firstName ? t("results.headingNamed", { name: firstName }) : t("results.heading")}
           </h1>
+          {(profile.roles[0]?.title || persona?.jobTitle) && (
+            <p className="mt-2 text-[14px] text-grey">{profile.roles[0]?.title || persona?.jobTitle}</p>
+          )}
           <p className="mt-2 text-[15px] text-grey">
             {data
-              ? `${matchedCount} of ${profile.skills.length} skills matched. Signal checked ${formatDayMonthYear(data.signalsAsOf)}.`
-              : "Matching your skills and ranking roles…"}
+              ? t("results.skillsMatchedLine", {
+                  matched: String(matchedCount),
+                  total: String(profile.skills.length),
+                  date: formatDayMonthYear(data.signalsAsOf, t),
+                })
+              : t("results.matching")}
           </p>
         </motion.section>
 
         {state.status === "error" && (
           <div className="panel p-6 text-[14px]" role="alert">
-            <p className="font-medium">We couldn&rsquo;t rank roles right now.</p>
+            <p className="font-medium">{t("results.rankError")}</p>
             <p className="mt-1 text-grey">{state.message}</p>
             <button type="button" onClick={retry} className="btn-secondary mt-4">
               <RefreshCw className="size-4" strokeWidth={1.6} />
-              Try again
+              {t("results.tryAgain")}
             </button>
           </div>
         )}
@@ -122,22 +129,28 @@ export function ResultsView() {
         {data && (
           <>
             {data.currentWork ? (
-              <ScoreCard currentWork={data.currentWork} />
+              <>
+                <ScoreCard currentWork={data.currentWork} />
+                <p className="mt-3 text-[13px] text-grey">{t("scoreCard.notJobLoss")}</p>
+              </>
             ) : (
-              <p className="border-y border-line py-6 text-[14px] text-grey">
-                Your current job isn&rsquo;t one of the 40 in our list, so its AI exposure isn&rsquo;t shown. The roles
-                below are still ranked from your skills.
-              </p>
+              <ExposurePendingCard />
             )}
 
             <section className="mt-12">
               <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-                <h2 className="font-serif text-[28px] font-medium tracking-tight">{ranked.length} roles you could move into</h2>
+                <h2 className="font-serif text-[28px] font-medium tracking-tight">
+                  {t("results.roleCount", { count: String(ranked.length) })}
+                </h2>
                 <div className="flex items-center gap-2">
                   <ScenarioTabs value={scenario} onChange={setScenario} />
-                  <InfoPopover label={`About the ${SCENARIO_LABEL[scenario]} scenario`} panelClassName="right-0 left-auto">
-                    <span className="font-medium text-ink">{SCENARIO_LABEL[scenario]}:</span> {SCENARIO_SUMMARY[scenario]}{" "}
-                    <span className="text-grey/80">{SCENARIO_ILLUSTRATIVE}</span>
+                  <InfoPopover
+                    label={t("results.aboutScenario", { scenario: t(SCENARIO_LABEL[scenario]) })}
+                    align="end"
+                    side="top"
+                  >
+                    <span className="font-medium text-ink">{t(SCENARIO_LABEL[scenario])}:</span>{" "}
+                    {t(SCENARIO_SUMMARY[scenario])} <span className="text-grey/80">{t(SCENARIO_ILLUSTRATIVE)}</span>
                   </InfoPopover>
                 </div>
               </div>
@@ -147,14 +160,14 @@ export function ResultsView() {
                   <p className="text-[13px] text-grey" aria-live="polite">
                     {changes && changes.length > 0 ? (
                       <>
-                        <span className="text-ink">Since {formatShortDate(data.signalDates.prior)}:</span>{" "}
-                        {changes.slice(0, 3).map(describeChangeShort).join(" · ")}
+                        <span className="text-ink">{t("results.since", { date: formatShortDate(data.signalDates.prior, t) })}</span>{" "}
+                        {changes.slice(0, 3).map((change) => describeChangeShort(change, t)).join(" · ")}
                       </>
                     ) : (
-                      <>Same order as on {formatShortDate(data.signalDates.prior)}. New arXiv counts only nudged the scores.</>
+                      <>{t("results.sameOrder", { date: formatShortDate(data.signalDates.prior, t) })}</>
                     )}{" "}
                     <Link href="/radar" className="whitespace-nowrap text-ink underline decoration-line underline-offset-4 hover:decoration-ink">
-                      Skills radar
+                      {t("results.skillsRadar")}
                     </Link>
                   </p>
                   <SignalDateToggle value={data.signalDate} dates={data.signalDates} onChange={setSignalDate} />
@@ -162,13 +175,13 @@ export function ResultsView() {
               )}
 
               <LayoutGroup>
-                <div className="mt-6 grid grid-cols-1 gap-5 lg:grid-cols-3">
+                <div className="mt-6 grid grid-cols-1 items-start gap-5 lg:grid-cols-3">
                   {ranked.map((role, index) => {
                     const breakdown = data.breakdown[role.occupationId];
                     return (
                       <RoleCard
                         key={role.occupationId}
-                        role={{ ...role, explanation: explainRole(role, breakdown, scenario) }}
+                        role={{ ...role, explanation: explainRole(role, breakdown, scenario, t) }}
                         rank={index + 1}
                         total={ranked.length}
                         status={breakdown.status}
@@ -187,13 +200,9 @@ export function ResultsView() {
               <div className="mt-6 flex flex-col gap-3 text-[12px] text-grey sm:flex-row sm:items-center sm:justify-between">
                 <SdgLegend />
                 <div className="flex items-center gap-1">
-                  How these numbers are made
-                  <InfoPopover label="How these numbers are made" panelClassName="right-0 bottom-6 left-auto sm:top-auto">
-                    Skills come from ESCO v1.2.1, AI exposure from the ILO GenAI exposure study (2025), and the trend
-                    signal from arXiv paper counts. Demand combines Malaysian employment growth (DOSM, 2024 to 2025) with
-                    employers&rsquo; 2025-2030 outlook by job (WEF Future of Jobs Report 2025); the three futures follow WEF&rsquo;s
-                    Four Futures for Jobs (2026). They are scenarios, not forecasts. SDG targets are drafted by the Laluan team and still under review. These are
-                    estimates to support your decision, not predictions.
+                  {t("results.howNumbers")}
+                  <InfoPopover label={t("results.howNumbers")} align="end" side="top">
+                    {t("results.howNumbersBody")}
                   </InfoPopover>
                 </div>
               </div>

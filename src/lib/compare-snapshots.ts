@@ -1,6 +1,7 @@
 // What changed between two rankings of the same profile, ranked with arXiv
 // snapshots ~30 days apart. Used for the "what changed" line on /results,
 // so a viewer can see the output move when the trend data moves.
+import { translate, type MessageKey } from "@/lib/i18n-messages";
 import { rankRoles } from "@/lib/rank-roles";
 import type { RoleResult, ScenarioId } from "@/types/contracts";
 
@@ -36,16 +37,27 @@ export function rankChanges(
   return changes.sort((x, y) => size(y) - size(x) || x.title.localeCompare(y.title));
 }
 
+type Translate = (key: MessageKey, vars?: Record<string, string>) => string;
+const defaultT: Translate = (key, vars) => translate("en", key, vars);
+
 /** "Data analyst #3 → #2" / "Energy assessor: new in the list" / "Cashier: drops out of the list". */
-export function describeChange(change: RankChange): string {
-  if (change.before == null) return `${change.title}: new in the list at #${change.after}`;
-  if (change.after == null) return `${change.title}: drops out of the list (was #${change.before})`;
-  return `${change.title} #${change.before} → #${change.after}`;
+export function describeChange(change: RankChange, t: Translate = defaultT): string {
+  if (change.before == null) return t("compare.newInList", { title: change.title, rank: String(change.after) });
+  if (change.after == null) return t("compare.dropsOut", { title: change.title, rank: String(change.before) });
+  return t("compare.move", {
+    title: change.title,
+    before: String(change.before),
+    after: String(change.after),
+  });
 }
 
 /** Short form for one-line summaries: "Software developer new at #6", "BI manager out", "Energy assessor #6 → #5". */
-export function describeChangeShort(change: RankChange): string {
-  if (change.before == null) return `${change.title} new at #${change.after}`;
-  if (change.after == null) return `${change.title} out`;
-  return `${change.title} #${change.before} → #${change.after}`;
+export function describeChangeShort(change: RankChange, t: Translate = defaultT): string {
+  if (change.before == null) return t("results.changeNewShort", { title: change.title, rank: String(change.after) });
+  if (change.after == null) return t("results.changeOut", { title: change.title });
+  return t("results.changeMove", {
+    title: change.title,
+    before: String(change.before),
+    after: String(change.after),
+  });
 }

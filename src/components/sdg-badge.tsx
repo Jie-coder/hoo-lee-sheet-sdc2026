@@ -2,6 +2,7 @@
 "use client";
 
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import { useT } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 import type { SdgLink } from "@/types/contracts";
 
@@ -34,6 +35,7 @@ export function SdgBadge({
   flagged?: boolean;
   onFlag?: (link: SdgLink) => void;
 }) {
+  const { t } = useT();
   if (plain) {
     return (
       <span className={cn("inline-flex items-center rounded-md px-2 py-0.5 text-[12px] whitespace-nowrap", TIER_CLASS[link.tier])}>
@@ -45,9 +47,9 @@ export function SdgBadge({
   const name = compact ? link.target : `${link.target} ${label}`.trim();
   const text =
     link.tier === "supporting"
-      ? `${name} · supporting`
+      ? t("sdgBadge.supporting", { name })
       : link.tier === "inferred"
-        ? `${name} · AI-suggested`
+        ? t("sdgBadge.inferred", { name })
         : name;
 
   return (
@@ -59,10 +61,10 @@ export function SdgBadge({
         <>
           <Tooltip>
             <TooltipTrigger
-              aria-label={`Why target ${link.target} was suggested`}
+              aria-label={t("sdgBadge.whyAria", { target: link.target })}
               className="text-[11px] text-sage-dark underline decoration-dotted underline-offset-2"
             >
-              why
+              {t("sdgBadge.why")}
             </TooltipTrigger>
             <TooltipContent className="max-w-[260px] text-left leading-relaxed">
               {link.reason}
@@ -74,7 +76,7 @@ export function SdgBadge({
             disabled={flagged || !onFlag}
             className="text-[11px] text-grey underline-offset-2 hover:underline disabled:no-underline"
           >
-            {flagged ? "Flagged" : "Flag this"}
+            {flagged ? t("sdgBadge.flagged") : t("sdgBadge.flagThis")}
           </button>
         </>
       )}

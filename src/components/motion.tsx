@@ -26,7 +26,7 @@ export function Reveal({
     <motion.div
       initial={reduce ? false : { opacity: 0, y: 18 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, amount: 0.2 }}
+      viewport={{ once: true, amount: 0, margin: "0px 0px 100% 0px" }}
       transition={{ duration: 0.65, delay, ease: EASE_OUT }}
       className={className}
     >
@@ -52,7 +52,7 @@ export function Stagger({
     <motion.div
       initial={reduce ? false : "hidden"}
       whileInView="show"
-      viewport={{ once: true, amount: 0.15 }}
+      viewport={{ once: true, amount: 0, margin: "0px 0px 100% 0px" }}
       variants={{ hidden: {}, show: { transition: { staggerChildren: gap, delayChildren: delay } } }}
       className={className}
     >
@@ -153,7 +153,7 @@ export function RouteLine({
         initial={reduce ? { pathLength: target } : { pathLength: 0 }}
         {...(controlled
           ? { animate: { pathLength: target } }
-          : { whileInView: { pathLength: target }, viewport: { once: true, amount: 0.3 } })}
+          : { whileInView: { pathLength: target }, viewport: { once: true, amount: 0 } })}
         transition={{ duration: reduce ? 0 : duration, delay: reduce ? 0 : delay, ease: EASE_OUT }}
       />
       {children}
@@ -186,7 +186,7 @@ export function RouteDot({
       strokeWidth={2}
       initial={reduce ? false : { scale: 0, opacity: 0 }}
       whileInView={{ scale: 1, opacity: 1 }}
-      viewport={{ once: true }}
+      viewport={{ once: true, amount: 0 }}
       transition={{ ...SPRING, delay }}
       style={{ transformOrigin: `${cx}px ${cy}px` }}
     />

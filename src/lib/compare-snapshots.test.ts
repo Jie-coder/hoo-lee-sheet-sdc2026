@@ -15,7 +15,7 @@ describe("rankChanges", () => {
     const before = [role("a", 0.9), role("b", 0.8), role("c", 0.7)];
     const after = [role("b", 0.95), role("a", 0.9), role("d", 0.6)];
     const changes = rankChanges(before, after, "co");
-    expect(changes.map(describeChange)).toEqual([
+    expect(changes.map((change) => describeChange(change))).toEqual([
       "C: drops out of the list (was #3)",
       "D: new in the list at #3",
       "A #1 → #2",

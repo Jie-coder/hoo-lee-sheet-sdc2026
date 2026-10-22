@@ -2,6 +2,7 @@
 "use client";
 
 import { RefreshCw } from "lucide-react";
+import { useT } from "@/lib/i18n";
 
 export function RefreshButton({
   loading,
@@ -10,6 +11,7 @@ export function RefreshButton({
   loading: boolean;
   onRefresh: () => void;
 }) {
+  const { t } = useT();
   return (
     <button
       type="button"
@@ -18,7 +20,7 @@ export function RefreshButton({
       className="inline-flex items-center gap-1.5 rounded-lg border border-line bg-btn2 px-3 py-1.5 text-[13px] font-medium whitespace-nowrap disabled:opacity-60"
     >
       <RefreshCw className={loading ? "size-3.5 animate-spin" : "size-3.5"} strokeWidth={1.6} />
-      Refresh
+      {t("refreshButton.label")}
     </button>
   );
 }

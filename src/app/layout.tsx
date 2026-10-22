@@ -1,10 +1,12 @@
 // Root layout: Laluan fonts, paper theme, app header, and toasts.
 import type { Metadata } from "next";
 import { Geist_Mono, Inter, Newsreader, Noto_Sans_SC } from "next/font/google";
+import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { FlowProvider } from "@/context/flow-context";
+import { LocaleProvider } from "@/lib/i18n";
 import "./globals.css";
 
 const inter = Inter({
@@ -61,11 +63,14 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     >
       <body className="flex min-h-full flex-col">
         <FlowProvider>
-          <TooltipProvider>
-            <SiteHeader />
-            <main className="flex flex-1 flex-col">{children}</main>
-            <Toaster />
-          </TooltipProvider>
+          <LocaleProvider>
+            <TooltipProvider>
+              <SiteHeader />
+              <main className="flex flex-1 flex-col">{children}</main>
+              <SiteFooter />
+              <Toaster />
+            </TooltipProvider>
+          </LocaleProvider>
         </FlowProvider>
       </body>
     </html>

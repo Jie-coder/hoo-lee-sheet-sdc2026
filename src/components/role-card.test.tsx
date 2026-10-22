@@ -3,6 +3,7 @@ import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
 import { analyzeProfile } from "@/lib/analyze";
 import { CATALOGUE } from "@/lib/catalogue";
+import { formatMonthlyRm, salaryForRole } from "@/lib/salary";
 import { RoleCard } from "./role-card";
 
 // Real pipeline: a profile with five of a nurse's essential skills ranks
@@ -16,10 +17,10 @@ const result = analyzeProfile(CATALOGUE, {
 const role = { ...result.roles.find((item) => item.occupationId === "o025")!, explanation: "Why this role, in one line." };
 const breakdown = result.breakdown[role.occupationId];
 
-function renderCard() {
+function renderCard(roleOverrides: Partial<typeof role> = {}) {
   return render(
     <RoleCard
-      role={role}
+      role={{ ...role, ...roleOverrides }}
       rank={1}
       total={3}
       status={breakdown.status}
@@ -72,7 +73,7 @@ describe("RoleCard", () => {
     }
   });
 
-  it("expanding the skills '+N more' disclosure reveals the remaining gap skills", async () => {
+  it("toggles the skills '+N more' / 'Show less' button, revealing the remaining gap skills", async () => {
     const user = userEvent.setup();
     renderCard();
 
@@ -81,9 +82,59 @@ describe("RoleCard", () => {
 
     await user.click(moreButton);
 
-    expect(moreButton).toHaveAttribute("aria-expanded", "true");
+    const lessButton = screen.getByRole("button", { name: "Show less" });
+    expect(lessButton).toHaveAttribute("aria-expanded", "true");
     expect(screen.getByText(role.gap[3].label)).toBeInTheDocument();
     expect(screen.getByText(role.gap[4].label)).toBeInTheDocument();
+
+    await user.click(lessButton);
+
+    expect(screen.getByRole("button", { name: "+2 more" })).toHaveAttribute("aria-expanded", "false");
+    expect(screen.queryByText(role.gap[3].label)).not.toBeInTheDocument();
+    expect(screen.queryByText(role.gap[4].label)).not.toBeInTheDocument();
+  });
+
+  it("toggles the extra SDG tags inline via '+N' / 'Show less'", async () => {
+    const user = userEvent.setup();
+    renderCard();
+
+    const extraSdgButton = screen.getByRole("button", { name: `+${role.sdg.length - 1}` });
+    expect(extraSdgButton).toHaveAttribute("aria-expanded", "false");
+
+    await user.click(extraSdgButton);
+
+    const lessButton = screen.getByRole("button", { name: "Show less" });
+    expect(lessButton).toHaveAttribute("aria-expanded", "true");
+    for (const link of role.sdg.slice(1)) {
+      expect(screen.getByText(`${link.target} ${result.targetLabels[link.target] ?? link.target}`)).toBeInTheDocument();
+    }
+
+    await user.click(lessButton);
+
+    expect(screen.getByRole("button", { name: `+${role.sdg.length - 1}` })).toHaveAttribute("aria-expanded", "false");
+  });
+
+  it("shows salary data for every occupation that has it", () => {
+    for (const occupation of CATALOGUE.occupations) {
+      const salary = salaryForRole(occupation.id);
+      if (!salary) continue;
+
+      const { unmount } = renderCard({ occupationId: occupation.id, title: occupation.title });
+
+      expect(screen.getByText(formatMonthlyRm(salary.avgMonthlyRm))).toBeInTheDocument();
+      expect(
+        screen.getByText(`MASCO ${salary.mascoMajor} ${salary.mascoMajorName} · DOSM ${salary.year}`),
+      ).toBeInTheDocument();
+
+      unmount();
+    }
+  });
+
+  it("shows a fallback when salary data is not available", () => {
+    renderCard({ occupationId: "unknown-occupation" });
+
+    expect(screen.getByText("Salary data not available")).toBeInTheDocument();
+    expect(screen.queryByText(/MASCO/)).not.toBeInTheDocument();
   });
 
   it("merges the card's sources into one 'n sources' control", async () => {

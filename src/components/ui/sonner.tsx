@@ -1,16 +1,24 @@
 "use client"
 
 // Toaster: theme-aware toast notification container built on sonner (shadcn/ui).
+import { useEffect } from "react"
+import { usePathname } from "next/navigation"
 import { useTheme } from "next-themes"
-import { Toaster as Sonner, type ToasterProps } from "sonner"
+import { Toaster as Sonner, toast, type ToasterProps } from "sonner"
 import { CircleCheckIcon, InfoIcon, TriangleAlertIcon, OctagonXIcon, Loader2Icon } from "lucide-react"
 
 const Toaster = ({ ...props }: ToasterProps) => {
   const { theme = "system" } = useTheme()
+  const pathname = usePathname()
+
+  useEffect(() => {
+    toast.dismiss()
+  }, [pathname])
 
   return (
     <Sonner
       theme={theme as ToasterProps["theme"]}
+      duration={3000}
       className="toaster group"
       icons={{
         success: (

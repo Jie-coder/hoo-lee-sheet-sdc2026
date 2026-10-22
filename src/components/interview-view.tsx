@@ -16,24 +16,26 @@ import {
   IMPACT_INTEREST_CHIPS,
   INTERVIEW_QUESTIONS,
   PERKESO_CHIPS,
-  TASK_SHARE_CHIPS,
+  TASK_WEIGHT_LEVELS,
+  TOOL_CHIPS,
   isInterviewDone,
-  normalizeTaskShares,
-  splitTaskSharesEvenly,
+  taskSharesFromLevels,
 } from "@/lib/interview";
 import { personaKnownSlots } from "@/lib/persona-slots";
+import { useT, type MessageKey } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 import { MAX_INTERVIEW_TURNS, type LanguageCode, type PartialSlots } from "@/types/contracts";
 
-const STUDY_LANGUAGES: ReadonlyArray<{ value: LanguageCode; label: string }> = [
-  { value: "en", label: "EN" },
-  { value: "ms", label: "BM" },
-  { value: "zh", label: "中文" },
+const STUDY_LANGUAGES: ReadonlyArray<{ value: LanguageCode; labelKey: MessageKey }> = [
+  { value: "en", labelKey: "interview.languageEn" },
+  { value: "ms", labelKey: "interview.languageMs" },
+  { value: "zh", labelKey: "interview.languageZh" },
 ];
 
 export function InterviewView() {
   const router = useRouter();
   const reduce = useReducedMotion();
+  const { t } = useT();
   const { hydrated, consent, profile, interviewAnswers, setInterviewAnswers, setCourseLanguages } = useFlow();
 
   const [turn, setTurn] = useState(1);
@@ -43,13 +45,34 @@ export function InterviewView() {
   const [hours, setHours] = useState<number | null>(null);
   const [budget, setBudget] = useState<number | null>(null);
 
+  const cvTasks = useMemo(
+    () => (profile?.roles.flatMap((role) => role.tasks) ?? []).map((task) => task.trim()).filter(Boolean),
+    [profile],
+  );
+  const hasCvTasks = cvTasks.length > 0;
   const tasks = useMemo(() => {
-    const fromCv = profile?.roles.flatMap((role) => role.tasks) ?? [];
-    return fromCv.slice(0, 5).length > 0 ? fromCv.slice(0, 5) : ["Main task", "Secondary task"];
-  }, [profile]);
-  const [taskShares, setTaskShares] = useState<number[]>(() => splitTaskSharesEvenly(tasks.length));
+    // CV tasks first. The live parser does not return per-role tasks yet
+    // (lib/parse-cv.ts), so fall back to the CV's matched ESCO skills, which
+    // are phrased as activities ("plan schedule", "file documents").
+    const fromCv =
+      hasCvTasks ? cvTasks : (profile?.skills.filter((skill) => skill.matched).map((skill) => skill.label) ?? []);
+    const seen = new Set<string>();
+    const unique = fromCv
+      .map((task) => task.trim())
+      .filter((task) => {
+        const key = task.toLowerCase();
+        if (!key || seen.has(key)) return false;
+        seen.add(key);
+        return true;
+      });
+    const capped = unique.slice(0, 5);
+    return capped.length > 0 ? capped : [t("interview.mainTask"), t("interview.secondaryTask")];
+  }, [cvTasks, hasCvTasks, profile, t]);
+  const [mainTaskIndex, setMainTaskIndex] = useState(0);
+  const [taskLevels, setTaskLevels] = useState<string[]>(() => tasks.map(() => "some"));
 
-  const [tools, setTools] = useState("");
+  const [selectedTools, setSelectedTools] = useState<string[]>([]);
+  const [otherTools, setOtherTools] = useState("");
   const [aiUsage, setAiUsage] = useState<PartialSlots["ai_usage"]>(undefined);
   const [employmentStatus, setEmploymentStatus] = useState<PartialSlots["employment_status"]>(undefined);
   const [perkeso, setPerkeso] = useState<boolean | undefined>(undefined);
@@ -69,7 +92,7 @@ export function InterviewView() {
 
   const known = personaKnownSlots(activeProfile.personaId);
   const studyLanguage = activeProfile.courseLanguages[0] ?? "en";
-  const percentTotal = Math.round(taskShares.reduce((sum, value) => sum + value, 0) * 100);
+  const currentTaskLevels = tasks.map((_, index) => taskLevels[index] ?? "some");
 
   function answerForCurrentTurn(): PartialSlots {
     switch (turn) {
@@ -78,15 +101,20 @@ export function InterviewView() {
           ...(hours != null ? { hours_per_week: hours } : {}),
           ...(budget != null ? { budget } : {}),
         };
-      case 2:
+      case 2: {
+        const shares = taskSharesFromLevels(mainTaskIndex, currentTaskLevels);
         return {
-          tasks: tasks.map((text, index) => ({ text, share: normalizeTaskShares(taskShares)[index] })),
+          tasks: tasks.map((text, index) => ({ text, share: shares[index] })),
         };
+      }
       case 3: {
-        const toolList = tools
-          .split(",")
-          .map((item) => item.trim())
-          .filter(Boolean);
+        const otherEntries = selectedTools.includes("Other")
+          ? otherTools
+              .split(",")
+              .map((item) => item.trim())
+              .filter(Boolean)
+          : [];
+        const toolList = [...selectedTools.filter((label) => label !== "Other"), ...otherEntries];
         return {
           ...(toolList.length ? { tools: toolList } : {}),
           ...(aiUsage ? { ai_usage: aiUsage } : {}),
@@ -139,18 +167,28 @@ export function InterviewView() {
   }
 
   // Answers so far, as short chips under the card.
+  const aiUsageChip = AI_USAGE_CHIPS.find((chip) => chip.value === aiUsage);
+  const employmentChip = EMPLOYMENT_STATUS_CHIPS.find((chip) => chip.value === employmentStatus);
+  const impactChip = IMPACT_INTEREST_CHIPS.find((chip) => chip.value === impactInterest);
   const soFar: string[] = [
     activeProfile.roles[0]?.title ?? "",
-    known.ageBand ? `Age ${known.ageBand}` : "",
-    hours != null ? `${hours} h/week` : "",
-    budget != null ? (budget === 0 ? "Free only" : `Up to RM${budget}`) : "",
-    turn > 2 ? `${tasks.length} tasks weighted` : "",
-    aiUsage ? AI_USAGE_CHIPS.find((chip) => chip.value === aiUsage)?.label ?? "" : "",
-    employmentStatus ? EMPLOYMENT_STATUS_CHIPS.find((chip) => chip.value === employmentStatus)?.label.split(" (")[0] ?? "" : "",
-    impactInterest ? IMPACT_INTEREST_CHIPS.find((chip) => chip.value === impactInterest)?.label ?? "" : "",
+    known.ageBand ? t("interview.ageTag", { age: known.ageBand }) : "",
+    hours != null ? t("interview.hoursPerWeekTag", { hours: String(hours) }) : "",
+    budget != null
+      ? budget === 0
+        ? t("interview.budgetFreeOnly")
+        : t("interview.budgetUpTo", { budget: String(budget) })
+      : "",
+    turn > 2 ? t("interview.tasksWeighted", { count: String(tasks.length) }) : "",
+    aiUsageChip ? t(aiUsageChip.labelKey) : "",
+    employmentChip ? t(employmentChip.labelKey).split(" (")[0] : "",
+    impactChip ? t(impactChip.labelKey) : "",
   ].filter(Boolean);
 
   const question = INTERVIEW_QUESTIONS[turn];
+  const usesFallbackTasks = turn === 2 && !hasCvTasks;
+  const questionTitleKey: MessageKey = usesFallbackTasks ? "interview.q2.fallbackTitle" : question.titleKey;
+  const questionSubtitleKey = usesFallbackTasks ? "interview.q2.fallbackSubtitle" : question.subtitleKey;
   const slide = {
     enter: (dir: number) => (reduce ? { opacity: 0 } : { opacity: 0, x: 40 * dir }),
     center: { opacity: 1, x: 0 },
@@ -165,8 +203,7 @@ export function InterviewView() {
         transition={{ duration: 0.6, ease: EASE_OUT }}
         className="pt-10 pb-8"
       >
-        <h1 className="font-serif text-[34px] leading-[1.05] font-medium tracking-tight md:text-[44px]">Five quick questions</h1>
-        <p className="mt-2 text-[15px] text-grey">Only what the CV cannot tell us. Tap to answer.</p>
+        <h1 className="font-serif text-[34px] leading-[1.05] font-medium tracking-tight md:text-[44px]">{t("interview.title")}</h1>
       </motion.section>
 
       {/* Progress: five stations on one line */}
@@ -181,7 +218,7 @@ export function InterviewView() {
           progress={(turn - 1) / (MAX_INTERVIEW_TURNS - 1)}
           className="absolute top-[11px] right-[2px] left-[2px] h-[2px] w-[calc(100%-4px)]"
         />
-        <ol className="absolute inset-x-0 top-0 flex justify-between" aria-label="Progress">
+        <ol className="absolute inset-x-0 top-0 flex justify-between" aria-label={t("interview.progress")}>
           {Array.from({ length: MAX_INTERVIEW_TURNS }, (_, index) => {
             const step = index + 1;
             const done = step < turn;
@@ -220,25 +257,29 @@ export function InterviewView() {
             className="p-6 sm:p-8"
           >
             <p className="text-[12px] text-grey">
-              Question <span className="tabular-nums">{turn}</span> of <span className="tabular-nums">{MAX_INTERVIEW_TURNS}</span>
+              {t("interview.questionCount", { current: String(turn), total: String(MAX_INTERVIEW_TURNS) })}
             </p>
-            <h2 className="mt-2 font-serif text-[24px] leading-snug font-medium text-balance sm:text-[28px]">{question.title}</h2>
-            {question.subtitle && <p className="mt-1.5 text-[14px] text-grey">{question.subtitle}</p>}
+            <h2 className="mt-2 font-serif text-[24px] leading-snug font-medium text-balance sm:text-[28px]">
+              {t(questionTitleKey)}
+            </h2>
+            {questionSubtitleKey && (
+              <p className="mt-1.5 text-[14px] text-grey">{t(questionSubtitleKey)}</p>
+            )}
 
             <div className="mt-6">
               {turn === 1 && (
                 <div className="flex flex-col gap-5">
-                  <ChipRow label="Hours a week">
+                  <ChipRow label={t("interview.hoursLabel")}>
                     {HOURS_PER_WEEK_CHIPS.map((value) => (
                       <Chip key={value} selected={hours === value} onClick={() => setHours(value)}>
-                        {value} h
+                        {t("interview.hoursChip", { hours: String(value) })}
                       </Chip>
                     ))}
                   </ChipRow>
-                  <ChipRow label="Budget for courses">
+                  <ChipRow label={t("interview.budgetLabel")}>
                     {BUDGET_CHIPS.map((chip) => (
-                      <Chip key={chip.label} selected={budget === chip.value} onClick={() => setBudget(chip.value)}>
-                        {chip.label}
+                      <Chip key={chip.labelKey} selected={budget === chip.value} onClick={() => setBudget(chip.value)}>
+                        {t(chip.labelKey)}
                       </Chip>
                     ))}
                   </ChipRow>
@@ -246,68 +287,71 @@ export function InterviewView() {
               )}
 
               {turn === 2 && (
-                <div>
-                  <ul className="divide-y divide-line">
-                    {tasks.map((task, index) => (
-                      <li key={`${task}-${index}`} className="py-3">
-                        <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
-                          <span className="text-[14px]">{task}</span>
-                          <div className="flex items-center gap-1.5 tabular-nums">
-                            {TASK_SHARE_CHIPS.map((chip) => (
+                <ul className="divide-y divide-line">
+                  {tasks.map((task, index) => (
+                    <li key={`${task}-${index}`} className="py-3">
+                      <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
+                        <span className="text-[14px]">{task}</span>
+                        <div className="flex flex-wrap items-center gap-1.5">
+                          <Chip compact selected={mainTaskIndex === index} onClick={() => setMainTaskIndex(index)}>
+                            {t("interview.mainTask")}
+                          </Chip>
+                          {mainTaskIndex !== index &&
+                            TASK_WEIGHT_LEVELS.map((level) => (
                               <Chip
-                                key={chip.label}
+                                key={level.value}
                                 compact
-                                selected={taskShares[index] === chip.value}
+                                selected={currentTaskLevels[index] === level.value}
                                 onClick={() =>
-                                  setTaskShares((current) => current.map((value, i) => (i === index ? chip.value : value)))
+                                  setTaskLevels((current) =>
+                                    tasks.map((_, i) => (i === index ? level.value : current[i] ?? "some")),
+                                  )
                                 }
                               >
-                                {chip.label}
+                                {t(level.labelKey)}
                               </Chip>
                             ))}
-                          </div>
                         </div>
-                        <div className="mt-2 flex items-center gap-3">
-                          <div className="h-1 flex-1 overflow-hidden rounded-full bg-alt">
-                            <motion.div
-                              className="h-1 rounded-full bg-sage"
-                              animate={{ width: `${Math.round((taskShares[index] ?? 0) * 200)}%` }}
-                              transition={SPRING}
-                            />
-                          </div>
-                          <span className="w-10 text-right text-[12px] tabular-nums text-grey">
-                            {Math.round((taskShares[index] ?? 0) * 100)}%
-                          </span>
-                        </div>
-                      </li>
-                    ))}
-                  </ul>
-                  <div className="flex items-center justify-between pt-3 text-[13px]">
-                    <button type="button" onClick={() => setTaskShares(splitTaskSharesEvenly(tasks.length))} className="text-grey underline-offset-4 hover:text-ink hover:underline">
-                      Split evenly
-                    </button>
-                    <span className="text-grey">
-                      Total <span className="font-medium text-ink tabular-nums">{percentTotal}%</span>
-                    </span>
-                  </div>
-                </div>
+                      </div>
+                    </li>
+                  ))}
+                </ul>
               )}
 
               {turn === 3 && (
                 <div className="flex flex-col gap-5">
-                  <label className="block text-[12px] text-grey">
-                    Tools you use, comma separated
-                    <input
-                      value={tools}
-                      onChange={(event) => setTools(event.target.value)}
-                      placeholder="Excel, WhatsApp Business, Canva"
-                      className="field mt-1.5"
-                    />
-                  </label>
-                  <ChipRow label="How much have you used AI tools?">
+                  <ChipRow label={t("interview.toolsLabel")}>
+                    {TOOL_CHIPS.map((tool) => (
+                      <Chip
+                        key={tool.value}
+                        selected={selectedTools.includes(tool.value)}
+                        onClick={() =>
+                          setSelectedTools((current) =>
+                            current.includes(tool.value)
+                              ? current.filter((item) => item !== tool.value)
+                              : [...current, tool.value],
+                          )
+                        }
+                      >
+                        {t(tool.labelKey)}
+                      </Chip>
+                    ))}
+                  </ChipRow>
+                  {selectedTools.includes("Other") && (
+                    <label className="block text-[12px] text-grey">
+                      {t("interview.otherToolsLabel")}
+                      <input
+                        value={otherTools}
+                        onChange={(event) => setOtherTools(event.target.value)}
+                        placeholder={t("interview.otherToolsPlaceholder")}
+                        className="field mt-1.5"
+                      />
+                    </label>
+                  )}
+                  <ChipRow label={t("interview.aiUsageLabel")}>
                     {AI_USAGE_CHIPS.map((chip) => (
                       <Chip key={chip.value} selected={aiUsage === chip.value} onClick={() => setAiUsage(chip.value)}>
-                        {chip.label}
+                        {t(chip.labelKey)}
                       </Chip>
                     ))}
                   </ChipRow>
@@ -316,17 +360,17 @@ export function InterviewView() {
 
               {turn === 4 && (
                 <div className="flex flex-col gap-5">
-                  <ChipRow label="Work status">
+                  <ChipRow label={t("interview.workStatusLabel")}>
                     {EMPLOYMENT_STATUS_CHIPS.map((chip) => (
                       <Chip key={chip.value} selected={employmentStatus === chip.value} onClick={() => setEmploymentStatus(chip.value)}>
-                        {chip.label}
+                        {t(chip.labelKey)}
                       </Chip>
                     ))}
                   </ChipRow>
-                  <ChipRow label="Registered with PERKESO?">
+                  <ChipRow label={t("interview.perkesoLabel")}>
                     {PERKESO_CHIPS.map((chip) => (
-                      <Chip key={chip.label} selected={perkeso === chip.value} onClick={() => setPerkeso(chip.value)}>
-                        {chip.label}
+                      <Chip key={chip.labelKey} selected={perkeso === chip.value} onClick={() => setPerkeso(chip.value)}>
+                        {t(chip.labelKey)}
                       </Chip>
                     ))}
                   </ChipRow>
@@ -335,21 +379,21 @@ export function InterviewView() {
 
               {turn === 5 && (
                 <div className="flex flex-col gap-5">
-                  <ChipRow label="A cause you care about">
+                  <ChipRow label={t("interview.causeLabel")}>
                     {IMPACT_INTEREST_CHIPS.map((chip) => (
                       <Chip key={chip.value} selected={impactInterest === chip.value} onClick={() => setImpactInterest(chip.value)}>
-                        {chip.label}
+                        {t(chip.labelKey)}
                       </Chip>
                     ))}
                   </ChipRow>
-                  <ChipRow label="Course language for your pathway">
+                  <ChipRow label={t("interview.courseLanguageLabel")}>
                     {STUDY_LANGUAGES.map((language) => (
                       <Chip
                         key={language.value}
                         selected={studyLanguage === language.value}
                         onClick={() => setCourseLanguages([language.value])}
                       >
-                        {language.label}
+                        {t(language.labelKey)}
                       </Chip>
                     ))}
                   </ChipRow>
@@ -357,20 +401,22 @@ export function InterviewView() {
               )}
             </div>
 
-            <p className="mt-6 text-[12px] text-grey">Why we ask: {question.why}</p>
+            <p className="mt-6 text-[12px] text-grey">
+              {t("interview.whyWeAsk", { why: t(question.whyKey) })}
+            </p>
           </motion.div>
         </AnimatePresence>
 
         <div className="flex items-center justify-between gap-3 border-t border-line px-6 py-4 sm:px-8">
           <button type="button" onClick={handleBack} disabled={turn === 1} className="btn-ghost -ml-3">
-            Back
+            {t("interview.back")}
           </button>
           <div className="flex items-center gap-2">
             <button type="button" onClick={handleSkip} className="btn-ghost">
-              Skip
+              {t("interview.skip")}
             </button>
             <button type="button" onClick={handleNext} className="btn-primary">
-              {isInterviewDone(turn) ? "See results" : "Next"}
+              {isInterviewDone(turn) ? t("interview.seeResults") : t("interview.next")}
               <ArrowRight className="size-4" strokeWidth={1.8} />
             </button>
           </div>
@@ -379,7 +425,7 @@ export function InterviewView() {
 
       {/* So far */}
       <div className="mt-5 flex flex-wrap items-center gap-1.5 text-[12px] text-grey">
-        <span className="mr-1">So far:</span>
+        <span className="mr-1">{t("interview.soFar")}</span>
         <AnimatePresence initial={false}>
           {soFar.map((item) => (
             <motion.span
