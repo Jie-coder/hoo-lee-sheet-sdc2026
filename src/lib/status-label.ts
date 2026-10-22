@@ -1,6 +1,6 @@
 // Translates the English status labels produced by analyze.ts's statusFor()
 // without changing that module's output (tests depend on it).
-import type { MessageKey } from "@/lib/i18n";
+import type { MessageKey } from "@/lib/i18n-messages";
 
 type Translate = (key: MessageKey, vars?: Record<string, string>) => string;
 

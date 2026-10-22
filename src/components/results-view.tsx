@@ -129,11 +129,13 @@ export function ResultsView() {
         {data && (
           <>
             {data.currentWork ? (
-              <ScoreCard currentWork={data.currentWork} />
+              <>
+                <ScoreCard currentWork={data.currentWork} />
+                <p className="mt-3 text-[13px] text-grey">{t("scoreCard.notJobLoss")}</p>
+              </>
             ) : (
               <ExposurePendingCard />
             )}
-            <p className="mt-3 text-[13px] text-grey">{t("scoreCard.notJobLoss")}</p>
 
             <section className="mt-12">
               <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">

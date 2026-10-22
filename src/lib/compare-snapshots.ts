@@ -1,7 +1,7 @@
 // What changed between two rankings of the same profile, ranked with arXiv
 // snapshots ~30 days apart. Used for the "what changed" line on /results,
 // so a viewer can see the output move when the trend data moves.
-import { translate, type MessageKey } from "@/lib/i18n";
+import { translate, type MessageKey } from "@/lib/i18n-messages";
 import { rankRoles } from "@/lib/rank-roles";
 import type { RoleResult, ScenarioId } from "@/types/contracts";
 

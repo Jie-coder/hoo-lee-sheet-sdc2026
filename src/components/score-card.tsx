@@ -73,8 +73,8 @@ export function ExposurePendingCard() {
   return (
     <section className="panel p-6">
       <p className="text-[13px] text-grey">{t("scoreCard.exposurePending")}</p>
-      <div className="mt-6 h-1 w-full rounded-full bg-alt" />
       <p className="mt-3 text-[13px] text-grey">{t("results.noCurrentWork")}</p>
+      <p className="mt-2 text-[13px] text-grey">{t("scoreCard.notJobLoss")}</p>
     </section>
   );
 }

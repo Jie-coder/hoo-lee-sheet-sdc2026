@@ -3,7 +3,7 @@
 // "slot filling" is scripted, matching docs/design/wireframes/user-flow.md.
 import { MAX_INTERVIEW_TURNS } from "@/types/contracts";
 import type { AiUsage, EmploymentStatus, ImpactInterest } from "@/types/contracts";
-import type { MessageKey } from "@/lib/i18n";
+import type { MessageKey } from "@/lib/i18n-messages";
 
 /** True once `turnsAnswered` has reached the hard cap (section 03 / contracts). */
 export function isInterviewDone(turnsAnswered: number): boolean {

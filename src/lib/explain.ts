@@ -1,7 +1,7 @@
 // Plain-language explanation of one role's score in one scenario, built only
 // from the numbers that produced it (see src/lib/analyze.ts).
 import type { RoleBreakdown } from "@/lib/analyze";
-import { translate, type MessageKey } from "@/lib/i18n";
+import { translate, type MessageKey } from "@/lib/i18n-messages";
 import { SCORING_PARAMS } from "@/lib/scoring";
 import type { RoleResult, ScenarioId } from "@/types/contracts";
 

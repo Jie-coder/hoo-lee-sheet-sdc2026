@@ -1,5 +1,5 @@
 // Formatting for scores and source dates. Bands come from the shared contracts.
-import { translate, type MessageKey } from "@/lib/i18n";
+import { translate, type MessageKey } from "@/lib/i18n-messages";
 import { scoreBand, type IsoDate, type UnitScore } from "@/types/contracts";
 
 type Translate = (key: MessageKey, vars?: Record<string, string>) => string;

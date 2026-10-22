@@ -5,7 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { connection } from "next/server";
 import { runHealthChecks } from "@/lib/health";
-import { translate } from "@/lib/i18n";
+import { translate } from "@/lib/i18n-messages";
 
 export default function StatusPage() {
   return (
