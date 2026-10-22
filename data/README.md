@@ -276,3 +276,13 @@ it is always safe to run.
    it never overwrites `label_ms`, `is_green`, or `base_importance` once
    someone has curated them. Those three columns are only seeded (with a
    placeholder) the first time a skill is created.
+
+   Every table is written before any embedding is computed, and embeddings
+   are sent to Gemini in batches of 100, each batch's vectors saved right
+   away. If Gemini's quota runs out partway through (the free tier allows
+   only 100 embedding requests a minute, and also has a daily cap), the run
+   exits **3** — distinct from 0 (fully done) and 1 (an error) — after
+   printing how many skills/occupations embeddings are done vs. remaining.
+   Every non-embedding table is already written by then; just re-run the
+   same `--apply` command later to resume — reruns skip rows that already
+   have a stored vector for unchanged text, so most rows aren't re-embedded.

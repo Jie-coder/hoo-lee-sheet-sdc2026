@@ -1,7 +1,8 @@
 // Validates data/*.csv against the Laluan contracts, and with --apply,
 // upserts the valid rows into Supabase (computing Gemini embeddings for
-// occupations and skills). Default is always a dry run: see data/README.md
-// for how Tiffany and Henry should use this day to day.
+// occupations and skills, filled in last — see the order comment on
+// applyImport in lib/apply.ts). Default is always a dry run: see
+// data/README.md for how Tiffany and Henry should use this day to day.
 import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { pathToFileURL } from "node:url";
@@ -620,6 +621,16 @@ export function formatWouldWriteLine(counts: WouldWriteCounts): string {
 export type CliOutput = { stdout: string[]; stderr: string[]; exitCode: number };
 
 /**
+ * Exit code when --apply wrote every table but a Gemini quota (daily, or
+ * per-minute retries exhausted) stopped embeddings partway through. Rerun
+ * the same command to resume: planEmbeddings (lib/apply.ts) skips any row
+ * that already has a stored vector, so already-embedded rows are not
+ * re-embedded or re-billed. Distinct from 0 (fully done) and 1 (an error),
+ * so a caller scripting this can tell "come back later" from "fix something".
+ */
+export const EXIT_CODE_EMBEDDINGS_INCOMPLETE = 3;
+
+/**
  * The CLI's logic with all I/O factored out: takes argv and a cwd, returns
  * what to print and the exit code, so it is testable without a subprocess.
  * --apply reads secrets only from <cwd>/.env.local, never from process.env,
@@ -687,9 +698,21 @@ export async function runCli(
       for (const skipped of result.applyResult.skipped) {
         applyLines.push(`  ${skipped.file}: skipped — ${skipped.reason}`);
       }
+      applyLines.push("\nembeddings:");
+      for (const embedding of result.applyResult.embeddings) {
+        applyLines.push(
+          embedding.stoppedByQuota
+            ? `  ${embedding.table}: embedded ${embedding.done}/${embedding.total}, INCOMPLETE — ` +
+              `Gemini quota exceeded, ${embedding.remaining} row(s) left. Rerun the same command to resume ` +
+              `(already-embedded rows are skipped).`
+            : `  ${embedding.table}: embedded ${embedding.done}/${embedding.total}`
+        );
+      }
       stdout.push(applyLines.join("\n"));
       const failed = result.applyResult.tables.some((table) => table.error);
       if (failed) return { stdout, stderr, exitCode: 1 };
+      const incomplete = result.applyResult.embeddings.some((embedding) => embedding.stoppedByQuota);
+      if (incomplete) return { stdout, stderr, exitCode: EXIT_CODE_EMBEDDINGS_INCOMPLETE };
     }
   }
 

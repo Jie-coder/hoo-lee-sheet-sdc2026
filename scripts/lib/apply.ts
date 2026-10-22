@@ -21,6 +21,7 @@ import type {
 } from "./row-schemas";
 import { demandByScenario } from "./scenario-demand";
 import type { Embedder } from "./clients";
+import { EmbeddingQuotaExceededError } from "./embedding-quota";
 
 export type SkillRecord = { id: string; escoUri: string; labelEn: string };
 
@@ -40,9 +41,20 @@ export type ApplyInput = {
 export type TableResult = { table: string; upserted: number; error?: string };
 export type SkippedFile = { file: string; reason: string };
 
+/** How far embedding one of the two embedded tables got. `remaining` is `total - done`; `stoppedByQuota` means a Gemini quota (not a bug) is why it isn't `total`. */
+export type EmbeddingProgress = {
+  table: "skills" | "occupations";
+  total: number;
+  done: number;
+  remaining: number;
+  stoppedByQuota: boolean;
+};
+
 export type ApplyResult = {
   tables: TableResult[];
   skipped: SkippedFile[];
+  /** Always one entry for skills and one for occupations, in that order — see applyImport's embedding step. */
+  embeddings: EmbeddingProgress[];
 };
 
 /** CSVs that validate fully but have nowhere to land in the current schema. */
@@ -71,30 +83,41 @@ function parseStoredEmbedding(value: unknown): number[] | null {
   return null;
 }
 
-export type EmbeddingReuseResult = {
-  embeddings: Map<string, number[]>;
+export type EmbeddingPlan = {
+  /**
+   * Embedding to use for each row in the non-embedding upsert below: only
+   * the reused vector for a row whose text is unchanged. A row with no entry
+   * here — brand new, or whose text changed — gets `null` in that upsert,
+   * so a rerun after quota exhaustion sees a missing vector (not a stale
+   * one for the old text) and doesn't skip it; it stays in `toEmbed` and
+   * gets a fresh vector written directly once fillEmbeddings computes one.
+   */
+  rowEmbeddings: Map<string, number[]>;
   /** Ids already present in the table, from the same select used for reuse — avoids a second query to tell new rows from existing ones. */
   existingIds: Set<string>;
+  /** Rows that still need a fresh embedding computed, in input order. */
+  toEmbed: { id: string; text: string }[];
 };
 
 /**
- * Computes one embedding per row, reusing a previously stored vector when
- * the embedding text has not changed. `rebuildStoredText` must rebuild the
- * same text a stored row would produce today (via occupationEmbeddingText /
- * skillEmbeddingText), so the comparison is against the full embedded text,
- * not just one column. Falls back to embedding everything when the existing
- * rows cannot be read (for example, the table is empty).
+ * Decides which rows need a fresh embedding, without calling the embedder:
+ * a row is skipped (resumed) when its text hasn't changed since the last
+ * successful embed and it already has a valid stored vector; otherwise it
+ * goes in `toEmbed` for fillEmbeddings to compute later, after every
+ * non-embedding table has already been written (see applyImport).
+ * `rebuildStoredText` must rebuild the same text a stored row would produce
+ * today (via occupationEmbeddingText / skillEmbeddingText), so the
+ * comparison is against the full embedded text, not just one column.
  */
-export async function computeEmbeddingsWithReuse(
+export async function planEmbeddings(
   supabase: SupabaseClient,
   table: "occupations" | "skills",
   selectColumns: string,
   rebuildStoredText: (row: Record<string, unknown>) => string,
-  rows: { id: string; text: string }[],
-  embedder: Embedder
-): Promise<EmbeddingReuseResult> {
-  const embeddings = new Map<string, number[]>();
-  if (rows.length === 0) return { embeddings, existingIds: new Set() };
+  rows: { id: string; text: string }[]
+): Promise<EmbeddingPlan> {
+  const rowEmbeddings = new Map<string, number[]>();
+  if (rows.length === 0) return { rowEmbeddings, existingIds: new Set(), toEmbed: [] };
 
   const ids = rows.map((row) => row.id);
   const { data: existing } = (await supabase.from(table).select(selectColumns).in("id", ids)) as {
@@ -110,19 +133,76 @@ export async function computeEmbeddingsWithReuse(
     const prior = existingById.get(row.id);
     const priorEmbedding = prior ? parseStoredEmbedding(prior.embedding) : null;
     const priorText = prior ? rebuildStoredText(prior) : null;
-    if (prior && priorText === row.text && priorEmbedding && priorEmbedding.length === EMBEDDING_DIMENSIONS) {
-      embeddings.set(row.id, priorEmbedding);
-    } else {
-      toEmbed.push(row);
+    const priorEmbeddingValid = Boolean(priorEmbedding && priorEmbedding.length === EMBEDDING_DIMENSIONS);
+
+    if (prior && priorText === row.text && priorEmbeddingValid) {
+      rowEmbeddings.set(row.id, priorEmbedding as number[]);
+      continue;
     }
+    // Needs a fresh embedding: leave it out of rowEmbeddings, so the
+    // non-embedding upsert below writes null for it. Preserving the old
+    // vector here would let a rerun see a (stale, wrong-for-the-new-text)
+    // valid vector and skip the row forever.
+    toEmbed.push(row);
   }
 
-  if (toEmbed.length > 0) {
-    const vectors = await embedder(toEmbed.map((row) => row.text));
-    toEmbed.forEach((row, index) => embeddings.set(row.id, vectors[index]));
-  }
+  return { rowEmbeddings, existingIds: new Set(existingById.keys()), toEmbed };
+}
 
-  return { embeddings, existingIds: new Set(existingById.keys()) };
+/** Values per embedMany call: Google's own per-call cap (model.maxEmbeddingsPerCall) is also 100, so one batch is one request. */
+export const EMBED_BATCH_SIZE = 100;
+
+/**
+ * Writes one batch's vectors with a per-row UPDATE (not upsert): the row
+ * already exists from the base-row write earlier in applyImport, and an
+ * upsert here would re-propose the whole row, which Postgres checks for
+ * NOT NULL columns (title_en/title_ms/cluster on occupations, label_en/
+ * label_ms/base_importance on skills) before conflict resolution even
+ * though only `embedding` is meant to change — failing every batch live.
+ */
+async function updateEmbeddingBatch(
+  supabase: SupabaseClient,
+  table: "occupations" | "skills",
+  rows: { id: string; embedding: number[] }[]
+): Promise<{ error?: string }> {
+  for (const row of rows) {
+    const { error } = await supabase.from(table).update({ embedding: row.embedding }).eq("id", row.id);
+    if (error) return { error: error.message };
+  }
+  return {};
+}
+
+/**
+ * Computes and stores embeddings for `toEmbed`, one batch at a time, writing
+ * each batch to the DB as soon as it's computed — so a quota error partway
+ * through still leaves every already-embedded row saved, and a rerun only
+ * has to redo the remainder. Stops (without throwing) on
+ * EmbeddingQuotaExceededError; any other error still throws.
+ */
+export async function fillEmbeddings(
+  supabase: SupabaseClient,
+  table: "occupations" | "skills",
+  toEmbed: { id: string; text: string }[],
+  embedder: Embedder
+): Promise<EmbeddingProgress> {
+  let done = 0;
+  for (let i = 0; i < toEmbed.length; i += EMBED_BATCH_SIZE) {
+    const batch = toEmbed.slice(i, i + EMBED_BATCH_SIZE);
+    let vectors: number[][];
+    try {
+      vectors = await embedder(batch.map((row) => row.text));
+    } catch (error) {
+      if (error instanceof EmbeddingQuotaExceededError) {
+        return { table, total: toEmbed.length, done, remaining: toEmbed.length - done, stoppedByQuota: true };
+      }
+      throw error;
+    }
+    const rows = batch.map((row, index) => ({ id: row.id, embedding: vectors[index] }));
+    const result = await updateEmbeddingBatch(supabase, table, rows);
+    if (result.error) throw new Error(`failed to store ${table} embeddings: ${result.error}`);
+    done += batch.length;
+  }
+  return { table, total: toEmbed.length, done, remaining: 0, stoppedByQuota: false };
 }
 
 /**
@@ -134,10 +214,11 @@ export async function computeEmbeddingsWithReuse(
 export const DEFAULT_BASE_IMPORTANCE = 1;
 
 /**
- * Builds the two skills upsert row sets: existing skills only get the columns
- * this importer owns (id, esco_uri, label_en, embedding), while a brand-new
- * skill also seeds label_ms / is_green / base_importance — all NOT NULL with
- * no default in the live schema — so the insert succeeds. label_ms and
+ * Builds the two skills row sets: existing skills (written with a per-row
+ * UPDATE — see updateExistingRows) only get the columns this importer owns
+ * (id, esco_uri, label_en, embedding), while a brand-new skill (written with
+ * upsert) also seeds label_ms / is_green / base_importance — all NOT NULL
+ * with no default in the live schema — so the insert succeeds. label_ms and
  * is_green are placeholders; base_importance is the neutral weight above.
  */
 export function buildSkillRows(
@@ -536,6 +617,30 @@ function describeUpsertError(table: string, error: { code?: string; message: str
   return error.message;
 }
 
+/**
+ * Writes rows that already exist with a per-row UPDATE (not upsert): an
+ * upsert's INSERT candidate row must satisfy every NOT NULL column before
+ * Postgres even looks at the conflict, so a row that sets only the columns
+ * this importer owns (skipping label_ms / is_green / base_importance on
+ * skills, say) fails live even though the row already exists and nothing
+ * else needs to change. Mirrors updateEmbeddingBatch, generalized to any
+ * column set; every row must carry an `id`, which is excluded from the SET.
+ */
+async function updateExistingRows(
+  supabase: SupabaseClient,
+  table: string,
+  rows: Record<string, unknown>[]
+): Promise<TableResult> {
+  let upserted = 0;
+  for (const row of rows) {
+    const { id, ...columns } = row;
+    const { error } = await supabase.from(table).update(columns).eq("id", id);
+    if (error) return { table, upserted, error: error.message };
+    upserted += 1;
+  }
+  return { table, upserted };
+}
+
 async function upsert(
   supabase: SupabaseClient,
   table: string,
@@ -554,13 +659,39 @@ async function upsert(
   return { table, upserted };
 }
 
-/** Combines two upserts against the same table into one reported result. */
+/** Combines two writes against the same table (e.g. an update and an upsert) into one reported result. */
 function combineTableResults(table: string, results: TableResult[]): TableResult {
   const upserted = results.reduce((total, result) => total + result.upserted, 0);
   const failed = results.find((result) => result.error);
   return failed ? { table, upserted, error: failed.error } : { table, upserted };
 }
 
+/**
+ * Writes every table, then fills in embeddings last, so a Gemini quota error
+ * (the free tier's 100-requests-per-minute cap, or a daily cap) never leaves
+ * the run having written nothing:
+ *
+ *  1. skills, occupations — written with embedding left as whatever is
+ *     already stored for a row whose text is unchanged (never nulled out),
+ *     or null for a brand-new row or one whose text changed (so a rerun
+ *     after quota exhaustion doesn't mistake a stale vector for a fresh
+ *     one and skip it). Neither table's embedding column is involved in
+ *     any FK, so this can't block anything downstream.
+ *  2. sources — no catalogue FK.
+ *  3. exposure, cluster_demand — both reference sources.name; exposure also
+ *     references the occupations written in step 1 (nullable FK).
+ *  4. scenarios, courses, programs — no catalogue FK.
+ *  5. signals, then occupation_skills — both reference the skills/occupations
+ *     ids written in step 1 (occupation_skills needs both).
+ *  6. Finally, embeddings are computed in EMBED_BATCH_SIZE batches — skills,
+ *     then occupations — and each batch is written immediately with a
+ *     per-row UPDATE (the row already exists from step 1; an upsert would
+ *     re-propose the whole row and fail NOT NULL checks on columns this
+ *     step never touches). A quota error here (fillEmbeddings) stops
+ *     embedding but every table above is already durable; the caller
+ *     reports done/remaining so a rerun can resume (rows already embedded
+ *     are skipped by planEmbeddings).
+ */
 export async function applyImport(
   input: ApplyInput,
   supabase: SupabaseClient,
@@ -568,39 +699,39 @@ export async function applyImport(
 ): Promise<ApplyResult> {
   const tables: TableResult[] = [];
 
-  const skillEmbeddingResult = await computeEmbeddingsWithReuse(
+  const skillPlan = await planEmbeddings(
     supabase,
     "skills",
     "id, label_en, embedding",
     (row) => skillEmbeddingText({ labelEn: String(row.label_en ?? "") }),
-    input.skills.map((skill) => ({ id: skill.id, text: skillEmbeddingText(skill) })),
-    embedder
+    input.skills.map((skill) => ({ id: skill.id, text: skillEmbeddingText(skill) }))
   );
 
-  // Existing skills: update only the columns this importer owns, leaving
-  // label_ms / is_green / base_importance as whoever curated them set them.
-  // New skills: also seed those NOT NULL columns with placeholder defaults.
+  // Existing skills: UPDATE only the columns this importer owns, leaving
+  // label_ms / is_green / base_importance as whoever curated them set them
+  // (and not tripping their NOT NULL checks, which an upsert would: see
+  // updateExistingRows). New skills: upsert, seeding those NOT NULL columns
+  // with placeholder defaults, since every column is set either way.
   const { existingRows: existingSkillRows, newRows: newSkillRows } = buildSkillRows(
     input.skills,
-    skillEmbeddingResult.existingIds,
-    skillEmbeddingResult.embeddings
+    skillPlan.existingIds,
+    skillPlan.rowEmbeddings
   );
 
-  const existingSkillsResult = await upsert(supabase, "skills", existingSkillRows);
+  const existingSkillsResult = await updateExistingRows(supabase, "skills", existingSkillRows);
   const newSkillsResult = await upsert(supabase, "skills", newSkillRows);
   tables.push(combineTableResults("skills", [existingSkillsResult, newSkillsResult]));
 
-  const occupationEmbeddingResult = await computeEmbeddingsWithReuse(
+  const occupationPlan = await planEmbeddings(
     supabase,
     "occupations",
     "id, title_en, description, embedding",
     (row) =>
       occupationEmbeddingText({ titleEn: String(row.title_en ?? ""), description: String(row.description ?? "") }),
-    input.occupations.map((occupation) => ({ id: occupation.id, text: occupationEmbeddingText(occupation) })),
-    embedder
+    input.occupations.map((occupation) => ({ id: occupation.id, text: occupationEmbeddingText(occupation) }))
   );
   tables.push(
-    await upsert(supabase, "occupations", buildOccupationRows(input.occupations, occupationEmbeddingResult.embeddings))
+    await upsert(supabase, "occupations", buildOccupationRows(input.occupations, occupationPlan.rowEmbeddings))
   );
 
   // sources before exposure: exposure.source_name references sources.name.
@@ -634,14 +765,28 @@ export async function applyImport(
     })
   );
 
-  // Last: both foreign keys (occupations, skills) were upserted above.
+  // Both foreign keys (occupations, skills) were upserted above; embeddings
+  // for those two tables are filled in last, below.
   tables.push(
     await upsert(supabase, "occupation_skills", buildOccupationSkillRows(input.occupationSkills), {
       onConflict: OCCUPATION_SKILLS_ON_CONFLICT,
     })
   );
 
-  return { tables, skipped: APPLY_SKIPPED_FILES };
+  const skillEmbedding = await fillEmbeddings(supabase, "skills", skillPlan.toEmbed, embedder);
+  // A quota hit is global (the same Gemini key, the same quota), so there is
+  // no point even trying occupations once skills has already stopped on one.
+  const occupationEmbedding = skillEmbedding.stoppedByQuota
+    ? {
+        table: "occupations" as const,
+        total: occupationPlan.toEmbed.length,
+        done: 0,
+        remaining: occupationPlan.toEmbed.length,
+        stoppedByQuota: true,
+      }
+    : await fillEmbeddings(supabase, "occupations", occupationPlan.toEmbed, embedder);
+
+  return { tables, skipped: APPLY_SKIPPED_FILES, embeddings: [skillEmbedding, occupationEmbedding] };
 }
 
 /** Target tables, in the order --apply upserts them, that a dry run reports row counts for. */

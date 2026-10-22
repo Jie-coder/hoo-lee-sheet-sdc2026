@@ -5,8 +5,9 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { EMBEDDING_DIMENSIONS } from "../src/types/contracts";
 import { pathToFileURL } from "node:url";
-import { isDirectRun, runCli, runImport } from "./import-data";
+import { EXIT_CODE_EMBEDDINGS_INCOMPLETE, isDirectRun, runCli, runImport } from "./import-data";
 import type { Embedder } from "./lib/clients";
+import { EmbeddingQuotaExceededError } from "./lib/embedding-quota";
 
 describe("isDirectRun", () => {
   const scriptPath = join(process.cwd(), "scripts", "import-data.ts");
@@ -212,6 +213,7 @@ describe("runImport (--apply)", () => {
 
   it("upserts valid rows and embeds in a 768-dim batch when the env and clients are present", async () => {
     const upserts: { table: string; rows: Record<string, unknown>[] }[] = [];
+    const updates: { table: string; set: Record<string, unknown>; value: unknown }[] = [];
     const createSupabaseClient = vi.fn(
       () =>
         ({
@@ -220,6 +222,14 @@ describe("runImport (--apply)", () => {
               upsert(rows: Record<string, unknown>[]) {
                 upserts.push({ table, rows });
                 return Promise.resolve({ error: null });
+              },
+              update(set: Record<string, unknown>) {
+                return {
+                  eq(_column: string, value: unknown) {
+                    updates.push({ table, set, value });
+                    return Promise.resolve({ error: null });
+                  },
+                };
               },
               select() {
                 return { in() { return Promise.resolve({ data: [] }); } };
@@ -253,16 +263,72 @@ describe("runImport (--apply)", () => {
     const coursesUpsert = upserts.find((u) => u.table === "courses");
     expect(coursesUpsert?.rows.length).toBe(3);
 
-    const occupationsUpsert = upserts.find((u) => u.table === "occupations");
-    expect(occupationsUpsert?.rows.every((row) => (row.embedding as number[]).length === EMBEDDING_DIMENSIONS)).toBe(
-      true
-    );
+    // occupations/skills are upserted once, before any embedding call (so
+    // the catalogue is durable even if Gemini never answers), then each
+    // row's embedding is written separately with a per-row update once
+    // computed.
+    const occupationsUpserts = upserts.filter((u) => u.table === "occupations");
+    expect(occupationsUpserts).toHaveLength(1);
+    const occupationsEmbeddingUpdates = updates.filter((u) => u.table === "occupations");
+    expect(occupationsEmbeddingUpdates.length).toBeGreaterThan(0);
+    expect(
+      occupationsEmbeddingUpdates.every((u) => (u.set.embedding as number[]).length === EMBEDDING_DIMENSIONS)
+    ).toBe(true);
 
     const signalsUpsert = upserts.find((u) => u.table === "signals");
     expect(signalsUpsert?.rows.length).toBeGreaterThan(0);
     expect(signalsUpsert?.rows.every((row) => !("id" in row))).toBe(true);
 
     expect(result.applyResult?.skipped).toEqual([]);
+    expect(result.applyResult?.embeddings).toEqual([
+      { table: "skills", total: 3, done: 3, remaining: 0, stoppedByQuota: false },
+      { table: "occupations", total: 2, done: 2, remaining: 0, stoppedByQuota: false },
+    ]);
+  });
+
+  it("writes every table but exits 3 with an INCOMPLETE message when Gemini's quota stops embeddings partway", async () => {
+    const cwd = mkdtempSync(join(tmpdir(), "laluan-cli-"));
+    try {
+      writeFileSync(
+        join(cwd, ".env.local"),
+        "SUPABASE_URL=https://example.supabase.co\nSUPABASE_SERVICE_ROLE_KEY=service-role-key\nGEMINI_API_KEY=gemini-key\n"
+      );
+      const createSupabaseClient = vi.fn(
+        () =>
+          ({
+            from() {
+              return {
+                upsert() {
+                  return Promise.resolve({ error: null });
+                },
+                select() {
+                  return { in() { return Promise.resolve({ data: [] }); } };
+                },
+              };
+            },
+          }) as unknown as SupabaseClient
+      );
+      const createEmbedder = vi.fn(
+        () =>
+          (async () => {
+            throw new EmbeddingQuotaExceededError("Gemini daily embedding quota exceeded: limit 100");
+          }) as Embedder
+      );
+
+      const result = await runCli(["--apply", "--dir", join(process.cwd(), VALID_DIR)], cwd, {
+        createSupabaseClient,
+        createEmbedder,
+      });
+
+      expect(result.exitCode).toBe(EXIT_CODE_EMBEDDINGS_INCOMPLETE);
+      const output = result.stdout.join("\n");
+      expect(output).toContain("INCOMPLETE");
+      expect(output).toMatch(/skills: embedded 0\/3/);
+      expect(output).toMatch(/occupations: embedded 0\/2/);
+      expect(output).toContain("Rerun the same command to resume");
+    } finally {
+      rmSync(cwd, { recursive: true, force: true });
+    }
   });
 });
 
@@ -322,6 +388,7 @@ describe("runCli --apply env resolution", () => {
         from: () => ({
           select: () => ({ in: () => Promise.resolve({ data: [] }) }),
           upsert: () => Promise.resolve({ error: null }),
+          update: () => ({ eq: () => Promise.resolve({ error: null }) }),
         }),
       } as unknown as SupabaseClient;
     });
