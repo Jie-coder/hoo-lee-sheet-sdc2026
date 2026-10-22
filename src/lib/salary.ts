@@ -16,6 +16,6 @@ export function salaryForRole(occupationId: string): RoleSalary | undefined {
   return TABLE[occupationId];
 }
 
-export function formatMonthlyRm(value: number): string {
-  return `RM ${value.toLocaleString("en-MY")} / month`;
+export function formatMonthlyRm(value: number, perMonth = "/ month"): string {
+  return `RM ${value.toLocaleString("en-MY")} ${perMonth}`;
 }

@@ -14,6 +14,7 @@ import { SourcesDisclosure } from "@/components/sources-disclosure";
 import { bandLabel, formatFitPercent } from "@/lib/display";
 import { useT, type MessageKey } from "@/lib/i18n";
 import { formatMonthlyRm, salaryForRole } from "@/lib/salary";
+import { localizeStatusLabel } from "@/lib/status-label";
 import { cn } from "@/lib/utils";
 import type { RoleResult, SdgLink } from "@/types/contracts";
 
@@ -95,7 +96,7 @@ export function RoleCard({
           )}
         >
           <StatusIcon className="size-3.5" strokeWidth={1.6} />
-          {status.label}
+          {localizeStatusLabel(status.label, t)}
         </span>
         <span className="shrink-0 font-serif text-[14px] text-grey tabular-nums">
           {t("roleCard.rankOf", { rank: String(rank), total: String(total) })}
@@ -189,7 +190,7 @@ export function RoleCard({
             <div>
               <p className="mb-1 text-[12px] text-grey">{t("roleCard.whyThisRole")}</p>
               <p className="leading-relaxed">
-                {status.label}
+                {localizeStatusLabel(status.label, t)}
                 {role.explanation ? `. ${role.explanation}` : ""}
               </p>
             </div>
@@ -227,7 +228,7 @@ export function RoleCard({
         <div className="mb-4 border-t border-line pt-4">
           {salary ? (
             <>
-              <p className="font-serif text-[26px] font-medium tabular-nums">{formatMonthlyRm(salary.avgMonthlyRm)}</p>
+              <p className="font-serif text-[26px] font-medium tabular-nums">{formatMonthlyRm(salary.avgMonthlyRm, t("salary.perMonth"))}</p>
               <p className="text-[12px] text-grey">
                 MASCO {salary.mascoMajor} {salary.mascoMajorName} · DOSM {salary.year}
               </p>

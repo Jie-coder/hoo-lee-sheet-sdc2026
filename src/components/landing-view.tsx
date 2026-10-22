@@ -12,6 +12,7 @@ import { bandLabel, formatDayMonthYear } from "@/lib/display";
 import { useFlow } from "@/context/flow-context";
 import { useT, type MessageKey } from "@/lib/i18n";
 import type { LandingPreview } from "@/lib/landing-preview";
+import { localizeStatusLabel } from "@/lib/status-label";
 
 const STOPS = [
   { titleKey: "nav.profile", bodyKey: "landing.stop1.body" },
@@ -180,7 +181,7 @@ function PreviewRoute({ preview }: { preview: LandingPreview }) {
   const { t } = useT();
   const role = preview.role;
   return (
-    <div className="panel relative aspect-auto min-h-[240px] w-full overflow-hidden p-5 sm:aspect-[5/4] sm:min-h-0 sm:p-6">
+    <div className="panel relative flex min-h-[240px] w-full flex-col gap-4 overflow-hidden p-5 sm:block sm:aspect-[5/4] sm:min-h-0 sm:p-6">
       <RouteLine
         d="M 40 280 C 200 280, 340 250, 362 150 S 372 70, 372 44"
         viewBox="0 0 400 320"
@@ -188,7 +189,7 @@ function PreviewRoute({ preview }: { preview: LandingPreview }) {
         strokeWidth={3}
         delay={0.6}
         duration={1.8}
-        className="absolute inset-0 h-full w-full"
+        className="absolute inset-0 hidden h-full w-full sm:block"
       >
         <RouteDot cx={40} cy={280} r={6} delay={0.5} />
         <RouteDot cx={253} cy={252} r={4} delay={1.5} filled={false} />
@@ -196,7 +197,7 @@ function PreviewRoute({ preview }: { preview: LandingPreview }) {
       </RouteLine>
 
       {/* today: sits above the first station */}
-      <div className="absolute bottom-[19%] left-[6%] max-w-[48%]">
+      <div className="max-w-[70%] sm:absolute sm:bottom-[19%] sm:left-[6%] sm:max-w-[48%]">
         <p className="text-[12px] text-grey capitalize">{preview.currentTitle}</p>
         <p className="mt-0.5 font-serif text-[30px] leading-none font-medium tracking-tight sm:text-[36px]">
           {bandLabel(preview.currentExposure, t)}{" "}
@@ -208,7 +209,7 @@ function PreviewRoute({ preview }: { preview: LandingPreview }) {
       </div>
 
       {/* the plan */}
-      <div className="absolute top-5 left-5 sm:top-6 sm:left-6">
+      <div className="sm:absolute sm:top-6 sm:left-6">
         <span className="tag bg-sage-wash text-sage-dark">
           {t("landing.planChip", {
             weeks: String(preview.planWeeks),
@@ -218,7 +219,7 @@ function PreviewRoute({ preview }: { preview: LandingPreview }) {
       </div>
 
       {/* the move: left of the last station */}
-      <div className="absolute top-[12%] right-[13%] max-w-[56%] text-right">
+      <div className="max-w-[80%] sm:absolute sm:top-[12%] sm:right-[13%] sm:max-w-[56%] sm:text-right">
         <p className="font-serif text-[20px] leading-tight font-medium capitalize sm:text-[24px]">{role.title}</p>
         <p className="mt-1 font-serif text-[30px] leading-none font-medium tracking-tight text-sage sm:text-[36px]">
           {bandLabel(role.exposure, t)}{" "}
@@ -230,12 +231,12 @@ function PreviewRoute({ preview }: { preview: LandingPreview }) {
         {preview.robust && (
           <span className="mt-2 inline-flex items-center gap-1 rounded-full bg-sage-soft px-2.5 py-1 text-[11px] font-medium text-sage-dark">
             <ShieldCheck className="size-3" strokeWidth={1.8} />
-            {t("landing.statusRobust")}
+            {localizeStatusLabel(preview.statusLabel, t)}
           </span>
         )}
       </div>
 
-      <p className="absolute right-5 bottom-4 text-[11px] text-grey/70 sm:right-6">
+      <p className="text-[11px] text-grey/70 sm:absolute sm:right-6 sm:bottom-4">
         {t("landing.exposureNotJobLoss")}
       </p>
     </div>
