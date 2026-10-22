@@ -8,6 +8,7 @@ import {
   type CostType,
   type CourseAiContent,
   type LanguageCode,
+  type MergedCourseInfo,
   type PartialSlots,
   type PathwayPlan,
   type PlanStep,
@@ -15,6 +16,28 @@ import {
   type RoleResult,
   type SdgLink,
 } from "@/types/contracts";
+
+/**
+ * Normalizes a URL for same-resource comparison: scheme and fragment are
+ * dropped (they don't change what page loads), host is lower-cased with any
+ * "www." stripped, and a trailing slash on the path is removed (except for
+ * the bare root). Query strings are kept as-is since two different query
+ * strings can legitimately point at different content.
+ *
+ * Used to detect when a catalogue course and a programme cite the same page
+ * (see mergeDuplicateUrlCourse below) without hardcoding either id.
+ */
+export function normalizeUrl(url: string): string {
+  let parsed: URL;
+  try {
+    parsed = new URL(url);
+  } catch {
+    return url.trim().toLowerCase();
+  }
+  const host = parsed.hostname.toLowerCase().replace(/^www\./, "");
+  const path = parsed.pathname.replace(/\/+$/, "") || "/";
+  return `${host}${path}${parsed.search}`;
+}
 
 /** Only the courses offered in at least one of the learner's study languages. */
 export function filterCoursesByLanguage(courses: readonly Course[], languages: readonly LanguageCode[]): Course[] {
@@ -204,7 +227,15 @@ export function buildPathwayPlan({
 }): PathwayPlan {
   const pace = hoursPerWeek > 0 ? hoursPerWeek : 6;
 
-  type Pick = { kind: "course" | "program"; item: Course | Programme; closesSkillIds: string[]; hours: number; why: string };
+  type Pick = {
+    kind: "course" | "program";
+    item: Course | Programme;
+    closesSkillIds: string[];
+    hours: number;
+    why: string;
+    /** Courses folded into this (programme) pick because they cite the same URL. */
+    mergedCourses?: Course[];
+  };
 
   const picks: Pick[] = [];
 
@@ -213,7 +244,48 @@ export function buildPathwayPlan({
     picks.push({ kind: "program", item: aiProgramme, closesSkillIds: [], hours: 1.5, why: aiProgramme.benefits });
   }
 
+  // Only "course" picks count toward maxCoursesPerRole. A course folded into a
+  // programme pick via mergeDuplicateUrlCourse below is never pushed as its
+  // own "course" pick, so it never counts here either — same rule as the
+  // AI-readiness programme step itself not counting.
   const courseCount = () => picks.filter((pick) => pick.kind === "course").length;
+
+  /**
+   * If `candidate` cites the same page as a programme already in the plan
+   * (compared with normalizeUrl, so scheme/www/trailing-slash/case
+   * differences don't matter), folds it into that programme pick instead of
+   * adding a separate step: the gap skill is recorded as closed by the
+   * programme, and the course's hours/certificate/languages are carried on
+   * the pick for the UI. Returns true when it merged, so the caller skips
+   * just this candidate. No replacement course is pulled in for the slot;
+   * the skill's other suggested courses stay as alternatives.
+   */
+  function mergeDuplicateUrlCourse(candidate: Course, skillId: string, isRelated: boolean): boolean {
+    const target = normalizeUrl(candidate.url);
+    const programmePick = picks.find((pick) => pick.kind === "program" && normalizeUrl((pick.item as Programme).url) === target);
+    if (!programmePick) return false;
+    if (!isRelated && !programmePick.closesSkillIds.includes(skillId)) {
+      programmePick.closesSkillIds.push(skillId);
+    }
+    if (!programmePick.mergedCourses?.some((course) => course.id === candidate.id)) {
+      programmePick.mergedCourses = [...(programmePick.mergedCourses ?? []), candidate];
+    }
+    return true;
+  }
+
+  /**
+   * Combines the courses folded into a programme pick (same URL, see
+   * mergeDuplicateUrlCourse) into the single info block the UI shows on the
+   * programme card: the longest stated duration, a certificate if any of
+   * them offers one, and every language any of them is offered in.
+   */
+  function mergeCourseInfo(mergedCourses: readonly Course[]): MergedCourseInfo {
+    return {
+      hours: Math.max(...mergedCourses.map((course) => course.hours)),
+      certificate: mergedCourses.some((course) => course.certificate),
+      languages: [...new Set(mergedCourses.flatMap((course) => course.languages))],
+    };
+  }
 
   for (const skill of role.gap) {
     if (courseCount() >= PATHWAY_PARAMS.maxCoursesPerRole) break;
@@ -233,6 +305,7 @@ export function buildPathwayPlan({
         }
         continue;
       }
+      if (mergeDuplicateUrlCourse(candidate, skill.skillId, isRelated)) continue;
       if (courseCount() >= PATHWAY_PARAMS.maxCoursesPerRole) break;
       if (isRelated) {
         const groupLabel = groupLabels[skillGroups[skill.skillId] ?? ""] ?? "the same ESCO skill group";
@@ -263,6 +336,7 @@ export function buildPathwayPlan({
     const weekStart = cursor;
     const weekEnd = weekStart + weeks - 1;
     cursor = weekEnd + 1;
+    const merged = pick.mergedCourses?.length ? mergeCourseInfo(pick.mergedCourses) : undefined;
     return {
       itemId: pick.item.id,
       kind: pick.kind,
@@ -271,6 +345,7 @@ export function buildPathwayPlan({
       closesSkillIds: pick.closesSkillIds,
       sdgTarget: sdgTargetForSkills(pick.closesSkillIds, skillLinks),
       why: pick.why,
+      ...(merged ? { merged } : {}),
     };
   });
 

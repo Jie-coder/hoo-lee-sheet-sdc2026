@@ -1,12 +1,17 @@
 import { describe, expect, it } from "vitest";
+import { PERSONA_IDS, PERSONAS } from "@/mocks/personas";
 import type { Course, Programme } from "@/types/contracts";
+import { analyzeProfile } from "./analyze";
+import { CATALOGUE } from "./catalogue";
 import {
   AI_READINESS_PROGRAMME_ID,
   buildPathwayPlan,
   filterCoursesByLanguage,
+  normalizeUrl,
   pickCourseForSkill,
   programmeEligibilityStatus,
 } from "./pathway";
+import { resolveProfileSkills } from "./profile-skills";
 
 function course(overrides: Partial<Course>): Course {
   return {
@@ -329,5 +334,135 @@ describe("buildPathwayPlan with real-data rules", () => {
       skillLinks: [],
     });
     expect(plan.steps.map((step) => step.itemId)).toEqual(["p001"]);
+  });
+});
+
+describe("normalizeUrl", () => {
+  it("treats scheme, www., trailing slash, and case as insignificant", () => {
+    const base = normalizeUrl("https://rakyatdigital.gov.my/en/literacy-hub");
+    expect(normalizeUrl("http://rakyatdigital.gov.my/en/literacy-hub")).toBe(base);
+    expect(normalizeUrl("https://www.rakyatdigital.gov.my/en/literacy-hub")).toBe(base);
+    expect(normalizeUrl("https://rakyatdigital.gov.my/en/literacy-hub/")).toBe(base);
+    expect(normalizeUrl("https://RakyatDigital.gov.my/en/literacy-hub")).toBe(base);
+  });
+
+  it("treats a different path as a different resource", () => {
+    expect(normalizeUrl("https://rakyatdigital.gov.my/en/literacy-hub")).not.toBe(
+      normalizeUrl("https://rakyatdigital.gov.my/en/other-page"),
+    );
+  });
+});
+
+describe("buildPathwayPlan folds a course into a same-URL programme (p001/c006-style merge)", () => {
+  const aiProgramme = {
+    id: AI_READINESS_PROGRAMME_ID,
+    name: "AI untuk Rakyat Programme",
+    agency: "Ministry of Digital",
+    url: "https://rakyatdigital.gov.my/en/literacy-hub",
+    benefits: "Free AI basics.",
+    eligibility: { age_min: null, age_max: null, citizen: true, employment: ["any"], perkeso_contributor: null, states: ["all"] },
+    costType: "free",
+    deadline: null,
+    lastChecked: "2026-10-20",
+  } satisfies Programme;
+
+  const duplicateCourse = course({
+    id: "c006",
+    title: "AI untuk Rakyat",
+    url: "https://www.rakyatdigital.gov.my/en/literacy-hub/",
+    languages: ["en", "ms", "zh"],
+    hours: 4,
+    certificate: true,
+    skillIds: ["ai-basics"],
+  });
+
+  const roleWithGap = {
+    occupationId: "role-merge",
+    gap: [{ skillId: "ai-basics", label: "principles of artificial intelligence", importance: 1 }],
+  } as import("@/types/contracts").RoleResult;
+
+  it("does not add the duplicate-URL course as its own step, and closes the gap via the programme instead", () => {
+    const plan = buildPathwayPlan({
+      role: roleWithGap,
+      courses: [duplicateCourse],
+      programmes: [aiProgramme],
+      studyLanguages: ["en"],
+      hoursPerWeek: 6,
+      skillLinks: [],
+    });
+    expect(plan.steps.map((step) => step.itemId)).toEqual(["p001"]);
+    expect(plan.steps[0].kind).toBe("program");
+    expect(plan.steps[0].closesSkillIds).toEqual(["ai-basics"]);
+  });
+
+  it("carries the merged course's hours, certificate, and languages onto the programme step", () => {
+    const plan = buildPathwayPlan({
+      role: roleWithGap,
+      courses: [duplicateCourse],
+      programmes: [aiProgramme],
+      studyLanguages: ["en"],
+      hoursPerWeek: 6,
+      skillLinks: [],
+    });
+    expect(plan.steps[0].merged).toEqual({ hours: 4, certificate: true, languages: ["en", "ms", "zh"] });
+  });
+
+  it("does not count the merged course toward maxCoursesPerRole, and never double-counts it when it also matches a second gap skill", () => {
+    const twoSkillCourse = course({ ...duplicateCourse, skillIds: ["ai-basics", "computer-literacy"] });
+    const role2 = {
+      occupationId: "role-merge-2",
+      gap: [
+        { skillId: "ai-basics", label: "principles of artificial intelligence", importance: 1 },
+        { skillId: "computer-literacy", label: "have computer literacy", importance: 1 },
+      ],
+    } as import("@/types/contracts").RoleResult;
+    const plan = buildPathwayPlan({
+      role: role2,
+      courses: [twoSkillCourse],
+      programmes: [aiProgramme],
+      studyLanguages: ["en"],
+      hoursPerWeek: 6,
+      skillLinks: [],
+    });
+    expect(plan.steps.map((step) => step.itemId)).toEqual(["p001"]);
+    expect(plan.steps[0].closesSkillIds.sort()).toEqual(["ai-basics", "computer-literacy"]);
+    expect(plan.steps[0].merged).toEqual({ hours: 4, certificate: true, languages: ["en", "ms", "zh"] });
+  });
+});
+
+describe("no two steps in one pathway share a URL (demo CVs)", () => {
+  function itemUrl(step: { kind: string; itemId: string }): string {
+    const item =
+      step.kind === "course"
+        ? CATALOGUE.courses.find((candidate) => candidate.id === step.itemId)
+        : CATALOGUE.programmes.find((candidate) => candidate.id === step.itemId);
+    if (!item) throw new Error(`Unknown step item: ${step.itemId}`);
+    return item.url;
+  }
+
+  it.each(PERSONA_IDS)("%s: every recommended role's plan has no duplicate normalized URLs across steps", (id) => {
+    const persona = PERSONAS[id];
+    const chips = persona.parsed.skills.map((label) => ({ label, selfReported: false }));
+    const { skills } = resolveProfileSkills(CATALOGUE, id, chips);
+    const result = analyzeProfile(CATALOGUE, {
+      skills,
+      currentOccupationId: persona.currentOccupationId,
+      impactInterest: "none",
+    });
+
+    for (const role of result.roles) {
+      const plan = buildPathwayPlan({
+        role,
+        courses: CATALOGUE.courses,
+        programmes: CATALOGUE.programmes,
+        studyLanguages: persona.courseLanguages,
+        hoursPerWeek: 6,
+        skillLinks: [],
+        skillGroups: CATALOGUE.skillGroups,
+        groupLabels: CATALOGUE.groupLabels,
+      });
+      const normalizedUrls = plan.steps.map((step) => normalizeUrl(itemUrl(step)));
+      expect(new Set(normalizedUrls).size).toBe(normalizedUrls.length);
+    }
   });
 });
