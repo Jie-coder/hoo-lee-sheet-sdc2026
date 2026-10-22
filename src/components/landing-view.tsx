@@ -180,7 +180,7 @@ function PreviewRoute({ preview }: { preview: LandingPreview }) {
   const { t } = useT();
   const role = preview.role;
   return (
-    <div className="panel relative aspect-[5/4] w-full overflow-hidden p-5 sm:p-6">
+    <div className="panel relative aspect-auto min-h-[240px] w-full overflow-hidden p-5 sm:aspect-[5/4] sm:min-h-0 sm:p-6">
       <RouteLine
         d="M 40 280 C 200 280, 340 250, 362 150 S 372 70, 372 44"
         viewBox="0 0 400 320"
@@ -230,7 +230,7 @@ function PreviewRoute({ preview }: { preview: LandingPreview }) {
         {preview.robust && (
           <span className="mt-2 inline-flex items-center gap-1 rounded-full bg-sage-soft px-2.5 py-1 text-[11px] font-medium text-sage-dark">
             <ShieldCheck className="size-3" strokeWidth={1.8} />
-            {preview.statusLabel}
+            {t("landing.statusRobust")}
           </span>
         )}
       </div>

@@ -39,8 +39,8 @@ export const EN = {
   "landing.promise1": "Synthetic CVs only",
   "landing.promise2": "Nothing stored, no login",
   "landing.promise3": "Public data, every score dated",
-  "results.heading": "Your future pathway",
-  "results.headingNamed": "{name}'s future pathway",
+  "results.heading": "Your future routes",
+  "results.headingNamed": "{name}'s future routes",
   "results.flagToast": "Flagged target {target} for a person to review.",
   "results.skillsMatchedLine": "{matched} of {total} skills matched. Signal checked {date}.",
   "results.matching": "Matching your skills and ranking roles…",
@@ -97,6 +97,7 @@ export const EN = {
   "roleCard.tier.inferred": "AI-suggested",
   "roleCard.rankOf": "#{rank} of {total}",
   "roleCard.fitWithSkills": "fit with your skills",
+  "roleCard.aiExposure": "AI exposure",
   "roleCard.showLess": "Show less",
   "roleCard.more": "+{count} more",
   "roleCard.skillsToBuild": "Skills to build",
@@ -217,6 +218,8 @@ export const EN = {
   "interview.q2.title": "Which task takes most of your week?",
   "interview.q2.subtitle":
     "I found these tasks in your CV. Pick your main one, then say how much time the others take.",
+  "interview.q2.fallbackTitle": "Which of these takes most of your week?",
+  "interview.q2.fallbackSubtitle": "Pick your main one, then say how much time the others take.",
   "interview.q2.why":
     "The time you spend on each task weights your AI exposure and augmentation scores.",
   "interview.q3.title": "Which tools do you use, and how much have you used AI tools like ChatGPT?",
@@ -227,6 +230,7 @@ export const EN = {
   "interview.q5.title": "Is there a cause you'd like your next role to support?",
   "interview.q5.why":
     "Links your pathway to the UN Sustainable Development Goals it can advance.",
+  "scoreCard.exposurePending": "AI exposure · estimate pending",
   "scoreCard.exposureLabel": "AI exposure of your current job",
   "scoreCard.exposureInfoLabel": "What AI exposure means",
   "scoreCard.exposureInfoBody":
@@ -367,6 +371,7 @@ export const EN = {
   "landing.exposureToday": "AI exposure today",
   "landing.exposureAfterMove": "AI exposure after the move",
   "landing.exposureNotJobLoss": "Exposure is not job loss.",
+  "landing.statusRobust": "Robust in all 3 futures",
   "landing.planChip": "{weeks} weeks, {cost}",
   "landing.builtOnEsco": "ESCO v1.2.1",
   "landing.builtOnIlo": "ILO GenAI Exposure 2025",
@@ -391,7 +396,7 @@ export const MS: Record<MessageKey, string> = {
   "lang.label": "Bahasa laman",
   "nav.profile": "Profil",
   "nav.interview": "Temu bual",
-  "nav.results": "Keputusan",
+  "nav.results": "Hasil",
   "nav.pathway": "Laluan",
   "footer.tagline": "Laluan anda melalui AI di tempat kerja.",
   "footer.about": "Tentang",
@@ -472,6 +477,7 @@ export const MS: Record<MessageKey, string> = {
   "roleCard.tier.inferred": "Dicadangkan AI",
   "roleCard.rankOf": "#{rank} daripada {total}",
   "roleCard.fitWithSkills": "padanan dengan kemahiran anda",
+  "roleCard.aiExposure": "Pendedahan AI",
   "roleCard.showLess": "Tunjuk kurang",
   "roleCard.more": "+{count} lagi",
   "roleCard.skillsToBuild": "Kemahiran untuk dibina",
@@ -547,7 +553,7 @@ export const MS: Record<MessageKey, string> = {
   "interview.whyWeAsk": "Mengapa kami bertanya: {why}",
   "interview.back": "Kembali",
   "interview.skip": "Langkau",
-  "interview.seeResults": "Lihat keputusan",
+  "interview.seeResults": "Lihat hasil",
   "interview.next": "Seterusnya",
   "interview.soFar": "Setakat ini:",
   "interview.ageTag": "Umur {age}",
@@ -593,6 +599,8 @@ export const MS: Record<MessageKey, string> = {
   "interview.q2.title": "Tugasan manakah yang mengambil sebahagian besar minggu anda?",
   "interview.q2.subtitle":
     "Saya menemui tugasan ini dalam CV anda. Pilih yang utama, kemudian nyatakan berapa banyak masa diambil oleh yang lain.",
+  "interview.q2.fallbackTitle": "Yang mana antara ini mengambil sebahagian besar minggu anda?",
+  "interview.q2.fallbackSubtitle": "Pilih yang utama, kemudian nyatakan berapa banyak masa diambil oleh yang lain.",
   "interview.q2.why":
     "Masa yang anda luangkan untuk setiap tugasan memberi pemberat kepada skor pendedahan dan pengukuhan AI anda.",
   "interview.q3.title":
@@ -607,6 +615,7 @@ export const MS: Record<MessageKey, string> = {
     "Adakah anda mahu peranan seterusnya menyokong sesuatu tujuan tertentu?",
   "interview.q5.why":
     "Menghubungkan laluan anda dengan Matlamat Pembangunan Lestari PBB yang boleh disokong olehnya.",
+  "scoreCard.exposurePending": "Pendedahan AI · anggaran belum tersedia",
   "scoreCard.exposureLabel": "Pendedahan AI bagi pekerjaan semasa anda",
   "scoreCard.exposureInfoLabel": "Apa maksud pendedahan AI",
   "scoreCard.exposureInfoBody":
@@ -679,7 +688,7 @@ export const MS: Record<MessageKey, string> = {
   "pathway.buildingPlan": "Membina pelan anda…",
   "pathway.loadError": "Kami tidak dapat memuatkan peranan anda sekarang.",
   "pathway.tryAgain": "Cuba lagi",
-  "pathway.roleNotInResults": "Peranan itu tiada dalam keputusan anda.",
+  "pathway.roleNotInResults": "Peranan itu tiada dalam hasil anda.",
   "pathway.pickRankedRole": "Pilih salah satu peranan yang disusun untuk profil anda.",
   "pathway.backToRoles": "Kembali ke peranan",
   "pathway.yourProfile": "Profil anda",
@@ -743,10 +752,11 @@ export const MS: Record<MessageKey, string> = {
   "status.ok": "OK",
   "status.error": "Ralat",
   "landing.trendChecked":
-    "Isyarat trend disemak {date}. Pratonton di atas ialah keputusan sebenar untuk {name}, profil sampel sintetik.",
+    "Isyarat trend disemak {date}. Pratonton di atas ialah hasil sebenar untuk {name}, profil sampel sintetik.",
   "landing.exposureToday": "Pendedahan AI hari ini",
   "landing.exposureAfterMove": "Pendedahan AI selepas peralihan",
   "landing.exposureNotJobLoss": "Pendedahan bukan bermakna kehilangan pekerjaan.",
+  "landing.statusRobust": "Kukuh dalam ketiga-tiga senario masa depan",
   "landing.planChip": "{weeks} minggu, {cost}",
   "landing.builtOnEsco": "ESCO v1.2.1",
   "landing.builtOnIlo": "Pendedahan GenAI ILO 2025",

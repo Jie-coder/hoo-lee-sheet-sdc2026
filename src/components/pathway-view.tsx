@@ -135,7 +135,7 @@ export function PathwayView({
 
   if (state.status !== "ready" || !role || !plan) {
     return (
-      <div className="pb-32 sm:pb-20">
+      <div className="pb-16 sm:pb-20">
         <main className="mx-auto max-w-[1248px] px-4 pt-10 sm:px-6">
           {state.status === "loading" && (
             <p className="text-[14px] text-grey" aria-live="polite">
@@ -200,7 +200,7 @@ export function PathwayView({
   }
 
   return (
-    <div className="pb-32 sm:pb-20">
+    <div className="pb-16 sm:pb-20">
       <main className="mx-auto max-w-[1248px] px-4 sm:px-6">
         <motion.section
           initial={reduce ? false : { opacity: 0, y: 14 }}

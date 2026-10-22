@@ -1,6 +1,6 @@
 // Current-work block: the AI exposure of the user's current job, from the
-// ILO GenAI exposure study. "Exposure is not job loss." always stays visible.
-// Augmentation is not shown: there is no task-level augmentation data yet.
+// ILO GenAI exposure study. Augmentation is not shown: there is no task-level
+// augmentation data yet.
 "use client";
 
 import { motion, useReducedMotion } from "framer-motion";
@@ -38,7 +38,6 @@ export function ScoreCard({ currentWork }: { currentWork: CurrentWork }) {
             <CountUp value={currentWork.exposure} decimals={2} />
           </span>
         </p>
-        <p className="mt-3 text-[15px] font-medium">{t("scoreCard.notJobLoss")}</p>
       </div>
 
       <div className="md:col-span-7">
@@ -65,6 +64,17 @@ export function ScoreCard({ currentWork }: { currentWork: CurrentWork }) {
           <SourcesDisclosure sources={currentWork.sources} />
         </div>
       </div>
+    </section>
+  );
+}
+
+export function ExposurePendingCard() {
+  const { t } = useT();
+  return (
+    <section className="panel p-6">
+      <p className="text-[13px] text-grey">{t("scoreCard.exposurePending")}</p>
+      <div className="mt-6 h-1 w-full rounded-full bg-alt" />
+      <p className="mt-3 text-[13px] text-grey">{t("results.noCurrentWork")}</p>
     </section>
   );
 }

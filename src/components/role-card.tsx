@@ -11,7 +11,7 @@ import { EASE_OUT } from "@/components/motion";
 import { Disclosure } from "@/components/ui/disclosure";
 import { SdgBadge, sdgFlagId } from "@/components/sdg-badge";
 import { SourcesDisclosure } from "@/components/sources-disclosure";
-import { formatFitPercent } from "@/lib/display";
+import { bandLabel, formatFitPercent } from "@/lib/display";
 import { useT, type MessageKey } from "@/lib/i18n";
 import { formatMonthlyRm, salaryForRole } from "@/lib/salary";
 import { cn } from "@/lib/utils";
@@ -121,6 +121,9 @@ export function RoleCard({
 
       {/* Two lines at a glance; the full reason is repeated under Details. */}
       {role.explanation && <p className="mt-4 line-clamp-2 text-[14px] leading-relaxed text-grey">{role.explanation}</p>}
+      <p className="mt-1 text-[13px] text-grey">
+        {t("roleCard.aiExposure")} · {bandLabel(role.exposure, t)} · {role.exposure.toFixed(2)}
+      </p>
 
       <div className="mt-4 flex flex-wrap items-center gap-1.5">
         <SdgBadge link={topSdg} label={targetLabels[topSdg.target] ?? topSdg.target} plain />

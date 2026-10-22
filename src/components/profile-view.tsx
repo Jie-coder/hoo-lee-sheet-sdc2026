@@ -24,6 +24,25 @@ const UPLOAD_STEPS: ReadonlyArray<{ labelKey: MessageKey }> = [
  * server does the real work in one call; this just keeps the wait legible. */
 const STEP_INTERVAL_MS = 900;
 
+/** The stat block shows the qualification large and its field below. When the
+ * level already names the field ("Diploma in Business Studies"), drop the
+ * duplicated " in <field>" so it reads "Diploma" plus "Business Studies". */
+function formatEducationStat(level: string, field: string): { level: string; field: string } {
+  const trimmedLevel = level.trim();
+  const trimmedField = field.trim();
+  if (!trimmedField) return { level: trimmedLevel, field: "" };
+  const escapedField = trimmedField.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  const stripped = trimmedLevel
+    .replace(new RegExp(`\\s+in\\s+${escapedField}(?=\\s|$|[.,;])`, "i"), "")
+    .replace(/\s{2,}/g, " ")
+    .trim();
+  if (stripped && stripped.toLowerCase() !== trimmedField.toLowerCase()) {
+    return { level: stripped, field: trimmedField };
+  }
+  if (trimmedLevel.toLowerCase() === trimmedField.toLowerCase()) return { level: trimmedLevel, field: "" };
+  return { level: trimmedLevel, field: trimmedField };
+}
+
 export function ProfileView() {
   const router = useRouter();
   const { t } = useT();
@@ -66,7 +85,7 @@ export function ProfileView() {
         return;
       }
       setUploadedProfile(body as UploadedCv);
-      toast.success(t("profile.toastParsed"));
+      toast.success(t("profile.toastParsed"), { duration: 3000 });
     } catch {
       toast.error(t("profile.toastNetwork"));
     } finally {
@@ -126,6 +145,9 @@ export function ProfileView() {
       .toUpperCase() || "?";
   const totalYears = (profile?.roles.reduce((sum, role) => sum + role.years, 0) ?? 0).toFixed(1);
   const visibleSkills = skillsExpanded ? (profile?.skills ?? []) : (profile?.skills.slice(0, 6) ?? []);
+  const educationStat = profile?.education[0]
+    ? formatEducationStat(profile.education[0].level, profile.education[0].field)
+    : null;
 
   return (
     <main className="mx-auto max-w-[1248px] px-4 pb-20 sm:px-6">
@@ -211,8 +233,8 @@ export function ProfileView() {
                   <p className="text-[12px] text-grey">{t("profile.yearsExperience")}</p>
                 </div>
                 <div className="col-span-2 rounded-xl border border-line px-4 py-3 md:col-span-1 md:min-w-[132px] md:max-w-[220px]">
-                  <p className="font-serif text-[16px] leading-snug">{profile.education[0]?.level || "—"}</p>
-                  <p className="text-[12px] text-grey">{profile.education[0]?.field || t("profile.educationLabel")}</p>
+                  <p className="font-serif text-[16px] leading-snug">{educationStat?.level || "—"}</p>
+                  <p className="text-[12px] text-grey">{educationStat?.field || t("profile.educationLabel")}</p>
                 </div>
               </div>
             </div>

@@ -45,13 +45,17 @@ export function InterviewView() {
   const [hours, setHours] = useState<number | null>(null);
   const [budget, setBudget] = useState<number | null>(null);
 
+  const cvTasks = useMemo(
+    () => (profile?.roles.flatMap((role) => role.tasks) ?? []).map((task) => task.trim()).filter(Boolean),
+    [profile],
+  );
+  const hasCvTasks = cvTasks.length > 0;
   const tasks = useMemo(() => {
     // CV tasks first. The live parser does not return per-role tasks yet
     // (lib/parse-cv.ts), so fall back to the CV's matched ESCO skills, which
     // are phrased as activities ("plan schedule", "file documents").
-    const cvTasks = profile?.roles.flatMap((role) => role.tasks) ?? [];
     const fromCv =
-      cvTasks.length > 0 ? cvTasks : (profile?.skills.filter((skill) => skill.matched).map((skill) => skill.label) ?? []);
+      hasCvTasks ? cvTasks : (profile?.skills.filter((skill) => skill.matched).map((skill) => skill.label) ?? []);
     const seen = new Set<string>();
     const unique = fromCv
       .map((task) => task.trim())
@@ -63,7 +67,7 @@ export function InterviewView() {
       });
     const capped = unique.slice(0, 5);
     return capped.length > 0 ? capped : [t("interview.mainTask"), t("interview.secondaryTask")];
-  }, [profile, t]);
+  }, [cvTasks, hasCvTasks, profile, t]);
   const [mainTaskIndex, setMainTaskIndex] = useState(0);
   const [taskLevels, setTaskLevels] = useState<string[]>(() => tasks.map(() => "some"));
 
@@ -182,6 +186,9 @@ export function InterviewView() {
   ].filter(Boolean);
 
   const question = INTERVIEW_QUESTIONS[turn];
+  const usesFallbackTasks = turn === 2 && !hasCvTasks;
+  const questionTitleKey: MessageKey = usesFallbackTasks ? "interview.q2.fallbackTitle" : question.titleKey;
+  const questionSubtitleKey = usesFallbackTasks ? "interview.q2.fallbackSubtitle" : question.subtitleKey;
   const slide = {
     enter: (dir: number) => (reduce ? { opacity: 0 } : { opacity: 0, x: 40 * dir }),
     center: { opacity: 1, x: 0 },
@@ -253,10 +260,10 @@ export function InterviewView() {
               {t("interview.questionCount", { current: String(turn), total: String(MAX_INTERVIEW_TURNS) })}
             </p>
             <h2 className="mt-2 font-serif text-[24px] leading-snug font-medium text-balance sm:text-[28px]">
-              {t(question.titleKey)}
+              {t(questionTitleKey)}
             </h2>
-            {question.subtitleKey && (
-              <p className="mt-1.5 text-[14px] text-grey">{t(question.subtitleKey)}</p>
+            {questionSubtitleKey && (
+              <p className="mt-1.5 text-[14px] text-grey">{t(questionSubtitleKey)}</p>
             )}
 
             <div className="mt-6">

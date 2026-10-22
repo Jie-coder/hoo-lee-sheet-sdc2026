@@ -31,9 +31,6 @@ export function explainRole(
           matched: String(breakdown.matchedSkills),
           essential: String(breakdown.essentialSkills),
         });
-  const exposure = breakdown.exposureGroupEstimate
-    ? t("explain.exposureGroup", { score: role.exposure.toFixed(2) })
-    : t("explain.exposure", { score: role.exposure.toFixed(2) });
   const demand = t("explain.demand", {
     scenario: t(SCENARIO_LABEL[scenario]),
     score: breakdown.demand[scenario].toFixed(2),
@@ -41,5 +38,5 @@ export function explainRole(
   const bonus = breakdown.interestMatch
     ? ` ${t("explain.interestBonus", { bonus: String(SCORING_PARAMS.sdgBonus) })}`
     : "";
-  return `${skills} ${exposure} ${demand} ${t("explain.score", { score: role.byScenario[scenario].toFixed(2) })}${bonus}`;
+  return `${skills} ${demand} ${t("explain.score", { score: role.byScenario[scenario].toFixed(2) })}${bonus}`;
 }

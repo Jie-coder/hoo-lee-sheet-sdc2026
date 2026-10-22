@@ -13,7 +13,7 @@ import { EstimateFooter } from "@/components/estimate-footer";
 import { EASE_OUT } from "@/components/motion";
 import { RoleCard } from "@/components/role-card";
 import { ScenarioTabs, SCENARIO_ILLUSTRATIVE, SCENARIO_LABEL, SCENARIO_SUMMARY } from "@/components/scenario-tabs";
-import { ScoreCard } from "@/components/score-card";
+import { ExposurePendingCard, ScoreCard } from "@/components/score-card";
 import { sdgFlagId } from "@/components/sdg-badge";
 import { SdgLegend } from "@/components/sdg-legend";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -58,6 +58,7 @@ export function ResultsView() {
       ? rankChanges(priorRoles.data.roles, todayRoles.data.roles, scenario)
       : null;
   const persona = profile.personaId === "upload" ? null : PERSONAS[profile.personaId];
+  const firstName = profile.name?.trim().split(/\s+/)[0];
   const matchedCount = data?.skillMatches.filter((match) => match.escoLabels.length > 0).length ?? 0;
 
   function handleChoose(role: RoleResult) {
@@ -78,7 +79,7 @@ export function ResultsView() {
   }
 
   return (
-    <div className="pb-32 sm:pb-20">
+    <div className="pb-16 sm:pb-20">
       <div className="mx-auto max-w-[1248px] px-4 sm:px-6">
         <motion.section
           initial={reduce ? false : { opacity: 0, y: 14 }}
@@ -87,7 +88,7 @@ export function ResultsView() {
           className="pt-10 pb-8"
         >
           <h1 className="font-serif text-[34px] leading-[1.05] font-medium tracking-tight md:text-[44px]">
-            {profile.name ? t("results.headingNamed", { name: profile.name }) : t("results.heading")}
+            {firstName ? t("results.headingNamed", { name: firstName }) : t("results.heading")}
           </h1>
           {(profile.roles[0]?.title || persona?.jobTitle) && (
             <p className="mt-2 text-[14px] text-grey">{profile.roles[0]?.title || persona?.jobTitle}</p>
@@ -130,8 +131,9 @@ export function ResultsView() {
             {data.currentWork ? (
               <ScoreCard currentWork={data.currentWork} />
             ) : (
-              <p className="border-y border-line py-6 text-[14px] text-grey">{t("results.noCurrentWork")}</p>
+              <ExposurePendingCard />
             )}
+            <p className="mt-3 text-[13px] text-grey">{t("scoreCard.notJobLoss")}</p>
 
             <section className="mt-12">
               <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
@@ -142,7 +144,8 @@ export function ResultsView() {
                   <ScenarioTabs value={scenario} onChange={setScenario} />
                   <InfoPopover
                     label={t("results.aboutScenario", { scenario: t(SCENARIO_LABEL[scenario]) })}
-                    panelClassName="right-0 left-auto"
+                    align="end"
+                    side="top"
                   >
                     <span className="font-medium text-ink">{t(SCENARIO_LABEL[scenario])}:</span>{" "}
                     {t(SCENARIO_SUMMARY[scenario])} <span className="text-grey/80">{t(SCENARIO_ILLUSTRATIVE)}</span>
@@ -170,7 +173,7 @@ export function ResultsView() {
               )}
 
               <LayoutGroup>
-                <div className="mt-6 grid grid-cols-1 gap-5 lg:grid-cols-3">
+                <div className="mt-6 grid grid-cols-1 items-start gap-5 lg:grid-cols-3">
                   {ranked.map((role, index) => {
                     const breakdown = data.breakdown[role.occupationId];
                     return (
@@ -196,7 +199,7 @@ export function ResultsView() {
                 <SdgLegend />
                 <div className="flex items-center gap-1">
                   {t("results.howNumbers")}
-                  <InfoPopover label={t("results.howNumbers")} panelClassName="right-0 bottom-6 left-auto sm:top-auto">
+                  <InfoPopover label={t("results.howNumbers")} align="end" side="top">
                     {t("results.howNumbersBody")}
                   </InfoPopover>
                 </div>
