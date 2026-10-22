@@ -54,3 +54,10 @@ export function formatSourceDate(iso: IsoDate): string {
   if (iso.endsWith("-01")) return formatMonthYear(iso);
   return formatDayMonthYear(iso);
 }
+
+/** "19 Sep" from an ISO date: for tight controls where the year is obvious. */
+export function formatShortDate(iso: IsoDate): string {
+  const [, month, day] = iso.split("-");
+  const name = MONTHS[Number(month) - 1] ?? month;
+  return `${Number(day)} ${name}`;
+}
