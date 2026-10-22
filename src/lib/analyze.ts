@@ -22,9 +22,11 @@ import {
 import { SOURCE_NAMES, type Catalogue, type CatalogueOccupation } from "@/lib/catalogue";
 import {
   SCORING_PARAMS,
+  compareId,
   scenarioDemand,
   scoreRoles,
   sdgInterestMatches,
+  skillImportance,
   type CandidateRole,
   type EssentialSkillInput,
 } from "@/lib/scoring";
@@ -53,7 +55,7 @@ export type RoleStatusTone = "robust" | "shift" | "interest";
 export type RoleBreakdown = {
   /** Essential skills the user has exactly (same ESCO skill). */
   matchedSkills: number;
-  /** Essential skills in the same ESCO skill group as one of the user's: half credit. */
+  /** Essential skills in the same ESCO skill group as one of the user's: quarter credit, capped at relatedSkillCap (4) per role. */
   relatedSkills: number;
   essentialSkills: number;
   demand: ScenarioScores;
@@ -129,7 +131,7 @@ function topIds(roles: readonly RoleResult[], scenario: ScenarioId): Set<string>
 }
 
 /** Credit for an essential skill in the same ESCO group as a user skill, times that skill's level. */
-export const RELATED_SKILL_CREDIT = 0.5;
+export const RELATED_SKILL_CREDIT = SCORING_PARAMS.relatedSkillCredit;
 
 export function analyzeProfile(catalogue: Catalogue, input: AnalyzeInput): AnalyzeResult {
   // The prior snapshot falls back to today's when it wasn't collected.
@@ -145,13 +147,47 @@ export function analyzeProfile(catalogue: Catalogue, input: AnalyzeInput): Analy
     const group = catalogue.skillGroups[skill.skillId];
     if (group) groupLevel.set(group, Math.max(groupLevel.get(group) ?? 0, skill.level));
   }
-  /** h_s: the user's level for the exact skill, else half credit for a same-group skill, else 0. */
-  const levelFor = (skillId: string): number => {
-    const exact = userLevel.get(skillId);
-    if (exact != null) return exact;
-    const group = catalogue.skillGroups[skillId];
-    const related = group ? groupLevel.get(group) : undefined;
-    return related != null ? RELATED_SKILL_CREDIT * related : SCORING_PARAMS.skillLevel.missing;
+  /**
+   * h_s for every essential skill of one role: the user's level for the
+   * exact skill, else related credit for a same-group skill, else 0.
+   *
+   * Related credit is only given to the relatedSkillCap (4) related skills
+   * with the highest adjusted importance imp_s (ties by skillId ascending).
+   * Any related skill beyond that falls back to missing. Without a cap, a
+   * role with many essential skills and a user with a few broadly-connected
+   * skills could rack up related credit on every one of them — the cap
+   * keeps it a small nudge, not a second way to match. See the header
+   * comment in scoring.ts for the full reasoning.
+   */
+  const levelsFor = (skillIds: readonly string[]): Map<string, number> => {
+    const levels = new Map<string, number>();
+    const related: { skillId: string; credit: number; imp: number }[] = [];
+    for (const skillId of skillIds) {
+      const exact = userLevel.get(skillId);
+      if (exact != null) {
+        levels.set(skillId, exact);
+        continue;
+      }
+      const group = catalogue.skillGroups[skillId];
+      const groupLvl = group ? groupLevel.get(group) : undefined;
+      if (groupLvl == null) {
+        levels.set(skillId, SCORING_PARAMS.skillLevel.missing);
+        continue;
+      }
+      related.push({
+        skillId,
+        credit: SCORING_PARAMS.relatedSkillCredit * groupLvl,
+        imp: skillImportance(BASE_IMPORTANCE, signals[skillId]?.momentum ?? 0),
+      });
+    }
+    related.sort((a, b) => b.imp - a.imp || compareId(a.skillId, b.skillId));
+    related.forEach((item, index) => {
+      levels.set(
+        item.skillId,
+        index < SCORING_PARAMS.relatedSkillCap ? item.credit : SCORING_PARAMS.skillLevel.missing,
+      );
+    });
+    return levels;
   };
   const teachable = new Set(catalogue.courses.flatMap((course) => course.skillIds));
 
@@ -159,25 +195,32 @@ export function analyzeProfile(catalogue: Catalogue, input: AnalyzeInput): Analy
     (occupation) => occupation.id !== input.currentOccupationId && occupation.exposure && occupation.essentialSkillIds.length > 0,
   );
 
-  const candidates: CandidateRole[] = scorable.map((occupation) => ({
-    occupationId: occupation.id,
-    title: occupation.title,
-    cluster: occupation.cluster,
-    // One task covering the whole week, at the occupation's published exposure.
-    // Augmentation is not scored yet (no task-level data), so it is 0 and never shown.
-    tasks: [{ share: 1, automation: occupation.exposure?.value ?? 0, augmentation: 0 }],
-    essentialSkills: occupation.essentialSkillIds.map(
-      (skillId): EssentialSkillInput => ({
-        skillId,
-        label: catalogue.skills[skillId] ?? skillId,
-        baseImportance: BASE_IMPORTANCE,
-        momentum: signals[skillId]?.momentum ?? 0,
-        level: levelFor(skillId),
-        teachable: teachable.has(skillId),
-      }),
-    ),
-    sdgLinks: occupation.sdg.map((sdg) => ({ target: sdg.target, tier: sdg.tier })),
-  }));
+  const levelsByOccupation = new Map(
+    scorable.map((occupation) => [occupation.id, levelsFor(occupation.essentialSkillIds)] as const),
+  );
+
+  const candidates: CandidateRole[] = scorable.map((occupation) => {
+    const levels = levelsByOccupation.get(occupation.id)!;
+    return {
+      occupationId: occupation.id,
+      title: occupation.title,
+      cluster: occupation.cluster,
+      // One task covering the whole week, at the occupation's published exposure.
+      // Augmentation is not scored yet (no task-level data), so it is 0 and never shown.
+      tasks: [{ share: 1, automation: occupation.exposure?.value ?? 0, augmentation: 0 }],
+      essentialSkills: occupation.essentialSkillIds.map(
+        (skillId): EssentialSkillInput => ({
+          skillId,
+          label: catalogue.skills[skillId] ?? skillId,
+          baseImportance: BASE_IMPORTANCE,
+          momentum: signals[skillId]?.momentum ?? 0,
+          level: levels.get(skillId) ?? SCORING_PARAMS.skillLevel.missing,
+          teachable: teachable.has(skillId),
+        }),
+      ),
+      sdgLinks: occupation.sdg.map((sdg) => ({ target: sdg.target, tier: sdg.tier })),
+    };
+  });
 
   const scored = scoreRoles(candidates, input.impactInterest);
   const byId = new Map(scorable.map((occupation) => [occupation.id, occupation]));
@@ -216,9 +259,13 @@ export function analyzeProfile(catalogue: Catalogue, input: AnalyzeInput): Analy
       occupation.sdg.map((sdg) => ({ target: sdg.target, tier: sdg.tier })),
       input.impactInterest,
     );
+    const levels = levelsByOccupation.get(role.occupationId)!;
     breakdown[role.occupationId] = {
       matchedSkills: occupation.essentialSkillIds.filter((id) => userLevel.has(id)).length,
-      relatedSkills: occupation.essentialSkillIds.filter((id) => !userLevel.has(id) && levelFor(id) > 0).length,
+      // Capped the same way as fit: at most relatedSkillCap (4) per role.
+      relatedSkills: occupation.essentialSkillIds.filter(
+        (id) => !userLevel.has(id) && (levels.get(id) ?? 0) > 0,
+      ).length,
       essentialSkills: occupation.essentialSkillIds.length,
       demand: Object.fromEntries(
         SCENARIO_IDS.map((scenario) => [scenario, scenarioDemand(occupation.cluster, scenario)]),

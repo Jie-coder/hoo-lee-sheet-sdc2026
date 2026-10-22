@@ -29,6 +29,9 @@ describe("SCORING_PARAMS", () => {
     expect(SCORING_PARAMS.sdgBonus).toBe(0.05);
     expect(SCORING_PARAMS.topN).toBe(3);
     expect(SCORING_PARAMS.gapSize).toBe(5);
+    expect(SCORING_PARAMS.relatedSkillCredit).toBe(0.25);
+    expect(SCORING_PARAMS.relatedSkillCap).toBe(4);
+    expect(SCORING_PARAMS.essentialSkillCap).toBe(25);
     expect(SCORING_PARAMS.theta).toEqual({ co: 1, dis: 1.4, sup: 1.2 });
     // demandByCluster is checked against data/*.csv in scripts/lib/scenario-demand.test.ts.
   });
@@ -208,6 +211,28 @@ describe("roleFitScore", () => {
 
   it("returns 0 when every importance is zero", () => {
     expect(roleFitScore([{ importance: 0, level: 1 }])).toBe(0);
+  });
+
+  it("leaves the denominator unchanged at or below the essential skill cap of 25", () => {
+    // 25 skills, importance 1 each, 10 fully matched: Σ imp = 25, same as the uncapped sum.
+    const skills = Array.from({ length: 25 }, (_, i) => ({ importance: 1, level: i < 10 ? 1 : 0 }));
+    expect(roleFitScore(skills)).toBeCloseTo(10 / 25, 12);
+  });
+
+  it("scales the denominator down for a role with more than 25 essential skills", () => {
+    // 30 skills, importance 1 each: Σ imp = 30, but the denominator is scaled
+    // to the 25-skill-equivalent sum, 30 * 25/30 = 25. 10 fully matched: 10/25.
+    const skills = Array.from({ length: 30 }, (_, i) => ({ importance: 1, level: i < 10 ? 1 : 0 }));
+    expect(roleFitScore(skills)).toBeCloseTo(10 / 25, 12);
+    // Without the cap this would have been 10/30; the scaled score is higher.
+    expect(roleFitScore(skills)).toBeGreaterThan(10 / 30);
+  });
+
+  it("clamps F to at most 1 when the scaled-down denominator is smaller than the matched weight", () => {
+    // 40 skills, importance 1 each, 30 fully matched: weighted = 30, scaled
+    // denominator = 40 * 25/40 = 25. Uncapped that would be 30/25 = 1.2.
+    const skills = Array.from({ length: 40 }, (_, i) => ({ importance: 1, level: i < 30 ? 1 : 0 }));
+    expect(roleFitScore(skills)).toBe(1);
   });
 });
 
