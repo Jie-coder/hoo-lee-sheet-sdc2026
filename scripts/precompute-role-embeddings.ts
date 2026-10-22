@@ -7,11 +7,12 @@
 //   npm run precompute-role-embeddings
 //
 // Needs GOOGLE_GENERATIVE_AI_API_KEY (same var as the rest of the app, see
-// .env.example). The output (src/data/role-embeddings.json) is committed;
-// this script is not part of the build or test run. Not run as part of this
-// change — the Gemini embedding quota is currently exhausted — so
-// src/lib/exposure-estimate.ts must (and does) tolerate that file being
-// absent.
+// .env.example). Overwrites the committed src/data/role-embeddings.json,
+// which src/lib/exposure-estimate.ts statically imports -- a rebuild is
+// needed to pick up a fresh run. This script is not part of the build or
+// test run. Not run as part of this change — the Gemini embedding quota is
+// currently exhausted — so the committed file is still the `[]` placeholder,
+// which src/lib/exposure-estimate.ts treats as unavailable.
 import { mkdirSync, writeFileSync } from "node:fs";
 import { dirname } from "node:path";
 import { embedMany } from "ai";

@@ -1,4 +1,4 @@
-import { describe, expect, it, vi } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import { CATALOGUE } from "@/lib/catalogue";
 import {
   cosineSimilarity,
@@ -130,8 +130,54 @@ describe("estimateExposure", () => {
     }
   });
 
-  it("uses the real on-disk loader (ROLE_EMBEDDINGS_PATH) by default, and that file is absent in this repo", async () => {
+  it("uses the real statically-imported src/data/role-embeddings.json by default, and that file is still the [] placeholder in this repo", async () => {
     const result = await estimateExposure("Underwater basket weaver");
     expect(result).toEqual({ status: "embeddings_unavailable" });
+  });
+});
+
+describe("estimateExposure's default loader (statically-imported role-embeddings.json)", () => {
+  afterEach(() => {
+    vi.doUnmock("@/data/role-embeddings.json");
+    vi.resetModules();
+  });
+
+  it("treats the [] placeholder as embeddings_unavailable", async () => {
+    vi.doMock("@/data/role-embeddings.json", () => ({ default: [] }));
+
+    const { estimateExposure: estimateExposureWithMock } = await import("@/lib/exposure-estimate");
+    const result = await estimateExposureWithMock("Underwater basket weaver", { embedTitle: vi.fn() });
+
+    expect(result).toEqual({ status: "embeddings_unavailable" });
+  });
+
+  it("treats an invalid shape (not matching RoleEmbeddingsFileSchema) as embeddings_unavailable", async () => {
+    vi.doMock("@/data/role-embeddings.json", () => ({ default: { oops: "wrong shape" } }));
+
+    const { estimateExposure: estimateExposureWithMock } = await import("@/lib/exposure-estimate");
+    const result = await estimateExposureWithMock("Underwater basket weaver", { embedTitle: vi.fn() });
+
+    expect(result).toEqual({ status: "embeddings_unavailable" });
+  });
+
+  it("uses valid statically-imported role embeddings to match a title", async () => {
+    vi.doMock("@/data/role-embeddings.json", () => ({
+      default: {
+        model: "gemini-embedding-001",
+        dimensions: 3,
+        generatedAt: "2026-10-01T00:00:00.000Z",
+        roles: [{ roleId: KNOWN_ROLE.id, title: KNOWN_ROLE.title, embedding: [1, 0, 0] }],
+      },
+    }));
+
+    const { estimateExposure: estimateExposureWithMock } = await import("@/lib/exposure-estimate");
+    const embedTitle = vi.fn(async () => [1, 0, 0]);
+    const result = await estimateExposureWithMock("a near-synonym title", { embedTitle });
+
+    expect(result.status).toBe("matched");
+    if (result.status === "matched") {
+      expect(result.borrowedFrom).toEqual({ roleId: KNOWN_ROLE.id, title: KNOWN_ROLE.title });
+      expect(result.similarity).toBeCloseTo(1, 10);
+    }
   });
 });

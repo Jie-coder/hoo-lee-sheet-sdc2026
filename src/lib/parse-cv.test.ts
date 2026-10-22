@@ -210,4 +210,35 @@ describe("parseCv", () => {
       expect(outcome.result.roles[0].tasks).toEqual(["Delivered the Q1 launch early"]);
     }
   });
+
+  it("matches an evidence quote that spans a tab-indented line break in the CV text, regardless of case", async () => {
+    process.env.AI_MOCK = "false";
+    const bytes = new TextEncoder().encode("a CV");
+    // CV text wraps the quote across a line break with a tab-indented continuation.
+    const cvText = "Reconciled monthly accounts\n\tfor three regional offices.";
+    const extractPdfText = vi.fn(async () => cvText);
+    const extractCv = vi.fn(async () => ({
+      skills: [],
+      roles: [
+        {
+          title: "Accounts Clerk",
+          years: 2,
+          tasks: [
+            {
+              text: "Reconciled accounts for three offices",
+              evidence: "RECONCILED MONTHLY ACCOUNTS for three regional offices",
+            },
+          ],
+        },
+      ],
+      education: [],
+    }));
+
+    const outcome = await parseCv(bytes, { demoResults: {}, sleep: noopSleep, extractPdfText, extractCv });
+
+    expect(outcome.ok).toBe(true);
+    if (outcome.ok) {
+      expect(outcome.result.roles[0].tasks).toEqual(["Reconciled accounts for three offices"]);
+    }
+  });
 });

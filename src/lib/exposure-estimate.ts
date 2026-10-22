@@ -3,19 +3,20 @@
 // embedding the title with Gemini and borrowing the closest curated role's
 // exposure figure when the two are close enough. Precomputed role
 // embeddings live in src/data/role-embeddings.json (written once by
-// scripts/precompute-role-embeddings.ts); this module reads that file from
-// disk at request time rather than importing it, so a run before that
-// script has ever produced the file still builds and serves requests —
-// POST /api/exposure-estimate just returns { status: "embeddings_unavailable" }.
+// scripts/precompute-role-embeddings.ts); this module statically imports
+// that file so it's bundled at build time rather than read from disk per
+// request. The placeholder checked into the repo before that script has
+// ever run is `[]`, which fails the object-shaped schema below and so
+// resolves to null — POST /api/exposure-estimate just returns
+// { status: "embeddings_unavailable" }.
 import "server-only";
-import { existsSync, readFileSync } from "node:fs";
-import { join } from "node:path";
 import { embed } from "ai";
 import { createGoogle } from "@ai-sdk/google";
 import { z } from "zod";
 import { getEnv } from "@/lib/env";
 import { CATALOGUE, type CatalogueExposure } from "@/lib/catalogue";
 import { EMBEDDING_DIMENSIONS, EMBEDDING_MODEL } from "@/types/contracts";
+import roleEmbeddingsJson from "@/data/role-embeddings.json";
 
 /**
  * Cosine threshold for borrowing a curated role's exposure figure for an
@@ -37,9 +38,6 @@ import { EMBEDDING_DIMENSIONS, EMBEDDING_MODEL } from "@/types/contracts";
  * justifies a different value.
  */
 export const EXPOSURE_MATCH_THRESHOLD = 0.8;
-
-/** Where scripts/precompute-role-embeddings.ts writes its output, and where this module reads it from. */
-export const ROLE_EMBEDDINGS_PATH = join(process.cwd(), "src/data/role-embeddings.json");
 
 export type RoleEmbedding = { roleId: string; title: string; embedding: number[] };
 
@@ -97,28 +95,22 @@ export function cosineSimilarity(a: readonly number[], b: readonly number[]): nu
 }
 
 /**
- * Reads and validates ROLE_EMBEDDINGS_PATH. Returns null for any reason it
- * can't be used: missing, unreadable, or invalid JSON/shape. An empty roles
- * list is still a validly-shaped file, so it is returned as-is; estimateExposure
- * treats zero roles the same as a missing file.
+ * Validates the statically-imported role-embeddings JSON. Returns null for
+ * any shape that doesn't match RoleEmbeddingsFileSchema -- including the
+ * `[]` placeholder committed before scripts/precompute-role-embeddings.ts
+ * has ever run. An empty roles list in an otherwise valid file is still
+ * returned as-is; estimateExposure treats zero roles the same as null.
  */
-function loadRoleEmbeddingsFromDisk(): RoleEmbeddingsFile | null {
-  if (!existsSync(ROLE_EMBEDDINGS_PATH)) return null;
-  let raw: string;
-  try {
-    raw = readFileSync(ROLE_EMBEDDINGS_PATH, "utf8");
-  } catch {
-    return null;
-  }
-  let json: unknown;
-  try {
-    json = JSON.parse(raw);
-  } catch {
-    return null;
-  }
+function parseRoleEmbeddings(json: unknown): RoleEmbeddingsFile | null {
   const parsed = RoleEmbeddingsFileSchema.safeParse(json);
-  if (!parsed.success) return null;
-  return parsed.data;
+  return parsed.success ? parsed.data : null;
+}
+
+/** Validated once at module load, since the import is static (bundled, not re-read per request). */
+const STATIC_ROLE_EMBEDDINGS = parseRoleEmbeddings(roleEmbeddingsJson);
+
+function loadRoleEmbeddingsFromModule(): RoleEmbeddingsFile | null {
+  return STATIC_ROLE_EMBEDDINGS;
 }
 
 async function embedTitleWithGemini(title: string): Promise<number[]> {
@@ -141,7 +133,7 @@ async function embedTitleWithGemini(title: string): Promise<number[]> {
 export type ExposureEstimateDeps = {
   /** Default: Gemini embed (gemini-embedding-001, 768 dims). Inject a stub in tests to avoid any network call. */
   embedTitle?: (title: string) => Promise<number[]>;
-  /** Default: read + validate ROLE_EMBEDDINGS_PATH from disk. */
+  /** Default: the statically-imported + zod-validated src/data/role-embeddings.json. */
   loadRoleEmbeddings?: () => RoleEmbeddingsFile | null;
 };
 
@@ -164,7 +156,7 @@ export async function estimateExposure(title: string, deps: ExposureEstimateDeps
     };
   }
 
-  const loadRoleEmbeddings = deps.loadRoleEmbeddings ?? loadRoleEmbeddingsFromDisk;
+  const loadRoleEmbeddings = deps.loadRoleEmbeddings ?? loadRoleEmbeddingsFromModule;
   const file = loadRoleEmbeddings();
   if (!file || file.roles.length === 0) {
     return { status: "embeddings_unavailable" };
