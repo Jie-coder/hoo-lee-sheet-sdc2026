@@ -1,0 +1,7 @@
+scenario_id,cluster,demand_multiplier,theta,source_name,source_url,page_or_figure,quote_or_figure,as_of,notes
+co,data_analytics,1.4,1,Contoso Jobs Outlook,https://example.com/reports/jobs-outlook.pdf,p.12,"""Data Analysts"": net growth +40%",2025-01-07,
+co,human_care,1.1,1,Contoso Jobs Outlook,https://example.com/reports/jobs-outlook.pdf,p.14,"""Teachers"": net growth +10%",2025-01-07,
+dis,data_analytics,1.1,1.4,Contoso Jobs Outlook,https://example.com/reports/jobs-outlook.pdf,p.12,"""Financial Analysts"": net growth +10%",2025-01-07,
+dis,human_care,1.1,1.4,Contoso Jobs Outlook,https://example.com/reports/jobs-outlook.pdf,p.14,"""Teachers"": net growth +10%",2025-01-07,
+sup,data_analytics,2,1.2,Contoso Jobs Outlook,https://example.com/reports/jobs-outlook.pdf,p.12,"""Big Data Specialists"": net growth +100%",2025-01-07,
+sup,human_care,1.1,1.2,Contoso Jobs Outlook,https://example.com/reports/jobs-outlook.pdf,p.14,"""Teachers"": net growth +10%",2025-01-07,

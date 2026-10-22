@@ -5608,8 +5608,8 @@
   },
   "WEF Future of Jobs Report 2025": {
    "name": "WEF Future of Jobs Report 2025",
-   "url": "https://www.weforum.org/publications/the-future-of-jobs-report-2025/",
-   "publisher": "WEF",
+   "url": "https://reports.weforum.org/docs/WEF_Future_of_Jobs_Report_2025.pdf",
+   "publisher": "World Economic Forum",
    "lastUpdated": "2025-01-07"
   },
   "OECD.AI": {
@@ -5647,6 +5647,18 @@
    "url": "https://esco.ec.europa.eu/en/use-esco/use-esco-services-api",
    "publisher": "European Commission",
    "lastUpdated": "2026-10-21"
+  },
+  "OpenDOSM Salaries & Wages by Occupation": {
+   "name": "OpenDOSM Salaries & Wages by Occupation",
+   "url": "https://open.dosm.gov.my/data-catalogue/wages_occupation",
+   "publisher": "Department of Statistics Malaysia (DOSM)",
+   "lastUpdated": "2026-09-21"
+  },
+  "WEF Four Futures for Jobs 2030": {
+   "name": "WEF Four Futures for Jobs 2030",
+   "url": "https://reports.weforum.org/docs/WEF_Four_Futures_for_Jobs_in_the_New_Economy_AI_and_Talent_in_2030_2025.pdf",
+   "publisher": "World Economic Forum",
+   "lastUpdated": "2026-01-09"
   }
  },
  "courses": [

@@ -15,6 +15,7 @@ import {
   buildOccupationRows,
   buildOccupationSkillRows,
   buildProgramRows,
+  buildScenarioRows,
   buildSignalRows,
   buildSkillRows,
   buildSourceRows,
@@ -106,6 +107,8 @@ const keywordsOutcome = runFile("keywords", DATA_DIR);
 const sourcesOutcome = runFile("sources", DATA_DIR);
 const exposureOutcome = runFile("exposure", DATA_DIR);
 const occupationSkillsOutcome = runFile("occupation_skills", DATA_DIR);
+const demandOutcome = runFile("demand", DATA_DIR);
+const scenariosOutcome = runFile("scenarios", DATA_DIR);
 
 const skills = deriveSkills([...coursesOutcome.skillPairs, ...keywordsOutcome.skillPairs]);
 const emptyEmbeddings = new Map<string, number[]>();
@@ -360,5 +363,36 @@ describe("data/*.csv respects the primary keys the migrations declare", () => {
 
     const names = rows.map((row) => row[nameIndex]);
     expect(new Set(names).size).toBe(names.length);
+  });
+});
+
+// public.cluster_demand is not in live-schema.json: its migration
+// (20261022090000) has not been applied to the live project yet.
+describe("data/demand.csv + data/scenarios.csv -> public.scenarios", () => {
+  const rows = buildScenarioRows(
+    scenariosOutcome.validScenarios,
+    demandOutcome.validDemand,
+    occupationsOutcome.validOccupations
+  );
+
+  it("both files are clean", () => {
+    expect(demandOutcome.fileReport.invalidRows).toBe(0);
+    expect(scenariosOutcome.fileReport.invalidRows).toBe(0);
+  });
+
+  it("builds rows that match the live public.scenarios columns", () => {
+    assertRowsMatchSchema("scenarios", rows);
+  });
+
+  it("gives every cluster in occupations.csv a demand between 0 and 1 in all three scenarios", () => {
+    const clusters = new Set(occupationsOutcome.validOccupations.map((occupation) => occupation.cluster));
+    expect(rows.map((row) => row.id)).toEqual(["co", "dis", "sup"]);
+    for (const row of rows) {
+      const demand = row.demand_by_cluster as Record<string, number>;
+      for (const cluster of clusters) {
+        expect(demand[cluster], `${row.id} ${cluster}`).toBeGreaterThan(0);
+        expect(demand[cluster]).toBeLessThanOrEqual(1);
+      }
+    }
   });
 });

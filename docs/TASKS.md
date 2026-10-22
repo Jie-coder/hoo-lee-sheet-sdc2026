@@ -71,6 +71,18 @@ The Domain 1 brief (journey step 2) asks for a view of which skills and roles ar
 
 **Done when** the radar loads from real signals and every item shows its source and date.
 
+## T19: sourced demand and scenarios (Jarvis with Claude Code; Henry checks the citations)
+The brief asks for identifiable AI-trend **and** job-market signals with source and date, and no invented statistics. Until now cluster demand D and the scenario values were typed in by hand.
+1. Malaysian demand: `npx tsx scripts/fetch-dosm-demand.ts` writes `data/demand.csv` from OpenDOSM `wages_occupation` (employees per ISCO major group, latest year and the year before). Rerun when `occupations.csv` changes.
+2. Scenario multipliers: `data/scenarios.csv`, one cited WEF Future of Jobs Report 2025 figure (role, %, page) per scenario and cluster. Henry checks every row against the PDF page.
+3. Henry adds the new and corrected rows of `data/sources.csv` (OpenDOSM Salaries & Wages by Occupation, WEF Four Futures for Jobs 2030, and the WEF Future of Jobs licence fix) to the "Laluan – AI Signals" sheet, so the next export keeps them.
+4. Check: `npx tsx scripts/import-data.ts --only demand,scenarios,sources,occupations` reports 0 errors.
+5. Peter applies migration `20261022090000_cluster_demand.sql` to the live project before the next `--apply`.
+6. Done: the app's scoring (`SCORING_PARAMS.demandByCluster`, `src/lib/scoring.ts`) uses these values. After changing `demand.csv` or `scenarios.csv`, copy the new values in; `scripts/lib/scenario-demand.test.ts` fails until you do.
+7. Later, if time allows: a second exposure figure per occupation from the Anthropic Economic Index (check the dataset card's licence first).
+
+**Done when** every cluster's demand traces to a DOSM table and period, and every scenario multiplier to a WEF page and figure.
+
 ## T11: deploy on Replit (Bing Jie with Peter guiding, in DM)
 1. Replit: Import → GitHub → `Jie-coder/hoo-lee-sheet-sdc2026` (allow Replit to see this private repo).
 2. Open **Secrets** and add: `GOOGLE_GENERATIVE_AI_API_KEY`, `SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`, and `AI_MODEL` if needed. Peter will say exactly which values to use.

@@ -101,8 +101,10 @@ describe("runImport (dry run)", () => {
       // 2 from courses/keywords + 1 ESCO skill only occupation_skills.csv mentions.
       skills: 3,
       occupations: 2,
-      sources: 3,
+      sources: 5,
       exposure: 2,
+      cluster_demand: 2,
+      scenarios: 3,
       courses: 3,
       programs: 3,
       signals: 4,
@@ -140,6 +142,33 @@ describe("runImport: occupation_skills.csv", () => {
     );
     expect(unknownOccupation.length).toBeGreaterThan(0);
     expect(result.exitCode).toBe(1);
+  });
+
+  it("reports demand.csv and scenarios.csv errors at their row and column", async () => {
+    const result = await runImport({ dir: INVALID_DIR, only: "demand,scenarios", apply: false, env: {} });
+    const issuesIn = (name: string) => result.report.files.find((f) => f.file === name)?.issues ?? [];
+    expect(issuesIn("demand.csv").map((issue) => [issue.row, issue.column])).toEqual([
+      [3, "cluster"],
+      [4, "value"],
+      [5, "prev_period"],
+      [6, "cluster + isco_major_group + metric + period"],
+    ]);
+    expect(issuesIn("scenarios.csv").map((issue) => [issue.row, issue.column])).toEqual([
+      [4, "scenario_id"],
+      [5, "demand_multiplier"],
+      [6, "page_or_figure"],
+      [3, "theta"],
+    ]);
+    expect(result.exitCode).toBe(1);
+  });
+
+  it("flags a demand.csv / scenarios.csv source_name missing from sources.csv as an error", async () => {
+    const result = await runImport({ dir: INVALID_DIR, only: "demand,scenarios,sources", apply: false, env: {} });
+    const unknown = result.report.crossFileIssues.filter((issue) => issue.column === "source_name");
+    expect(unknown.map((issue) => [issue.file, issue.severity])).toEqual([
+      ["demand.csv", "error"],
+      ["scenarios.csv", "error"],
+    ]);
   });
 
   it("is reachable with --only occupation-skills", async () => {
@@ -329,7 +358,7 @@ describe("runCli --apply env resolution", () => {
     const result = await runCli(["--dir", "scripts/fixtures/valid"], cwd);
     const stdout = result.stdout.join("\n");
     expect(stdout).toContain(
-      "would write: skills 3, occupations 2, sources 3, exposure 2, courses 3, programs 3, signals 4, occupation_skills 2"
+      "would write: skills 3, occupations 2, sources 5, exposure 2, cluster_demand 2, scenarios 3, courses 3, programs 3, signals 4, occupation_skills 2"
     );
   });
 });

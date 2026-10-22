@@ -20,12 +20,13 @@ const SCENARIO_ICON: Record<ScenarioId, LucideIcon> = {
 };
 
 export const SCENARIO_SUMMARY: Record<ScenarioId, string> = {
-  co: "AI spreads steadily and mostly works alongside people. Demand grows for data and customer roles; routine clerical work shrinks slowly.",
-  dis: "AI replaces routine tasks faster than new work appears. Clerical demand falls sharply, and some customer roles slip down the ranking.",
-  sup: "AI capability jumps quickly. Demand surges for digital and data work, and green reporting grows with it.",
+  co: "AI spreads steadily and mostly works alongside people. Digital, data and green roles grow; routine clerical work shrinks.",
+  dis: "AI moves faster than people can retrain. Every field grows less, clerical work shrinks most, and AI exposure counts for more.",
+  sup: "AI advances fast and people are ready for it. Digital and data roles grow fastest.",
 };
 
-export const SCENARIO_ILLUSTRATIVE = "Scenario values are illustrative, based on WEF Jobs of Tomorrow futures.";
+export const SCENARIO_ILLUSTRATIVE =
+  "Demand uses DOSM employment (2025) and WEF Future of Jobs 2025 figures. Scenarios follow WEF Four Futures (2026).";
 
 export function ScenarioTabs({ value, onChange }: { value: ScenarioId; onChange: (scenario: ScenarioId) => void }) {
   const [stacked, setStacked] = useState(false);

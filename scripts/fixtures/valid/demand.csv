@@ -1,0 +1,3 @@
+cluster,isco_major_group,metric,value,period,prev_value,prev_period,source_name,source_url,table_or_dataset,as_of,notes
+data_analytics,2,salaries_wages_recipients_thousands,1100,2025,1000,2024,Contoso Labour Survey,https://example.com/data/labour-survey.csv,"labour-survey, occupation=professionals",2026-09-21,1 of 1 data_analytics occupations is in group 2
+human_care,5,salaries_wages_recipients_thousands,990,2025,1000,2024,Contoso Labour Survey,https://example.com/data/labour-survey.csv,"labour-survey, occupation=service_sales",2026-09-21,

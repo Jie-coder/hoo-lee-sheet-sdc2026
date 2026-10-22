@@ -16,7 +16,7 @@ export function explainRole(role: RoleResult, breakdown: RoleBreakdown, scenario
       ? `You have ${breakdown.matchedSkills} of its ${breakdown.essentialSkills} essential skills, and ${breakdown.relatedSkills} more are close to ones you have.`
       : `You have ${breakdown.matchedSkills} of its ${breakdown.essentialSkills} essential skills.`;
   const exposure = `AI exposure ${role.exposure.toFixed(2)}${breakdown.exposureGroupEstimate ? " (occupation group)" : ""}.`;
-  const demand = `Demand in ${SCENARIO_NAME[scenario]}: ${breakdown.demand[scenario].toFixed(2)} (illustrative).`;
+  const demand = `Demand in ${SCENARIO_NAME[scenario]}: ${breakdown.demand[scenario].toFixed(2)} (DOSM and WEF data).`;
   const bonus = breakdown.interestMatch ? ` Includes +${SCORING_PARAMS.sdgBonus} for matching your impact interest.` : "";
   return `${skills} ${exposure} ${demand} Score ${role.byScenario[scenario].toFixed(2)}.${bonus}`;
 }
