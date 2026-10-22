@@ -306,7 +306,7 @@ export function ProfileView() {
                         <textarea
                           value={item.field}
                           onChange={(event) => updateEducation(index, { field: event.target.value })}
-                          placeholder="Institution"
+                          placeholder="Field of study"
                           rows={1}
                           className="field field-sizing-content min-w-[8rem] flex-1 resize-none px-2 py-1 text-[13px]"
                         />

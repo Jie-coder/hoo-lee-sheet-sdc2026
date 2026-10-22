@@ -71,6 +71,20 @@ describe("parseCv", () => {
     expect(extractCv).not.toHaveBeenCalled();
   });
 
+  it("returns 422 when the PDF itself cannot be read (corrupt file)", async () => {
+    process.env.AI_MOCK = "false";
+    const bytes = new TextEncoder().encode("not actually a valid PDF");
+    const extractPdfText = vi.fn(async () => {
+      throw new Error("bad XRef entry");
+    });
+    const extractCv = vi.fn();
+
+    const outcome = await parseCv(bytes, { demoResults: {}, sleep: noopSleep, extractPdfText, extractCv });
+
+    expect(outcome).toEqual({ ok: false, status: 422, error: "Could not read that PDF." });
+    expect(extractCv).not.toHaveBeenCalled();
+  });
+
   it("returns 500 with a readable message when the Gemini extraction call fails", async () => {
     process.env.AI_MOCK = "false";
     const bytes = new TextEncoder().encode("a CV");
@@ -96,7 +110,7 @@ describe("parseCv", () => {
       name: "Jane Doe",
       skills: [],
       roles: [{ title: "Clerk", years: 2 }],
-      education: [{ qualification: "Diploma in Business", institution: "A Polytechnic" }],
+      education: [{ qualification: "Diploma in Business", field: "Business Administration" }],
     }));
 
     const outcome = await parseCv(bytes, { demoResults: {}, sleep: noopSleep, extractPdfText, extractCv });
@@ -106,7 +120,7 @@ describe("parseCv", () => {
       result: {
         name: "Jane Doe",
         roles: [{ title: "Clerk", years: 2, tasks: [] }],
-        education: [{ level: "Diploma in Business", field: "A Polytechnic" }],
+        education: [{ level: "Diploma in Business", field: "Business Administration" }],
         skills: [],
       },
     });

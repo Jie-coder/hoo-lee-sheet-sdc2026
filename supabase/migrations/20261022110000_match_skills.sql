@@ -13,7 +13,9 @@ create or replace function public.match_skills(
 returns table (id text, label_en text, similarity double precision)
 language sql
 stable
-set search_path = ''
+-- pgvector's `<=>` operator lives in the public schema, so search_path must
+-- include it (an empty search_path would make `<=>` unresolvable).
+set search_path = public, pg_temp
 as $$
   select
     s.id,

@@ -54,9 +54,11 @@ const DEFAULT_DEMO_RESULTS: Record<string, ParsedCvResult> = (() => {
 
 /**
  * What Gemini is asked to return. Deliberately smaller than ParsedCV in
- * contracts.ts: no per-role tasks (not shown on /profile) and plain
- * qualification/institution names instead of level/field, mapped onto
- * ParsedCvRole/ParsedCvEducation afterwards.
+ * contracts.ts: no per-role tasks (not shown on /profile), mapped onto
+ * ParsedCvRole/ParsedCvEducation afterwards. Education asks for the
+ * qualification and its field of study (major/subject) to line up with
+ * ParsedCvEducation's level/field; the school name is not collected since
+ * ParsedCvEducation has nowhere to put it.
  */
 const CvExtractionSchema = z.strictObject({
   name: z.string().min(1).optional().describe("The person's name, only if it is written on the CV."),
@@ -70,7 +72,12 @@ const CvExtractionSchema = z.strictObject({
     )
     .max(20),
   education: z
-    .array(z.strictObject({ qualification: z.string().min(1), institution: z.string().min(1) }))
+    .array(
+      z.strictObject({
+        qualification: z.string().min(1).describe('The degree or qualification name, e.g. "Diploma in Business".'),
+        field: z.string().min(1).describe('The major or field of study, e.g. "Business Administration".'),
+      }),
+    )
     .max(10),
 });
 export type CvExtraction = z.infer<typeof CvExtractionSchema>;
@@ -78,8 +85,9 @@ export type CvExtraction = z.infer<typeof CvExtractionSchema>;
 const EXTRACTION_SYSTEM_PROMPT =
   "You read a CV's plain text and extract only what is written in it: the person's name if it appears, " +
   "their skills and tools, their roles (title and years in each, estimated from any dates given), and their " +
-  "education (qualification and institution). Never invent a name, skill, role, or qualification that is not " +
-  "in the text. If a field is not in the text, leave it out rather than guessing.";
+  "education (the qualification/degree, and its major or field of study). Never invent a name, skill, role, " +
+  "qualification, or field of study that is not in the text. If a field is not in the text, leave it out " +
+  "rather than guessing.";
 
 function sha256Hex(bytes: Uint8Array): string {
   return createHash("sha256").update(bytes).digest("hex");
@@ -93,7 +101,7 @@ function toParsedCvResult(extraction: CvExtraction, skills: ParsedSkill[]): Pars
   return {
     name: extraction.name ?? "",
     roles: extraction.roles.map((role) => ({ title: role.title, years: role.years, tasks: [] })),
-    education: extraction.education.map((edu) => ({ level: edu.qualification, field: edu.institution })),
+    education: extraction.education.map((edu) => ({ level: edu.qualification, field: edu.field })),
     skills,
   };
 }
@@ -162,7 +170,14 @@ export async function parseCv(bytes: Uint8Array, deps: ParseCvDeps = {}): Promis
  */
 export async function extractAndMapCv(bytes: Uint8Array, deps: ParseCvDeps = {}): Promise<ParseCvOutcome> {
   const extractPdfText = deps.extractPdfText ?? defaultExtractPdfText;
-  const text = await extractPdfText(bytes);
+  let text: string;
+  try {
+    text = await extractPdfText(bytes);
+  } catch {
+    // A corrupt or unreadable PDF throws inside unpdf/pdf.js; that's a bad
+    // upload, not a server error, so this is a 422 like the scanned-PDF case.
+    return { ok: false, status: 422, error: "Could not read that PDF." };
+  }
   if (!text.trim()) {
     return { ok: false, status: 422, error: "Scanned PDFs are not supported." };
   }
