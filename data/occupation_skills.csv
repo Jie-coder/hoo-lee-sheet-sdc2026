@@ -1321,3 +1321,443 @@ o040,http://data.europa.eu/esco/skill/4339176e-3acd-4f7f-a5d9-445bee3d23f2,mathe
 o040,http://data.europa.eu/esco/skill/af0f7625-b9fc-4f97-a71d-d7c7648bfc35,prepare paychecks,essential,ESCO,2026-10-21
 o040,http://data.europa.eu/esco/skill/ff5e9b54-d141-4f5a-ad04-ddefd7d8843f,procure time sheet approval,essential,ESCO,2026-10-21
 o040,http://data.europa.eu/esco/skill/0295b2a4-fb86-495f-9547-d479532fc4c2,trace financial transactions,essential,ESCO,2026-10-21
+o001,http://data.europa.eu/esco/skill/8369ede5-4200-4a44-be2e-bc60ef959259,Microsoft Visual C++,optional,ESCO,2026-10-22
+o001,http://data.europa.eu/esco/skill/d31fab87-2a7d-485c-b699-2901ca294b15,use functional programming,optional,ESCO,2026-10-22
+o001,http://data.europa.eu/esco/skill/300d432b-f457-4cd3-9cb1-1858c7d14954,OpenEdge Advanced Business Language,optional,ESCO,2026-10-22
+o001,http://data.europa.eu/esco/skill/5b9cde20-f1b9-4adc-bfb3-dbf70b14138d,use object-oriented programming,optional,ESCO,2026-10-22
+o001,http://data.europa.eu/esco/skill/7814e88f-c133-4c3b-b27f-857afa145d42,ICT security legislation,optional,ESCO,2026-10-22
+o001,http://data.europa.eu/esco/skill/c7451027-8249-405a-bb1b-342ff0f3fb3b,Salt (tools for software configuration management),optional,ESCO,2026-10-22
+o001,http://data.europa.eu/esco/skill/c3a03c5a-c260-4c26-9b9a-873abb396f4d,MATLAB,optional,ESCO,2026-10-22
+o001,http://data.europa.eu/esco/skill/2c4e11ef-da18-4e19-816b-e6bc19e12424,use logic programming,optional,ESCO,2026-10-22
+o001,http://data.europa.eu/esco/skill/3cd569a2-4f88-4c1e-9995-8dce8c5e51a7,JavaScript,optional,ESCO,2026-10-22
+o001,http://data.europa.eu/esco/skill/449d119b-2d66-43a9-9230-7d27f16afbb6,Xcode,optional,ESCO,2026-10-22
+o001,http://data.europa.eu/esco/skill/f47a1998-0beb-43be-9f46-380aa4d183da,Jenkins (tools for software configuration management),optional,ESCO,2026-10-22
+o001,http://data.europa.eu/esco/skill/4c016b68-4116-468c-9dc6-42710c239e4a,C#,optional,ESCO,2026-10-22
+o002,http://data.europa.eu/esco/skill/25b291b5-8245-4d9d-b391-86a8a31d7109,use concurrent programming,optional,ESCO,2026-10-22
+o002,http://data.europa.eu/esco/skill/47b9bbcf-356c-4782-83a4-7f5a1b2b51a3,Assembly (computer programming),optional,ESCO,2026-10-22
+o002,http://data.europa.eu/esco/skill/d31fab87-2a7d-485c-b699-2901ca294b15,use functional programming,optional,ESCO,2026-10-22
+o002,http://data.europa.eu/esco/skill/26fa7a33-a426-4cd5-9792-33bf668612e1,LESS,optional,ESCO,2026-10-22
+o002,http://data.europa.eu/esco/skill/f5308e60-d763-4ead-be95-88c96fb3e02b,adapt to changes in technological development plans,optional,ESCO,2026-10-22
+o002,http://data.europa.eu/esco/skill/dcdd5ddf-82a6-4ac3-8edc-d4b23cae9a88,VBScript,optional,ESCO,2026-10-22
+o002,http://data.europa.eu/esco/skill/c3a03c5a-c260-4c26-9b9a-873abb396f4d,MATLAB,optional,ESCO,2026-10-22
+o002,http://data.europa.eu/esco/skill/e8b89eb6-51e8-4c3a-babb-88b2e110376b,Pascal (computer programming),optional,ESCO,2026-10-22
+o002,http://data.europa.eu/esco/skill/e8d9ce55-7bc3-4f09-8412-0a393d4b5b96,compose description for web elements,optional,ESCO,2026-10-22
+o002,http://data.europa.eu/esco/skill/1110c92f-3059-445a-9436-0f4200d365f5,Sass,optional,ESCO,2026-10-22
+o002,http://data.europa.eu/esco/skill/8785ccda-6f9f-4cf3-9033-fda10653d0be,JSSS,optional,ESCO,2026-10-22
+o002,http://data.europa.eu/esco/skill/c7451027-8249-405a-bb1b-342ff0f3fb3b,Salt (tools for software configuration management),optional,ESCO,2026-10-22
+o003,http://data.europa.eu/esco/skill/19a8293b-8e95-4de3-983f-77484079c389,Java (computer programming),optional,ESCO,2026-10-22
+o003,http://data.europa.eu/esco/skill/25b291b5-8245-4d9d-b391-86a8a31d7109,use concurrent programming,optional,ESCO,2026-10-22
+o003,http://data.europa.eu/esco/skill/300d432b-f457-4cd3-9cb1-1858c7d14954,OpenEdge Advanced Business Language,optional,ESCO,2026-10-22
+o003,http://data.europa.eu/esco/skill/0ccdfe98-f845-4598-84a1-3dca66e9d9a3,Ruby (computer programming),optional,ESCO,2026-10-22
+o003,http://data.europa.eu/esco/skill/7814e88f-c133-4c3b-b27f-857afa145d42,ICT security legislation,optional,ESCO,2026-10-22
+o003,http://data.europa.eu/esco/skill/bb99af26-71ff-4dca-bde7-1eb1f6194426,SAP R3,optional,ESCO,2026-10-22
+o003,http://data.europa.eu/esco/skill/3cd569a2-4f88-4c1e-9995-8dce8c5e51a7,JavaScript,optional,ESCO,2026-10-22
+o003,http://data.europa.eu/esco/skill/b4dc6e4f-dc7d-445f-8ce2-d7b9d225e282,AJAX,optional,ESCO,2026-10-22
+o003,http://data.europa.eu/esco/skill/dcdd5ddf-82a6-4ac3-8edc-d4b23cae9a88,VBScript,optional,ESCO,2026-10-22
+o003,http://data.europa.eu/esco/skill/fd33c66c-70c4-40e6-b87c-5495bd3bf26e,design user interface,optional,ESCO,2026-10-22
+o003,http://data.europa.eu/esco/skill/5b9cde20-f1b9-4adc-bfb3-dbf70b14138d,use object-oriented programming,optional,ESCO,2026-10-22
+o003,http://data.europa.eu/esco/skill/6f8a40d6-f9ce-43ec-a72f-d4213a53f3ed,Ansible,optional,ESCO,2026-10-22
+o004,http://data.europa.eu/esco/skill/2bde42ae-e776-41c1-9ded-b07b30bfe985,Prolog (computer programming),optional,ESCO,2026-10-22
+o004,http://data.europa.eu/esco/skill/03a74eee-2dc6-4147-8667-5cdeb65f122d,manage ICT data classification,optional,ESCO,2026-10-22
+o004,http://data.europa.eu/esco/skill/bb99af26-71ff-4dca-bde7-1eb1f6194426,SAP R3,optional,ESCO,2026-10-22
+o004,http://data.europa.eu/esco/skill/42ed3bfb-1a01-4c8b-9758-fc6438865734,Smalltalk (computer programming),optional,ESCO,2026-10-22
+o004,http://data.europa.eu/esco/skill/143769cb-b61e-47d8-a61e-eedfbec1016c,business intelligence,optional,ESCO,2026-10-22
+o004,http://data.europa.eu/esco/skill/41bf7ede-fc84-4a57-8c89-b548d11b0ba1,manage business knowledge,optional,ESCO,2026-10-22
+o004,http://data.europa.eu/esco/skill/19a8293b-8e95-4de3-983f-77484079c389,Java (computer programming),optional,ESCO,2026-10-22
+o005,http://data.europa.eu/esco/skill/cf3e976d-2c3e-495c-a874-f9e8a66d3b48,perform backups,optional,ESCO,2026-10-22
+o005,http://data.europa.eu/esco/skill/a56dec32-05ef-45de-a256-ee6741f356db,information confidentiality,optional,ESCO,2026-10-22
+o005,http://data.europa.eu/esco/skill/5ef0c719-5bcb-49f8-b8eb-824388225333,use scripting programming,optional,ESCO,2026-10-22
+o005,http://data.europa.eu/esco/skill/7814e88f-c133-4c3b-b27f-857afa145d42,ICT security legislation,optional,ESCO,2026-10-22
+o005,http://data.europa.eu/esco/skill/902fb91c-3113-4004-9b4f-79aa86b638b7,web application security threats,optional,ESCO,2026-10-22
+o005,http://data.europa.eu/esco/skill/e54ff029-1ce9-447d-a5b2-eb7283a23e6e,train employees,optional,ESCO,2026-10-22
+o005,http://data.europa.eu/esco/skill/d32db06e-bd06-4415-a7ab-1b0ee68caa9a,ICT encryption,optional,ESCO,2026-10-22
+o005,http://data.europa.eu/esco/skill/ddb65832-91a7-4157-9488-719a0e2ad87b,lead disaster recovery exercises,optional,ESCO,2026-10-22
+o005,http://data.europa.eu/esco/skill/d0c6d77e-cb25-4770-bf77-2073fc5f7523,ICT infrastructure,optional,ESCO,2026-10-22
+o005,http://data.europa.eu/esco/skill/7e1f9657-ab4e-407c-842f-b846197060e3,execute ICT audits,optional,ESCO,2026-10-22
+o005,http://data.europa.eu/esco/skill/3ff589b7-68df-4ea5-ae41-b395bdb2378f,ICT security standards,optional,ESCO,2026-10-22
+o005,http://data.europa.eu/esco/skill/913e7e83-b8f8-4574-b1ca-1b38f3fd974a,execute software tests,optional,ESCO,2026-10-22
+o006,http://data.europa.eu/esco/skill/f0ff6f10-cbb4-44c0-acd5-ed17046b1396,install signal repeaters,optional,ESCO,2026-10-22
+o006,http://data.europa.eu/esco/skill/d56fc2b5-4b0a-4e7e-9bde-a33736f6ff18,Scratch (computer programming),optional,ESCO,2026-10-22
+o006,http://data.europa.eu/esco/skill/90be83d9-56f1-46a4-a6bc-96c51f6c9025,acquire system component,optional,ESCO,2026-10-22
+o006,http://data.europa.eu/esco/skill/13bdd41a-2a18-441f-96db-41252c519413,Visual Studio .NET,optional,ESCO,2026-10-22
+o006,http://data.europa.eu/esco/skill/709ef32a-7435-48e2-8fa2-16e389ecab8a,Cisco,optional,ESCO,2026-10-22
+o006,http://data.europa.eu/esco/skill/04f1b938-d4d4-4cb1-a863-982af76b9d93,SAS language,optional,ESCO,2026-10-22
+o006,http://data.europa.eu/esco/skill/2bde42ae-e776-41c1-9ded-b07b30bfe985,Prolog (computer programming),optional,ESCO,2026-10-22
+o006,http://data.europa.eu/esco/skill/4c016b68-4116-468c-9dc6-42710c239e4a,C#,optional,ESCO,2026-10-22
+o006,http://data.europa.eu/esco/skill/a4d336a6-9ffd-402a-91cc-f359716ba4e0,ML (computer programming),optional,ESCO,2026-10-22
+o006,http://data.europa.eu/esco/skill/3a5231a0-8c30-48ee-b671-08e2debd4441,organisational policies,optional,ESCO,2026-10-22
+o006,http://data.europa.eu/esco/skill/56a7f561-1d55-43c9-9cd7-36a0a9bc6c50,ASP.NET,optional,ESCO,2026-10-22
+o006,http://data.europa.eu/esco/skill/f5ac9226-0ace-4d34-a1c3-7b3845834a98,maintain ICT server,optional,ESCO,2026-10-22
+o007,http://data.europa.eu/esco/skill/2618f336-8e71-4666-83b5-f368edb0906d,cognitive psychology,optional,ESCO,2026-10-22
+o007,http://data.europa.eu/esco/skill/c3a03c5a-c260-4c26-9b9a-873abb396f4d,MATLAB,optional,ESCO,2026-10-22
+o007,http://data.europa.eu/esco/skill/a9bf8565-8a09-4118-9922-932d65a79d69,manage localisation,optional,ESCO,2026-10-22
+o007,http://data.europa.eu/esco/skill/4c016b68-4116-468c-9dc6-42710c239e4a,C#,optional,ESCO,2026-10-22
+o007,http://data.europa.eu/esco/skill/da6393d5-a53c-4863-abc7-51f36281d74e,Lean project management,optional,ESCO,2026-10-22
+o007,http://data.europa.eu/esco/skill/b4dc6e4f-dc7d-445f-8ce2-d7b9d225e282,AJAX,optional,ESCO,2026-10-22
+o007,http://data.europa.eu/esco/skill/3bddfd7c-ab6d-40c2-883d-5e97fb7640ba,create software design,optional,ESCO,2026-10-22
+o007,http://data.europa.eu/esco/skill/13bdd41a-2a18-441f-96db-41252c519413,Visual Studio .NET,optional,ESCO,2026-10-22
+o007,http://data.europa.eu/esco/skill/86f7126d-97fd-4da5-be96-d1cf6ecd54e6,Microsoft Visio,optional,ESCO,2026-10-22
+o007,http://data.europa.eu/esco/skill/27b913f0-3c52-448b-ad27-fc6ef08fb326,Adobe Illustrator,optional,ESCO,2026-10-22
+o007,http://data.europa.eu/esco/skill/6a876489-7ad8-4a13-b09c-c9b8e97a302e,Waterfall development,optional,ESCO,2026-10-22
+o007,http://data.europa.eu/esco/skill/867137fb-ff1b-4ca3-99f3-cb6969aa2c68,TypeScript,optional,ESCO,2026-10-22
+o008,http://data.europa.eu/esco/skill/2daa2d63-07ef-4c16-b0f3-697bbb6fc205,adapt to change in marketing,optional,ESCO,2026-10-22
+o008,http://data.europa.eu/esco/skill/7a66b8a3-502f-408e-ac69-46e72dec6ede,deal with pressure from unexpected circumstances,optional,ESCO,2026-10-22
+o008,http://data.europa.eu/esco/skill/ce5598ec-5ca4-4f3e-92a2-c55c90ce6038,competition law,optional,ESCO,2026-10-22
+o008,http://data.europa.eu/esco/skill/6e4f75b4-c60f-4623-a9ba-760c8245753b,ICT communications protocols,optional,ESCO,2026-10-22
+o008,http://data.europa.eu/esco/skill/2ad081e6-0a3f-4612-ac15-7ace75d39e26,intellectual property law,optional,ESCO,2026-10-22
+o008,http://data.europa.eu/esco/skill/a507f45d-0894-4803-b1cd-9ca7f15c9299,printed goods processes,optional,ESCO,2026-10-22
+o008,http://data.europa.eu/esco/skill/86d2e2ea-1ba2-4aa6-b465-8a1f9abc81b8,apply information security policies,optional,ESCO,2026-10-22
+o008,http://data.europa.eu/esco/skill/a0bf9b9d-e53f-418c-a839-5d99eff718fe,conduct search engine optimisation,optional,ESCO,2026-10-22
+o008,http://data.europa.eu/esco/skill/a56dec32-05ef-45de-a256-ee6741f356db,information confidentiality,optional,ESCO,2026-10-22
+o009,http://data.europa.eu/esco/skill/5da8018b-ae85-4cde-ad93-0394369018f3,SPARQL,optional,ESCO,2026-10-22
+o009,http://data.europa.eu/esco/skill/1bba98a7-92b9-450b-9235-e0c905f8f3c4,information architecture,optional,ESCO,2026-10-22
+o009,http://data.europa.eu/esco/skill/fbafa41f-cd05-4109-a649-8b44d306d779,create data models,optional,ESCO,2026-10-22
+o009,http://data.europa.eu/esco/skill/1b7c716e-af95-4cda-a42f-6479c8b139f5,MDX,optional,ESCO,2026-10-22
+o009,http://data.europa.eu/esco/skill/a7f0fbe0-c546-4f30-8e41-34a58c64567e,data storage,optional,ESCO,2026-10-22
+o009,http://data.europa.eu/esco/skill/3f4dab51-572b-4e2c-85ef-3b4c3f7094e1,XQuery,optional,ESCO,2026-10-22
+o009,http://data.europa.eu/esco/skill/43ae58b9-5e56-4524-b45a-b422777a0576,database,optional,ESCO,2026-10-22
+o009,http://data.europa.eu/esco/skill/f597f772-24d3-4cec-813c-cf5a7027c794,N1QL,optional,ESCO,2026-10-22
+o009,http://data.europa.eu/esco/skill/a57a54b6-2f2e-43e4-9621-b52f4a63cb08,LDAP,optional,ESCO,2026-10-22
+o009,http://data.europa.eu/esco/skill/b0a3bb25-a02f-43ed-ab1f-994fa66a424a,online analytical processing,optional,ESCO,2026-10-22
+o009,http://data.europa.eu/esco/skill/bd14968e-e409-45af-b362-3495ed7b10e0,cloud technologies,optional,ESCO,2026-10-22
+o009,http://data.europa.eu/esco/skill/c7d24594-0c11-4b27-9039-fe0bb903da8e,LINQ,optional,ESCO,2026-10-22
+o010,http://data.europa.eu/esco/skill/5da8018b-ae85-4cde-ad93-0394369018f3,SPARQL,optional,ESCO,2026-10-22
+o010,http://data.europa.eu/esco/skill/c7d24594-0c11-4b27-9039-fe0bb903da8e,LINQ,optional,ESCO,2026-10-22
+o010,http://data.europa.eu/esco/skill/c5e8abde-d2ba-4e8e-a65e-720b71180666,unstructured data,optional,ESCO,2026-10-22
+o010,http://data.europa.eu/esco/skill/cc7370dd-69fa-4c67-a96f-d4d135d38700,data quality assessment,optional,ESCO,2026-10-22
+o010,http://data.europa.eu/esco/skill/46ec0033-3c71-415e-bcff-b065675ba2dc,integrate ICT data,optional,ESCO,2026-10-22
+o010,http://data.europa.eu/esco/skill/fbafa41f-cd05-4109-a649-8b44d306d779,create data models,optional,ESCO,2026-10-22
+o010,http://data.europa.eu/esco/skill/54c9c155-9293-4329-8ed2-2e76e8b519d4,define data quality criteria,optional,ESCO,2026-10-22
+o010,http://data.europa.eu/esco/skill/1b7c716e-af95-4cda-a42f-6479c8b139f5,MDX,optional,ESCO,2026-10-22
+o010,http://data.europa.eu/esco/skill/3f4dab51-572b-4e2c-85ef-3b4c3f7094e1,XQuery,optional,ESCO,2026-10-22
+o010,http://data.europa.eu/esco/skill/4216e465-7baa-4884-a241-54b197bb9278,perform data mining,optional,ESCO,2026-10-22
+o010,http://data.europa.eu/esco/skill/143769cb-b61e-47d8-a61e-eedfbec1016c,business intelligence,optional,ESCO,2026-10-22
+o010,http://data.europa.eu/esco/skill/a57a54b6-2f2e-43e4-9621-b52f4a63cb08,LDAP,optional,ESCO,2026-10-22
+o011,http://data.europa.eu/esco/skill/143769cb-b61e-47d8-a61e-eedfbec1016c,business intelligence,optional,ESCO,2026-10-22
+o011,http://data.europa.eu/esco/skill/21c5790c-0930-4d74-b3b0-84caf5af12ea,manage budgets,optional,ESCO,2026-10-22
+o011,http://data.europa.eu/esco/skill/e7219848-a27a-4bf4-8775-d367707be7c9,sales strategies,optional,ESCO,2026-10-22
+o011,http://data.europa.eu/esco/skill/b5feaf25-3975-4e74-85fd-4470e344ba2e,advise on tax policy,optional,ESCO,2026-10-22
+o011,http://data.europa.eu/esco/skill/f1b5800e-b763-4740-9586-3fef30568e81,analyse production processes for improvement,optional,ESCO,2026-10-22
+o011,http://data.europa.eu/esco/skill/96d549bb-3e62-4c45-92a7-f114df089581,analyse supply chain strategies,optional,ESCO,2026-10-22
+o011,http://data.europa.eu/esco/skill/6eff134b-e34f-4d6e-a6e8-5e47cf2228d0,risk management,optional,ESCO,2026-10-22
+o011,http://data.europa.eu/esco/skill/0839eea4-c57b-4c14-b19b-923fbedb5d88,perform business research,optional,ESCO,2026-10-22
+o011,http://data.europa.eu/esco/skill/e54ff029-1ce9-447d-a5b2-eb7283a23e6e,train employees,optional,ESCO,2026-10-22
+o011,http://data.europa.eu/esco/skill/f929c89e-c363-4132-a918-e021d57b307c,supply chain management,optional,ESCO,2026-10-22
+o011,http://data.europa.eu/esco/skill/f60c9e52-95fc-4ca1-a73c-18a491153b63,make strategic business decisions,optional,ESCO,2026-10-22
+o011,http://data.europa.eu/esco/skill/25f0ea33-b4a2-4f31-b7b4-7d20e827b180,data mining,optional,ESCO,2026-10-22
+o012,http://data.europa.eu/esco/skill/a56dec32-05ef-45de-a256-ee6741f356db,information confidentiality,optional,ESCO,2026-10-22
+o012,http://data.europa.eu/esco/skill/c3e36d05-8ae8-447f-bb2b-6f9409f85389,deliver visual presentation of data,optional,ESCO,2026-10-22
+o012,http://data.europa.eu/esco/skill/f88cb903-83a2-44a3-98a8-e72180ec37a9,plan research process,optional,ESCO,2026-10-22
+o012,http://data.europa.eu/esco/skill/3c35dfa4-6dae-45a5-ae0a-f6a45923a95f,biometrics,optional,ESCO,2026-10-22
+o012,http://data.europa.eu/esco/skill/f73ed9e8-65c6-450d-9f19-8f3f8266689c,design questionnaires,optional,ESCO,2026-10-22
+o012,http://data.europa.eu/esco/skill/ef30e7f8-1ef0-4a6f-87ac-d6a701125305,set theory,optional,ESCO,2026-10-22
+o012,http://data.europa.eu/esco/skill/d39a5880-7d0a-4573-9f70-a75ff875bf83,provide lesson materials,optional,ESCO,2026-10-22
+o012,http://data.europa.eu/esco/skill/d6179c4b-ff5a-4bbb-a3c8-e0acf0de1f56,assist scientific research,optional,ESCO,2026-10-22
+o012,http://data.europa.eu/esco/skill/38d49d88-9069-467b-b29e-3cae739bdd4d,build predictive models,optional,ESCO,2026-10-22
+o012,http://data.europa.eu/esco/skill/4f060129-8b75-4d58-a8dd-515bd8fef349,develop financial statistics reports,optional,ESCO,2026-10-22
+o012,http://data.europa.eu/esco/skill/20f57a7f-b90e-4403-8c77-5ddd89b5835b,prepare lesson content,optional,ESCO,2026-10-22
+o012,http://data.europa.eu/esco/skill/be727774-46d7-43d7-aee9-1a51b5cd8c71,carry out statistical forecasts,optional,ESCO,2026-10-22
+o013,http://data.europa.eu/esco/skill/7eb4c570-9dc7-4f4d-83d2-f4c4c87b6e49,handle mergers and acquisitions,optional,ESCO,2026-10-22
+o013,http://data.europa.eu/esco/skill/b078d38c-7dd4-4efc-b333-7633d8bf6259,monitor stock market,optional,ESCO,2026-10-22
+o013,http://data.europa.eu/esco/skill/161a6c5a-593a-4977-b7b7-49c6a2a2f2a3,advise on tax planning,optional,ESCO,2026-10-22
+o013,http://data.europa.eu/esco/skill/8a43795b-bb38-4f29-91df-a6c92ad4643c,analyse financial performance of a company,optional,ESCO,2026-10-22
+o013,http://data.europa.eu/esco/skill/7d35602d-bc94-4975-aa7c-f4e8e05ce8e0,cost management,optional,ESCO,2026-10-22
+o013,http://data.europa.eu/esco/skill/da629999-d226-4ff3-9e1a-01788132664f,ensure compliance with disclosure criteria of accounting information,optional,ESCO,2026-10-22
+o013,http://data.europa.eu/esco/skill/0f5bd097-ed76-47f7-8f44-93be67967b5f,explain financial technicalities to clients,optional,ESCO,2026-10-22
+o013,http://data.europa.eu/esco/skill/c35b19ad-b06f-44e8-be9f-c20c68750346,monitor loan portfolio,optional,ESCO,2026-10-22
+o013,http://data.europa.eu/esco/skill/452c4c68-50d7-42ed-8c4e-b437446637d0,develop investment portfolio,optional,ESCO,2026-10-22
+o013,http://data.europa.eu/esco/skill/075c68d7-efe4-4466-be4a-9acc726504df,mergers and acquisitions,optional,ESCO,2026-10-22
+o013,http://data.europa.eu/esco/skill/eb8babfb-ab91-4937-a032-6a79f82e9b7f,analyse financial risk,optional,ESCO,2026-10-22
+o013,http://data.europa.eu/esco/skill/48b68726-0fd6-4e03-a5eb-82236516ee7a,provide cost benefit analysis reports,optional,ESCO,2026-10-22
+o014,http://data.europa.eu/esco/skill/136e0cab-0b19-48f7-9086-745d615f416b,customer segmentation,optional,ESCO,2026-10-22
+o014,http://data.europa.eu/esco/skill/f597f772-24d3-4cec-813c-cf5a7027c794,N1QL,optional,ESCO,2026-10-22
+o014,http://data.europa.eu/esco/skill/cd5efa8c-e44d-4cbc-91c6-796018dbed68,perform project management,optional,ESCO,2026-10-22
+o014,http://data.europa.eu/esco/skill/b7e57889-a84f-440c-9e60-459aa69979e9,analyse supply chain trends,optional,ESCO,2026-10-22
+o014,http://data.europa.eu/esco/skill/8316979b-df5a-4dc7-98ef-61ec6a10df84,conduct quantitative research,optional,ESCO,2026-10-22
+o014,http://data.europa.eu/esco/skill/15a33d76-4640-438d-ae64-fdc0c1d3eebc,customer service,optional,ESCO,2026-10-22
+o014,http://data.europa.eu/esco/skill/c7d24594-0c11-4b27-9039-fe0bb903da8e,LINQ,optional,ESCO,2026-10-22
+o014,http://data.europa.eu/esco/skill/324f0243-1a21-4f5c-9f71-52eebc2596ed,interview techniques,optional,ESCO,2026-10-22
+o014,http://data.europa.eu/esco/skill/1b7c716e-af95-4cda-a42f-6479c8b139f5,MDX,optional,ESCO,2026-10-22
+o014,http://data.europa.eu/esco/skill/e1f09038-b493-4771-ae29-a2d3e7ea013a,document interviews,optional,ESCO,2026-10-22
+o014,http://data.europa.eu/esco/skill/5f00bf83-f776-4488-b312-6725f8b6783a,conduct public surveys,optional,ESCO,2026-10-22
+o014,http://data.europa.eu/esco/skill/43ae58b9-5e56-4524-b45a-b422777a0576,database,optional,ESCO,2026-10-22
+o015,http://data.europa.eu/esco/skill/f597f772-24d3-4cec-813c-cf5a7027c794,N1QL,optional,ESCO,2026-10-22
+o015,http://data.europa.eu/esco/skill/4da171e5-779c-4983-a76f-91c16751e99f,MySQL,optional,ESCO,2026-10-22
+o015,http://data.europa.eu/esco/skill/a8d07b5a-c1a1-42c6-9d53-db9c7a2ca996,PostgreSQL,optional,ESCO,2026-10-22
+o015,http://data.europa.eu/esco/skill/04dfd9fb-e0cf-40f6-96c6-9d2280c4347e,provide technical documentation,optional,ESCO,2026-10-22
+o015,http://data.europa.eu/esco/skill/84251cb1-babf-4d17-a3cd-baa642c24c8d,IBM Informix,optional,ESCO,2026-10-22
+o015,http://data.europa.eu/esco/skill/7e1f9657-ab4e-407c-842f-b846197060e3,execute ICT audits,optional,ESCO,2026-10-22
+o015,http://data.europa.eu/esco/skill/d9eaf831-9348-4330-a83e-b7c099cdc8f6,Teradata Database,optional,ESCO,2026-10-22
+o015,http://data.europa.eu/esco/skill/c062bab3-3ea0-4291-9220-a2d8fef4bead,SQL Server,optional,ESCO,2026-10-22
+o015,http://data.europa.eu/esco/skill/d54a1355-05c8-45eb-9c42-267d2cfcdf44,provide technical training,optional,ESCO,2026-10-22
+o015,http://data.europa.eu/esco/skill/415abd43-e8e5-4643-b5da-5f11307af57a,use different communication channels,optional,ESCO,2026-10-22
+o015,http://data.europa.eu/esco/skill/7d10fcb2-b368-48ab-996b-7c9fafcf68ed,use automatic programming,optional,ESCO,2026-10-22
+o015,http://data.europa.eu/esco/skill/43ec6db6-33f7-449b-a566-5779a7e8997a,OpenEdge Database,optional,ESCO,2026-10-22
+o016,http://data.europa.eu/esco/skill/8d4271ca-c9fd-40b3-875f-15f78332a49e,quality standards,optional,ESCO,2026-10-22
+o016,http://data.europa.eu/esco/skill/69f36674-440a-4fa0-89f9-1b70172ebb9d,advise on communication strategies,optional,ESCO,2026-10-22
+o016,http://data.europa.eu/esco/skill/98301d4a-2cc3-439d-8d7f-0b6ac76302bb,business process modelling,optional,ESCO,2026-10-22
+o016,http://data.europa.eu/esco/skill/79c36c91-28a5-44b7-ab9b-7093b2d4b21e,advise on financial matters,optional,ESCO,2026-10-22
+o016,http://data.europa.eu/esco/skill/c544a9f3-5945-4b54-afed-de0697852817,report analysis results,optional,ESCO,2026-10-22
+o016,http://data.europa.eu/esco/skill/7b3abd38-61ae-42a4-88bb-0884784f9ee1,advise client on technical possibilities,optional,ESCO,2026-10-22
+o016,http://data.europa.eu/esco/skill/143769cb-b61e-47d8-a61e-eedfbec1016c,business intelligence,optional,ESCO,2026-10-22
+o016,http://data.europa.eu/esco/skill/4a460161-eaea-4fe2-bd0e-164ccc635be1,financial statements,optional,ESCO,2026-10-22
+o016,http://data.europa.eu/esco/skill/62bf2e21-2613-47f1-a624-fe0fc925e671,market entry strategies,optional,ESCO,2026-10-22
+o016,http://data.europa.eu/esco/skill/f1155d3f-fbca-4298-a31c-f6955653bacf,shape organisational teams based on competencies,optional,ESCO,2026-10-22
+o016,http://data.europa.eu/esco/skill/1212ac42-2564-4fce-80e1-6ce4ea4d9bf5,advise on personnel management,optional,ESCO,2026-10-22
+o016,http://data.europa.eu/esco/skill/d77d7685-04fb-43a4-a1ac-09a10811f646,corporate law,optional,ESCO,2026-10-22
+o017,http://data.europa.eu/esco/skill/bf59255e-782a-4e83-a93c-6055cfdd8e7f,draw blueprints,optional,ESCO,2026-10-22
+o017,http://data.europa.eu/esco/skill/4cecff40-8e5c-4320-a87d-be8687008dbf,inspect facility sites,optional,ESCO,2026-10-22
+o017,http://data.europa.eu/esco/skill/f2071535-4da0-4253-a548-920d170b80e0,design thermal equipment,optional,ESCO,2026-10-22
+o017,http://data.europa.eu/esco/skill/b34e2ba1-9080-48c9-9b42-ee9192a4d3f1,use CAD software,optional,ESCO,2026-10-22
+o017,http://data.europa.eu/esco/skill/e95058a6-e139-42e7-a470-72038a606649,assess financial viability,optional,ESCO,2026-10-22
+o017,http://data.europa.eu/esco/skill/f8413360-6114-40de-a276-c59b764b9913,renewable energy technologies,optional,ESCO,2026-10-22
+o017,http://data.europa.eu/esco/skill/33784b61-bd86-4451-8a89-741ada5f8475,maintain photovoltaic systems,optional,ESCO,2026-10-22
+o017,http://data.europa.eu/esco/skill/0dc8813a-cebd-4a42-acc8-9a7c4e6e3663,test procedures in electricity transmission,optional,ESCO,2026-10-22
+o017,http://data.europa.eu/esco/skill/8d4271ca-c9fd-40b3-875f-15f78332a49e,quality standards,optional,ESCO,2026-10-22
+o017,http://data.europa.eu/esco/skill/4334037f-c1d8-4241-b82e-8db7e469327b,electricity market,optional,ESCO,2026-10-22
+o017,http://data.europa.eu/esco/skill/6122d586-5978-431f-8e7a-96e61fc1f3fc,wear appropriate protective gear,optional,ESCO,2026-10-22
+o017,http://data.europa.eu/esco/skill/cd5efa8c-e44d-4cbc-91c6-796018dbed68,perform project management,optional,ESCO,2026-10-22
+o018,http://data.europa.eu/esco/skill/7832b684-580c-4eaf-a8b3-322164b041ab,provide information on solar panels,optional,ESCO,2026-10-22
+o018,http://data.europa.eu/esco/skill/5d9dd44a-81f8-4710-bd4d-af27ec5c2139,calculate needs for construction supplies,optional,ESCO,2026-10-22
+o018,http://data.europa.eu/esco/skill/5bf756dd-a54a-47cd-80fe-3418fedd1c51,calculate solar panel orientation,optional,ESCO,2026-10-22
+o018,http://data.europa.eu/esco/skill/9f1bd2a4-91af-4b60-aeb3-0fe1f4434966,order construction supplies,optional,ESCO,2026-10-22
+o018,http://data.europa.eu/esco/skill/5598739b-6718-4cff-8402-91d7f65b1505,maintain work area cleanliness,optional,ESCO,2026-10-22
+o018,http://data.europa.eu/esco/skill/c643e59b-d74c-4f44-b76e-6e1d96c05ec4,use safety equipment in construction,optional,ESCO,2026-10-22
+o018,http://data.europa.eu/esco/skill/a3e0224a-c952-4b4e-b664-d7186f62715b,process incoming construction supplies,optional,ESCO,2026-10-22
+o018,http://data.europa.eu/esco/skill/43ea53b0-65a8-4c23-a0ef-b95389e7548e,rig loads,optional,ESCO,2026-10-22
+o018,http://data.europa.eu/esco/skill/615cfc39-797f-4229-8e92-159fcf8f3030,building codes,optional,ESCO,2026-10-22
+o018,http://data.europa.eu/esco/skill/5033c2fb-ec55-4b8e-b0a4-9379593f1e1c,maintain equipment,optional,ESCO,2026-10-22
+o018,http://data.europa.eu/esco/skill/9f719da2-5ba8-46b8-b20b-3d5f59208f49,solar panel mounting systems,optional,ESCO,2026-10-22
+o018,http://data.europa.eu/esco/skill/13879c29-3c14-4a53-945c-5a8c0f8984db,install inverter,optional,ESCO,2026-10-22
+o019,http://data.europa.eu/esco/skill/519e5731-4d6c-4f98-938e-0976a202c6ba,hazardous waste treatment,optional,ESCO,2026-10-22
+o019,http://data.europa.eu/esco/skill/0e0b8991-4b24-4bb8-9113-df3ce43c1ff9,advise on mining environmental issues,optional,ESCO,2026-10-22
+o019,http://data.europa.eu/esco/skill/cd5efa8c-e44d-4cbc-91c6-796018dbed68,perform project management,optional,ESCO,2026-10-22
+o019,http://data.europa.eu/esco/skill/81d274bc-6dbf-4003-bcba-f76478d5d930,nuclear energy,optional,ESCO,2026-10-22
+o019,http://data.europa.eu/esco/skill/3220a66f-d129-463b-848e-891b4f1c79e3,develop hazardous waste management strategies,optional,ESCO,2026-10-22
+o019,http://data.europa.eu/esco/skill/bed97655-cb0c-4f05-bfd7-9a79d058619d,wildlife projects,optional,ESCO,2026-10-22
+o019,http://data.europa.eu/esco/skill/41a3240f-58ba-44e2-a688-edeb21ea5c16,conduct quality control analysis,optional,ESCO,2026-10-22
+o019,http://data.europa.eu/esco/skill/5aa79c4a-8b29-4d57-8723-b9a69ef0727e,design strategies for nuclear emergencies,optional,ESCO,2026-10-22
+o019,http://data.europa.eu/esco/skill/7111b95d-0ce3-441a-9d92-4c75d05c4388,project management,optional,ESCO,2026-10-22
+o019,http://data.europa.eu/esco/skill/c9bb544b-99a1-4335-bcea-23f84b01095a,develop non-hazardous waste management strategies,optional,ESCO,2026-10-22
+o019,http://data.europa.eu/esco/skill/ed8dbdd1-5b40-4eaf-adaf-3b1f6d16a37b,hazardous waste storage,optional,ESCO,2026-10-22
+o019,http://data.europa.eu/esco/skill/4ca91852-c534-4b98-ab1c-59a126534c88,project commissioning,optional,ESCO,2026-10-22
+o020,http://data.europa.eu/esco/skill/b1b118c4-3291-484e-b64d-6d51fd5da8b3,environmental engineering,optional,ESCO,2026-10-22
+o020,http://data.europa.eu/esco/skill/192e12e7-6bf0-42e6-bfc3-70c08551f12a,assess environmental plans against financial costs,optional,ESCO,2026-10-22
+o020,http://data.europa.eu/esco/skill/209a5498-3449-4689-8ed9-bd08cab4fd78,engineering principles,optional,ESCO,2026-10-22
+o020,http://data.europa.eu/esco/skill/82887396-e5bf-4306-af51-3fe8d82790b2,civil engineering,optional,ESCO,2026-10-22
+o020,http://data.europa.eu/esco/skill/2416dc09-6384-409e-8b1d-80bb7a2e7369,handle chemicals,optional,ESCO,2026-10-22
+o020,http://data.europa.eu/esco/skill/94747ff4-603d-47d4-9780-bf53be41e190,inspect industrial equipment,optional,ESCO,2026-10-22
+o020,http://data.europa.eu/esco/skill/ed8dbdd1-5b40-4eaf-adaf-3b1f6d16a37b,hazardous waste storage,optional,ESCO,2026-10-22
+o020,http://data.europa.eu/esco/skill/d15ce60f-ddab-41ce-ba56-398451b77b60,have computer literacy,optional,ESCO,2026-10-22
+o020,http://data.europa.eu/esco/skill/929a997b-d56c-4383-b36d-6de9fa0e1721,work with chemicals,optional,ESCO,2026-10-22
+o020,http://data.europa.eu/esco/skill/abcfd4de-3b3d-48ed-a002-36071bad8d46,manage chemical testing procedures,optional,ESCO,2026-10-22
+o020,http://data.europa.eu/esco/skill/cde9911c-f92e-4de1-811f-336e177ac4ce,chemistry,optional,ESCO,2026-10-22
+o020,http://data.europa.eu/esco/skill/3d69b305-4051-4c1d-ba1e-d8c5b35e22db,monitor environmental parameters,optional,ESCO,2026-10-22
+o021,http://data.europa.eu/esco/skill/0037c821-2898-4919-b96e-7ed1cd89554c,develop energy saving concepts,optional,ESCO,2026-10-22
+o021,http://data.europa.eu/esco/skill/5f2efbdf-08a2-49cd-9c06-bd284e4f0fbf,negotiate terms with suppliers,optional,ESCO,2026-10-22
+o021,http://data.europa.eu/esco/skill/649cab01-fa5e-4721-bf63-76dccc34f3f6,advise on potential safety hazards concerning heating systems,optional,ESCO,2026-10-22
+o021,http://data.europa.eu/esco/skill/c927ec6e-9082-4b22-afd3-0c4e219eaf73,ensure equipment maintenance,optional,ESCO,2026-10-22
+o021,http://data.europa.eu/esco/skill/5c606d18-6404-4047-b235-350f18e11827,contract law,optional,ESCO,2026-10-22
+o021,http://data.europa.eu/esco/skill/bb663409-5c88-4e3a-bc16-01aa1c8ce171,plan health and safety procedures,optional,ESCO,2026-10-22
+o021,http://data.europa.eu/esco/skill/94747ff4-603d-47d4-9780-bf53be41e190,inspect industrial equipment,optional,ESCO,2026-10-22
+o021,http://data.europa.eu/esco/skill/c3c2420c-ce9a-4371-8eed-1db479c3a562,write scientific papers,optional,ESCO,2026-10-22
+o021,http://data.europa.eu/esco/skill/48a83424-6758-4ad5-b5fa-ca3a32034431,identify faults in utility meters,optional,ESCO,2026-10-22
+o021,http://data.europa.eu/esco/skill/f8413360-6114-40de-a276-c59b764b9913,renewable energy technologies,optional,ESCO,2026-10-22
+o021,http://data.europa.eu/esco/skill/46454506-fb7c-4ad7-84e0-d4a6a5589ea1,zero-energy building design,optional,ESCO,2026-10-22
+o021,http://data.europa.eu/esco/skill/97bcbb41-c42b-4777-ab26-1f8f7dcfafd8,negotiate improvement with suppliers,optional,ESCO,2026-10-22
+o022,http://data.europa.eu/esco/skill/7832b684-580c-4eaf-a8b3-322164b041ab,provide information on solar panels,optional,ESCO,2026-10-22
+o022,http://data.europa.eu/esco/skill/1cf20c3c-027e-45f4-bad1-c91b98726d28,provide information on geothermal heat pumps,optional,ESCO,2026-10-22
+o022,http://data.europa.eu/esco/skill/7ff9cce1-6518-48db-8f59-2beb81508fb2,provide information on wind turbines,optional,ESCO,2026-10-22
+o022,http://data.europa.eu/esco/skill/732cb4dd-af91-4c88-9a9f-5fc62144e500,provide information,optional,ESCO,2026-10-22
+o022,http://data.europa.eu/esco/skill/8abdc43c-2bfd-417c-97c2-27fcdaf53171,promote environmental awareness,optional,ESCO,2026-10-22
+o022,http://data.europa.eu/esco/skill/96d901a6-c931-4e8d-b685-a47e1deaaa1b,identify energy needs,optional,ESCO,2026-10-22
+o022,http://data.europa.eu/esco/skill/1a6c7e0d-fc13-41d7-a5c0-8ca00606de89,promote sustainable energy,optional,ESCO,2026-10-22
+o022,http://data.europa.eu/esco/skill/05e5e14f-ffa6-4106-b311-c6335ccc2bd2,solar energy,optional,ESCO,2026-10-22
+o023,http://data.europa.eu/esco/skill/02e235f4-a30a-412a-a06e-1c471ad28678,follow control of substances hazardous to health procedures,optional,ESCO,2026-10-22
+o023,http://data.europa.eu/esco/skill/587f6825-0ef1-4fb0-8425-71a50d786a37,arrange equipment repairs,optional,ESCO,2026-10-22
+o023,http://data.europa.eu/esco/skill/69f23426-9279-4fe6-a283-24c2aa4c855d,ensure equipment availability,optional,ESCO,2026-10-22
+o023,http://data.europa.eu/esco/skill/77f109c4-3107-4d2a-a512-5160ac103933,analyse environmental data,optional,ESCO,2026-10-22
+o023,http://data.europa.eu/esco/skill/44e2c4c4-9fd2-42d4-a133-d81360ded4bc,manage health and safety standards,optional,ESCO,2026-10-22
+o023,http://data.europa.eu/esco/skill/2be2d20e-1191-4f85-8f8c-d49a60ca428a,educate on recycling regulations,optional,ESCO,2026-10-22
+o023,http://data.europa.eu/esco/skill/92721092-fe7c-4689-96bd-4f02385bc0e7,manage contracts,optional,ESCO,2026-10-22
+o023,http://data.europa.eu/esco/skill/1fe682ad-b8a2-44bb-a557-7eccf79b2014,operate recycling processing equipment,optional,ESCO,2026-10-22
+o023,http://data.europa.eu/esco/skill/496932f1-0b6b-4f73-9432-d95c7ddcd43b,recruit employees,optional,ESCO,2026-10-22
+o023,http://data.europa.eu/esco/skill/415abd43-e8e5-4643-b5da-5f11307af57a,use different communication channels,optional,ESCO,2026-10-22
+o024,http://data.europa.eu/esco/skill/b216d9a2-7d4e-4312-8d05-e375f4ab44d8,ensure cross-department cooperation,optional,ESCO,2026-10-22
+o024,http://data.europa.eu/esco/skill/594a002c-de7a-4805-8cb9-a4c6283b61c3,integrate community outreach,optional,ESCO,2026-10-22
+o024,http://data.europa.eu/esco/skill/5d34adde-0b78-42b4-9d3d-69e9388d8398,oversee quality control,optional,ESCO,2026-10-22
+o024,http://data.europa.eu/esco/skill/fe30a4b0-1a99-4fc7-afff-b162b8c834ba,communication principles,optional,ESCO,2026-10-22
+o024,http://data.europa.eu/esco/skill/0efbe2dc-2770-47ec-b8f4-d1bdff6ac0a4,advise on risk management,optional,ESCO,2026-10-22
+o024,http://data.europa.eu/esco/skill/081d7679-5070-4777-bece-a28c49f15636,environmental policy,optional,ESCO,2026-10-22
+o024,http://data.europa.eu/esco/skill/13e2378e-0d10-450d-843a-b3592575826e,implement marketing strategies,optional,ESCO,2026-10-22
+o024,http://data.europa.eu/esco/skill/fbe6232a-e2b2-4830-a5e6-ed6415f01e85,analyse community needs,optional,ESCO,2026-10-22
+o024,http://data.europa.eu/esco/skill/20e7c937-a5e5-4a27-bb87-ddda5826f777,liaise with cultural partners,optional,ESCO,2026-10-22
+o024,http://data.europa.eu/esco/skill/7111b95d-0ce3-441a-9d92-4c75d05c4388,project management,optional,ESCO,2026-10-22
+o024,http://data.europa.eu/esco/skill/28f98c7e-b89c-4b4d-ae0a-0c5a6328992e,build community relations,optional,ESCO,2026-10-22
+o024,http://data.europa.eu/esco/skill/4bf0a15a-be84-4560-b64c-9556781a0d60,liaise with government officials,optional,ESCO,2026-10-22
+o025,http://data.europa.eu/esco/skill/ef1e6c93-2a90-4abf-951b-a8ae283d368d,carry out nurse-led discharge,optional,ESCO,2026-10-22
+o025,http://data.europa.eu/esco/skill/e724205b-6b9a-45b4-b629-cd32a6c80b4f,employ foreign languages in care,optional,ESCO,2026-10-22
+o025,http://data.europa.eu/esco/skill/8eab4e4f-03f8-4a66-a830-ec4e5db43253,prescribe medication,optional,ESCO,2026-10-22
+o025,http://data.europa.eu/esco/skill/cc69175e-c35d-4494-8844-e71385ccce4a,employ foreign languages for health-related research,optional,ESCO,2026-10-22
+o025,http://data.europa.eu/esco/skill/bdcf429c-5ccf-4c3d-bb61-4c987573a35e,show entrepreneurial spirit,optional,ESCO,2026-10-22
+o027,http://data.europa.eu/esco/skill/0a06b0a8-d931-44ba-b85a-3e0e617261c3,support social service users at the end of life,optional,ESCO,2026-10-22
+o027,http://data.europa.eu/esco/skill/c634630b-210b-4da5-b0f3-894cc292d6e3,promote mental health,optional,ESCO,2026-10-22
+o027,http://data.europa.eu/esco/skill/54411e8e-d62f-46d8-b87b-fce23f8e3bc8,disability care,optional,ESCO,2026-10-22
+o027,http://data.europa.eu/esco/skill/eaa7af7e-0a6f-4383-9d19-05dec9abed36,counsel on end-of-life care,optional,ESCO,2026-10-22
+o027,http://data.europa.eu/esco/skill/d5879a17-de0d-4766-9da0-810455119b01,stages of bereavement,optional,ESCO,2026-10-22
+o027,http://data.europa.eu/esco/skill/5401bf12-9cb2-4c24-8293-37de2a834031,help clients cope with grief,optional,ESCO,2026-10-22
+o027,http://data.europa.eu/esco/skill/90ccd1bc-af3f-4c04-b2dd-bef2ba62905d,advise on mental health,optional,ESCO,2026-10-22
+o027,http://data.europa.eu/esco/skill/c5a80bb0-31e6-4de0-868c-00a0f9b88b47,palliative care,optional,ESCO,2026-10-22
+o027,http://data.europa.eu/esco/skill/7d8ca06a-f737-4927-96f2-de4f2cd15895,identify mental health issues,optional,ESCO,2026-10-22
+o027,http://data.europa.eu/esco/skill/941438bd-cc03-4326-91bf-677157dca170,support social service users to live at home,optional,ESCO,2026-10-22
+o027,http://data.europa.eu/esco/skill/6b28bb69-a6ef-42d4-84df-46e498f09297,disability types,optional,ESCO,2026-10-22
+o028,http://data.europa.eu/esco/skill/bd420d08-880b-43bc-a808-d46ad3115168,advise on lesson plans,optional,ESCO,2026-10-22
+o028,http://data.europa.eu/esco/skill/7b34134b-eb4c-40da-98a0-98b6190aa93b,common children's diseases,optional,ESCO,2026-10-22
+o028,http://data.europa.eu/esco/skill/8e839bce-38f0-472d-8792-9b7c12b197ef,behavioural disorders,optional,ESCO,2026-10-22
+o028,http://data.europa.eu/esco/skill/77eda69d-ddf6-40ca-b66f-870ea996734d,provide after school care,optional,ESCO,2026-10-22
+o028,http://data.europa.eu/esco/skill/6339a2d3-0c34-4156-b202-5929764fb720,musical notation,optional,ESCO,2026-10-22
+o028,http://data.europa.eu/esco/skill/0fbba913-65b1-47ea-a429-d4d84f44072c,teach arts principles,optional,ESCO,2026-10-22
+o028,http://data.europa.eu/esco/skill/2b98fed2-58b5-4b05-a9ec-bc3d101933a4,recognise indicators of gifted student,optional,ESCO,2026-10-22
+o028,http://data.europa.eu/esco/skill/06bd47bc-d9f3-4517-8e34-c55c2e81f8c2,workplace sanitation,optional,ESCO,2026-10-22
+o028,http://data.europa.eu/esco/skill/f0699875-51da-48d2-bc92-54b0749baef1,develop course outline,optional,ESCO,2026-10-22
+o028,http://data.europa.eu/esco/skill/480282ca-74ce-4f01-8495-0afa409ea164,support gifted students,optional,ESCO,2026-10-22
+o028,http://data.europa.eu/esco/skill/56d51dce-23bc-4135-a0a3-07d77cc1c0fd,select artistic materials to create artworks,optional,ESCO,2026-10-22
+o028,http://data.europa.eu/esco/skill/90c0e266-c9ea-4036-802e-475ea50b9c7b,teach music principles,optional,ESCO,2026-10-22
+o029,http://data.europa.eu/esco/skill/f7464f30-662b-4177-85a0-3df9693e9e58,first aid,optional,ESCO,2026-10-22
+o029,http://data.europa.eu/esco/skill/b1d75e36-64d3-4000-bd9c-14899bea87e2,perform playground surveillance,optional,ESCO,2026-10-22
+o029,http://data.europa.eu/esco/skill/06bd47bc-d9f3-4517-8e34-c55c2e81f8c2,workplace sanitation,optional,ESCO,2026-10-22
+o029,http://data.europa.eu/esco/skill/d39a5880-7d0a-4573-9f70-a75ff875bf83,provide lesson materials,optional,ESCO,2026-10-22
+o029,http://data.europa.eu/esco/skill/ef1e63c9-f8c1-46ad-8c74-3cea311c9377,special needs education,optional,ESCO,2026-10-22
+o029,http://data.europa.eu/esco/skill/98a0c718-40b1-4a4f-a366-b8155f238d9b,promote the safeguarding of young people,optional,ESCO,2026-10-22
+o029,http://data.europa.eu/esco/skill/31b67516-af16-4b97-8430-a8a8e0f84190,assessment processes,optional,ESCO,2026-10-22
+o029,http://data.europa.eu/esco/skill/860e85ee-5992-445a-b3d3-9bab524f7600,manage resources for educational purposes,optional,ESCO,2026-10-22
+o029,http://data.europa.eu/esco/skill/efe801a5-8704-4def-8a96-c32f7a6cb9fb,maintain relations with children's parents,optional,ESCO,2026-10-22
+o029,http://data.europa.eu/esco/skill/3399cde5-6d0d-48a5-a7ac-53706648f283,escort students on a field trip,optional,ESCO,2026-10-22
+o029,http://data.europa.eu/esco/skill/beb952e4-8a9c-47af-8a60-c6eb5c5f25bc,attend to children's basic physical needs,optional,ESCO,2026-10-22
+o030,http://data.europa.eu/esco/skill/8eab4e4f-03f8-4a66-a830-ec4e5db43253,prescribe medication,optional,ESCO,2026-10-22
+o030,http://data.europa.eu/esco/skill/e724205b-6b9a-45b4-b629-cd32a6c80b4f,employ foreign languages in care,optional,ESCO,2026-10-22
+o030,http://data.europa.eu/esco/skill/5dbbeadb-45a7-404b-ba3c-eeaa045c4e64,apply acupuncture,optional,ESCO,2026-10-22
+o030,http://data.europa.eu/esco/skill/f8bc0c97-e56f-4f19-bedc-fededf7bea26,apply massage therapy,optional,ESCO,2026-10-22
+o030,http://data.europa.eu/esco/skill/cc69175e-c35d-4494-8844-e71385ccce4a,employ foreign languages for health-related research,optional,ESCO,2026-10-22
+o030,http://data.europa.eu/esco/skill/8ceaad7f-1d37-41e6-a1fe-4ab9707a959b,hydrotherapy,optional,ESCO,2026-10-22
+o030,http://data.europa.eu/esco/skill/00506f28-e884-4496-800c-3477c67eb355,sport and exercise medicine,optional,ESCO,2026-10-22
+o031,http://data.europa.eu/esco/skill/df958b10-9e1c-4a80-9170-5572a5366e84,medical devices,optional,ESCO,2026-10-22
+o031,http://data.europa.eu/esco/skill/dd88bcb0-100a-4d48-896b-746c355fcd46,radiopharmaceuticals,optional,ESCO,2026-10-22
+o031,http://data.europa.eu/esco/skill/13d96098-2ff0-46b8-b326-b7c0e18cc1f1,nutrition,optional,ESCO,2026-10-22
+o031,http://data.europa.eu/esco/skill/880c54f9-866e-4f37-b5fa-25ef8a7d49b6,accounting techniques,optional,ESCO,2026-10-22
+o031,http://data.europa.eu/esco/skill/4d3f3068-9b6a-4f33-bfa5-a7b298bfd303,medical statistics,optional,ESCO,2026-10-22
+o031,http://data.europa.eu/esco/skill/493fb8bf-d880-4499-b374-b1ecb0df4b50,phytotherapy,optional,ESCO,2026-10-22
+o031,http://data.europa.eu/esco/skill/279101c1-e325-4349-bf58-401b6c8ff208,operate cash point,optional,ESCO,2026-10-22
+o031,http://data.europa.eu/esco/skill/0cb013af-6dd9-4fb2-b34e-63dda1a5cf82,operate cash register,optional,ESCO,2026-10-22
+o031,http://data.europa.eu/esco/skill/afdee309-07f9-464e-ad3b-29f4e539da88,conduct health related research,optional,ESCO,2026-10-22
+o031,http://data.europa.eu/esco/skill/daf3da9c-0b23-418f-befd-3d05337a2002,homeopathy,optional,ESCO,2026-10-22
+o031,http://data.europa.eu/esco/skill/a117f32c-662b-4dd9-b739-1230dd04cb60,pedagogy,optional,ESCO,2026-10-22
+o031,http://data.europa.eu/esco/skill/fef20fea-bb6d-4423-9b19-c28e225081a8,maintain medical devices,optional,ESCO,2026-10-22
+o032,http://data.europa.eu/esco/skill/7f6f3d05-7b6f-4622-9082-6c355edfcb7e,sports competition information,optional,ESCO,2026-10-22
+o032,http://data.europa.eu/esco/skill/d11fd23b-ad01-4f12-85f4-e0d2ed16d5af,functional properties of foods,optional,ESCO,2026-10-22
+o032,http://data.europa.eu/esco/skill/b54545e6-637c-43a2-8ab2-9efd5f9e2d38,passenger transport regulations,optional,ESCO,2026-10-22
+o032,http://data.europa.eu/esco/skill/b1c7c4c6-f3cb-4fb2-958c-236385b2782a,european food safety policy,optional,ESCO,2026-10-22
+o032,http://data.europa.eu/esco/skill/5b22f5a1-edf3-4476-8487-ed4ab344edc5,teach tourism principles,optional,ESCO,2026-10-22
+o032,http://data.europa.eu/esco/skill/6cb9c23b-e3bc-4917-b588-26c4cef9d920,maintenance and repair,optional,ESCO,2026-10-22
+o032,http://data.europa.eu/esco/skill/74ad37e3-325b-4ccd-ab2a-04f7696750e8,health and safety measures in transportation,optional,ESCO,2026-10-22
+o032,http://data.europa.eu/esco/skill/341c4478-c976-4ff0-a102-cfd92174d873,business law,optional,ESCO,2026-10-22
+o032,http://data.europa.eu/esco/skill/6ee0f29a-2be7-4dd1-bee3-6ee2a3539376,tourism market,optional,ESCO,2026-10-22
+o032,http://data.europa.eu/esco/skill/4f7b14d8-f09c-49f7-abae-231e8c210e07,general medicine,optional,ESCO,2026-10-22
+o032,http://data.europa.eu/esco/skill/710c37e5-a6df-4755-9482-2e87db91f593,ensure vehicle operability,optional,ESCO,2026-10-22
+o032,http://data.europa.eu/esco/skill/c76d86b3-9860-4bc0-996d-cc724c669bcf,hair,optional,ESCO,2026-10-22
+o033,http://data.europa.eu/esco/skill/a7f0fbe0-c546-4f30-8e41-34a58c64567e,data storage,optional,ESCO,2026-10-22
+o033,http://data.europa.eu/esco/skill/03a74eee-2dc6-4147-8667-5cdeb65f122d,manage ICT data classification,optional,ESCO,2026-10-22
+o033,http://data.europa.eu/esco/skill/713fb616-118e-40bc-9366-4a69879a49d5,implement data quality processes,optional,ESCO,2026-10-22
+o033,http://data.europa.eu/esco/skill/2daec0e6-f0c1-43e8-8178-aedba99130ec,establish data processes,optional,ESCO,2026-10-22
+o033,http://data.europa.eu/esco/skill/12c82224-6394-4c3c-9831-2a8198ed1274,optical character recognition software,optional,ESCO,2026-10-22
+o033,http://data.europa.eu/esco/skill/1b7c716e-af95-4cda-a42f-6479c8b139f5,MDX,optional,ESCO,2026-10-22
+o033,http://data.europa.eu/esco/skill/a57a54b6-2f2e-43e4-9621-b52f4a63cb08,LDAP,optional,ESCO,2026-10-22
+o033,http://data.europa.eu/esco/skill/c7d24594-0c11-4b27-9039-fe0bb903da8e,LINQ,optional,ESCO,2026-10-22
+o033,http://data.europa.eu/esco/skill/9ff9db9d-d14b-426e-83f3-e7449af6c79f,manage data,optional,ESCO,2026-10-22
+o033,http://data.europa.eu/esco/skill/a80fb090-63f4-4b05-83a5-2f090deb7757,manage data collection systems,optional,ESCO,2026-10-22
+o033,http://data.europa.eu/esco/skill/fd6d2981-3d4a-4ce2-9741-cfc98c5b74bd,implement data warehousing techniques,optional,ESCO,2026-10-22
+o033,http://data.europa.eu/esco/skill/d3eccb86-f02d-4950-bfbd-20b9510774a1,apply organisational techniques,optional,ESCO,2026-10-22
+o034,http://data.europa.eu/esco/skill/28a2ff4b-5f99-448e-8bd7-fb836166e95f,allocate bills,optional,ESCO,2026-10-22
+o034,http://data.europa.eu/esco/skill/63321ecf-4fc6-44d9-88f1-5373a4f3038a,handle petty cash,optional,ESCO,2026-10-22
+o034,http://data.europa.eu/esco/skill/e2e15494-65b9-4af5-8b86-53fb51e7e022,manage accounts,optional,ESCO,2026-10-22
+o034,http://data.europa.eu/esco/skill/3982571a-e9ce-442a-a4a0-fdfc97727091,manage cash desk,optional,ESCO,2026-10-22
+o034,http://data.europa.eu/esco/skill/68b51538-b056-4cb3-bb15-ab8c3e576cc9,follow up accounts receivables,optional,ESCO,2026-10-22
+o034,http://data.europa.eu/esco/skill/3e04e39d-9eb6-4167-ad2d-e3413f647e4e,organise business documents,optional,ESCO,2026-10-22
+o034,http://data.europa.eu/esco/skill/5f1d1319-7954-4a9b-90c7-57668e3a0d4b,interpret financial statements,optional,ESCO,2026-10-22
+o034,http://data.europa.eu/esco/skill/e3e42d54-78bd-4337-aa87-bb31a7670c9a,issue sales invoices,optional,ESCO,2026-10-22
+o034,http://data.europa.eu/esco/skill/39e43f7c-a95e-4583-be76-bb134ccce1ae,financial department processes,optional,ESCO,2026-10-22
+o034,http://data.europa.eu/esco/skill/7ee4c2ea-b349-4bd2-81a3-ec31475d4833,statistics,optional,ESCO,2026-10-22
+o034,http://data.europa.eu/esco/skill/f7e7ccb6-fadc-4c35-935d-e1040be40dfe,handle financial transactions,optional,ESCO,2026-10-22
+o034,http://data.europa.eu/esco/skill/22a173f5-868c-4d82-87e6-beed500ce070,prepare tax returns forms,optional,ESCO,2026-10-22
+o035,http://data.europa.eu/esco/skill/60f51172-37c0-4933-a27a-cbf55dcd7580,prepare financial statements,optional,ESCO,2026-10-22
+o035,http://data.europa.eu/esco/skill/00e53a0a-c0ba-4c9f-a2ed-4706d5832a00,guarantee customer satisfaction,optional,ESCO,2026-10-22
+o035,http://data.europa.eu/esco/skill/c241f5a5-e23f-47bf-ad24-d83ea0010166,ensure proper document management,optional,ESCO,2026-10-22
+o035,http://data.europa.eu/esco/skill/210827e3-3129-45a2-8683-70399f3f561f,order supplies,optional,ESCO,2026-10-22
+o035,http://data.europa.eu/esco/skill/905b6acd-377b-46b9-9d80-e47e9ca789ca,financial markets,optional,ESCO,2026-10-22
+o035,http://data.europa.eu/esco/skill/603fc2c9-b1bb-4cf5-be48-e62fbcd3a12e,manage bank vault,optional,ESCO,2026-10-22
+o035,http://data.europa.eu/esco/skill/ab986bc4-df92-4351-9ac1-aa75af943cf7,perform clerical duties,optional,ESCO,2026-10-22
+o035,http://data.europa.eu/esco/skill/f2f463e5-2382-49cb-8199-e7e043d868df,health and safety regulations,optional,ESCO,2026-10-22
+o035,http://data.europa.eu/esco/skill/dd7c9dfd-6e2c-46fd-aefc-369402d0200c,create a financial report,optional,ESCO,2026-10-22
+o035,http://data.europa.eu/esco/skill/a05ead02-1728-4d60-929c-7e7c3a87672c,operate financial instruments,optional,ESCO,2026-10-22
+o035,http://data.europa.eu/esco/skill/c753a3b5-d5cc-406d-adfe-3372bb267f4b,maintain customer records,optional,ESCO,2026-10-22
+o035,http://data.europa.eu/esco/skill/880c54f9-866e-4f37-b5fa-25ef8a7d49b6,accounting techniques,optional,ESCO,2026-10-22
+o036,http://data.europa.eu/esco/skill/5a0bffcf-4ff6-49cf-a7db-4142e63f5f04,answer incoming calls,optional,ESCO,2026-10-22
+o036,http://data.europa.eu/esco/skill/378caeec-10a0-4162-b75c-ab374a42e93d,e-procurement,optional,ESCO,2026-10-22
+o036,http://data.europa.eu/esco/skill/b1272de4-1f5f-408b-8b26-061f2550fc72,e-commerce systems,optional,ESCO,2026-10-22
+o036,http://data.europa.eu/esco/skill/946c1229-1171-40d4-82cc-fe3f483ca100,perform escalation procedure,optional,ESCO,2026-10-22
+o036,http://data.europa.eu/esco/skill/fe30a4b0-1a99-4fc7-afff-b162b8c834ba,communication principles,optional,ESCO,2026-10-22
+o036,http://data.europa.eu/esco/skill/2b92a5b2-6758-4ee3-9fb4-b6387a55cc8f,perform data analysis,optional,ESCO,2026-10-22
+o036,http://data.europa.eu/esco/skill/c2296e2e-5fef-4f24-a24f-e5b3792268be,provide ICT support,optional,ESCO,2026-10-22
+o036,http://data.europa.eu/esco/skill/e186976a-64f0-4052-a25b-297d19e1d0ec,think proactively,optional,ESCO,2026-10-22
+o036,http://data.europa.eu/esco/skill/a5b0cd5c-e13a-4ab3-8d93-4d242adcfb01,teamwork principles,optional,ESCO,2026-10-22
+o036,http://data.europa.eu/esco/skill/118efbcd-8fc5-4668-81d1-c383a0d16070,handle helpdesk problems,optional,ESCO,2026-10-22
+o036,http://data.europa.eu/esco/skill/f642d7ed-e8d7-4355-a747-b85094d4e2e3,prioritise requests,optional,ESCO,2026-10-22
+o036,http://data.europa.eu/esco/skill/6aef2baa-5fa7-4c16-bd28-3e070ec4e4df,educate on data confidentiality,optional,ESCO,2026-10-22
+o037,http://data.europa.eu/esco/skill/bdcac0c8-b77a-4640-9eaf-c0cf3efd1e23,process payments,optional,ESCO,2026-10-22
+o037,http://data.europa.eu/esco/skill/71dde84c-0058-4c52-a556-523369333db8,use office systems,optional,ESCO,2026-10-22
+o037,http://data.europa.eu/esco/skill/9df34bc3-25d4-4452-a896-4d19b94ef896,keep personal administration,optional,ESCO,2026-10-22
+o037,http://data.europa.eu/esco/skill/c58050e1-0774-4097-93d2-07dd7ba6a27a,organise facilities for office personnel,optional,ESCO,2026-10-22
+o037,http://data.europa.eu/esco/skill/df1265b9-81fd-4a40-a746-f0442ffbf7ef,deliver correspondence,optional,ESCO,2026-10-22
+o037,http://data.europa.eu/esco/skill/63321ecf-4fc6-44d9-88f1-5373a4f3038a,handle petty cash,optional,ESCO,2026-10-22
+o037,http://data.europa.eu/esco/skill/f2d57f41-43b4-4f5b-8100-3df5c21eda50,process data,optional,ESCO,2026-10-22
+o037,http://data.europa.eu/esco/skill/76f22707-8d30-453f-9eb7-3376e2960311,handle mail,optional,ESCO,2026-10-22
+o037,http://data.europa.eu/esco/skill/cace7a77-38b7-4cdf-8171-e17692bef5f6,respond to customers' inquiries,optional,ESCO,2026-10-22
+o037,http://data.europa.eu/esco/skill/e3e42d54-78bd-4337-aa87-bb31a7670c9a,issue sales invoices,optional,ESCO,2026-10-22
+o037,http://data.europa.eu/esco/skill/415abd43-e8e5-4643-b5da-5f11307af57a,use different communication channels,optional,ESCO,2026-10-22
+o037,http://data.europa.eu/esco/skill/695c3249-18e7-4435-bdb8-54a16011159d,develop documentation in accordance with legal requirements,optional,ESCO,2026-10-22
+o038,http://data.europa.eu/esco/skill/0959a14b-9743-4d71-93ba-a1fefa56e5ae,create import-export commercial documentation,optional,ESCO,2026-10-22
+o038,http://data.europa.eu/esco/skill/31c7add0-0150-4029-bf33-47872c23fcf1,maintain inventory of office supplies,optional,ESCO,2026-10-22
+o038,http://data.europa.eu/esco/skill/906c9e66-bdee-4f8e-93d7-88d9fcf39a0a,fix meetings,optional,ESCO,2026-10-22
+o038,http://data.europa.eu/esco/skill/40005305-4541-4da7-9f76-abab74f0bc51,monitor staff absences,optional,ESCO,2026-10-22
+o038,http://data.europa.eu/esco/skill/73aeff8a-28d9-46ca-9920-a9f37ce074fe,transcription methods,optional,ESCO,2026-10-22
+o038,http://data.europa.eu/esco/skill/debb8d81-ed7f-447d-853a-5d107fda6fcf,provide customer follow-up services,optional,ESCO,2026-10-22
+o038,http://data.europa.eu/esco/skill/e3e42d54-78bd-4337-aa87-bb31a7670c9a,issue sales invoices,optional,ESCO,2026-10-22
+o038,http://data.europa.eu/esco/skill/df1265b9-81fd-4a40-a746-f0442ffbf7ef,deliver correspondence,optional,ESCO,2026-10-22
+o038,http://data.europa.eu/esco/skill/48391ec6-42ba-4093-acf4-c7673b0c07f4,process commissioned instructions,optional,ESCO,2026-10-22
+o038,http://data.europa.eu/esco/skill/3838a64c-78dc-4f3f-a0c0-9f604e33eefd,maintain internal communication systems,optional,ESCO,2026-10-22
+o038,http://data.europa.eu/esco/skill/f14ff4b7-be1e-4b55-b39b-520005f8a97e,liaise with managers,optional,ESCO,2026-10-22
+o038,http://data.europa.eu/esco/skill/2de4572a-4724-4f76-afc2-72a568a264ac,speak different languages,optional,ESCO,2026-10-22
+o039,http://data.europa.eu/esco/skill/42cad89f-afd4-4418-8439-8ce87eff1f26,count money,optional,ESCO,2026-10-22
+o039,http://data.europa.eu/esco/skill/9e406af9-6561-43ef-9138-e5befeefd856,pack merchandise for gifts,optional,ESCO,2026-10-22
+o039,http://data.europa.eu/esco/skill/418765cd-77f9-4c6f-8b00-e56ebec767bb,weigh materials,optional,ESCO,2026-10-22
+o039,http://data.europa.eu/esco/skill/e8bd4f15-c928-463c-8454-5a7d99dd9926,direct customers to merchandise,optional,ESCO,2026-10-22
+o039,http://data.europa.eu/esco/skill/0c0488b3-fca5-4deb-865b-8dc605c3d909,sales argumentation,optional,ESCO,2026-10-22
+o039,http://data.europa.eu/esco/skill/dc3932d7-d064-436b-9dc7-ee8835d0f246,maintain check-out area cleanliness,optional,ESCO,2026-10-22
+o039,http://data.europa.eu/esco/skill/24814e7a-70cd-47e5-98b2-d44b46be92d2,maintain transaction's reports,optional,ESCO,2026-10-22
+o039,http://data.europa.eu/esco/skill/6ffdcb09-16bc-4480-9ac8-40fdbf915712,put up price tags,optional,ESCO,2026-10-22
+o039,http://data.europa.eu/esco/skill/aa9b1abd-3a2d-499e-95c5-684385ca5847,reserve merchandise for customers,optional,ESCO,2026-10-22
+o039,http://data.europa.eu/esco/skill/756ae350-9e1f-4cb9-9c27-6bd99806dadc,sales promotion techniques,optional,ESCO,2026-10-22
+o039,http://data.europa.eu/esco/skill/a5b0cd5c-e13a-4ab3-8d93-4d242adcfb01,teamwork principles,optional,ESCO,2026-10-22
+o039,http://data.europa.eu/esco/skill/bd2f7603-5e58-4d71-8f13-44c632782b02,package purchases in bags,optional,ESCO,2026-10-22
+o040,http://data.europa.eu/esco/skill/ecc18804-a466-40d9-98b4-fba5cd67dd4b,accounting,optional,ESCO,2026-10-22
+o040,http://data.europa.eu/esco/skill/3ee090a1-9d1c-44ed-bd93-f6b7c9b68a97,manage payroll reports,optional,ESCO,2026-10-22
+o040,http://data.europa.eu/esco/skill/e207163b-7963-4c3e-9494-7a4bb000211b,estimate duration of work,optional,ESCO,2026-10-22
+o040,http://data.europa.eu/esco/skill/3e4776e7-dd79-4a18-b334-6e8f9e989a49,liaise with union officials,optional,ESCO,2026-10-22
+o040,http://data.europa.eu/esco/skill/faf8943c-72ff-4736-a587-25508695d6f0,maintain financial records,optional,ESCO,2026-10-22
+o040,http://data.europa.eu/esco/skill/2ecf90f1-c511-464b-b26f-598d69182c70,calculate tax,optional,ESCO,2026-10-22
+o040,http://data.europa.eu/esco/skill/88564d2d-2dc9-4789-864a-f9cb73f389ec,maintain data entry requirements,optional,ESCO,2026-10-22
+o040,http://data.europa.eu/esco/skill/7849ac25-1166-4b96-955e-a754e72fdd4c,calculate commissions,optional,ESCO,2026-10-22
+o040,http://data.europa.eu/esco/skill/60f51172-37c0-4933-a27a-cbf55dcd7580,prepare financial statements,optional,ESCO,2026-10-22
+o040,http://data.europa.eu/esco/skill/a4e50b95-8962-4408-81f9-f5de71461276,calculate benefits,optional,ESCO,2026-10-22
+o040,http://data.europa.eu/esco/skill/ee6a9d20-0132-4f31-9da3-32fdc5749a9b,allocate paychecks,optional,ESCO,2026-10-22
+o040,http://data.europa.eu/esco/skill/3dfa5c1e-a2cc-4c09-9e60-d21b28072c37,trade union regulations,optional,ESCO,2026-10-22
