@@ -214,10 +214,11 @@ export async function fillEmbeddings(
 export const DEFAULT_BASE_IMPORTANCE = 1;
 
 /**
- * Builds the two skills upsert row sets: existing skills only get the columns
- * this importer owns (id, esco_uri, label_en, embedding), while a brand-new
- * skill also seeds label_ms / is_green / base_importance — all NOT NULL with
- * no default in the live schema — so the insert succeeds. label_ms and
+ * Builds the two skills row sets: existing skills (written with a per-row
+ * UPDATE — see updateExistingRows) only get the columns this importer owns
+ * (id, esco_uri, label_en, embedding), while a brand-new skill (written with
+ * upsert) also seeds label_ms / is_green / base_importance — all NOT NULL
+ * with no default in the live schema — so the insert succeeds. label_ms and
  * is_green are placeholders; base_importance is the neutral weight above.
  */
 export function buildSkillRows(
@@ -616,6 +617,30 @@ function describeUpsertError(table: string, error: { code?: string; message: str
   return error.message;
 }
 
+/**
+ * Writes rows that already exist with a per-row UPDATE (not upsert): an
+ * upsert's INSERT candidate row must satisfy every NOT NULL column before
+ * Postgres even looks at the conflict, so a row that sets only the columns
+ * this importer owns (skipping label_ms / is_green / base_importance on
+ * skills, say) fails live even though the row already exists and nothing
+ * else needs to change. Mirrors updateEmbeddingBatch, generalized to any
+ * column set; every row must carry an `id`, which is excluded from the SET.
+ */
+async function updateExistingRows(
+  supabase: SupabaseClient,
+  table: string,
+  rows: Record<string, unknown>[]
+): Promise<TableResult> {
+  let upserted = 0;
+  for (const row of rows) {
+    const { id, ...columns } = row;
+    const { error } = await supabase.from(table).update(columns).eq("id", id);
+    if (error) return { table, upserted, error: error.message };
+    upserted += 1;
+  }
+  return { table, upserted };
+}
+
 async function upsert(
   supabase: SupabaseClient,
   table: string,
@@ -634,7 +659,7 @@ async function upsert(
   return { table, upserted };
 }
 
-/** Combines two upserts against the same table into one reported result. */
+/** Combines two writes against the same table (e.g. an update and an upsert) into one reported result. */
 function combineTableResults(table: string, results: TableResult[]): TableResult {
   const upserted = results.reduce((total, result) => total + result.upserted, 0);
   const failed = results.find((result) => result.error);
@@ -682,16 +707,18 @@ export async function applyImport(
     input.skills.map((skill) => ({ id: skill.id, text: skillEmbeddingText(skill) }))
   );
 
-  // Existing skills: update only the columns this importer owns, leaving
-  // label_ms / is_green / base_importance as whoever curated them set them.
-  // New skills: also seed those NOT NULL columns with placeholder defaults.
+  // Existing skills: UPDATE only the columns this importer owns, leaving
+  // label_ms / is_green / base_importance as whoever curated them set them
+  // (and not tripping their NOT NULL checks, which an upsert would: see
+  // updateExistingRows). New skills: upsert, seeding those NOT NULL columns
+  // with placeholder defaults, since every column is set either way.
   const { existingRows: existingSkillRows, newRows: newSkillRows } = buildSkillRows(
     input.skills,
     skillPlan.existingIds,
     skillPlan.rowEmbeddings
   );
 
-  const existingSkillsResult = await upsert(supabase, "skills", existingSkillRows);
+  const existingSkillsResult = await updateExistingRows(supabase, "skills", existingSkillRows);
   const newSkillsResult = await upsert(supabase, "skills", newSkillRows);
   tables.push(combineTableResults("skills", [existingSkillsResult, newSkillsResult]));
 

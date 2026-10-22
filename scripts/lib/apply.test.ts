@@ -604,7 +604,7 @@ describe("applyImport", () => {
   });
 
   it("does not clobber label_ms / is_green / base_importance for a skill that already exists", async () => {
-    const { client, upserts } = fakeSupabase({
+    const { client, upserts, updates } = fakeSupabase({
       skills: [
         {
           id: "s1",
@@ -625,17 +625,74 @@ describe("applyImport", () => {
 
     await applyImport(input, client, embedder);
 
-    const skillsUpserts = upserts.filter((u) => u.table === "skills");
-    const existingSkillRow = skillsUpserts.flatMap((u) => u.rows).find((row) => row.id === "s1");
-    expect(existingSkillRow).toEqual({
-      id: "s1",
+    // Existing skills must never go through upsert with a partial column
+    // set: Postgres checks every NOT NULL column (label_ms, base_importance,
+    // is_green) on the proposed INSERT row before it even looks at the
+    // conflict, so a partial-column upsert fails live even though the row
+    // already exists.
+    expect(upserts.filter((u) => u.table === "skills")).toHaveLength(0);
+
+    const skillUpdates = updates.filter((u) => u.table === "skills" && u.value === "s1");
+    expect(skillUpdates).toHaveLength(1);
+    expect(skillUpdates[0].column).toBe("id");
+    expect(skillUpdates[0].set).toEqual({
       esco_uri: "https://data.europa.eu/esco/skill/s1",
       label_en: "Data analysis",
       embedding: vector(1),
     });
-    expect(existingSkillRow).not.toHaveProperty("label_ms");
-    expect(existingSkillRow).not.toHaveProperty("is_green");
-    expect(existingSkillRow).not.toHaveProperty("base_importance");
+    expect(skillUpdates[0].set).not.toHaveProperty("label_ms");
+    expect(skillUpdates[0].set).not.toHaveProperty("is_green");
+    expect(skillUpdates[0].set).not.toHaveProperty("base_importance");
+  });
+
+  it("a rerun over skills that already exist never upserts a partial column set: only update().eq('id') for existing rows, upsert only for new rows with every NOT NULL column filled", async () => {
+    const { client, upserts, updates } = fakeSupabase({
+      skills: [
+        { id: "s1", label_en: "Data analysis", label_ms: "Analisis data", is_green: true, base_importance: 7, embedding: vector(1) },
+        { id: "s2", label_en: "Communication", label_ms: "Komunikasi", is_green: false, base_importance: 3, embedding: vector(2) },
+      ],
+    });
+    const embedder: Embedder = vi.fn(async (texts: string[]) => texts.map((_, i) => vector(i)));
+
+    const input: ApplyInput = {
+      ...EMPTY_INPUT,
+      skills: [
+        { id: "s1", escoUri: "https://data.europa.eu/esco/skill/s1", labelEn: "Data analysis" },
+        { id: "s2", escoUri: "https://data.europa.eu/esco/skill/s2", labelEn: "Communication" },
+        { id: "s3", escoUri: "https://data.europa.eu/esco/skill/s3", labelEn: "Teamwork" },
+      ],
+    };
+
+    await applyImport(input, client, embedder);
+
+    // Not one skills upsert carries a partial column set: the only skills
+    // upsert is the brand-new row s3, with every NOT NULL column filled.
+    const skillsUpserts = upserts.filter((u) => u.table === "skills");
+    const upsertedRows = skillsUpserts.flatMap((u) => u.rows);
+    expect(upsertedRows.map((row) => row.id)).toEqual(["s3"]);
+    expect(upsertedRows[0]).toMatchObject({
+      id: "s3",
+      esco_uri: "https://data.europa.eu/esco/skill/s3",
+      label_en: "Teamwork",
+      label_ms: "Teamwork",
+      is_green: false,
+      base_importance: DEFAULT_BASE_IMPORTANCE,
+    });
+
+    // s1 and s2 (already existing) are each written via update().eq('id'),
+    // never upsert, and only with the columns this importer owns. s3 is
+    // brand new, so its only update (if any) comes from fillEmbeddings —
+    // identifiable because it sets nothing but embedding.
+    const skillUpdates = updates.filter((u) => u.table === "skills");
+    const baseRowUpdates = skillUpdates.filter((u) => "esco_uri" in u.set);
+    expect(baseRowUpdates.map((u) => u.value).sort()).toEqual(["s1", "s2"]);
+    for (const update of baseRowUpdates) {
+      expect(update.column).toBe("id");
+      expect(Object.keys(update.set).sort()).toEqual(["embedding", "esco_uri", "label_en"]);
+    }
+    expect(skillUpdates.every((u) => u.value !== "s3" || Object.keys(u.set).sort().join() === "embedding")).toBe(
+      true
+    );
   });
 
   it("reports a table error instead of throwing when Supabase rejects a row", async () => {
@@ -821,7 +878,7 @@ describe("applyImport", () => {
   it("resumes: never calls the embedder for a skill/occupation whose text is unchanged and already has a vector", async () => {
     const storedSkillEmbedding = vector(1);
     const storedOccupationEmbedding = vector(2);
-    const { client, upserts } = fakeSupabase({
+    const { client, upserts, updates } = fakeSupabase({
       skills: [{ id: "s1", label_en: "Data analysis", embedding: storedSkillEmbedding }],
       occupations: [
         { id: "o001", title_en: "software developer", description: "Writes software.", embedding: storedOccupationEmbedding },
@@ -842,19 +899,21 @@ describe("applyImport", () => {
       { table: "skills", total: 0, done: 0, remaining: 0, stoppedByQuota: false },
       { table: "occupations", total: 0, done: 0, remaining: 0, stoppedByQuota: false },
     ]);
-    const skillRow = upserts.filter((u) => u.table === "skills").flatMap((u) => u.rows).find((r) => r.id === "s1");
+    // s1 already exists: written via update, never a partial-column upsert.
+    expect(upserts.filter((u) => u.table === "skills")).toHaveLength(0);
+    const skillUpdate = updates.find((u) => u.table === "skills" && u.value === "s1");
     const occupationRowUpserted = upserts
       .filter((u) => u.table === "occupations")
       .flatMap((u) => u.rows)
       .find((r) => r.id === "o001");
-    expect(skillRow?.embedding).toEqual(storedSkillEmbedding);
+    expect(skillUpdate?.set.embedding).toEqual(storedSkillEmbedding);
     expect(occupationRowUpserted?.embedding).toEqual(storedOccupationEmbedding);
   });
 
   it("a changed-text row whose embedding batch never ran (quota exhausted first) is re-embedded on rerun, not skipped", async () => {
     // Run 1: s1's text changed ("Old label" -> "New label"); the quota is
     // exhausted immediately, so s1's batch is never even attempted.
-    const { client: run1Client, upserts: run1Upserts } = fakeSupabase({
+    const { client: run1Client, upserts: run1Upserts, updates: run1Updates } = fakeSupabase({
       skills: [{ id: "s1", label_en: "Old label", embedding: vector(1) }],
     });
     const quotaExceeded: Embedder = vi.fn(async () => {
@@ -868,10 +927,12 @@ describe("applyImport", () => {
     const run1Result = await applyImport(input, run1Client, quotaExceeded);
 
     expect(run1Result.embeddings[0]).toMatchObject({ table: "skills", done: 0, remaining: 1, stoppedByQuota: true });
-    // The base-row write already stored the new text, but must null the
-    // embedding rather than keep the old (now text-mismatched) vector.
-    const run1SkillRow = run1Upserts.filter((u) => u.table === "skills").flatMap((u) => u.rows)[0];
-    expect(run1SkillRow).toMatchObject({ id: "s1", label_en: "New label", embedding: null });
+    // s1 already exists: the base-row write goes through update, not
+    // upsert, and still stores the new text while nulling the embedding
+    // rather than keeping the old (now text-mismatched) vector.
+    expect(run1Upserts.filter((u) => u.table === "skills")).toHaveLength(0);
+    const run1SkillUpdate = run1Updates.find((u) => u.table === "skills" && u.value === "s1");
+    expect(run1SkillUpdate?.set).toMatchObject({ label_en: "New label", embedding: null });
 
     // Run 2 (rerun): a fresh fake DB reflecting exactly what run 1 wrote.
     const { client: run2Client, updates: run2Updates } = fakeSupabase({
@@ -885,7 +946,14 @@ describe("applyImport", () => {
     // s1 was not skipped: it was sent to the embedder and its fresh vector written.
     expect(succeedingEmbedder).toHaveBeenCalledWith(["New label"]);
     expect(run2Result.embeddings[0]).toMatchObject({ table: "skills", done: 1, remaining: 0, stoppedByQuota: false });
-    expect(run2Updates).toEqual([{ table: "skills", set: { embedding: freshVector }, column: "id", value: "s1" }]);
+    // Two updates for s1: the base-row write (still existing, still null
+    // embedding since nothing to reuse) and then fillEmbeddings's own write
+    // of the freshly computed vector.
+    const run2SkillUpdates = run2Updates.filter((u) => u.table === "skills" && u.value === "s1");
+    expect(run2SkillUpdates).toEqual([
+      { table: "skills", set: { esco_uri: "https://data.europa.eu/esco/skill/s1", label_en: "New label", embedding: null }, column: "id", value: "s1" },
+      { table: "skills", set: { embedding: freshVector }, column: "id", value: "s1" },
+    ]);
   });
 
   it("writes every non-embedding table even when the embedder fails immediately, and reports the quota stop", async () => {
