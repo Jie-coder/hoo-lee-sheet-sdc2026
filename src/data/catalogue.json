@@ -2426,18 +2426,66 @@
   "b1272de4-1f5f-408b-8b26-061f2550fc72": "e-commerce systems",
   "7111b95d-0ce3-441a-9d92-4c75d05c4388": "project management",
   "0a9acb6b-1139-4be9-b431-3a80a959f2f4": "Agile project management",
-  "69bbd53f-fbb0-4476-b4b2-ef7844464e28": "web programming",
   "29fb0fb5-dfc4-4098-ac9b-3a712000f48f": "manage database",
   "7364cc39-b9c0-449f-9416-57723e2fd9c4": "utilise methodologies for user centered design",
   "bacbfc27-4b5d-47de-8bfd-af5fa27562a2": "design prototypes",
   "15d76317-c71a-4fa2-aadc-2ecc34e627b7": "communication",
   "0da516ee-e70e-4384-be13-f5ff80be8127": "communicate with customers",
   "a4346013-a967-4a58-a533-6b32ad1364c5": "data protection",
+  "656b2dab-4ace-4afa-bad4-d9ddef577e2b": "promote organisational communication",
   "99571e68-801f-49af-a897-5f75996642e1": "financial analysis",
   "fd446407-b08e-49da-b8e3-7e7c79618c3f": "conduct public presentations",
   "0a48d064-dd04-47fb-a00d-85e9b4874033": "business management principles",
   "e437eba1-3e22-41f2-8703-741e94785cba": "human resource management",
-  "656b2dab-4ace-4afa-bad4-d9ddef577e2b": "promote organisational communication",
+  "05e5e14f-ffa6-4106-b311-c6335ccc2bd2": "solar energy",
+  "e45507ff-c1e2-4e0c-92fb-b6c0e6cb6245": "photovoltaic systems",
+  "8f585def-6ade-41b3-b897-3d71fba4151d": "alternative energy",
+  "8248a071-5307-4a64-a62d-643a35ec31e2": "types of photovoltaic panels",
+  "50ac5186-bb18-4ffb-9f29-00636853c8ea": "design solar energy systems",
+  "0ad6d5e8-593f-4191-843c-439b23a468ca": "conduct energy audit",
+  "83fc0b2b-6cd2-46af-b1ff-d3fc83604c26": "energy efficiency",
+  "4e09e2d2-e317-47d2-bf5e-1d6c66be3efc": "energy performance of buildings",
+  "29bfe2cd-f011-4f94-a3aa-f77768e60460": "analyse energy consumption",
+  "40f65a56-ccbe-4601-9f32-1cc6cdd24f28": "waste management",
+  "f82b05a7-128b-4a72-a815-044ff6062f62": "advise on waste management procedures",
+  "6f5850ea-5785-4e2c-b062-743066fd5bdb": "environmental legislation",
+  "5641a2af-9eb2-4209-9fc6-856f78f2d2f2": "pollution legislation",
+  "081d7679-5070-4777-bece-a28c49f15636": "environmental policy",
+  "f5bf985b-ac78-4d23-881a-18a359234528": "corporate sustainability",
+  "dda745dd-b8d6-45d8-8c74-e05495ce90f5": "sustainable development goals",
+  "469e19ed-a0bd-445a-ae2d-4ba9430e296b": "promote sustainability",
+  "8abdc43c-2bfd-417c-97c2-27fcdaf53171": "promote environmental awareness",
+  "4300b453-9bcf-474c-9ee3-92ec2229720c": "global standards for sustainability reporting",
+  "bbcc7e1b-3d4d-4422-9fac-efd636eb9de4": "lead the sustainability reporting process",
+  "d53eab76-e8ff-4e28-af26-7e012951c763": "measure company's sustainability performance",
+  "203083ca-b051-4c28-8986-fc8731bacee5": "sustainable finance",
+  "66db424f-2abe-420d-8e5b-186607266b61": "corporate social responsibility",
+  "b2f05068-c409-43ec-ba58-b5dfe991ca5e": "advise on corporate social responsibility",
+  "9cf681c7-89ec-470c-b651-7fe03786f586": "query languages",
+  "4463a721-69f3-413d-8321-43e3af13a4f1": "use databases",
+  "65e58886-bd1e-4c5b-8ca5-8d9b353c8aa1": "data visualisation software",
+  "348b74cd-49ce-4844-8bdf-ec188b497213": "visual presentation techniques",
+  "c0326e27-5fa8-4dca-aecb-ed89ab491513": "prepare visual data",
+  "7ee4c2ea-b349-4bd2-81a3-ec31475d4833": "statistics",
+  "6360a934-cc87-4954-9656-b32db20592e3": "quantitative analysis",
+  "31c69100-b612-4a61-8db5-fd314318854c": "execute analytical mathematical calculations",
+  "faf8943c-72ff-4736-a587-25508695d6f0": "maintain financial records",
+  "99b163e8-7815-43e2-83f3-a47f3076354c": "accounting entries",
+  "60f51172-37c0-4933-a27a-cbf55dcd7580": "prepare financial statements",
+  "a0d79341-8398-4019-ad1b-27888ec35aaa": "use accounting systems",
+  "15a33d76-4640-438d-ae64-fdc0c1d3eebc": "customer service",
+  "a17286c5-238d-4f0b-bc24-29e9121345de": "listen actively",
+  "634865e0-2ec2-4b7f-bb7f-c196637f0f7b": "older adults' needs",
+  "52c19dc8-651f-4095-98fe-dcb2799d702e": "geriatrics",
+  "7a63f944-6948-4ae4-9c1f-d08e492535c9": "apply person-centred care",
+  "fbdfc3bf-56a0-4454-a17d-2f513fe57b53": "manage stress in the work place",
+  "28ca596e-5e2f-4149-a28d-42d2c4c20227": "assess the development of youth",
+  "4e3db6d7-88b8-492d-89e5-a93d01c3e369": "social development",
+  "6b58a6d2-89cf-4ab5-bb62-eb29ae968934": "implement care programmes for children",
+  "59eb177a-2f30-4943-8b30-5f87dd51a80d": "apply teaching strategies",
+  "81ad8286-cc55-4a08-92a6-38474c35c893": "instructional strategies",
+  "6fe019dd-027f-45f3-b19c-d27f7ae00980": "assess students",
+  "9d2e926f-53d9-41f5-98f3-19dfaa687f3f": "tools for software configuration management",
   "9710092c-f174-4e84-95bf-2064d39ad7a0": "manage content metadata",
   "2af29864-c941-40a5-ae7b-2b6c4b92c0d7": "speech recognition",
   "9ff9db9d-d14b-426e-83f3-e7449af6c79f": "manage data",
@@ -2460,7 +2508,6 @@
   "6a899482-8bcf-40ca-ae67-579a1cc467ab": "manage engineering project",
   "4fabca9a-7435-4f33-b1da-3cdb00340fdc": "perform scientific research",
   "59ea80e1-463a-4dba-82c6-d0b6d577d532": "technical drawings",
-  "9d2e926f-53d9-41f5-98f3-19dfaa687f3f": "tools for software configuration management",
   "04fe962b-4017-4eb7-9139-7d69b6922bc9": "use an application-specific interface",
   "2b7a79e5-84d8-4880-be66-3d9bb05bea17": "use software design patterns",
   "8b94aa1e-89c9-459d-b3b4-1dfab8dec2df": "use software libraries",
@@ -2479,6 +2526,7 @@
   "16a00c69-9c74-4c37-96d7-6301d285e5ce": "use e-services",
   "0af062de-eb43-41e9-9b96-249e2cd22d26": "use markup languages",
   "93e65de1-923c-437e-aa5b-e6002967ce71": "web based collaborative platforms",
+  "69bbd53f-fbb0-4476-b4b2-ef7844464e28": "web programming",
   "8696aff0-18c0-4ba6-a4d0-9a21861b3e5e": "World Wide Web Consortium standards",
   "f049d050-12da-4e40-813a-2b5eb6df6b51": "Internet of Things",
   "020918ef-4b55-47c1-8430-ab7b8f6a7377": "migrate existing data",
@@ -2510,7 +2558,6 @@
   "7482a123-e801-48de-9733-262125671410": "task algorithmisation",
   "c5e8abde-d2ba-4e8e-a65e-720b71180666": "unstructured data",
   "1b70a55d-b8a4-49fc-96c6-15ab4cff2522": "use data processing techniques",
-  "348b74cd-49ce-4844-8bdf-ec188b497213": "visual presentation techniques",
   "0a43729f-2a79-4dae-9faa-95520daae79f": "apply company policies",
   "7f0b1a66-ebaf-4c8a-b606-4c1844eb692e": "attend to ICT systems quality",
   "5898d99a-62a4-4e10-a2e3-0d815ce44248": "cyber attack counter-measures",
@@ -2606,11 +2653,9 @@
   "48db96bf-3314-45c6-bad8-fdb6e20e5639": "data engineering",
   "e9575f7f-053a-439e-8074-f93df3334e92": "data ethics",
   "cc7370dd-69fa-4c67-a96f-d4d135d38700": "data quality assessment",
-  "65e58886-bd1e-4c5b-8ca5-8d9b353c8aa1": "data visualisation software",
   "54c9c155-9293-4329-8ed2-2e76e8b519d4": "define data quality criteria",
   "327d15c8-29ff-4ad4-a4fe-6536d777a45f": "documentation types",
   "2daec0e6-f0c1-43e8-8178-aedba99130ec": "establish data processes",
-  "31c69100-b612-4a61-8db5-fd314318854c": "execute analytical mathematical calculations",
   "4a193795-fa63-414e-9f2e-bfdb3924571e": "handle data samples",
   "713fb616-118e-40bc-9366-4a69879a49d5": "implement data quality processes",
   "a56dec32-05ef-45de-a256-ee6741f356db": "information confidentiality",
@@ -2619,9 +2664,6 @@
   "07889c08-7220-47c8-96f7-6068fbea00dc": "normalise data",
   "50b100ea-74fd-4706-99db-3e4ca55e51b8": "perform data cleansing",
   "4216e465-7baa-4884-a241-54b197bb9278": "perform data mining",
-  "9cf681c7-89ec-470c-b651-7fe03786f586": "query languages",
-  "7ee4c2ea-b349-4bd2-81a3-ec31475d4833": "statistics",
-  "4463a721-69f3-413d-8321-43e3af13a4f1": "use databases",
   "5f0082ab-2131-49b5-94d6-a1821daf57d6": "apply for research funding",
   "833289fa-3646-4010-9d9e-93ba8c9ef2d8": "apply research ethics and scientific integrity principles in research activities",
   "505e4ef3-7ce4-437d-b7b4-5c608f71c258": "build recommender systems",
@@ -2652,7 +2694,6 @@
   "fa642fc3-5cc5-41cf-8926-6617a8b976a7": "promote the participation of citizens in scientific and research activities",
   "988f4ac3-a37c-4b0a-a40f-4e0e56b5919e": "promote the transfer of knowledge",
   "979cf728-896f-4f2c-8fa8-2698ca0d4930": "publish academic research",
-  "6360a934-cc87-4954-9656-b32db20592e3": "quantitative analysis",
   "c544a9f3-5945-4b54-afed-de0697852817": "report analysis results",
   "74e49482-75e8-4637-bdb1-fff868d02f7a": "scientific literature",
   "2de4572a-4724-4f76-afc2-72a568a264ac": "speak different languages",
@@ -2665,7 +2706,6 @@
   "9714735d-6f60-440b-bdbc-aaf45ebcbe78": "analyse the context of an organisation",
   "3c03ee71-4a23-448f-b79e-81fd75d27dca": "apply change management",
   "633a3637-2c6b-40ae-ac38-289eb2a62aa6": "business analysis",
-  "66db424f-2abe-420d-8e5b-186607266b61": "corporate social responsibility",
   "9d59f4e5-20a5-428e-b8b3-645043500457": "create a work atmosphere of continuous improvement",
   "ba2c6181-b036-40b4-8f6d-51499463ccbb": "develop company strategies",
   "ad28c970-6bc7-4fff-9c01-0f4d67769de3": "develop revenue generation strategies",
@@ -2753,12 +2793,10 @@
   "6eff134b-e34f-4d6e-a6e8-5e47cf2228d0": "risk management",
   "42b23922-1c40-4dbe-9e0c-7a568dfdf06b": "adjust engineering designs",
   "9a25b5b8-8b41-4dcd-8bd7-0034542836a2": "adjust voltage",
-  "8f585def-6ade-41b3-b897-3d71fba4151d": "alternative energy",
   "f54c10e4-630d-4e50-95e9-4e9e268e8f12": "approve engineering design",
   "09473fea-69ea-40dc-9ff4-bbaaff10840e": "conduct engineering site audits",
   "76415d7f-0fde-4364-b45f-5c044580d2aa": "create CAD drawings",
   "30685aeb-512f-4517-adc8-63bdc1eefb8e": "design a solar heating system",
-  "50ac5186-bb18-4ffb-9f29-00636853c8ea": "design solar energy systems",
   "3e40c7d0-0e36-4b33-bc33-0aa87eda0561": "electrical engineering",
   "1e38f5be-bb7d-42c5-8301-c16cf400f8ee": "energy",
   "071c7f1d-f659-4b96-a222-b21012297f3b": "energy market",
@@ -2768,15 +2806,12 @@
   "9cf2856d-0375-4ec3-a51f-7f9c82119859": "maintain solar energy systems",
   "ab0deac2-b872-45c8-ad65-657938d2fe79": "operate solar thermal energy systems for hot water and heating",
   "6561f116-70de-47d8-80b8-f0e2a1d2cf11": "perform feasibility study on solar heating",
-  "e45507ff-c1e2-4e0c-92fb-b6c0e6cb6245": "photovoltaic systems",
   "dd6e5939-d19b-4e2f-a025-2014f0a2ec88": "power engineering",
   "1a6c7e0d-fc13-41d7-a5c0-8ca00606de89": "promote sustainable energy",
   "7832b684-580c-4eaf-a8b3-322164b041ab": "provide information on solar panels",
-  "05e5e14f-ffa6-4106-b311-c6335ccc2bd2": "solar energy",
   "c4867766-50f8-489e-98d7-262da5589c0a": "solar products",
   "103f7814-d262-4df6-a1b6-759bc51f76cb": "sustainable technologies",
   "857e8624-4db0-4725-a758-5914bd8cc350": "thermodynamics",
-  "8248a071-5307-4a64-a62d-643a35ec31e2": "types of photovoltaic panels",
   "5d3798b0-d3a3-45ef-9df2-8b8756d4d79c": "use thermal analysis",
   "3892f2ff-714e-4201-823d-5d6fc5bab621": "check compatibility of materials",
   "3d3ee5c3-4286-457f-9f76-1704011f7e11": "comply with legal regulations",
@@ -2801,7 +2836,6 @@
   "c0ccbd15-36f3-4515-ae0b-b4062d225ee2": "abide by regulations on banned materials",
   "1cebfd4f-2ab3-480a-a3c8-8065a303717d": "address public health issues",
   "b422efe7-b151-4120-86ae-db11a48dd0fa": "advise on environmental remediation",
-  "29bfe2cd-f011-4f94-a3aa-f77768e60460": "analyse energy consumption",
   "77f109c4-3107-4d2a-a512-5160ac103933": "analyse environmental data",
   "3181325d-0590-4c6e-8db1-8278427c18ff": "analyse information processes",
   "abdc7ac8-151f-40c6-bc1a-1e9b4b073290": "augmented reality",
@@ -2815,22 +2849,17 @@
   "8088750d-8388-4170-a76f-48354c469c44": "cyber security",
   "e4ff825c-7376-4135-93cd-3892fd67b7c1": "develop environmental remediation strategies",
   "270c4de9-97f9-4a7a-95d1-63670f1ec3bc": "ecosystem management",
-  "83fc0b2b-6cd2-46af-b1ff-d3fc83604c26": "energy efficiency",
   "233be639-bdb5-4099-ab40-96d537d6c1f3": "ensure compliance with safety legislation",
   "b1b118c4-3291-484e-b64d-6d51fd5da8b3": "environmental engineering",
-  "6f5850ea-5785-4e2c-b062-743066fd5bdb": "environmental legislation",
-  "081d7679-5070-4777-bece-a28c49f15636": "environmental policy",
   "a031d739-c760-441e-955b-b667502e9af2": "implement traceability systems",
   "06f46a6e-62d3-4ca0-bedb-cb4c021c14ee": "legal studies",
   "3a2d5b45-56e4-4f5a-a55a-4a4a65afdc43": "machine learning",
   "ce4990a4-bf69-4f5f-becb-e4fd96da3a74": "mining, construction and civil engineering machinery products",
   "d2c81ad1-2439-43cf-9c63-204187b8f771": "mitigate waste of resources",
   "23845010-4c1e-41d3-94a3-940bcab65bce": "monitor nature conservation",
-  "5641a2af-9eb2-4209-9fc6-856f78f2d2f2": "pollution legislation",
   "75f312e1-622b-4751-8d93-815b32feaf8d": "pollution prevention",
   "0d6c9508-1cd6-4cea-98d2-d5fe2f5c6a73": "process customer requests based on the REACh Regulation 1907 2006",
   "21e0cad8-4eef-42be-b18b-0f8e37f0dbd0": "product life-cycle",
-  "8abdc43c-2bfd-417c-97c2-27fcdaf53171": "promote environmental awareness",
   "9570e84e-6699-4c9f-9a12-7bc82d53a231": "public health",
   "eb65ce8e-61bf-49d1-99bb-cb699ba1005b": "radiation protection",
   "d1ec6846-dd8a-4810-8115-474cdf271540": "regulations on substances",
@@ -2850,15 +2879,12 @@
   "b13e0689-636d-42d0-86c3-df9d6f85a882": "manage environmental management system",
   "3f82a026-8a37-4b54-9ebb-7702b66eeb24": "perform environmental investigations",
   "692ace70-7f97-4214-92bd-88f7637d8a44": "physics",
-  "c0326e27-5fa8-4dca-aecb-ed89ab491513": "prepare visual data",
   "414332e4-8347-4771-b947-65bd3801a620": "use consulting techniques",
   "aa238394-8126-4ada-be2f-9dfe065cf314": "adhere to organisational guidelines",
   "8614b988-b907-473e-a701-47b525959dc8": "advise on heating systems energy efficiency",
   "6742977a-aa00-4c8c-9861-898b0373907e": "advise on sustainable management policies",
   "1ab1449d-5b65-458b-b115-f5283a52da8e": "advise on utility consumption",
   "885808f7-f42b-406e-95f2-28efcd45ddda": "carry out energy management of facilities",
-  "0ad6d5e8-593f-4191-843c-439b23a468ca": "conduct energy audit",
-  "f5bf985b-ac78-4d23-881a-18a359234528": "corporate sustainability",
   "37520413-563e-4d99-a14c-1c6dca3cf833": "create manufacturing guidelines",
   "555343c3-e580-4b3d-82dc-51af4e1b3b75": "define energy profiles",
   "46e1b714-94f4-462d-88e6-31f442708812": "define manufacturing quality criteria",
@@ -2869,7 +2895,6 @@
   "6360d655-3494-45f6-bfc6-d5f63afc355b": "electrical power safety regulations",
   "21c27eba-bd1f-42f5-a1d5-c250227030f7": "electricity consumption",
   "ddce2912-bc0f-4a47-aa2b-c1de48bc4b44": "energy conservation",
-  "4e09e2d2-e317-47d2-bf5e-1d6c66be3efc": "energy performance of buildings",
   "65ca5e3c-940c-46b2-b277-aff394cfdd4c": "establish daily priorities",
   "f5f5b244-6cea-4fbc-8a50-8f712791bc09": "follow company standards",
   "96d901a6-c931-4e8d-b685-a47e1deaaa1b": "identify energy needs",
@@ -2887,7 +2912,6 @@
   "4334037f-c1d8-4241-b82e-8db7e469327b": "electricity market",
   "7f4d1dee-bc5a-495a-926b-17b383b8d8fd": "green building standards",
   "f8413360-6114-40de-a276-c59b764b9913": "renewable energy",
-  "f82b05a7-128b-4a72-a815-044ff6062f62": "advise on waste management procedures",
   "9d04490c-cea5-4765-a15e-99c46b543c1d": "coordinate shipments of recycling materials",
   "862920c8-f2d0-4058-8fb8-9f06fbfc2446": "develop recycling programs",
   "27273605-2400-4392-a6d6-cc8161a2d445": "ensure compliance with waste legislative regulations",
@@ -2902,24 +2926,16 @@
   "5d34adde-0b78-42b4-9d3d-69e9388d8398": "oversee quality control",
   "b30c2dd2-996c-4984-9c68-ce05bf26f1e1": "train staff on recycling programs",
   "81fad068-0a1b-4311-867f-6cb9a60f785a": "update licenses",
-  "40f65a56-ccbe-4601-9f32-1cc6cdd24f28": "waste management",
-  "b2f05068-c409-43ec-ba58-b5dfe991ca5e": "advise on corporate social responsibility",
   "c362f415-9cdf-4328-9cf0-651443857a48": "advise on government policy compliance",
   "afdb41dd-5dd5-4fbb-bf9e-e041422698b4": "coordinate operational activities",
   "d77d7685-04fb-43a4-a1ac-09a10811f646": "corporate law",
   "97bd1c21-66b2-4b7e-ad0f-e3cda590e378": "data analytics",
   "72731261-d7b0-4e6d-bbde-5c76c85934d0": "define the corporate structure",
   "969ebc5a-e486-41b7-9a3d-15f9aa61680d": "evaluate company needs",
-  "4300b453-9bcf-474c-9ee3-92ec2229720c": "global standards for sustainability reporting",
-  "bbcc7e1b-3d4d-4422-9fac-efd636eb9de4": "lead the sustainability reporting process",
-  "d53eab76-e8ff-4e28-af26-7e012951c763": "measure company's sustainability performance",
   "696e604d-53d2-4243-a6cb-a99663caa119": "monitor social impact",
   "5ff0df56-48a7-4f84-937f-ba9a88182f3f": "promote human rights implementation",
   "bcd2ce08-ba12-4d66-865f-f4ba36419707": "promote inclusion",
   "bf5ab3df-9589-4e99-b8f6-a83b494f40be": "promote social awareness",
-  "469e19ed-a0bd-445a-ae2d-4ba9430e296b": "promote sustainability",
-  "dda745dd-b8d6-45d8-8c74-e05495ce90f5": "sustainable development goals",
-  "203083ca-b051-4c28-8986-fc8731bacee5": "sustainable finance",
   "f90d4810-8bac-4e5e-b870-3e35a4138ff7": "accept own accountability",
   "9b9244b4-6f62-4834-839b-19e9eba0a407": "acute care",
   "79c012c7-4b09-497e-8152-e73e5d1d3384": "adapt leadership styles in healthcare",
@@ -2931,7 +2947,6 @@
   "e18a6a3c-4f26-4141-8c72-4b4f01d77914": "apply context specific clinical competences",
   "a28e8141-89ee-4b24-a3bb-1aebcc56c72d": "apply nursing care in long-term care",
   "d3eccb86-f02d-4950-bfbd-20b9510774a1": "apply organisational techniques",
-  "7a63f944-6948-4ae4-9c1f-d08e492535c9": "apply person-centred care",
   "e6bf6e73-230a-434c-97b2-a0c042a8b7ac": "apply sustainability principles in health care",
   "1d4b74b0-1a48-48ec-a3cd-26cca0c212a3": "biological chemistry",
   "572c3e87-61ed-4271-9c95-148837deae5e": "citizen involvement in healthcare",
@@ -2955,7 +2970,6 @@
   "f7464f30-662b-4177-85a0-3df9693e9e58": "first aid",
   "76395873-7fe2-4f9a-b4b6-9932f8cbd0b4": "follow clinical guidelines",
   "4f7b14d8-f09c-49f7-abae-231e8c210e07": "general medicine",
-  "52c19dc8-651f-4095-98fe-dcb2799d702e": "geriatrics",
   "1709f408-9965-489b-9805-8e1e5d9e483b": "health care legislation",
   "9ec4252d-cbe8-4134-88fa-549dee1883f3": "human anatomy",
   "51e53aff-6f8a-42ca-9cb9-47335130f4d7": "human physiology",
@@ -2970,7 +2984,6 @@
   "bc7a6b88-a279-4b6e-ac5e-21666bc51dae": "innovation in nursing",
   "c65aa043-98da-4136-9877-494e72d9e4cf": "interact with healthcare users",
   "cf6ca1fc-f2be-4deb-bb35-1fffe4099023": "leadership in nursing",
-  "a17286c5-238d-4f0b-bc24-29e9121345de": "listen actively",
   "6c3e28d6-e3cc-4b25-a5da-a0dce043cf17": "manage information in health care",
   "f735e153-1f57-4841-afe9-4712cc740054": "manage multiple patients simultaneously",
   "5ff6f551-f2a4-4cef-a72d-e81116155a43": "newborn care",
@@ -3022,7 +3035,6 @@
   "fd8a70fb-1174-4263-b701-ea442fbbc324": "comply with legislation in social services",
   "4f4afd0b-07e5-48fd-a7d4-0e8746c608df": "conduct interview in social service",
   "3dbf27e5-bb92-4b31-b242-d6b02d933184": "contribute to protecting individuals from harm",
-  "15a33d76-4640-438d-ae64-fdc0c1d3eebc": "customer service",
   "4b5d4fe3-4280-47c0-b1d2-ab08ace85557": "deliver social services in diverse cultural communities",
   "524c4331-5090-4565-a0bc-0a9ae874938d": "demonstrate leadership in social service cases",
   "7e57eb3c-092b-4307-ad1c-c65f55adbc4e": "encourage social service users to preserve their independence in their daily activities",
@@ -3034,10 +3046,8 @@
   "bd17a64e-a9bd-439d-9b87-01c6bb1b7e09": "maintain records of work with service users",
   "edf5a26c-8a71-4683-99b1-a8f567a603e2": "maintain the trust of service users",
   "a4d46d86-9de5-4734-881c-5b2059b9fccf": "manage social crisis",
-  "fbdfc3bf-56a0-4454-a17d-2f513fe57b53": "manage stress in the work place",
   "2b8386c1-eed6-42ff-bd99-349eca9ea46e": "meet standards of practice in social services",
   "453b6898-de72-4ff9-b217-4a3cd377e155": "monitor service users' health",
-  "634865e0-2ec2-4b7f-bb7f-c196637f0f7b": "older adults' needs",
   "6d80a4cb-cad2-435c-b899-e0e91fda07d6": "prevent social problems",
   "7838b15f-1beb-4da3-b4f2-22d8ae6e9079": "promote service users' rights",
   "644209ac-8452-4e81-959a-2b10050023cc": "promote social change",
@@ -3080,8 +3090,6 @@
   "f6d5f009-b188-45ef-98e0-18d700744892": "strategies for handling cases of elder abuse",
   "573d3f91-c81c-407e-a56d-0f3a63272b43": "adapt teaching to student's capabilities",
   "e3ef4981-2cba-4b34-b273-728c3a33d04f": "apply intercultural teaching strategies",
-  "59eb177a-2f30-4943-8b30-5f87dd51a80d": "apply teaching strategies",
-  "6fe019dd-027f-45f3-b19c-d27f7ae00980": "assess students",
   "31b67516-af16-4b97-8430-a8a8e0f84190": "assessment processes",
   "128f0b4c-8da7-467b-9196-7c691e067a1e": "assign homework",
   "d5e1e30e-44ab-4aba-abab-b8263e801b7a": "assist students in their learning",
@@ -3093,8 +3101,6 @@
   "b9bb1f03-15e2-4079-943e-7e483b21725b": "give constructive feedback",
   "11f536f5-b0e2-46a6-95c1-bd765946604c": "guarantee students' safety",
   "07090471-265a-48ec-b744-72b357e801ed": "handle children's problems",
-  "6b58a6d2-89cf-4ab5-bb62-eb29ae968934": "implement care programmes for children",
-  "81ad8286-cc55-4a08-92a6-38474c35c893": "instructional strategies",
   "731101d9-94bc-4805-bff4-9578d1bf03b5": "learning difficulties",
   "efe801a5-8704-4def-8a96-c32f7a6cb9fb": "maintain relations with children's parents",
   "5a42eaf5-93bb-4bca-8ebd-4d78e96e4929": "maintain students' discipline",
@@ -3107,11 +3113,9 @@
   "383955b1-9059-47e4-9028-67bb2fdb6be6": "teach primary education class content",
   "a5b0cd5c-e13a-4ab3-8d93-4d242adcfb01": "teamwork principles",
   "1c7ac9a3-5385-4443-bd7f-64f86451c0c1": "use pedagogic strategies for creativity",
-  "28ca596e-5e2f-4149-a28d-42d2c4c20227": "assess the development of youth",
   "8e09fe66-2649-4179-81ef-91fefa3ceee8": "assist children in developing personal skills",
   "eeb3e7ea-56f4-422f-8a85-0438b25ff0ce": "kindergarten school procedures",
   "3ff9d956-3e26-40d1-ae0e-f5f247943042": "monitor children's physical development",
-  "4e3db6d7-88b8-492d-89e5-a93d01c3e369": "social development",
   "a65fb963-6faf-47b2-a3d9-c4e5e4d833c5": "support children's wellbeing",
   "a8c5e58f-1f0f-40bc-8860-aaab0f64f105": "teach kindergarten class content",
   "68aefa78-9a8c-4d5f-879a-abcfe1cd464f": "adhere to health well-being and safety",
@@ -3212,7 +3216,6 @@
   "88564d2d-2dc9-4789-864a-f9cb73f389ec": "maintain data entry requirements",
   "81633a44-f1db-4a01-a940-804c6905e330": "use word processing software",
   "08371fe9-c658-4f6a-966f-71dbb0ab683d": "accounting department processes",
-  "99b163e8-7815-43e2-83f3-a47f3076354c": "accounting entries",
   "880c54f9-866e-4f37-b5fa-25ef8a7d49b6": "accounting techniques",
   "e9030465-13c5-46d2-bdae-c2c1a9dbec86": "attach accounting certificates to accounting transactions",
   "2ff405ec-f59c-4a7b-84b6-9776a49582c4": "bookkeeping regulations",
@@ -3221,13 +3224,10 @@
   "4a460161-eaea-4fe2-bd0e-164ccc635be1": "financial statements",
   "83e97138-899a-4af8-9187-47823e875841": "follow the statutory obligations",
   "8a326ee1-169c-4c44-b38b-8f1bb20ec79b": "identify accounting errors",
-  "faf8943c-72ff-4736-a587-25508695d6f0": "maintain financial records",
   "dc417e19-edb4-4401-883a-2375f67a162f": "manage the general ledger",
   "585ed991-fdab-4f3c-9187-a32bfb7ab822": "perform balance sheet operations",
-  "60f51172-37c0-4933-a27a-cbf55dcd7580": "prepare financial statements",
   "eaa9727c-df1e-407a-85d3-48cc71508bc2": "prepare trial accounting balances",
   "d669af41-756c-48d9-a286-1443253f54b1": "tax legislation",
-  "a0d79341-8398-4019-ad1b-27888ec35aaa": "use accounting systems",
   "3c209873-c757-47bb-91b5-9b6dc05df116": "banking activities",
   "98e26527-4cca-42b7-9902-5749f48e62c5": "convert currency",
   "e4c205f6-55ba-4bed-9c5d-2032058300c0": "financial jurisdiction",
@@ -5670,33 +5670,33 @@
    "languages": [
     "en"
    ],
-   "hours": 180,
+   "hours": 152,
    "costType": "free",
    "certificate": false,
    "skillIds": [
     "1973c966-f236-40c9-b2d4-5d71a89019be",
     "2b92a5b2-6758-4ee3-9fb4-b6387a55cc8f"
    ],
-   "lastChecked": "2026-10-20",
+   "lastChecked": "2026-10-21",
    "mode": "online"
   },
   {
    "id": "c002",
-   "title": "AI for Everyone",
+   "title": "AI For Everyone",
    "provider": "Coursera",
    "url": "https://www.coursera.org/learn/ai-for-everyone",
    "languages": [
     "en",
     "zh"
    ],
-   "hours": 10,
+   "hours": 7,
    "costType": "free",
    "certificate": false,
    "skillIds": [
     "e465a154-93f7-4973-9ce1-31659fe16dd2",
     "3c76296d-4bbd-44ba-8eaa-95bf275f79b7"
    ],
-   "lastChecked": "2026-10-20",
+   "lastChecked": "2026-10-21",
    "mode": "online"
   },
   {
@@ -5708,14 +5708,14 @@
     "en",
     "zh"
    ],
-   "hours": 15,
+   "hours": 5.1,
    "costType": "free",
    "certificate": false,
    "skillIds": [
     "bd14968e-e409-45af-b362-3495ed7b10e0",
     "a7f0fbe0-c546-4f30-8e41-34a58c64567e"
    ],
-   "lastChecked": "2026-10-20",
+   "lastChecked": "2026-10-21",
    "mode": "online"
   },
   {
@@ -5726,33 +5726,33 @@
    "languages": [
     "en"
    ],
-   "hours": 8,
+   "hours": 2.7,
    "costType": "free",
    "certificate": true,
    "skillIds": [
     "21d2f96d-35f7-4e3f-9745-c533d2dd6e97",
     "5b9cde20-f1b9-4adc-bfb3-dbf70b14138d"
    ],
-   "lastChecked": "2026-10-20",
+   "lastChecked": "2026-10-21",
    "mode": "online"
   },
   {
    "id": "c005",
    "title": "Data Analytics and Business Intelligence Tools - Master Class",
-   "provider": "GARRANTO ACADEMY",
+   "provider": "e-LATiH",
    "url": "https://elatih.hrdcorp.gov.my/courses-details/data-analytics-and-business-intelligence-tools-master-class",
    "languages": [
     "en"
    ],
-   "hours": 40,
+   "hours": 1.5,
    "costType": "free",
    "certificate": true,
    "skillIds": [
     "2b92a5b2-6758-4ee3-9fb4-b6387a55cc8f",
     "382c11ed-20d5-4ae7-b60e-15fec527fa6c"
    ],
-   "lastChecked": "2026-10-20",
-   "mode": "hybrid"
+   "lastChecked": "2026-10-21",
+   "mode": "online"
   },
   {
    "id": "c006",
@@ -5771,7 +5771,7 @@
     "e465a154-93f7-4973-9ce1-31659fe16dd2",
     "d15ce60f-ddab-41ce-ba56-398451b77b60"
    ],
-   "lastChecked": "2026-10-20",
+   "lastChecked": "2026-10-21",
    "mode": "online"
   },
   {
@@ -5782,14 +5782,14 @@
    "languages": [
     "en"
    ],
-   "hours": 160,
+   "hours": 178,
    "costType": "free",
-   "certificate": true,
+   "certificate": false,
    "skillIds": [
     "2b92a5b2-6758-4ee3-9fb4-b6387a55cc8f",
     "8369c2d6-c100-4cf6-bd83-9668d8678433"
    ],
-   "lastChecked": "2026-10-20",
+   "lastChecked": "2026-10-21",
    "mode": "online"
   },
   {
@@ -5800,14 +5800,14 @@
    "languages": [
     "en"
    ],
-   "hours": 120,
+   "hours": 122,
    "costType": "free",
-   "certificate": true,
+   "certificate": false,
    "skillIds": [
     "c2296e2e-5fef-4f24-a24f-e5b3792268be",
     "0868eef3-2213-4572-9343-74931345a7d3"
    ],
-   "lastChecked": "2026-10-20",
+   "lastChecked": "2026-10-21",
    "mode": "online"
   },
   {
@@ -5818,14 +5818,14 @@
    "languages": [
     "en"
    ],
-   "hours": 150,
+   "hours": 132,
    "costType": "free",
-   "certificate": true,
+   "certificate": false,
    "skillIds": [
     "6833e58b-eceb-4599-9375-1b7e6ec64087",
     "21d2f96d-35f7-4e3f-9745-c533d2dd6e97"
    ],
-   "lastChecked": "2026-10-20",
+   "lastChecked": "2026-10-21",
    "mode": "online"
   },
   {
@@ -5836,14 +5836,14 @@
    "languages": [
     "en"
    ],
-   "hours": 100,
+   "hours": 82,
    "costType": "free",
-   "certificate": true,
+   "certificate": false,
    "skillIds": [
     "43dfbe7f-9e10-4871-b171-e5076737b4cf",
     "5303169c-75d6-4751-9136-a4b88343388c"
    ],
-   "lastChecked": "2026-10-20",
+   "lastChecked": "2026-10-21",
    "mode": "online"
   },
   {
@@ -5855,14 +5855,14 @@
     "en",
     "zh"
    ],
-   "hours": 24,
+   "hours": 20,
    "costType": "free",
    "certificate": false,
    "skillIds": [
     "143769cb-b61e-47d8-a61e-eedfbec1016c",
     "2b92a5b2-6758-4ee3-9fb4-b6387a55cc8f"
    ],
-   "lastChecked": "2026-10-20",
+   "lastChecked": "2026-10-21",
    "mode": "online"
   },
   {
@@ -5880,7 +5880,7 @@
     "21d2f96d-35f7-4e3f-9745-c533d2dd6e97",
     "8ff015a0-98ea-4d80-a23e-1f68110a919e"
    ],
-   "lastChecked": "2026-10-20",
+   "lastChecked": "2026-10-21",
    "mode": "physical"
   },
   {
@@ -5898,7 +5898,7 @@
     "bd14968e-e409-45af-b362-3495ed7b10e0",
     "0868eef3-2213-4572-9343-74931345a7d3"
    ],
-   "lastChecked": "2026-10-20",
+   "lastChecked": "2026-10-21",
    "mode": "hybrid"
   },
   {
@@ -5909,15 +5909,15 @@
    "languages": [
     "en"
    ],
-   "hours": 140,
+   "hours": 120,
    "costType": "free",
-   "certificate": true,
+   "certificate": false,
    "skillIds": [
     "43dfbe7f-9e10-4871-b171-e5076737b4cf",
     "b1272de4-1f5f-408b-8b26-061f2550fc72"
    ],
-   "lastChecked": "2026-10-20",
-   "mode": "hybrid"
+   "lastChecked": "2026-10-21",
+   "mode": "online"
   },
   {
    "id": "c015",
@@ -5927,15 +5927,15 @@
    "languages": [
     "en"
    ],
-   "hours": 140,
+   "hours": 142,
    "costType": "free",
-   "certificate": true,
+   "certificate": false,
    "skillIds": [
     "7111b95d-0ce3-441a-9d92-4c75d05c4388",
     "0a9acb6b-1139-4be9-b431-3a80a959f2f4"
    ],
-   "lastChecked": "2026-10-20",
-   "mode": "hybrid"
+   "lastChecked": "2026-10-21",
+   "mode": "online"
   },
   {
    "id": "c016",
@@ -5945,14 +5945,14 @@
    "languages": [
     "en"
    ],
-   "hours": 400,
-   "costType": "hrdcorp_claimable",
+   "hours": 40,
+   "costType": "free",
    "certificate": true,
    "skillIds": [
-    "69bbd53f-fbb0-4476-b4b2-ef7844464e28",
+    "21d2f96d-35f7-4e3f-9745-c533d2dd6e97",
     "29fb0fb5-dfc4-4098-ac9b-3a712000f48f"
    ],
-   "lastChecked": "2026-10-20",
+   "lastChecked": "2026-10-21",
    "mode": "hybrid"
   },
   {
@@ -5963,15 +5963,15 @@
    "languages": [
     "en"
    ],
-   "hours": 200,
+   "hours": 112,
    "costType": "free",
-   "certificate": true,
+   "certificate": false,
    "skillIds": [
     "7364cc39-b9c0-449f-9416-57723e2fd9c4",
     "bacbfc27-4b5d-47de-8bfd-af5fa27562a2"
    ],
-   "lastChecked": "2026-10-20",
-   "mode": "hybrid"
+   "lastChecked": "2026-10-21",
+   "mode": "online"
   },
   {
    "id": "c018",
@@ -5981,21 +5981,21 @@
    "languages": [
     "en"
    ],
-   "hours": 240,
+   "hours": 150,
    "costType": "hrdcorp_claimable",
    "certificate": true,
    "skillIds": [
     "2b92a5b2-6758-4ee3-9fb4-b6387a55cc8f",
     "8369c2d6-c100-4cf6-bd83-9668d8678433"
    ],
-   "lastChecked": "2026-10-20",
-   "mode": "hybrid"
+   "lastChecked": "2026-10-21",
+   "mode": "online"
   },
   {
    "id": "c019",
    "title": "Data Science 360 Certification",
    "provider": "The LEAD",
-   "url": "https://thelead.io/data-science-360",
+   "url": "https://thelead.io/online-courses/",
    "languages": [
     "en"
    ],
@@ -6006,25 +6006,25 @@
     "2b92a5b2-6758-4ee3-9fb4-b6387a55cc8f",
     "8369c2d6-c100-4cf6-bd83-9668d8678433"
    ],
-   "lastChecked": "2026-10-20",
+   "lastChecked": "2026-10-21",
    "mode": "online"
   },
   {
    "id": "c020",
-   "title": "Kursus Microsoft Excel",
+   "title": "Kursus Microsoft Excel.",
    "provider": "e-LATiH",
    "url": "https://elatih.hrdcorp.gov.my/courses-details/kursus-microsoft-excel",
    "languages": [
     "ms"
    ],
-   "hours": 4,
+   "hours": 2,
    "costType": "free",
    "certificate": true,
    "skillIds": [
     "1973c966-f236-40c9-b2d4-5d71a89019be",
     "2b92a5b2-6758-4ee3-9fb4-b6387a55cc8f"
    ],
-   "lastChecked": "2026-10-20",
+   "lastChecked": "2026-10-21",
    "mode": "online"
   },
   {
@@ -6035,14 +6035,14 @@
    "languages": [
     "ms"
    ],
-   "hours": 3,
+   "hours": 1.25,
    "costType": "free",
    "certificate": true,
    "skillIds": [
     "1973c966-f236-40c9-b2d4-5d71a89019be",
     "29fb0fb5-dfc4-4098-ac9b-3a712000f48f"
    ],
-   "lastChecked": "2026-10-20",
+   "lastChecked": "2026-10-21",
    "mode": "online"
   },
   {
@@ -6053,15 +6053,15 @@
    "languages": [
     "ms"
    ],
-   "hours": 3,
+   "hours": 1,
    "costType": "free",
    "certificate": true,
    "skillIds": [
     "b1272de4-1f5f-408b-8b26-061f2550fc72",
     "43dfbe7f-9e10-4871-b171-e5076737b4cf"
    ],
-   "lastChecked": "2026-10-20",
-   "mode": "hybrid"
+   "lastChecked": "2026-10-21",
+   "mode": "online"
   },
   {
    "id": "c023",
@@ -6072,97 +6072,96 @@
     "ms",
     "en"
    ],
-   "hours": 2,
+   "hours": 1.25,
    "costType": "free",
    "certificate": true,
    "skillIds": [
     "15d76317-c71a-4fa2-aadc-2ecc34e627b7",
     "0da516ee-e70e-4384-be13-f5ff80be8127"
    ],
-   "lastChecked": "2026-10-20",
-   "mode": "hybrid"
+   "lastChecked": "2026-10-21",
+   "mode": "online"
   },
   {
    "id": "c024",
-   "title": "Microsoft Certified Azure AI Fundamentals",
+   "title": "Semiconductor IC Design and AI for Semiconductor Engineering (Designated Prog)",
    "provider": "Yayasan Peneraju",
-   "url": "https://peneraju.org/course-details?id=139",
+   "url": "https://peneraju.org/courses?interest=Digital%20Technology%20Builder",
    "languages": [
     "en",
     "ms"
    ],
-   "hours": 360,
+   "hours": 160,
    "costType": "free",
    "certificate": true,
    "skillIds": [
-    "bd14968e-e409-45af-b362-3495ed7b10e0",
-    "6833e58b-eceb-4599-9375-1b7e6ec64087"
+    "e465a154-93f7-4973-9ce1-31659fe16dd2",
+    "21d2f96d-35f7-4e3f-9745-c533d2dd6e97"
    ],
-   "lastChecked": "2026-10-20",
+   "lastChecked": "2026-10-21",
    "mode": "hybrid"
   },
   {
    "id": "c025",
-   "title": "Selangor E-Commerce & Digital Retail Masterclass",
+   "title": "Selangor Retail Tech Xccelerator (Retail-X)",
    "provider": "SIDEC",
-   "url": "https://myfuturejobs.gov.my/training-programmes/",
+   "url": "https://www.sidec.com.my/retail-x/",
    "languages": [
     "en",
     "ms",
     "zh"
    ],
-   "hours": 16,
+   "hours": 48,
    "costType": "subsidised",
    "certificate": true,
    "skillIds": [
     "b1272de4-1f5f-408b-8b26-061f2550fc72",
     "43dfbe7f-9e10-4871-b171-e5076737b4cf"
    ],
-   "lastChecked": "2026-10-20",
+   "lastChecked": "2026-10-21",
    "mode": "physical"
   },
   {
    "id": "c026",
-   "title": "Data Privacy and Protection (PDPA Malaysia)",
+   "title": "Data Privacy and Protection",
    "provider": "e-LATiH",
    "url": "https://elatih.hrdcorp.gov.my/courses-details/data-privacy-and-protection",
    "languages": [
     "en"
    ],
-   "hours": 2,
-   "costType": "free",
+   "hours": 1,
+   "costType": "paid",
    "certificate": true,
    "skillIds": [
     "a4346013-a967-4a58-a533-6b32ad1364c5",
     "6833e58b-eceb-4599-9375-1b7e6ec64087"
    ],
-   "lastChecked": "2026-10-20",
-   "mode": "hybrid"
+   "lastChecked": "2026-10-21",
+   "mode": "online"
   },
   {
    "id": "c027",
-   "title": "Digital Skills & AI Training for Youth",
-   "provider": "Biji-biji Initiative",
-   "url": "https://biji-biji.com/blog/learn-digital-marketing-with-microsoft-until-you-can-practice-yourself/",
+   "title": "Penetapan Matlamat, Impian & Pelan Pembangunan Kendiri",
+   "provider": "e-LATiH",
+   "url": "https://elatih.hrdcorp.gov.my/courses-details/penetapan-matlamat-impian-pelan-pembangunan-kendiri",
    "languages": [
-    "en",
     "ms"
    ],
-   "hours": 20,
+   "hours": 4.2,
    "costType": "free",
    "certificate": true,
    "skillIds": [
-    "d15ce60f-ddab-41ce-ba56-398451b77b60",
-    "e465a154-93f7-4973-9ce1-31659fe16dd2"
+    "15d76317-c71a-4fa2-aadc-2ecc34e627b7",
+    "656b2dab-4ace-4afa-bad4-d9ddef577e2b"
    ],
-   "lastChecked": "2026-10-20",
-   "mode": "hybrid"
+   "lastChecked": "2026-10-21",
+   "mode": "online"
   },
   {
    "id": "c028",
-   "title": "Capital Market Graduate Programme (CMGP)",
+   "title": "Capital Market Graduate Programme (CMGP) – investED Leadership Programme",
    "provider": "Securities Commission Malaysia",
-   "url": "https://www.invested.com.my/cmgp/",
+   "url": "https://www.invested.my/leadership-programme/",
    "languages": [
     "en"
    ],
@@ -6173,7 +6172,7 @@
     "99571e68-801f-49af-a897-5f75996642e1",
     "2b92a5b2-6758-4ee3-9fb4-b6387a55cc8f"
    ],
-   "lastChecked": "2026-10-20",
+   "lastChecked": "2026-10-21",
    "mode": "physical"
   },
   {
@@ -6185,32 +6184,32 @@
     "ms",
     "en"
    ],
-   "hours": 2,
+   "hours": 1.25,
    "costType": "free",
    "certificate": true,
    "skillIds": [
     "15d76317-c71a-4fa2-aadc-2ecc34e627b7",
     "fd446407-b08e-49da-b8e3-7e7c79618c3f"
    ],
-   "lastChecked": "2026-10-20",
+   "lastChecked": "2026-10-21",
    "mode": "online"
   },
   {
    "id": "c030",
-   "title": "Enterprise Data Analyst Programme",
+   "title": "Axiata Digital Certification Program (Data Star Accelerator)",
    "provider": "CADS",
    "url": "https://v1.cads.ai/datastar",
    "languages": [
     "en"
    ],
-   "hours": 40,
-   "costType": "hrdcorp_claimable",
+   "hours": 160,
+   "costType": "free",
    "certificate": true,
    "skillIds": [
     "2b92a5b2-6758-4ee3-9fb4-b6387a55cc8f",
     "143769cb-b61e-47d8-a61e-eedfbec1016c"
    ],
-   "lastChecked": "2026-10-20",
+   "lastChecked": "2026-10-21",
    "mode": "hybrid"
   },
   {
@@ -6222,15 +6221,15 @@
     "en",
     "zh"
    ],
-   "hours": 100,
+   "hours": 95,
    "costType": "free",
-   "certificate": true,
+   "certificate": false,
    "skillIds": [
     "8369c2d6-c100-4cf6-bd83-9668d8678433",
     "21d2f96d-35f7-4e3f-9745-c533d2dd6e97"
    ],
-   "lastChecked": "2026-10-20",
-   "mode": "hybrid"
+   "lastChecked": "2026-10-21",
+   "mode": "online"
   },
   {
    "id": "c032",
@@ -6241,14 +6240,14 @@
     "ms",
     "zh"
    ],
-   "hours": 2,
+   "hours": 0.5,
    "costType": "free",
    "certificate": true,
    "skillIds": [
     "15d76317-c71a-4fa2-aadc-2ecc34e627b7",
     "0da516ee-e70e-4384-be13-f5ff80be8127"
    ],
-   "lastChecked": "2026-10-20",
+   "lastChecked": "2026-10-21",
    "mode": "online"
   },
   {
@@ -6259,14 +6258,14 @@
    "languages": [
     "en"
    ],
-   "hours": 2,
+   "hours": 1.35,
    "costType": "free",
    "certificate": true,
    "skillIds": [
     "b1272de4-1f5f-408b-8b26-061f2550fc72",
     "0a48d064-dd04-47fb-a00d-85e9b4874033"
    ],
-   "lastChecked": "2026-10-20",
+   "lastChecked": "2026-10-21",
    "mode": "online"
   },
   {
@@ -6275,7 +6274,8 @@
    "provider": "Cisco Networking Academy",
    "url": "https://www.netacad.com/courses/networking-basics",
    "languages": [
-    "en"
+    "en",
+    "zh"
    ],
    "hours": 22,
    "costType": "free",
@@ -6284,7 +6284,7 @@
     "0868eef3-2213-4572-9343-74931345a7d3",
     "c2296e2e-5fef-4f24-a24f-e5b3792268be"
    ],
-   "lastChecked": "2026-10-20",
+   "lastChecked": "2026-10-21",
    "mode": "online"
   },
   {
@@ -6295,14 +6295,14 @@
    "languages": [
     "en"
    ],
-   "hours": 2,
+   "hours": 1.25,
    "costType": "free",
    "certificate": true,
    "skillIds": [
     "e437eba1-3e22-41f2-8703-741e94785cba",
     "656b2dab-4ace-4afa-bad4-d9ddef577e2b"
    ],
-   "lastChecked": "2026-10-20",
+   "lastChecked": "2026-10-21",
    "mode": "online"
   },
   {
@@ -6314,14 +6314,825 @@
     "en",
     "zh"
    ],
-   "hours": 80,
+   "hours": 79,
    "costType": "free",
-   "certificate": true,
+   "certificate": false,
    "skillIds": [
     "21d2f96d-35f7-4e3f-9745-c533d2dd6e97",
     "29fb0fb5-dfc4-4098-ac9b-3a712000f48f"
    ],
-   "lastChecked": "2026-10-20",
+   "lastChecked": "2026-10-21",
+   "mode": "online"
+  },
+  {
+   "id": "c037",
+   "title": "用Python玩转数据 (Data Processing Using Python)",
+   "provider": "Coursera",
+   "url": "https://www.coursera.org/learn/hipython",
+   "languages": [
+    "zh"
+   ],
+   "hours": 28.4,
+   "costType": "free",
+   "certificate": false,
+   "skillIds": [
+    "2b92a5b2-6758-4ee3-9fb4-b6387a55cc8f",
+    "21d2f96d-35f7-4e3f-9745-c533d2dd6e97"
+   ],
+   "lastChecked": "2026-10-21",
+   "mode": "online"
+  },
+  {
+   "id": "c038",
+   "title": "用Python 做商管程式設計（一）(Programming for Business Computing in Python (1))",
+   "provider": "Coursera",
+   "url": "https://www.coursera.org/learn/pbc1",
+   "languages": [
+    "zh"
+   ],
+   "hours": 13,
+   "costType": "free",
+   "certificate": false,
+   "skillIds": [
+    "21d2f96d-35f7-4e3f-9745-c533d2dd6e97",
+    "0a48d064-dd04-47fb-a00d-85e9b4874033"
+   ],
+   "lastChecked": "2026-10-21",
+   "mode": "online"
+  },
+  {
+   "id": "c039",
+   "title": "用Python 做商管程式設計（二）(Programming for Business Computing in Python (2))",
+   "provider": "Coursera",
+   "url": "https://www.coursera.org/learn/pbc2",
+   "languages": [
+    "zh"
+   ],
+   "hours": 9,
+   "costType": "free",
+   "certificate": false,
+   "skillIds": [
+    "2b92a5b2-6758-4ee3-9fb4-b6387a55cc8f",
+    "99571e68-801f-49af-a897-5f75996642e1"
+   ],
+   "lastChecked": "2026-10-21",
+   "mode": "online"
+  },
+  {
+   "id": "c040",
+   "title": "用Python 做商管程式設計（三）(Programming for Business Computing in Python (3))",
+   "provider": "Coursera",
+   "url": "https://www.coursera.org/learn/pbc3",
+   "languages": [
+    "zh"
+   ],
+   "hours": 12,
+   "costType": "free",
+   "certificate": false,
+   "skillIds": [
+    "5b9cde20-f1b9-4adc-bfb3-dbf70b14138d",
+    "8369c2d6-c100-4cf6-bd83-9668d8678433"
+   ],
+   "lastChecked": "2026-10-21",
+   "mode": "online"
+  },
+  {
+   "id": "c041",
+   "title": "機器學習基石上 (Machine Learning Foundations)---Mathematical Foundations",
+   "provider": "Coursera",
+   "url": "https://www.coursera.org/learn/ntumlone-mathematicalfoundations",
+   "languages": [
+    "zh"
+   ],
+   "hours": 11,
+   "costType": "free",
+   "certificate": false,
+   "skillIds": [
+    "8369c2d6-c100-4cf6-bd83-9668d8678433",
+    "382c11ed-20d5-4ae7-b60e-15fec527fa6c"
+   ],
+   "lastChecked": "2026-10-21",
+   "mode": "online"
+  },
+  {
+   "id": "c042",
+   "title": "機器學習技法 (Machine Learning Techniques)",
+   "provider": "Coursera",
+   "url": "https://www.coursera.org/learn/machine-learning-techniques",
+   "languages": [
+    "zh"
+   ],
+   "hours": 18,
+   "costType": "free",
+   "certificate": false,
+   "skillIds": [
+    "8369c2d6-c100-4cf6-bd83-9668d8678433",
+    "2b92a5b2-6758-4ee3-9fb4-b6387a55cc8f"
+   ],
+   "lastChecked": "2026-10-21",
+   "mode": "online"
+  },
+  {
+   "id": "c043",
+   "title": "計算機程式設計 (Computer Programming)",
+   "provider": "Coursera",
+   "url": "https://www.coursera.org/learn/c-bian-cheng",
+   "languages": [
+    "zh"
+   ],
+   "hours": 13,
+   "costType": "free",
+   "certificate": false,
+   "skillIds": [
+    "21d2f96d-35f7-4e3f-9745-c533d2dd6e97",
+    "8ff015a0-98ea-4d80-a23e-1f68110a919e"
+   ],
+   "lastChecked": "2026-10-21",
+   "mode": "online"
+  },
+  {
+   "id": "c044",
+   "title": "Mastering Company Analysis with Credit Report （CH）以信用报告掌握公司分析",
+   "provider": "e-LATiH",
+   "url": "https://elatih.hrdcorp.gov.my/courses-details/mastering-company-analysis-with-credit-report-ch-yixinyongbaogaozhangwogongsifenxi",
+   "languages": [
+    "zh"
+   ],
+   "hours": 1.1,
+   "costType": "paid",
+   "certificate": true,
+   "skillIds": [
+    "99571e68-801f-49af-a897-5f75996642e1",
+    "0a48d064-dd04-47fb-a00d-85e9b4874033"
+   ],
+   "lastChecked": "2026-10-21",
+   "mode": "online"
+  },
+  {
+   "id": "c045",
+   "title": "Introduction to Cybersecurity",
+   "provider": "Cisco Networking Academy",
+   "url": "https://www.netacad.com/courses/introduction-to-cybersecurity",
+   "languages": [
+    "en",
+    "zh"
+   ],
+   "hours": 6,
+   "costType": "free",
+   "certificate": true,
+   "skillIds": [
+    "6833e58b-eceb-4599-9375-1b7e6ec64087",
+    "a4346013-a967-4a58-a533-6b32ad1364c5"
+   ],
+   "lastChecked": "2026-10-21",
+   "mode": "online"
+  },
+  {
+   "id": "c046",
+   "title": "Introduction to Modern AI",
+   "provider": "Cisco Networking Academy",
+   "url": "https://www.netacad.com/courses/introduction-to-modern-ai",
+   "languages": [
+    "en",
+    "zh"
+   ],
+   "hours": 6,
+   "costType": "free",
+   "certificate": true,
+   "skillIds": [
+    "e465a154-93f7-4973-9ce1-31659fe16dd2",
+    "d15ce60f-ddab-41ce-ba56-398451b77b60"
+   ],
+   "lastChecked": "2026-10-21",
+   "mode": "online"
+  },
+  {
+   "id": "c047",
+   "title": "Fahami Kos Dan Analisis Perniagaan Anda Dengan Excel",
+   "provider": "e-LATiH",
+   "url": "https://elatih.hrdcorp.gov.my/courses-details/fahami-kos-dan-analisis-perniagaan-anda-dengan-excel",
+   "languages": [
+    "ms"
+   ],
+   "hours": 0.93,
+   "costType": "free",
+   "certificate": true,
+   "skillIds": [
+    "1973c966-f236-40c9-b2d4-5d71a89019be",
+    "99571e68-801f-49af-a897-5f75996642e1"
+   ],
+   "lastChecked": "2026-10-21",
+   "mode": "online"
+  },
+  {
+   "id": "c048",
+   "title": "Kreativiti dalam era revolusi industri keempat (IR 4.0)",
+   "provider": "e-LATiH",
+   "url": "https://elatih.hrdcorp.gov.my/courses-details/kreativiti-dalam-era-revolusi-industri-keempat-ir-4-0",
+   "languages": [
+    "ms"
+   ],
+   "hours": 1.33,
+   "costType": "free",
+   "certificate": true,
+   "skillIds": [
+    "e465a154-93f7-4973-9ce1-31659fe16dd2",
+    "d15ce60f-ddab-41ce-ba56-398451b77b60"
+   ],
+   "lastChecked": "2026-10-21",
+   "mode": "online"
+  },
+  {
+   "id": "c049",
+   "title": "Pengurusan Profesional Dalam Organisasi",
+   "provider": "e-LATiH",
+   "url": "https://elatih.hrdcorp.gov.my/courses-details/pengurusan-profesional-dalam-organisasi",
+   "languages": [
+    "ms"
+   ],
+   "hours": 1.28,
+   "costType": "free",
+   "certificate": true,
+   "skillIds": [
+    "0a48d064-dd04-47fb-a00d-85e9b4874033",
+    "656b2dab-4ace-4afa-bad4-d9ddef577e2b"
+   ],
+   "lastChecked": "2026-10-21",
+   "mode": "online"
+  },
+  {
+   "id": "c050",
+   "title": "Transformasi Kepada Pekerja Produktif & Cemerlang",
+   "provider": "e-LATiH",
+   "url": "https://elatih.hrdcorp.gov.my/courses-details/transformasi-kepada-pekerja-produktif-cemerlang",
+   "languages": [
+    "ms"
+   ],
+   "hours": 1.25,
+   "costType": "free",
+   "certificate": true,
+   "skillIds": [
+    "656b2dab-4ace-4afa-bad4-d9ddef577e2b",
+    "15d76317-c71a-4fa2-aadc-2ecc34e627b7"
+   ],
+   "lastChecked": "2026-10-21",
+   "mode": "online"
+  },
+  {
+   "id": "c051",
+   "title": "Kepimpinan Mengikut Konteks",
+   "provider": "e-LATiH",
+   "url": "https://elatih.hrdcorp.gov.my/courses-details/kepimpinan-mengikut-konteks",
+   "languages": [
+    "ms"
+   ],
+   "hours": 1.12,
+   "costType": "free",
+   "certificate": true,
+   "skillIds": [
+    "0a48d064-dd04-47fb-a00d-85e9b4874033",
+    "656b2dab-4ace-4afa-bad4-d9ddef577e2b"
+   ],
+   "lastChecked": "2026-10-21",
+   "mode": "online"
+  },
+  {
+   "id": "c052",
+   "title": "Pengurusan Operasi Berkesan",
+   "provider": "e-LATiH",
+   "url": "https://elatih.hrdcorp.gov.my/courses-details/pengurusan-operasi-berkesan",
+   "languages": [
+    "ms"
+   ],
+   "hours": 0.6,
+   "costType": "free",
+   "certificate": true,
+   "skillIds": [
+    "0a48d064-dd04-47fb-a00d-85e9b4874033",
+    "7111b95d-0ce3-441a-9d92-4c75d05c4388"
+   ],
+   "lastChecked": "2026-10-21",
+   "mode": "online"
+  },
+  {
+   "id": "c053",
+   "title": "[Kursus Inovasi Perniagaan] Membangun Kreativiti untuk Kejayaan Masa Depan",
+   "provider": "e-LATiH",
+   "url": "https://elatih.hrdcorp.gov.my/courses-details/kursus-inovasi-perniagaan-membangun-kreativiti-untuk-kejayaan-masa-depan",
+   "languages": [
+    "ms"
+   ],
+   "hours": 1.25,
+   "costType": "free",
+   "certificate": true,
+   "skillIds": [
+    "0a48d064-dd04-47fb-a00d-85e9b4874033",
+    "43dfbe7f-9e10-4871-b171-e5076737b4cf"
+   ],
+   "lastChecked": "2026-10-21",
+   "mode": "online"
+  },
+  {
+   "id": "c054",
+   "title": "Papan Tanda Keselamatan di Tempat Kerja",
+   "provider": "e-LATiH",
+   "url": "https://elatih.hrdcorp.gov.my/courses-details/papan-tanda-keselamatan-di-tempat-kerja",
+   "languages": [
+    "ms"
+   ],
+   "hours": 0.67,
+   "costType": "free",
+   "certificate": true,
+   "skillIds": [
+    "656b2dab-4ace-4afa-bad4-d9ddef577e2b",
+    "15d76317-c71a-4fa2-aadc-2ecc34e627b7"
+   ],
+   "lastChecked": "2026-10-21",
+   "mode": "online"
+  },
+  {
+   "id": "c055",
+   "title": "Business Chinese 1 中级汉语（上）",
+   "provider": "Coursera",
+   "url": "https://www.coursera.org/learn/intermediate-business-chinese-1",
+   "languages": [
+    "zh"
+   ],
+   "hours": 26,
+   "costType": "free",
+   "certificate": false,
+   "skillIds": [
+    "15d76317-c71a-4fa2-aadc-2ecc34e627b7",
+    "0da516ee-e70e-4384-be13-f5ff80be8127"
+   ],
+   "lastChecked": "2026-10-21",
+   "mode": "online"
+  },
+  {
+   "id": "c056",
+   "title": "Learning Chinese : Start From Scratch (零到一學中文)",
+   "provider": "Coursera",
+   "url": "https://www.coursera.org/learn/learn-chinese-mandarin",
+   "languages": [
+    "zh"
+   ],
+   "hours": 6,
+   "costType": "free",
+   "certificate": false,
+   "skillIds": [
+    "15d76317-c71a-4fa2-aadc-2ecc34e627b7",
+    "0da516ee-e70e-4384-be13-f5ff80be8127"
+   ],
+   "lastChecked": "2026-10-21",
+   "mode": "online"
+  },
+  {
+   "id": "c057",
+   "title": "Introduction to Data Science",
+   "provider": "Cisco Networking Academy",
+   "url": "https://www.netacad.com/courses/introduction-data-science",
+   "languages": [
+    "en",
+    "zh"
+   ],
+   "hours": 6,
+   "costType": "free",
+   "certificate": true,
+   "skillIds": [
+    "2b92a5b2-6758-4ee3-9fb4-b6387a55cc8f",
+    "e465a154-93f7-4973-9ce1-31659fe16dd2"
+   ],
+   "lastChecked": "2026-10-21",
+   "mode": "online"
+  },
+  {
+   "id": "c058",
+   "title": "Operating Systems Basics",
+   "provider": "Cisco Networking Academy",
+   "url": "https://www.netacad.com/courses/operating-systems-basics",
+   "languages": [
+    "en",
+    "zh"
+   ],
+   "hours": 12,
+   "costType": "free",
+   "certificate": true,
+   "skillIds": [
+    "0868eef3-2213-4572-9343-74931345a7d3",
+    "6833e58b-eceb-4599-9375-1b7e6ec64087"
+   ],
+   "lastChecked": "2026-10-21",
+   "mode": "online"
+  },
+  {
+   "id": "c059",
+   "title": "Introduction to IoT and Digital Transformation",
+   "provider": "Cisco Networking Academy",
+   "url": "https://www.netacad.com/courses/introduction-iot",
+   "languages": [
+    "en",
+    "zh"
+   ],
+   "hours": 6,
+   "costType": "free",
+   "certificate": true,
+   "skillIds": [
+    "21d2f96d-35f7-4e3f-9745-c533d2dd6e97",
+    "bd14968e-e409-45af-b362-3495ed7b10e0"
+   ],
+   "lastChecked": "2026-10-21",
+   "mode": "online"
+  },
+  {
+   "id": "c060",
+   "title": "Microsoft Certified: Azure AI Fundamentals (AI-900)",
+   "provider": "Microsoft Learn",
+   "url": "https://learn.microsoft.com/en-us/credentials/certifications/azure-ai-fundamentals/",
+   "languages": [
+    "en",
+    "zh"
+   ],
+   "hours": 14,
+   "costType": "free",
+   "certificate": false,
+   "skillIds": [
+    "e465a154-93f7-4973-9ce1-31659fe16dd2",
+    "8369c2d6-c100-4cf6-bd83-9668d8678433"
+   ],
+   "lastChecked": "2026-10-21",
+   "mode": "online"
+  },
+  {
+   "id": "c061",
+   "title": "Solar Energy Basics",
+   "provider": "Coursera",
+   "url": "https://www.coursera.org/learn/solar-energy-basics",
+   "languages": [
+    "en"
+   ],
+   "hours": 16,
+   "costType": "free",
+   "certificate": false,
+   "skillIds": [
+    "05e5e14f-ffa6-4106-b311-c6335ccc2bd2",
+    "e45507ff-c1e2-4e0c-92fb-b6c0e6cb6245",
+    "8f585def-6ade-41b3-b897-3d71fba4151d"
+   ],
+   "lastChecked": "2026-10-22",
+   "mode": "online"
+  },
+  {
+   "id": "c062",
+   "title": "Solar Energy System Design",
+   "provider": "Coursera",
+   "url": "https://www.coursera.org/learn/solar-energy-system-design",
+   "languages": [
+    "en"
+   ],
+   "hours": 16,
+   "costType": "free",
+   "certificate": false,
+   "skillIds": [
+    "e45507ff-c1e2-4e0c-92fb-b6c0e6cb6245",
+    "8248a071-5307-4a64-a62d-643a35ec31e2",
+    "50ac5186-bb18-4ffb-9f29-00636853c8ea"
+   ],
+   "lastChecked": "2026-10-22",
+   "mode": "online"
+  },
+  {
+   "id": "c063",
+   "title": "Energy management for real estate. Methods and digital tools",
+   "provider": "Coursera",
+   "url": "https://www.coursera.org/learn/energy-management-for-real-estate",
+   "languages": [
+    "en"
+   ],
+   "hours": 4.1,
+   "costType": "free",
+   "certificate": false,
+   "skillIds": [
+    "0ad6d5e8-593f-4191-843c-439b23a468ca",
+    "83fc0b2b-6cd2-46af-b1ff-d3fc83604c26",
+    "4e09e2d2-e317-47d2-bf5e-1d6c66be3efc",
+    "29bfe2cd-f011-4f94-a3aa-f77768e60460"
+   ],
+   "lastChecked": "2026-10-22",
+   "mode": "online"
+  },
+  {
+   "id": "c064",
+   "title": "Municipal Solid Waste Management in Developing Countries",
+   "provider": "Coursera",
+   "url": "https://www.coursera.org/learn/solid-waste-management",
+   "languages": [
+    "en"
+   ],
+   "hours": 15,
+   "costType": "free",
+   "certificate": false,
+   "skillIds": [
+    "40f65a56-ccbe-4601-9f32-1cc6cdd24f28",
+    "f82b05a7-128b-4a72-a815-044ff6062f62"
+   ],
+   "lastChecked": "2026-10-22",
+   "mode": "online"
+  },
+  {
+   "id": "c065",
+   "title": "Introduction to Environmental Law and Policy",
+   "provider": "Coursera",
+   "url": "https://www.coursera.org/learn/environmental-law",
+   "languages": [
+    "en"
+   ],
+   "hours": 14,
+   "costType": "free",
+   "certificate": false,
+   "skillIds": [
+    "6f5850ea-5785-4e2c-b062-743066fd5bdb",
+    "5641a2af-9eb2-4209-9fc6-856f78f2d2f2",
+    "081d7679-5070-4777-bece-a28c49f15636"
+   ],
+   "lastChecked": "2026-10-22",
+   "mode": "online"
+  },
+  {
+   "id": "c066",
+   "title": "Corporate Sustainability. Understanding and Seizing the Strategic Opportunity",
+   "provider": "Coursera",
+   "url": "https://www.coursera.org/learn/corporate-sustainability",
+   "languages": [
+    "en"
+   ],
+   "hours": 17,
+   "costType": "free",
+   "certificate": false,
+   "skillIds": [
+    "f5bf985b-ac78-4d23-881a-18a359234528",
+    "dda745dd-b8d6-45d8-8c74-e05495ce90f5",
+    "469e19ed-a0bd-445a-ae2d-4ba9430e296b"
+   ],
+   "lastChecked": "2026-10-22",
+   "mode": "online"
+  },
+  {
+   "id": "c067",
+   "title": "The Age of Sustainable Development",
+   "provider": "Coursera",
+   "url": "https://www.coursera.org/learn/sustainable-development",
+   "languages": [
+    "en"
+   ],
+   "hours": 30,
+   "costType": "free",
+   "certificate": false,
+   "skillIds": [
+    "dda745dd-b8d6-45d8-8c74-e05495ce90f5",
+    "8abdc43c-2bfd-417c-97c2-27fcdaf53171"
+   ],
+   "lastChecked": "2026-10-22",
+   "mode": "online"
+  },
+  {
+   "id": "c068",
+   "title": "Sustainability Reporting: From Regulation to Implementation",
+   "provider": "Coursera",
+   "url": "https://www.coursera.org/learn/sustainability-reporting-from-regulation-to-implementation",
+   "languages": [
+    "en"
+   ],
+   "hours": 20,
+   "costType": "free",
+   "certificate": false,
+   "skillIds": [
+    "4300b453-9bcf-474c-9ee3-92ec2229720c",
+    "bbcc7e1b-3d4d-4422-9fac-efd636eb9de4",
+    "d53eab76-e8ff-4e28-af26-7e012951c763"
+   ],
+   "lastChecked": "2026-10-22",
+   "mode": "online"
+  },
+  {
+   "id": "c069",
+   "title": "Reshaping our Economies",
+   "provider": "UN CC:Learn",
+   "url": "https://unccelearn.org/course/view.php?id=227&page=overview&lang=en",
+   "languages": [
+    "en"
+   ],
+   "hours": 4.5,
+   "costType": "free",
+   "certificate": false,
+   "skillIds": [
+    "203083ca-b051-4c28-8986-fc8731bacee5",
+    "469e19ed-a0bd-445a-ae2d-4ba9430e296b"
+   ],
+   "lastChecked": "2026-10-22",
+   "mode": "online"
+  },
+  {
+   "id": "c070",
+   "title": "ESG Practices and Governance in the Workplace",
+   "provider": "e-LATiH",
+   "url": "https://elatih.hrdcorp.gov.my/courses-details/esg-practices-and-governance-in-the-workplace",
+   "languages": [
+    "en"
+   ],
+   "hours": 1,
+   "costType": "paid",
+   "certificate": true,
+   "skillIds": [
+    "66db424f-2abe-420d-8e5b-186607266b61",
+    "f5bf985b-ac78-4d23-881a-18a359234528",
+    "b2f05068-c409-43ec-ba58-b5dfe991ca5e"
+   ],
+   "lastChecked": "2026-10-22",
+   "mode": "online"
+  },
+  {
+   "id": "c071",
+   "title": "SQL for Data Science",
+   "provider": "Coursera",
+   "url": "https://www.coursera.org/learn/sql-for-data-science",
+   "languages": [
+    "en"
+   ],
+   "hours": 15,
+   "costType": "free",
+   "certificate": false,
+   "skillIds": [
+    "9cf681c7-89ec-470c-b651-7fe03786f586",
+    "4463a721-69f3-413d-8321-43e3af13a4f1"
+   ],
+   "lastChecked": "2026-10-22",
+   "mode": "online"
+  },
+  {
+   "id": "c072",
+   "title": "Data Visualization and Communication with Tableau",
+   "provider": "Coursera",
+   "url": "https://www.coursera.org/learn/analytics-tableau",
+   "languages": [
+    "en"
+   ],
+   "hours": 26,
+   "costType": "free",
+   "certificate": false,
+   "skillIds": [
+    "65e58886-bd1e-4c5b-8ca5-8d9b353c8aa1",
+    "348b74cd-49ce-4844-8bdf-ec188b497213",
+    "c0326e27-5fa8-4dca-aecb-ed89ab491513"
+   ],
+   "lastChecked": "2026-10-22",
+   "mode": "online"
+  },
+  {
+   "id": "c073",
+   "title": "Basic Statistics",
+   "provider": "Coursera",
+   "url": "https://www.coursera.org/learn/basic-statistics",
+   "languages": [
+    "en"
+   ],
+   "hours": 17,
+   "costType": "free",
+   "certificate": false,
+   "skillIds": [
+    "7ee4c2ea-b349-4bd2-81a3-ec31475d4833",
+    "6360a934-cc87-4954-9656-b32db20592e3",
+    "31c69100-b612-4a61-8db5-fd314318854c"
+   ],
+   "lastChecked": "2026-10-22",
+   "mode": "online"
+  },
+  {
+   "id": "c074",
+   "title": "Intuit Academy Bookkeeping Professional Certificate",
+   "provider": "Coursera",
+   "url": "https://www.coursera.org/professional-certificates/intuit-bookkeeping",
+   "languages": [
+    "en"
+   ],
+   "hours": 54,
+   "costType": "free",
+   "certificate": false,
+   "skillIds": [
+    "faf8943c-72ff-4736-a587-25508695d6f0",
+    "99b163e8-7815-43e2-83f3-a47f3076354c",
+    "60f51172-37c0-4933-a27a-cbf55dcd7580",
+    "a0d79341-8398-4019-ad1b-27888ec35aaa"
+   ],
+   "lastChecked": "2026-10-22",
+   "mode": "online"
+  },
+  {
+   "id": "c075",
+   "title": "Introduction to Customer Service",
+   "provider": "Coursera",
+   "url": "https://www.coursera.org/learn/introduction-to-customer-service",
+   "languages": [
+    "en"
+   ],
+   "hours": 19,
+   "costType": "free",
+   "certificate": false,
+   "skillIds": [
+    "15a33d76-4640-438d-ae64-fdc0c1d3eebc",
+    "a17286c5-238d-4f0b-bc24-29e9121345de"
+   ],
+   "lastChecked": "2026-10-22",
+   "mode": "online"
+  },
+  {
+   "id": "c076",
+   "title": "Living with Dementia: Impact on Individuals, Caregivers, Communities and Societies",
+   "provider": "Coursera",
+   "url": "https://www.coursera.org/learn/dementia-care",
+   "languages": [
+    "en"
+   ],
+   "hours": 19,
+   "costType": "free",
+   "certificate": false,
+   "skillIds": [
+    "634865e0-2ec2-4b7f-bb7f-c196637f0f7b",
+    "52c19dc8-651f-4095-98fe-dcb2799d702e"
+   ],
+   "lastChecked": "2026-10-22",
+   "mode": "online"
+  },
+  {
+   "id": "c077",
+   "title": "Learning to be caregivers for people with chronic conditions",
+   "provider": "Coursera",
+   "url": "https://www.coursera.org/learn/learning-to-be-caregivers-for-people-with-chronic-conditions",
+   "languages": [
+    "en"
+   ],
+   "hours": 13,
+   "costType": "free",
+   "certificate": false,
+   "skillIds": [
+    "7a63f944-6948-4ae4-9c1f-d08e492535c9",
+    "fbdfc3bf-56a0-4454-a17d-2f513fe57b53"
+   ],
+   "lastChecked": "2026-10-22",
+   "mode": "online"
+  },
+  {
+   "id": "c078",
+   "title": "Introduction to Early Childhood",
+   "provider": "Coursera",
+   "url": "https://www.coursera.org/learn/teaching-early-home-based-childhood",
+   "languages": [
+    "en"
+   ],
+   "hours": 10,
+   "costType": "free",
+   "certificate": false,
+   "skillIds": [
+    "28ca596e-5e2f-4149-a28d-42d2c4c20227",
+    "4e3db6d7-88b8-492d-89e5-a93d01c3e369",
+    "6b58a6d2-89cf-4ab5-bb62-eb29ae968934"
+   ],
+   "lastChecked": "2026-10-22",
+   "mode": "online"
+  },
+  {
+   "id": "c079",
+   "title": "Foundations of Teaching for Learning: Introduction",
+   "provider": "Coursera",
+   "url": "https://www.coursera.org/learn/teaching",
+   "languages": [
+    "en"
+   ],
+   "hours": 9,
+   "costType": "free",
+   "certificate": false,
+   "skillIds": [
+    "59eb177a-2f30-4943-8b30-5f87dd51a80d",
+    "81ad8286-cc55-4a08-92a6-38474c35c893",
+    "6fe019dd-027f-45f3-b19c-d27f7ae00980"
+   ],
+   "lastChecked": "2026-10-22",
+   "mode": "online"
+  },
+  {
+   "id": "c080",
+   "title": "Introduction to Git and GitHub",
+   "provider": "Coursera",
+   "url": "https://www.coursera.org/learn/introduction-git-github",
+   "languages": [
+    "en"
+   ],
+   "hours": 20,
+   "costType": "free",
+   "certificate": false,
+   "skillIds": [
+    "9d2e926f-53d9-41f5-98f3-19dfaa687f3f"
+   ],
+   "lastChecked": "2026-10-22",
    "mode": "online"
   }
  ],
@@ -6331,7 +7142,7 @@
    "name": "AI untuk Rakyat Programme",
    "agency": "Ministry of Digital",
    "url": "https://rakyatdigital.gov.my/en/literacy-hub",
-   "benefits": "Free foundational AI micro-credential and 3-month premium AI tools subscription for eligible youth.",
+   "benefits": "Free foundational AI micro-courses and 3-month premium AI tools subscription for eligible youth.",
    "eligibility": {
     "age_min": null,
     "age_max": null,
@@ -6346,7 +7157,7 @@
    },
    "costType": "free",
    "deadline": null,
-   "lastChecked": "2026-10-20"
+   "lastChecked": "2026-10-21"
   },
   {
    "id": "p002",
@@ -6368,14 +7179,14 @@
    },
    "costType": "free",
    "deadline": null,
-   "lastChecked": "2026-10-20"
+   "lastChecked": "2026-10-21"
   },
   {
    "id": "p003",
    "name": "PERKESO EIS Training Programme",
    "agency": "PERKESO",
-   "url": "https://myfuturejobs.gov.my",
-   "benefits": "Fully funded professional training tuition plus RM20 daily training allowance.",
+   "url": "https://myfuturejobs.gov.my/training-programmes/",
+   "benefits": "Fully funded professional training tuition plus up to RM20 daily training allowance.",
    "eligibility": {
     "age_min": 18,
     "age_max": 60,
@@ -6390,14 +7201,14 @@
    },
    "costType": "free",
    "deadline": null,
-   "lastChecked": "2026-10-20"
+   "lastChecked": "2026-10-21"
   },
   {
    "id": "p004",
    "name": "HRD Corp e-LATiH",
    "agency": "HRD Corp",
-   "url": "https://elatih.hrdcorp.gov.my",
-   "benefits": "Free access to over 1,000 online courses covering digital, business, and workplace skills.",
+   "url": "https://elatih.hrdcorp.gov.my/",
+   "benefits": "Free access to over 1,000 foundational online courses covering digital, business, and workplace skills.",
    "eligibility": {
     "age_min": null,
     "age_max": null,
@@ -6412,14 +7223,14 @@
    },
    "costType": "free",
    "deadline": null,
-   "lastChecked": "2026-10-20"
+   "lastChecked": "2026-10-21"
   },
   {
    "id": "p005",
    "name": "PENJANA KPT-PACE",
    "agency": "Ministry of Higher Education",
-   "url": "https://budget.mof.gov.my/manfaat/faq/kpt-pace.html",
-   "benefits": "Provides up to RM3,000 training and certification vouchers for local tertiary students and graduates.",
+   "url": "https://www.mohe.gov.my/",
+   "benefits": "Provides up to RM3,000 training and certification vouchers for local tertiary students and graduates when cohorts are active.",
    "eligibility": {
     "age_min": null,
     "age_max": null,
@@ -6434,15 +7245,15 @@
     ]
    },
    "costType": "free",
-   "deadline": "2026-12-31",
-   "lastChecked": "2026-10-20"
+   "deadline": null,
+   "lastChecked": "2026-10-21"
   },
   {
    "id": "p006",
    "name": "Peneraju Profesional Perakaunan (Accounting)",
    "agency": "Yayasan Peneraju",
    "url": "https://peneraju.org/courses?interest=Accounting",
-   "benefits": "Full sponsorship for accounting tuition and exams plus monthly living allowance for full-time trainees.",
+   "benefits": "Full convertible financing for professional accounting tuition and exams plus monthly living allowance for full-time trainees.",
    "eligibility": {
     "age_min": 16,
     "age_max": null,
@@ -6459,13 +7270,13 @@
    },
    "costType": "free",
    "deadline": null,
-   "lastChecked": "2026-10-20"
+   "lastChecked": "2026-10-21"
   },
   {
    "id": "p007",
    "name": "National Structured Internship Programme (MySIP)",
    "agency": "TalentCorp",
-   "url": "https://www.talentcorp.com.my/our-initiatives/for-students-graduates/",
+   "url": "https://www.talentcorp.com.my/mysip-incentives/",
    "benefits": "Guaranteed minimum monthly internship allowance for students and double tax deduction for host employers.",
    "eligibility": {
     "age_min": null,
@@ -6481,21 +7292,88 @@
    },
    "costType": "free",
    "deadline": null,
-   "lastChecked": "2026-10-20"
+   "lastChecked": "2026-10-21"
   },
   {
    "id": "p008",
    "name": "Global Online Workforce (GLOW) Malaysia",
    "agency": "MDEC",
-   "url": "https://mdec.my/glow",
-   "benefits": "Free intensive training and mentoring to help Malaysians earn income as global digital freelancers.",
+   "url": "https://www.mdec.my/glowmalaysia",
+   "benefits": "Free 3-day intensive training and mentoring to help Malaysians earn income as global digital freelancers.",
    "eligibility": {
     "age_min": 18,
     "age_max": null,
     "citizen": true,
     "employment": [
      "unemployed",
-     "self_employed",
+     "self_employed"
+    ],
+    "perkeso_contributor": null,
+    "states": [
+     "all"
+    ]
+   },
+   "costType": "free",
+   "deadline": null,
+   "lastChecked": "2026-10-21"
+  },
+  {
+   "id": "p009",
+   "name": "K-Youth Development Programme (K-Youth)",
+   "agency": "Khazanah Nasional",
+   "url": "https://www.khazanah.com.my/for-malaysia-and-its-people/capacity-building-initiatives/k-youth/",
+   "benefits": "Fully funded short-term skills acceleration, paid on-the-job apprenticeship, and industry certification for youth.",
+   "eligibility": {
+    "age_min": 18,
+    "age_max": 30,
+    "citizen": true,
+    "employment": [
+     "student",
+     "unemployed"
+    ],
+    "perkeso_contributor": null,
+    "states": [
+     "all"
+    ]
+   },
+   "costType": "free",
+   "deadline": null,
+   "lastChecked": "2026-10-21"
+  },
+  {
+   "id": "p010",
+   "name": "Women's Career Comeback Programme (CCP)",
+   "agency": "TalentCorp",
+   "url": "https://www.talentcorp.com.my/ccp/",
+   "benefits": "Free career readiness workshops, coaching, employer matching, and personal income tax exemption eligibility upon returning to work.",
+   "eligibility": {
+    "age_min": null,
+    "age_max": null,
+    "citizen": true,
+    "employment": [
+     "unemployed"
+    ],
+    "perkeso_contributor": null,
+    "states": [
+     "all"
+    ]
+   },
+   "costType": "free",
+   "deadline": null,
+   "lastChecked": "2026-10-21"
+  },
+  {
+   "id": "p011",
+   "name": "MYMidCareer40",
+   "agency": "PERKESO",
+   "url": "https://myfuturejobs.gov.my/midcareer40-initiative/",
+   "benefits": "Free AI-assisted career matching, personalized career counseling, interview coaching, and funded reskilling courses for job seekers aged 40 and above.",
+   "eligibility": {
+    "age_min": 40,
+    "age_max": null,
+    "citizen": true,
+    "employment": [
+     "unemployed",
      "employed"
     ],
     "perkeso_contributor": null,
@@ -6505,7 +7383,52 @@
    },
    "costType": "free",
    "deadline": null,
-   "lastChecked": "2026-10-20"
+   "lastChecked": "2026-10-21"
+  },
+  {
+   "id": "p012",
+   "name": "Young Employable Students (YES!)",
+   "agency": "TalentCorp",
+   "url": "https://www.talentcorp.com.my/our-initiatives/for-students-graduates/yes/",
+   "benefits": "Free certified career coaching, communication and problem-solving bootcamps, resume clinics, and direct networking with top Malaysian employers.",
+   "eligibility": {
+    "age_min": null,
+    "age_max": null,
+    "citizen": true,
+    "employment": [
+     "student"
+    ],
+    "perkeso_contributor": null,
+    "states": [
+     "all"
+    ]
+   },
+   "costType": "free",
+   "deadline": null,
+   "lastChecked": "2026-10-21"
+  },
+  {
+   "id": "p013",
+   "name": "PERKESO Return To Work (RTW) Programme",
+   "agency": "PERKESO",
+   "url": "https://myfuturejobs.gov.my/return-to-work-programme/",
+   "benefits": "Fully funded vocational retraining, physical rehabilitation, assistive devices, workplace modification, and job placement support.",
+   "eligibility": {
+    "age_min": 18,
+    "age_max": 60,
+    "citizen": true,
+    "employment": [
+     "unemployed",
+     "employed"
+    ],
+    "perkeso_contributor": true,
+    "states": [
+     "all"
+    ]
+   },
+   "costType": "free",
+   "deadline": null,
+   "lastChecked": "2026-10-21"
   }
  ],
  "personaSkills": {
