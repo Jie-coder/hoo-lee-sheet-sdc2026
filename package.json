@@ -15,7 +15,8 @@
     "test": "vitest run",
     "import-data": "tsx scripts/import-data.ts",
     "build-catalogue": "tsx scripts/build-catalogue.ts",
-    "precompute-demo-cvs": "tsx --conditions=react-server scripts/precompute-demo-cvs.ts"
+    "precompute-demo-cvs": "tsx --conditions=react-server scripts/precompute-demo-cvs.ts",
+    "precompute-role-embeddings": "tsx --conditions=react-server scripts/precompute-role-embeddings.ts"
   },
   "dependencies": {
     "@ai-sdk/google": "^4.0.99",

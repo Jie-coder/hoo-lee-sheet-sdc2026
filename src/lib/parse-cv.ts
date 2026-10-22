@@ -68,6 +68,21 @@ const CvExtractionSchema = z.strictObject({
       z.strictObject({
         title: z.string().min(1),
         years: z.number().nonnegative().describe("Years in the role, estimated from the dates given."),
+        tasks: z
+          .array(
+            z.strictObject({
+              text: z.string().min(1).describe("A short description of one task or responsibility performed in this role."),
+              evidence: z
+                .string()
+                .min(1)
+                .describe("A verbatim quote copied exactly from the CV text that supports this task."),
+            }),
+          )
+          .max(10)
+          .describe(
+            "Tasks performed in this role. Every task must carry a verbatim evidence quote; " +
+              "tasks without a quote found in the CV are dropped before the response is returned.",
+          ),
       }),
     )
     .max(20),
@@ -84,10 +99,12 @@ export type CvExtraction = z.infer<typeof CvExtractionSchema>;
 
 const EXTRACTION_SYSTEM_PROMPT =
   "You read a CV's plain text and extract only what is written in it: the person's name if it appears, " +
-  "their skills and tools, their roles (title and years in each, estimated from any dates given), and their " +
-  "education (the qualification/degree, and its major or field of study). Never invent a name, skill, role, " +
-  "qualification, or field of study that is not in the text. If a field is not in the text, leave it out " +
-  "rather than guessing.";
+  "their skills and tools, their roles (title and years in each, estimated from any dates given, plus the " +
+  "tasks or responsibilities performed in that role), and their education (the qualification/degree, and its " +
+  "major or field of study). For every task, copy a short verbatim quote from the CV text into its evidence " +
+  "field, copied exactly as written (same words, same spelling) so it can be found in the original text; do " +
+  "not paraphrase the evidence. Never invent a name, skill, role, task, qualification, or field of study that " +
+  "is not in the text. If a field is not in the text, leave it out rather than guessing.";
 
 function sha256Hex(bytes: Uint8Array): string {
   return createHash("sha256").update(bytes).digest("hex");
@@ -97,10 +114,44 @@ function sleep(ms: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-function toParsedCvResult(extraction: CvExtraction, skills: ParsedSkill[]): ParsedCvResult {
+/**
+ * Normalizes text before checking that a task's evidence quote actually
+ * appears in the CV: lowercases, folds curly quotes/dashes to their plain
+ * ASCII equivalents (the model sometimes "prettifies" punctuation when
+ * quoting), and collapses whitespace so a line-wrapped quote still matches.
+ */
+function normalizeForEvidenceMatch(text: string): string {
+  return text
+    .replace(/[‘’‚‛]/g, "'")
+    .replace(/[“”„‟]/g, '"')
+    .replace(/[‐‑‒–—−]/g, "-")
+    .toLowerCase()
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+/**
+ * Keeps only the tasks whose evidence quote is actually findable in the CV
+ * text (after normalization), dropping the rest. This is the only guard
+ * against an invented task: the model schema requires a quote, but only
+ * checking it against the source text catches a quote that was paraphrased
+ * or fabricated rather than copied.
+ */
+function verifiedTaskTexts(tasks: CvExtraction["roles"][number]["tasks"], normalizedCvText: string): string[] {
+  return tasks
+    .filter((task) => normalizedCvText.includes(normalizeForEvidenceMatch(task.evidence)))
+    .map((task) => task.text);
+}
+
+function toParsedCvResult(extraction: CvExtraction, skills: ParsedSkill[], cvText: string): ParsedCvResult {
+  const normalizedCvText = normalizeForEvidenceMatch(cvText);
   return {
     name: extraction.name ?? "",
-    roles: extraction.roles.map((role) => ({ title: role.title, years: role.years, tasks: [] })),
+    roles: extraction.roles.map((role) => ({
+      title: role.title,
+      years: role.years,
+      tasks: verifiedTaskTexts(role.tasks, normalizedCvText),
+    })),
     education: extraction.education.map((edu) => ({ level: edu.qualification, field: edu.field })),
     skills,
   };
@@ -199,5 +250,5 @@ export async function extractAndMapCv(bytes: Uint8Array, deps: ParseCvDeps = {})
   deps.onExtracted?.(extraction);
 
   const skills = await mapSkillsToEsco(extraction.skills, deps);
-  return { ok: true, result: toParsedCvResult(extraction, skills) };
+  return { ok: true, result: toParsedCvResult(extraction, skills, text) };
 }
