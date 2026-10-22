@@ -44,6 +44,7 @@ import {
 // import() below, only once --apply has actually been requested.
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { Embedder } from "./lib/clients";
+import { defaultLogger, type Logger } from "./lib/embedding-quota";
 import type { Course, Programme } from "../src/types/contracts";
 import type {
   DemandRow,
@@ -61,6 +62,8 @@ export type RunOptions = {
   env: Record<string, string | undefined>;
   createSupabaseClient?: (env: ApplyEnv) => SupabaseClient;
   createEmbedder?: (env: ApplyEnv) => Embedder;
+  /** Receives the per-batch embedding progress lines and the 429 quota lines. Defaults to console.log/console.error so tests can inject a fake and capture both without touching the real console. */
+  logger?: Logger;
 };
 
 export type RunResult = {
@@ -572,6 +575,8 @@ export async function runImport(options: RunOptions): Promise<RunResult> {
     return result;
   }
 
+  const logger = options.logger ?? defaultLogger;
+
   let createSupabaseClient = options.createSupabaseClient;
   let createEmbedder = options.createEmbedder;
   if (!createSupabaseClient || !createEmbedder) {
@@ -579,12 +584,12 @@ export async function runImport(options: RunOptions): Promise<RunResult> {
     // Gemini SDK (and never prints their startup warnings).
     const clients = await import("./lib/clients");
     createSupabaseClient = createSupabaseClient ?? clients.createSupabaseClientFor;
-    createEmbedder = createEmbedder ?? clients.createEmbedderFor;
+    createEmbedder = createEmbedder ?? ((env) => clients.createEmbedderFor(env, { logger }));
   }
   const supabase = createSupabaseClient(envResult.env);
   const embedder = createEmbedder(envResult.env);
 
-  result.applyResult = await applyImport(applyInput, supabase, embedder);
+  result.applyResult = await applyImport(applyInput, supabase, embedder, logger);
   return result;
 }
 
@@ -643,6 +648,7 @@ export async function runCli(
   overrides?: {
     createSupabaseClient?: (env: ApplyEnv) => SupabaseClient;
     createEmbedder?: (env: ApplyEnv) => Embedder;
+    logger?: Logger;
   }
 ): Promise<CliOutput> {
   const args = parseArgs(argv);
@@ -664,6 +670,7 @@ export async function runCli(
     env,
     createSupabaseClient: overrides?.createSupabaseClient,
     createEmbedder: overrides?.createEmbedder,
+    logger: overrides?.logger,
   });
 
   if (result.argError) {

@@ -5,7 +5,7 @@ import { createGoogle } from "@ai-sdk/google";
 import { embedMany } from "ai";
 import { EMBEDDING_DIMENSIONS, EMBEDDING_MODEL } from "../../src/types/contracts";
 import type { ApplyEnv } from "./env";
-import { callWithQuotaRetry } from "./embedding-quota";
+import { callWithQuotaRetry, type Logger } from "./embedding-quota";
 
 export function createSupabaseClientFor(env: ApplyEnv): SupabaseClient {
   return createClient(env.supabaseUrl, env.supabaseServiceRoleKey);
@@ -16,7 +16,7 @@ export type Embedder = (texts: string[]) => Promise<number[][]>;
 
 export function createEmbedderFor(
   env: ApplyEnv,
-  options: { sleep?: (ms: number) => Promise<void> } = {}
+  options: { sleep?: (ms: number) => Promise<void>; logger?: Logger } = {}
 ): Embedder {
   const google = createGoogle({ apiKey: env.geminiApiKey });
   const model = google.embeddingModel(EMBEDDING_MODEL);
@@ -44,7 +44,7 @@ export function createEmbedderFor(
           // wrong model id is configured here.
           providerOptions: { google: { outputDimensionality: EMBEDDING_DIMENSIONS } },
         }),
-      { sleep: options.sleep }
+      { sleep: options.sleep, logger: options.logger }
     );
     for (const embedding of embeddings) {
       if (embedding.length !== EMBEDDING_DIMENSIONS) {

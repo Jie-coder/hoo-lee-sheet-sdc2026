@@ -330,6 +330,72 @@ describe("runImport (--apply)", () => {
       rmSync(cwd, { recursive: true, force: true });
     }
   });
+
+  it("exits 1 naming the table/row id and error when an existing skill's update fails, and never writes any later table", async () => {
+    const cwd = mkdtempSync(join(tmpdir(), "laluan-cli-"));
+    try {
+      writeFileSync(
+        join(cwd, ".env.local"),
+        "SUPABASE_URL=https://example.supabase.co\nSUPABASE_SERVICE_ROLE_KEY=service-role-key\nGEMINI_API_KEY=gemini-key\n"
+      );
+      const EXISTING_SKILL_ID = "00000000-0000-0000-0000-000000000001";
+      const upsertCalls: string[] = [];
+      const createSupabaseClient = vi.fn(
+        () =>
+          ({
+            from(table: string) {
+              return {
+                upsert() {
+                  upsertCalls.push(table);
+                  return Promise.resolve({ error: null });
+                },
+                update() {
+                  return {
+                    eq(_column: string, value: unknown) {
+                      if (table === "skills" && value === EXISTING_SKILL_ID) {
+                        return Promise.resolve({ error: { message: "connection reset" } });
+                      }
+                      return Promise.resolve({ error: null });
+                    },
+                  };
+                },
+                select() {
+                  return {
+                    in() {
+                      return Promise.resolve({
+                        data:
+                          table === "skills"
+                            ? [{ id: EXISTING_SKILL_ID, label_en: "Data analysis", embedding: null }]
+                            : [],
+                      });
+                    },
+                  };
+                },
+              };
+            },
+          }) as unknown as SupabaseClient
+      );
+      const createEmbedder = vi.fn(() => (vi.fn(async () => []) as unknown) as Embedder);
+
+      const result = await runCli(["--apply", "--dir", join(process.cwd(), VALID_DIR)], cwd, {
+        createSupabaseClient,
+        createEmbedder,
+      });
+
+      expect(result.exitCode).toBe(1);
+      const output = result.stdout.join("\n");
+      expect(output).toContain("skills");
+      expect(output).toContain(EXISTING_SKILL_ID);
+      expect(output).toContain("connection reset");
+      // Stopped before the new skill (a different id) was ever upserted, and before any later table.
+      expect(upsertCalls).not.toContain("skills");
+      expect(upsertCalls).not.toContain("occupations");
+      expect(upsertCalls).not.toContain("courses");
+      expect(createEmbedder).toHaveBeenCalledTimes(1);
+    } finally {
+      rmSync(cwd, { recursive: true, force: true });
+    }
+  });
 });
 
 describe("runCli --apply env resolution", () => {

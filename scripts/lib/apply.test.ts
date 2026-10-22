@@ -21,7 +21,7 @@ import {
   type ApplyInput,
   type SignalRow,
 } from "./apply";
-import { EmbeddingQuotaExceededError } from "./embedding-quota";
+import { EmbeddingQuotaExceededError, type Logger } from "./embedding-quota";
 import type { Embedder } from "./clients";
 import type { ExposureRow, OccupationRow, OccupationSkillRow, SourceRow } from "./row-schemas";
 import { roleFitScore, skillImportance } from "../../src/lib/scoring";
@@ -51,6 +51,16 @@ describe("buildSkillRows base_importance", () => {
 
 function vector(seed: number): number[] {
   return Array.from({ length: EMBEDDING_DIMENSIONS }, (_, i) => seed + i / 1000);
+}
+
+/** Captures logged lines instead of touching the real console. */
+function fakeLogger(): Logger & { lines: { log: string[]; error: string[] } } {
+  const lines = { log: [] as string[], error: [] as string[] };
+  return {
+    lines,
+    log: (message: string) => lines.log.push(message),
+    error: (message: string) => lines.error.push(message),
+  };
 }
 
 /** A minimal fake Supabase client: just enough of .from().upsert()/.update().eq()/.select().in() to drive apply.ts. */
@@ -239,6 +249,24 @@ describe("fillEmbeddings", () => {
     expect(skillsUpdates.map((u) => u.value)).toEqual(toEmbed.map((row) => row.id));
     expect(skillsUpdates.every((u) => u.column === "id")).toBe(true);
     expect((skillsUpdates[0].set.embedding as number[]).length).toBe(EMBEDDING_DIMENSIONS);
+  });
+
+  it("logs one line per batch with the table, batch number/total, item count, and duration", async () => {
+    const { client } = fakeSupabase({});
+    const toEmbed = Array.from({ length: EMBED_BATCH_SIZE + 10 }, (_, i) => ({ id: `s${i}`, text: `text ${i}` }));
+    const embedder: Embedder = vi.fn(async (texts: string[]) => texts.map((_, i) => vector(i)));
+    const logger = fakeLogger();
+
+    await fillEmbeddings(client, "skills", toEmbed, embedder, logger);
+
+    expect(logger.lines.log).toHaveLength(2);
+    expect(logger.lines.log[0]).toContain("skills");
+    expect(logger.lines.log[0]).toContain("1/2");
+    expect(logger.lines.log[0]).toContain(`${EMBED_BATCH_SIZE} item`);
+    expect(logger.lines.log[0]).toMatch(/\d+ms \(\d+(\.\d+)?s\)/);
+    expect(logger.lines.log[1]).toContain("2/2");
+    expect(logger.lines.log[1]).toContain("10 item");
+    expect(logger.lines.error).toHaveLength(0);
   });
 
   it("writes each row's embedding with update(...).eq('id', ...), never insert/upsert", async () => {
@@ -693,6 +721,67 @@ describe("applyImport", () => {
     expect(skillUpdates.every((u) => u.value !== "s3" || Object.keys(u.set).sort().join() === "embedding")).toBe(
       true
     );
+  });
+
+  it("stops on the first failed existing-skill update: never upserts the new skill or writes any later table", async () => {
+    const upsertCalls: string[] = [];
+    const client = {
+      from(table: string) {
+        return {
+          upsert() {
+            upsertCalls.push(table);
+            return Promise.resolve({ error: null });
+          },
+          update() {
+            return {
+              eq(_column: string, value: unknown) {
+                if (table === "skills" && value === "s1") {
+                  return Promise.resolve({ error: { message: "connection reset" } });
+                }
+                return Promise.resolve({ error: null });
+              },
+            };
+          },
+          select() {
+            return {
+              in() {
+                return Promise.resolve({
+                  data: table === "skills" ? [{ id: "s1", label_en: "Data analysis", embedding: vector(1) }] : [],
+                });
+              },
+            };
+          },
+        };
+      },
+    } as unknown as SupabaseClient;
+
+    const embedder: Embedder = vi.fn(async (texts: string[]) => texts.map((_, i) => vector(i)));
+    const input: ApplyInput = {
+      ...EMPTY_INPUT,
+      // s1 already exists (goes through update().eq('id'), which fails below);
+      // s2 is brand new and must never reach the new-skill upsert.
+      skills: [
+        { id: "s1", escoUri: "https://data.europa.eu/esco/skill/s1", labelEn: "Data analysis" },
+        { id: "s2", escoUri: "https://data.europa.eu/esco/skill/s2", labelEn: "Teamwork" },
+      ],
+      // A later table: must never be written once the skills update fails.
+      occupations: [occupationRow()],
+    };
+
+    const result = await applyImport(input, client, embedder);
+
+    const skillsResult = result.tables.find((t) => t.table === "skills");
+    expect(skillsResult?.error).toContain("skills");
+    expect(skillsResult?.error).toContain("s1");
+    expect(skillsResult?.error).toContain("connection reset");
+
+    // Only the failed skills result is reported: no occupations (or any
+    // other later table) result at all, because applyImport returned early.
+    expect(result.tables).toEqual([skillsResult]);
+    expect(upsertCalls).not.toContain("skills"); // s2 (new skill) never upserted
+    expect(upsertCalls).not.toContain("occupations");
+    expect(embedder).not.toHaveBeenCalled();
+    expect(result.embeddings).toEqual([]);
   });
 
   it("reports a table error instead of throwing when Supabase rejects a row", async () => {

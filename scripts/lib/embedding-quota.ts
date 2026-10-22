@@ -22,7 +22,29 @@ export type GoogleQuotaErrorInfo = {
   retryDelaySeconds: number | null;
   /** True when the violated quota is a daily cap (quotaId/quotaMetric or the message mentions "PerDay"/"per day"): waiting and retrying cannot help today. */
   isDaily: boolean;
+  /** The quota's name, from QuotaFailure's quotaMetric/quotaId, or the "Quota exceeded for metric: X" text. Null when neither is present. */
+  quotaMetric: string | null;
+  /** The quota's cap, from QuotaFailure's quotaValue, or the "limit: N" text. Null when neither is present. */
+  quotaLimit: number | null;
 };
+
+/** A logger for progress/diagnostic lines, injectable so tests can capture them instead of hitting the real console. */
+export type Logger = { log: (message: string) => void; error: (message: string) => void };
+
+export const defaultLogger: Logger = {
+  log: (message) => console.log(message),
+  error: (message) => console.error(message),
+};
+
+/**
+ * Strips anything that could leak the Gemini API key from a log line: a
+ * `key=` query parameter (however it got into the string) and a bare Google
+ * API key token (the `AIza...` shape), so a 429's URL or raw error text can
+ * never be logged verbatim.
+ */
+export function sanitizeForLog(text: string): string {
+  return text.replace(/key=[^&\s"']+/gi, "key=REDACTED").replace(/AIza[0-9A-Za-z_-]{10,}/g, "REDACTED");
+}
 
 type ApiErrorLike = {
   statusCode?: number;
@@ -59,6 +81,8 @@ export function parseGoogleQuotaError(error: unknown): GoogleQuotaErrorInfo | nu
 
   let retryDelaySeconds: number | null = null;
   let isDaily = false;
+  let quotaMetric: string | null = null;
+  let quotaLimit: number | null = null;
 
   const bodyText = err.responseBody ?? "";
   let parsedBody: unknown = null;
@@ -81,8 +105,13 @@ export function parseGoogleQuotaError(error: unknown): GoogleQuotaErrorInfo | nu
         for (const violation of d.violations) {
           const v = asRecord(violation);
           const quotaId = String(v?.quotaId ?? "");
-          const quotaMetric = String(v?.quotaMetric ?? "");
-          if (/per ?day/i.test(quotaId) || /per ?day/i.test(quotaMetric)) isDaily = true;
+          const violationMetric = String(v?.quotaMetric ?? "");
+          if (/per ?day/i.test(quotaId) || /per ?day/i.test(violationMetric)) isDaily = true;
+          if (quotaMetric == null && (violationMetric || quotaId)) quotaMetric = violationMetric || quotaId;
+          if (quotaLimit == null && v?.quotaValue != null) {
+            const parsedLimit = Number(v.quotaValue);
+            if (!Number.isNaN(parsedLimit)) quotaLimit = parsedLimit;
+          }
         }
       }
     }
@@ -95,7 +124,21 @@ export function parseGoogleQuotaError(error: unknown): GoogleQuotaErrorInfo | nu
   }
   if (!isDaily && /per ?day/i.test(haystack)) isDaily = true;
 
-  return { retryDelaySeconds, isDaily };
+  const textMatch = /Quota exceeded for metric:\s*([^,]+),\s*limit:\s*(\d+)/i.exec(haystack);
+  if (textMatch) {
+    if (quotaMetric == null) quotaMetric = textMatch[1].trim();
+    if (quotaLimit == null) quotaLimit = Number(textMatch[2]);
+  }
+
+  return { retryDelaySeconds, isDaily, quotaMetric, quotaLimit };
+}
+
+/** The one-line summary logged for every 429, however it's eventually handled. Never includes the raw error message/body, so an API key embedded in a URL can't leak through it. */
+export function formatQuotaLogLine(quota: GoogleQuotaErrorInfo): string {
+  const metric = quota.quotaMetric ?? "unknown";
+  const limit = quota.quotaLimit != null ? String(quota.quotaLimit) : "unknown";
+  const retryDelay = quota.retryDelaySeconds != null ? `${quota.retryDelaySeconds}s` : "unknown";
+  return sanitizeForLog(`gemini embedding quota exceeded: metric=${metric} limit=${limit} retryDelay=${retryDelay}`);
 }
 
 /** Bounded retries for a recoverable (per-minute) 429: enough to ride out a burst without hanging forever on a misbehaving quota. */
@@ -120,10 +163,11 @@ async function defaultSleep(ms: number): Promise<void> {
  */
 export async function callWithQuotaRetry<T>(
   attempt: () => Promise<T>,
-  options: { maxRetries?: number; sleep?: (ms: number) => Promise<void> } = {}
+  options: { maxRetries?: number; sleep?: (ms: number) => Promise<void>; logger?: Logger } = {}
 ): Promise<T> {
   const maxRetries = options.maxRetries ?? MAX_RATE_LIMIT_RETRIES;
   const sleep = options.sleep ?? defaultSleep;
+  const logger = options.logger ?? defaultLogger;
 
   for (let attemptNumber = 0; ; attemptNumber += 1) {
     try {
@@ -131,6 +175,7 @@ export async function callWithQuotaRetry<T>(
     } catch (error) {
       const quota = parseGoogleQuotaError(error);
       if (!quota) throw error;
+      logger.error(formatQuotaLogLine(quota));
 
       const message = error instanceof Error ? error.message : String(error);
       if (quota.isDaily) {
