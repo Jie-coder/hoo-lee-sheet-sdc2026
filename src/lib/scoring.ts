@@ -64,6 +64,21 @@
 // - Display bands stay in contracts.scoreBand. Values here are full precision;
 //   two-decimal display is a UI rule and is not applied, so rounding cannot
 //   change a rank.
+//
+// Minimum fit filter, for a hackathon judge:
+// - Top 3 per scenario is picked only from roles with F >= minFit (0.13).
+//   Without this, a role that scores only on demand and exposure can take a
+//   top-3 slot with essentially no actual skill overlap (e.g. a Solar energy
+//   technician at F=0 next to an IT-skilled CV) — ranking on demand/exposure
+//   alone, with fit at zero, is not a recommendation a learner can act on.
+// - 0.13 was picked by hand against the demo CVs: it keeps the closest real
+//   matches (e.g. Environmental scientist at F≈0.14 for an environmental-
+//   science CV) while dropping weak matches at F=0.12 and below.
+// - If fewer than topN roles clear minFit for a scenario, that scenario
+//   retries with minFitFallback (0.10), a looser bar. If that still is not
+//   enough, that scenario falls back to no filter at all, so every scenario
+//   always shows topN roles when that many candidates exist — a demo should
+//   never show an empty slate because every role scored low.
 
 import {
   SCENARIO_IDS,
@@ -95,6 +110,10 @@ export const SCORING_PARAMS = {
   relatedSkillCap: 6,
   /** Essential-skill count above which the fit denominator is scaled down. See the file header. */
   essentialSkillCap: 25,
+  /** Minimum fit F a role needs to be eligible for a scenario's top 3. See "Minimum fit filter" in the file header. */
+  minFit: 0.13,
+  /** Looser fit bar used for a scenario only when minFit leaves fewer than topN roles eligible. See the file header. */
+  minFitFallback: 0.1,
   skillLevel: { full: 1, partial: 0.5, missing: 0 },
   theta: { co: 1.0, dis: 1.4, sup: 1.2 },
   /**
@@ -341,13 +360,37 @@ type PreparedRole = {
   gap: GapSkill[];
 };
 
-function rankForScenario(prepared: readonly PreparedRole[], scenario: ScenarioId): Set<string> {
-  const ordered = [...prepared].sort(
-    (a, b) =>
-      b.byScenario[scenario] - a.byScenario[scenario] ||
-      compareId(a.role.occupationId, b.role.occupationId),
+/** The fields topRoleIdsForScenario needs: enough to rank by scenario score and filter by fit. */
+export type ScenarioRankable = {
+  occupationId: string;
+  fit: number;
+  byScenario: ScenarioScores;
+};
+
+/**
+ * Top SCORING_PARAMS.topN role ids for one scenario, sorted by that
+ * scenario's R descending then occupationId ascending, restricted to roles
+ * with fit >= SCORING_PARAMS.minFit. If that leaves fewer than topN roles,
+ * retries with minFitFallback; if that is still not enough, falls back to
+ * no fit filter. See "Minimum fit filter" in the file header. The single
+ * place this rule is applied — scoreRoles below and analyze.ts (recomputing
+ * robust/status over its already-filtered role list) both call it, so the
+ * two "top 3 per scenario" computations stay in sync.
+ */
+export function topRoleIdsForScenario(roles: readonly ScenarioRankable[], scenario: ScenarioId): Set<string> {
+  const { topN, minFit, minFitFallback } = SCORING_PARAMS;
+  const ordered = [...roles].sort(
+    (a, b) => b.byScenario[scenario] - a.byScenario[scenario] || compareId(a.occupationId, b.occupationId),
   );
-  return new Set(ordered.slice(0, SCORING_PARAMS.topN).map((item) => item.role.occupationId));
+  // Fit is always within [0, 1] (roleFitScore), so a threshold of 0 is the "no filter" step.
+  for (const threshold of [minFit, minFitFallback, 0]) {
+    const eligible = ordered.filter((role) => role.fit >= threshold);
+    if (eligible.length >= topN || threshold === 0) {
+      return new Set(eligible.slice(0, topN).map((role) => role.occupationId));
+    }
+  }
+  /* istanbul ignore next -- threshold 0 above always returns */
+  return new Set();
 }
 
 /**
@@ -391,8 +434,13 @@ export function scoreRoles(
     };
   });
 
+  const rankable: ScenarioRankable[] = prepared.map((item) => ({
+    occupationId: item.role.occupationId,
+    fit: item.fit,
+    byScenario: item.byScenario,
+  }));
   const topByScenario = Object.fromEntries(
-    SCENARIO_IDS.map((scenario) => [scenario, rankForScenario(prepared, scenario)]),
+    SCENARIO_IDS.map((scenario) => [scenario, topRoleIdsForScenario(rankable, scenario)]),
   ) as Record<ScenarioId, Set<string>>;
 
   return prepared

@@ -23,6 +23,17 @@ export function filterCoursesByLanguage(courses: readonly Course[], languages: r
 
 const COST_ORDER: Record<CostType, number> = { free: 0, subsidised: 1, hrdcorp_claimable: 2, paid: 3 };
 
+/**
+ * Preference order for course choices: in the learner's study language first
+ * (courses outside it are only considered when none are in it), then
+ * cheapest, then shortest.
+ */
+function rankCourses(matches: readonly Course[], languages: readonly LanguageCode[]): Course[] {
+  const inLanguage = filterCoursesByLanguage(matches, languages);
+  const pool = inLanguage.length > 0 ? inLanguage : matches;
+  return [...pool].sort((a, b) => COST_ORDER[a.costType] - COST_ORDER[b.costType] || a.hours - b.hours);
+}
+
 /** Cheapest, then shortest, course that closes `skillId` in the learner's language. */
 export function pickCourseForSkill(
   skillId: string,
@@ -30,10 +41,18 @@ export function pickCourseForSkill(
   languages: readonly LanguageCode[],
 ): Course | null {
   const matches = courses.filter((course) => course.skillIds.includes(skillId));
-  const inLanguage = filterCoursesByLanguage(matches, languages);
-  const pool = inLanguage.length > 0 ? inLanguage : matches;
-  if (pool.length === 0) return null;
-  return [...pool].sort((a, b) => COST_ORDER[a.costType] - COST_ORDER[b.costType] || a.hours - b.hours)[0];
+  return rankCourses(matches, languages)[0] ?? null;
+}
+
+/** Up to `limit` courses that close `skillId`, in the same preference order as {@link pickCourseForSkill}. */
+export function pickCoursesForSkill(
+  skillId: string,
+  courses: readonly Course[],
+  languages: readonly LanguageCode[],
+  limit: number,
+): Course[] {
+  const matches = courses.filter((course) => course.skillIds.includes(skillId));
+  return rankCourses(matches, languages).slice(0, limit);
 }
 
 export type EligibilityStatus = "pass" | "check" | "fail";
@@ -104,19 +123,46 @@ export function pickRelatedCourse(
   const group = skillGroups[skillId];
   if (!group) return null;
   const matches = courses.filter((course) => course.skillIds.some((id) => skillGroups[id] === group));
-  const inLanguage = filterCoursesByLanguage(matches, languages);
-  const pool = inLanguage.length > 0 ? inLanguage : matches;
-  if (pool.length === 0) return null;
-  return [...pool].sort((a, b) => COST_ORDER[a.costType] - COST_ORDER[b.costType] || a.hours - b.hours)[0];
+  return rankCourses(matches, languages)[0] ?? null;
+}
+
+/** Up to `limit` same-ESCO-group courses for `skillId`, in the same preference order as {@link pickRelatedCourse}. */
+export function pickRelatedCourses(
+  skillId: string,
+  courses: readonly Course[],
+  languages: readonly LanguageCode[],
+  skillGroups: Readonly<Record<string, string>>,
+  limit: number,
+): Course[] {
+  const group = skillGroups[skillId];
+  if (!group) return [];
+  const matches = courses.filter((course) => course.skillIds.some((id) => skillGroups[id] === group));
+  return rankCourses(matches, languages).slice(0, limit);
 }
 
 /**
+ * Up to coursesPerGapSkill courses are suggested per gap skill (exact
+ * matches, or related ones when nothing teaches the skill exactly), and a
+ * plan never lists more than maxCoursesPerRole courses in total. Both are
+ * demo tuning values, not derived from data.
+ */
+export const PATHWAY_PARAMS = {
+  /** How many courses to suggest for each gap skill, at most. */
+  coursesPerGapSkill: 3,
+  /** A plan never lists more courses than this. The AI-readiness programme step at the start does not count toward it. */
+  maxCoursesPerRole: 8,
+} as const;
+
+/**
  * Builds the PathwayPlan for one chosen role: the AI-readiness programme,
- * then one course per gap skill (cheapest and shortest in the learner's
- * study language). When no course teaches a gap skill, a course from the
- * same ESCO skill group is suggested instead, without claiming to close
- * the gap. Ordered free -> subsidised -> HRD Corp claimable -> paid and
- * laid out at `hoursPerWeek` a week. A course is never listed twice.
+ * then up to PATHWAY_PARAMS.coursesPerGapSkill courses per gap skill
+ * (cheapest and shortest in the learner's study language). When no course
+ * teaches a gap skill exactly, up to that many courses from the same ESCO
+ * skill group are suggested instead, without claiming to close the gap. The
+ * plan stops adding courses once PATHWAY_PARAMS.maxCoursesPerRole is
+ * reached (the AI-readiness programme does not count toward it). Ordered
+ * free -> subsidised -> HRD Corp claimable -> paid and laid out at
+ * `hoursPerWeek` a week. A course is never listed twice.
  */
 export function buildPathwayPlan({
   role,
@@ -148,34 +194,46 @@ export function buildPathwayPlan({
     picks.push({ kind: "program", item: aiProgramme, closesSkillIds: [], hours: 1.5, why: aiProgramme.benefits });
   }
 
+  const courseCount = () => picks.filter((pick) => pick.kind === "course").length;
+
   for (const skill of role.gap) {
-    const exact = pickCourseForSkill(skill.skillId, courses, studyLanguages);
-    const existing = exact ? picks.find((pick) => pick.item.id === exact.id) : undefined;
-    if (existing) {
-      existing.closesSkillIds.push(skill.skillId);
-      existing.why = `${existing.why.replace(/\.$/, "")}, ${skill.label}.`;
-      continue;
+    if (courseCount() >= PATHWAY_PARAMS.maxCoursesPerRole) break;
+
+    const exactCandidates = pickCoursesForSkill(skill.skillId, courses, studyLanguages, PATHWAY_PARAMS.coursesPerGapSkill);
+    const isRelated = exactCandidates.length === 0;
+    const candidates = isRelated
+      ? pickRelatedCourses(skill.skillId, courses, studyLanguages, skillGroups, PATHWAY_PARAMS.coursesPerGapSkill)
+      : exactCandidates;
+
+    for (const candidate of candidates) {
+      const existing = picks.find((pick) => pick.item.id === candidate.id);
+      if (existing) {
+        if (!isRelated && !existing.closesSkillIds.includes(skill.skillId)) {
+          existing.closesSkillIds.push(skill.skillId);
+          existing.why = `${existing.why.replace(/\.$/, "")}, ${skill.label}.`;
+        }
+        continue;
+      }
+      if (courseCount() >= PATHWAY_PARAMS.maxCoursesPerRole) break;
+      if (isRelated) {
+        const groupLabel = groupLabels[skillGroups[skill.skillId] ?? ""] ?? "the same ESCO skill group";
+        picks.push({
+          kind: "course",
+          item: candidate,
+          closesSkillIds: [],
+          hours: candidate.hours,
+          why: `No course in our catalogue teaches "${skill.label}" yet. This one builds related skills (ESCO group: ${groupLabel}).`,
+        });
+      } else {
+        picks.push({
+          kind: "course",
+          item: candidate,
+          closesSkillIds: [skill.skillId],
+          hours: candidate.hours,
+          why: `Closes the gap skill: ${skill.label}.`,
+        });
+      }
     }
-    if (exact) {
-      picks.push({
-        kind: "course",
-        item: exact,
-        closesSkillIds: [skill.skillId],
-        hours: exact.hours,
-        why: `Closes the gap skill: ${skill.label}.`,
-      });
-      continue;
-    }
-    const related = pickRelatedCourse(skill.skillId, courses, studyLanguages, skillGroups);
-    if (!related || picks.some((pick) => pick.item.id === related.id)) continue;
-    const groupLabel = groupLabels[skillGroups[skill.skillId] ?? ""] ?? "the same ESCO skill group";
-    picks.push({
-      kind: "course",
-      item: related,
-      closesSkillIds: [],
-      hours: related.hours,
-      why: `No course in our catalogue teaches "${skill.label}" yet. This one builds related skills (ESCO group: ${groupLabel}).`,
-    });
   }
 
   const ordered = [...picks].sort((a, b) => COST_ORDER[a.item.costType] - COST_ORDER[b.item.costType]);

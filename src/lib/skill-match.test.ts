@@ -1,11 +1,25 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { CATALOGUE } from "@/lib/catalogue";
-import { CV_SKILL_MATCH_COSINE, embeddingMatchCache, mapSkillsToEsco } from "@/lib/skill-match";
+import { CV_SKILL_MATCH_COSINE, embeddingMatchCache, mapSkillsToEsco, skillMatchTier } from "@/lib/skill-match";
 
 const KNOWN_LABEL = Object.values(CATALOGUE.skills)[0];
 
 beforeEach(() => {
   embeddingMatchCache.clear();
+});
+
+describe("skillMatchTier", () => {
+  it("routes the hand-added synonym entries through the synonym tier", () => {
+    expect(skillMatchTier("scheduling and coordination")).toBe("synonym");
+    expect(skillMatchTier("report filing")).toBe("synonym");
+    expect(skillMatchTier("customer correspondence")).toBe("synonym");
+    expect(skillMatchTier("attention to detail")).toBe("synonym");
+  });
+
+  it("is case-insensitive and strips a trailing parenthetical, same as mapSkillsToEsco", () => {
+    expect(skillMatchTier("Attention To Detail")).toBe("synonym");
+    expect(skillMatchTier("Scheduling and Coordination (daily)")).toBe("synonym");
+  });
 });
 
 describe("mapSkillsToEsco", () => {
