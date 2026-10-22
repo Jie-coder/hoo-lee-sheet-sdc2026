@@ -139,6 +139,12 @@ export type ParseCvDeps = SkillMatchDeps & {
   extractCv?: (text: string) => Promise<CvExtraction>;
   /** Default: a real setTimeout-based delay. Tests pass a no-op so they run instantly. */
   sleep?: (ms: number) => Promise<void>;
+  /**
+   * Diagnostics-only: called with the raw Gemini extraction (skills in CV
+   * order, before ESCO mapping) once it's available. scripts/precompute-demo-cvs.ts
+   * uses this to pair each raw skill with how mapSkillsToEsco resolved it.
+   */
+  onExtracted?: (extraction: CvExtraction) => void;
 };
 
 export async function parseCv(bytes: Uint8Array, deps: ParseCvDeps = {}): Promise<ParseCvOutcome> {
@@ -190,6 +196,7 @@ export async function extractAndMapCv(bytes: Uint8Array, deps: ParseCvDeps = {})
     const message = error instanceof Error ? error.message : "Unknown AI provider error.";
     return { ok: false, status: 500, error: `Could not read that CV: ${message}` };
   }
+  deps.onExtracted?.(extraction);
 
   const skills = await mapSkillsToEsco(extraction.skills, deps);
   return { ok: true, result: toParsedCvResult(extraction, skills) };

@@ -2,9 +2,12 @@
 -- for CV skills that the exact-label and synonym tiers in
 -- src/lib/skill-match.ts could not resolve on their own.
 --
--- similarity is 1 - cosine distance, so 1.0 is identical and the app's
--- SCORING_PARAMS.skillMatchCosine (0.82) threshold applies the same way
--- here as it does to the essential-skill match in scoring.ts.
+-- similarity is 1 - cosine distance, so 1.0 is identical. This function
+-- returns the raw top match(es), unfiltered; the threshold is applied by
+-- the caller (src/lib/skill-match.ts's CV_SKILL_MATCH_COSINE, currently
+-- 0.72 — deliberately lower than SCORING_PARAMS.skillMatchCosine's 0.82 in
+-- scoring.ts, since that threshold compares two ESCO labels while this one
+-- compares a short, informal CV skill string against a long ESCO label).
 
 create or replace function public.match_skills(
   query_embedding vector(768),

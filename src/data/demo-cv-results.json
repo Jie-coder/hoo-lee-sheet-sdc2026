@@ -1,1 +1,233 @@
-{}
+{
+  "c15a9bf0cb319deb514f17c93a32dce8e00e7ec1f1f9b510c6adea5d029d1dcf": {
+    "name": "Aisyah binti Rahman",
+    "roles": [
+      {
+        "title": "Administrative Clerk",
+        "years": 0.8,
+        "tasks": []
+      },
+      {
+        "title": "Customer Service Assistant (part-time)",
+        "years": 1.5,
+        "tasks": []
+      },
+      {
+        "title": "Industrial Trainee",
+        "years": 0.4,
+        "tasks": []
+      }
+    ],
+    "education": [
+      {
+        "level": "Diploma in Business Studies",
+        "field": "Business Studies"
+      }
+    ],
+    "skills": [
+      {
+        "label": "maintain data entry requirements",
+        "matched": true
+      },
+      {
+        "label": "Scheduling and coordination",
+        "matched": false
+      },
+      {
+        "label": "Report filing",
+        "matched": false
+      },
+      {
+        "label": "Customer correspondence (BM, English)",
+        "matched": false
+      },
+      {
+        "label": "Attention to detail",
+        "matched": false
+      },
+      {
+        "label": "teamwork principles",
+        "matched": true
+      },
+      {
+        "label": "use spreadsheets software",
+        "matched": true
+      },
+      {
+        "label": "use word processing software",
+        "matched": true
+      },
+      {
+        "label": "use personal organization software",
+        "matched": true
+      },
+      {
+        "label": "digital communication and collaboration",
+        "matched": true
+      },
+      {
+        "label": "web based collaborative platforms",
+        "matched": true
+      },
+      {
+        "label": "ChatGPT (tried once)",
+        "matched": false
+      }
+    ]
+  },
+  "1a38a3c8f92c7461c2ee1c81308716b9eea82ed097aaf9d57c30d215de4e6f49": {
+    "name": "Lim Jia Hui 林佳慧",
+    "roles": [
+      {
+        "title": "Senior Accounts Assistant",
+        "years": 3.9,
+        "tasks": []
+      },
+      {
+        "title": "Accounts Assistant",
+        "years": 2.7,
+        "tasks": []
+      },
+      {
+        "title": "Accounts Clerk",
+        "years": 1.4,
+        "tasks": []
+      }
+    ],
+    "education": [
+      {
+        "level": "Diploma",
+        "field": "Accounting"
+      }
+    ],
+    "skills": [
+      {
+        "label": "maintain financial records",
+        "matched": true
+      },
+      {
+        "label": "generate reconciliation reports",
+        "matched": true
+      },
+      {
+        "label": "manage the general ledger",
+        "matched": true
+      },
+      {
+        "label": "maintain records of financial transactions",
+        "matched": true
+      },
+      {
+        "label": "SST and e-invoicing compliance",
+        "matched": false
+      },
+      {
+        "label": "develop staff",
+        "matched": true
+      },
+      {
+        "label": "use accounting systems",
+        "matched": true
+      },
+      {
+        "label": "use accounting systems",
+        "matched": true
+      },
+      {
+        "label": "use spreadsheets software",
+        "matched": true
+      },
+      {
+        "label": "issue sales invoices",
+        "matched": true
+      },
+      {
+        "label": "use spreadsheets software",
+        "matched": true
+      },
+      {
+        "label": "digital communication and collaboration",
+        "matched": true
+      },
+      {
+        "label": "digital communication and collaboration",
+        "matched": true
+      }
+    ]
+  },
+  "c18a3a89000f6ed2b80df6bf85c59a063eeda5aca0524a3bb5fc65fd772d0879": {
+    "name": "Pravin a/l Murugan",
+    "roles": [
+      {
+        "title": "Customer Support Agent",
+        "years": 0.3,
+        "tasks": []
+      },
+      {
+        "title": "Warehouse Assistant",
+        "years": 1.2,
+        "tasks": []
+      }
+    ],
+    "education": [
+      {
+        "level": "Bachelor of Science (Hons)",
+        "field": "Environmental Science"
+      }
+    ],
+    "skills": [
+      {
+        "label": "communicate with customers",
+        "matched": true
+      },
+      {
+        "label": "Case logging and problem solving",
+        "matched": false
+      },
+      {
+        "label": "analyse environmental data",
+        "matched": true
+      },
+      {
+        "label": "perform data cleansing",
+        "matched": true
+      },
+      {
+        "label": "write work-related reports",
+        "matched": true
+      },
+      {
+        "label": "track key performance indicators",
+        "matched": true
+      },
+      {
+        "label": "customer relationship management",
+        "matched": true
+      },
+      {
+        "label": "use spreadsheets software",
+        "matched": true
+      },
+      {
+        "label": "prepare presentation material",
+        "matched": true
+      },
+      {
+        "label": "R",
+        "matched": true
+      },
+      {
+        "label": "geographic information systems",
+        "matched": true
+      },
+      {
+        "label": "office software",
+        "matched": true
+      },
+      {
+        "label": "ChatGPT",
+        "matched": false
+      }
+    ]
+  }
+}
