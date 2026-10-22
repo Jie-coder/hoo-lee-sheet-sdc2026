@@ -34,10 +34,14 @@ export function createEmbedderFor(
           // SDK must not also retry underneath us.
           maxRetries: 0,
           // Google-specific option name for the API's outputDimensionality
-          // field (vector(768) in the schema). The generic embedMany
-          // `dimensions` option happens to reach the same field for this
-          // provider, but this is the documented, provider-correct way to
-          // set it — see /tmp/model-finding.md for the full check.
+          // field. We use gemini-embedding-001, whose native output is
+          // larger than 768; outputDimensionality truncates it to the 768
+          // dimensions our vector(768) column expects (and matches the
+          // generic embedMany `dimensions` option for this provider, but
+          // this is the documented, provider-correct way to set it). The
+          // 429 error text some clients show as "gemini-embedding-1.0" is
+          // just Google's quota label for this same model — not a sign the
+          // wrong model id is configured here.
           providerOptions: { google: { outputDimensionality: EMBEDDING_DIMENSIONS } },
         }),
       { sleep: options.sleep }

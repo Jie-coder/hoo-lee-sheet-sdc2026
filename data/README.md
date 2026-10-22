@@ -284,5 +284,5 @@ it is always safe to run.
    exits **3** — distinct from 0 (fully done) and 1 (an error) — after
    printing how many skills/occupations embeddings are done vs. remaining.
    Every non-embedding table is already written by then; just re-run the
-   same `--apply` command later to resume — rows that already have a stored
-   vector are skipped, so you never re-embed or get billed twice for them.
+   same `--apply` command later to resume — reruns skip rows that already
+   have a stored vector for unchanged text, so most rows aren't re-embedded.

@@ -89,6 +89,7 @@ function fakeSupabase(errorFor: Record<string, { code: string; message: string }
           upserts.push({ table, rows, onConflict: options?.onConflict });
           return Promise.resolve({ error: errorFor[table] ?? null });
         },
+        update: () => ({ eq: () => Promise.resolve({ error: null }) }),
         select: () => ({ in: () => Promise.resolve({ data: [] }) }),
       };
     },

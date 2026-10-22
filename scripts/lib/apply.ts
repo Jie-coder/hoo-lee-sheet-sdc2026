@@ -85,12 +85,12 @@ function parseStoredEmbedding(value: unknown): number[] | null {
 
 export type EmbeddingPlan = {
   /**
-   * Embedding to use for each row in the non-embedding upsert below: a
-   * reused vector (text unchanged), or a stale-but-valid previously stored
-   * vector preserved as-is for a row whose text changed (it stays in
-   * `toEmbed` and gets replaced once a fresh vector is computed). A row with
-   * no entry here — brand new, or never successfully embedded before — gets
-   * `null`, since there is nothing to preserve.
+   * Embedding to use for each row in the non-embedding upsert below: only
+   * the reused vector for a row whose text is unchanged. A row with no entry
+   * here — brand new, or whose text changed — gets `null` in that upsert,
+   * so a rerun after quota exhaustion sees a missing vector (not a stale
+   * one for the old text) and doesn't skip it; it stays in `toEmbed` and
+   * gets a fresh vector written directly once fillEmbeddings computes one.
    */
   rowEmbeddings: Map<string, number[]>;
   /** Ids already present in the table, from the same select used for reuse — avoids a second query to tell new rows from existing ones. */
@@ -139,11 +139,10 @@ export async function planEmbeddings(
       rowEmbeddings.set(row.id, priorEmbedding as number[]);
       continue;
     }
-    // Needs a fresh embedding. Preserve whatever valid vector is already
-    // stored (even though its text is now stale) so the non-embedding
-    // upsert never nulls out a row that already has a real vector — it is
-    // replaced once fillEmbeddings computes a fresh one.
-    if (priorEmbeddingValid) rowEmbeddings.set(row.id, priorEmbedding as number[]);
+    // Needs a fresh embedding: leave it out of rowEmbeddings, so the
+    // non-embedding upsert below writes null for it. Preserving the old
+    // vector here would let a rerun see a (stale, wrong-for-the-new-text)
+    // valid vector and skip the row forever.
     toEmbed.push(row);
   }
 
@@ -152,6 +151,26 @@ export async function planEmbeddings(
 
 /** Values per embedMany call: Google's own per-call cap (model.maxEmbeddingsPerCall) is also 100, so one batch is one request. */
 export const EMBED_BATCH_SIZE = 100;
+
+/**
+ * Writes one batch's vectors with a per-row UPDATE (not upsert): the row
+ * already exists from the base-row write earlier in applyImport, and an
+ * upsert here would re-propose the whole row, which Postgres checks for
+ * NOT NULL columns (title_en/title_ms/cluster on occupations, label_en/
+ * label_ms/base_importance on skills) before conflict resolution even
+ * though only `embedding` is meant to change — failing every batch live.
+ */
+async function updateEmbeddingBatch(
+  supabase: SupabaseClient,
+  table: "occupations" | "skills",
+  rows: { id: string; embedding: number[] }[]
+): Promise<{ error?: string }> {
+  for (const row of rows) {
+    const { error } = await supabase.from(table).update({ embedding: row.embedding }).eq("id", row.id);
+    if (error) return { error: error.message };
+  }
+  return {};
+}
 
 /**
  * Computes and stores embeddings for `toEmbed`, one batch at a time, writing
@@ -179,7 +198,7 @@ export async function fillEmbeddings(
       throw error;
     }
     const rows = batch.map((row, index) => ({ id: row.id, embedding: vectors[index] }));
-    const result = await upsert(supabase, table, rows);
+    const result = await updateEmbeddingBatch(supabase, table, rows);
     if (result.error) throw new Error(`failed to store ${table} embeddings: ${result.error}`);
     done += batch.length;
   }
@@ -628,20 +647,25 @@ function combineTableResults(table: string, results: TableResult[]): TableResult
  * the run having written nothing:
  *
  *  1. skills, occupations — written with embedding left as whatever is
- *     already stored (never nulled out), or null for a brand-new row.
- *     Neither table's embedding column is involved in any FK, so this can't
- *     block anything downstream.
+ *     already stored for a row whose text is unchanged (never nulled out),
+ *     or null for a brand-new row or one whose text changed (so a rerun
+ *     after quota exhaustion doesn't mistake a stale vector for a fresh
+ *     one and skip it). Neither table's embedding column is involved in
+ *     any FK, so this can't block anything downstream.
  *  2. sources — no catalogue FK.
  *  3. exposure, cluster_demand — both reference sources.name; exposure also
  *     references the occupations written in step 1 (nullable FK).
  *  4. scenarios, courses, programs — no catalogue FK.
  *  5. signals, then occupation_skills — both reference the skills/occupations
  *     ids written in step 1 (occupation_skills needs both).
- *  6. Finally, embeddings are computed and written in EMBED_BATCH_SIZE
- *     batches — skills, then occupations — upserting each batch immediately.
- *     A quota error here (fillEmbeddings) stops embedding but every table
- *     above is already durable; the caller reports done/remaining so a
- *     rerun can resume (rows already embedded are skipped by planEmbeddings).
+ *  6. Finally, embeddings are computed in EMBED_BATCH_SIZE batches — skills,
+ *     then occupations — and each batch is written immediately with a
+ *     per-row UPDATE (the row already exists from step 1; an upsert would
+ *     re-propose the whole row and fail NOT NULL checks on columns this
+ *     step never touches). A quota error here (fillEmbeddings) stops
+ *     embedding but every table above is already durable; the caller
+ *     reports done/remaining so a rerun can resume (rows already embedded
+ *     are skipped by planEmbeddings).
  */
 export async function applyImport(
   input: ApplyInput,

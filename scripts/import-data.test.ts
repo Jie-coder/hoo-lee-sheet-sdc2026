@@ -213,6 +213,7 @@ describe("runImport (--apply)", () => {
 
   it("upserts valid rows and embeds in a 768-dim batch when the env and clients are present", async () => {
     const upserts: { table: string; rows: Record<string, unknown>[] }[] = [];
+    const updates: { table: string; set: Record<string, unknown>; value: unknown }[] = [];
     const createSupabaseClient = vi.fn(
       () =>
         ({
@@ -221,6 +222,14 @@ describe("runImport (--apply)", () => {
               upsert(rows: Record<string, unknown>[]) {
                 upserts.push({ table, rows });
                 return Promise.resolve({ error: null });
+              },
+              update(set: Record<string, unknown>) {
+                return {
+                  eq(_column: string, value: unknown) {
+                    updates.push({ table, set, value });
+                    return Promise.resolve({ error: null });
+                  },
+                };
               },
               select() {
                 return { in() { return Promise.resolve({ data: [] }); } };
@@ -254,13 +263,16 @@ describe("runImport (--apply)", () => {
     const coursesUpsert = upserts.find((u) => u.table === "courses");
     expect(coursesUpsert?.rows.length).toBe(3);
 
-    // occupations/skills are upserted twice: once before any embedding call
-    // (so the catalogue is durable even if Gemini never answers), and once
-    // more — the last upsert for that table — once embeddings are computed.
+    // occupations/skills are upserted once, before any embedding call (so
+    // the catalogue is durable even if Gemini never answers), then each
+    // row's embedding is written separately with a per-row update once
+    // computed.
     const occupationsUpserts = upserts.filter((u) => u.table === "occupations");
-    const finalOccupationsUpsert = occupationsUpserts[occupationsUpserts.length - 1];
+    expect(occupationsUpserts).toHaveLength(1);
+    const occupationsEmbeddingUpdates = updates.filter((u) => u.table === "occupations");
+    expect(occupationsEmbeddingUpdates.length).toBeGreaterThan(0);
     expect(
-      finalOccupationsUpsert?.rows.every((row) => (row.embedding as number[]).length === EMBEDDING_DIMENSIONS)
+      occupationsEmbeddingUpdates.every((u) => (u.set.embedding as number[]).length === EMBEDDING_DIMENSIONS)
     ).toBe(true);
 
     const signalsUpsert = upserts.find((u) => u.table === "signals");
@@ -376,6 +388,7 @@ describe("runCli --apply env resolution", () => {
         from: () => ({
           select: () => ({ in: () => Promise.resolve({ data: [] }) }),
           upsert: () => Promise.resolve({ error: null }),
+          update: () => ({ eq: () => Promise.resolve({ error: null }) }),
         }),
       } as unknown as SupabaseClient;
     });
