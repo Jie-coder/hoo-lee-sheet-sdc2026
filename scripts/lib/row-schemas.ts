@@ -28,8 +28,10 @@ export const SourceRowSchema = z
   .describe("sources.csv row: dataset metadata and the licence that allows reuse.");
 export type SourceRow = z.infer<typeof SourceRowSchema>;
 
-export const SIGNAL_DIRECTIONS = ["up", "down"] as const;
+// "flat": the two 90-day windows differ by 10% or less (scripts/lib/arxiv.ts).
+export const SIGNAL_DIRECTIONS = ["up", "down", "flat"] as const;
 export const SignalDirectionSchema = z.enum(SIGNAL_DIRECTIONS);
+export type SignalDirection = z.infer<typeof SignalDirectionSchema>;
 
 /** One row of keywords.csv: an arXiv keyword mapped to one or more ESCO skills. */
 export const KeywordRowSchema = z

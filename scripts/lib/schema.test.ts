@@ -241,14 +241,18 @@ describe("built rows match scripts/fixtures/live-schema.json", () => {
       '"time series forecasting"',
     ];
 
+    // Counts from scripts/fetch-arxiv.ts --as-of 2026-10-19.
     expect(current).toMatchObject({
-      value: 69 + 115 + 422 + 214,
+      value: 69 + 115 + 423 + 216,
+      window_start: "2026-07-22",
       as_of: "2026-10-19",
       keywords,
       url: arxivQueryUrl(arxivQueries),
     });
     expect(preceding).toMatchObject({
-      value: 102 + 131 + 424 + 200,
+      value: 102 + 132 + 424 + 200,
+      window_start: "2026-04-23",
+      window_end: "2026-07-21",
       as_of: "2026-10-19",
       keywords,
       url: arxivQueryUrl(arxivQueries),

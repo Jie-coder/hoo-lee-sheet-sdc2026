@@ -2,6 +2,7 @@
 // so tests can assert on calls without any network access.
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { EMBEDDING_DIMENSIONS, type Course, type Programme } from "../../src/types/contracts";
+import { arxivWindows } from "./arxiv";
 import { escoUriToId, isBlank, splitNames } from "./cells";
 import type { Issue } from "./report";
 import type { ExposureRow, OccupationRow, OccupationSkillRow, SourceRow } from "./row-schemas";
@@ -283,14 +284,6 @@ export type SignalRow = {
 /** One row of keywords.csv, raw (string) cells, zipped with its header. */
 export type SignalRowInput = { row: number; raw: Record<string, string> };
 
-const DAY_MS = 24 * 60 * 60 * 1000;
-
-/** Shifts an ISO date (YYYY-MM-DD) by a whole number of days, UTC. */
-function shiftIsoDate(isoDate: string, days: number): string {
-  const date = new Date(`${isoDate}T00:00:00Z`);
-  return new Date(date.getTime() + days * DAY_MS).toISOString().slice(0, 10);
-}
-
 /** The arXiv API query URL whose search_query ORs every contributing arxiv_query value, each wrapped as all:(...), urlencoded. */
 export function arxivQueryUrl(arxivQueries: string[]): string {
   const searchQuery = arxivQueries.map((query) => `all:(${query})`).join(" OR ");
@@ -298,7 +291,6 @@ export function arxivQueryUrl(arxivQueries: string[]): string {
 }
 
 const SIGNAL_METRIC = "arxiv_papers_90d";
-const WINDOW_DAYS = 90;
 
 /** One keyword's contribution to one signals reading, before same-key contributions are summed. */
 type SignalContribution = {
@@ -355,12 +347,14 @@ export function buildSignalRows(inputs: SignalRowInput[]): { rows: SignalRow[]; 
     const arxivQuery = raw.arxiv_query ?? "";
     const skillUris = splitNames(raw.skill_uris ?? "");
 
+    // The same two windows scripts/fetch-arxiv.ts counted the papers in.
+    const windows = arxivWindows(checkedOn);
     for (const uri of skillUris) {
       const skillId = escoUriToId(uri);
       contributions.push({
         skillId,
-        windowEnd: checkedOn,
-        windowStart: shiftIsoDate(checkedOn, -WINDOW_DAYS),
+        windowEnd: windows.recent.end,
+        windowStart: windows.recent.start,
         checkedOn,
         value: countLast90d,
         keyword,
@@ -368,8 +362,8 @@ export function buildSignalRows(inputs: SignalRowInput[]): { rows: SignalRow[]; 
       });
       contributions.push({
         skillId,
-        windowEnd: shiftIsoDate(checkedOn, -(WINDOW_DAYS + 1)),
-        windowStart: shiftIsoDate(checkedOn, -(2 * WINDOW_DAYS + 1)),
+        windowEnd: windows.previous.end,
+        windowStart: windows.previous.start,
         checkedOn,
         value: countPrev90d,
         keyword,

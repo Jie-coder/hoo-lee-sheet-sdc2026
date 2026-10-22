@@ -104,3 +104,13 @@ export function parseCsv(text: string): ParsedCsv {
   const [header = [], ...dataRows] = rows;
   return { header, rows: dataRows };
 }
+
+/** Quotes a field only when it needs it (comma, quote or newline), doubling inner quotes. */
+export function formatCsvField(value: string): string {
+  return /[",\r\n]/.test(value) ? `"${value.replace(/"/g, '""')}"` : value;
+}
+
+/** CSV text for a header and rows, LF line endings and a trailing newline. parseCsv reads it back unchanged. */
+export function formatCsv({ header, rows }: ParsedCsv): string {
+  return `${[header, ...rows].map((row) => row.map(formatCsvField).join(",")).join("\n")}\n`;
+}

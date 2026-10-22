@@ -13,6 +13,7 @@ import {
   KeywordRowSchema,
   OccupationRowSchema,
   OccupationSkillRowSchema,
+  SIGNAL_DIRECTIONS,
   SourceRowSchema,
   type ExposureRow,
   type KeywordRow,
@@ -33,6 +34,7 @@ import {
 } from "./cells";
 import type { Issue } from "./report";
 import { zodErrorToIssues } from "./zod-report";
+import { FLAT_BAND, hasEnoughPapers, MIN_PAPERS, signalDirection } from "./arxiv";
 
 export type MapResult<T> = {
   issues: Issue[];
@@ -285,7 +287,6 @@ export type KeywordRowResult = MapResult<KeywordRow> & {
   warnings: Issue[];
 };
 
-const MIN_PAPERS_90D = 20;
 
 export function mapKeywordRow(raw: Record<string, string>, row: number): KeywordRowResult {
   const file = "keywords.csv";
@@ -324,17 +325,47 @@ export function mapKeywordRow(raw: Record<string, string>, row: number): Keyword
     );
   }
 
-  if (countLast90d.ok && countLast90d.value !== null && countLast90d.value < MIN_PAPERS_90D) {
+  // A keyword that falls from 30 papers to 5 is a real decline, so only warn
+  // when both windows are small: then scoring ignores it (hasEnoughPapers).
+  if (
+    countLast90d.ok &&
+    countLast90d.value !== null &&
+    countPrev90d.ok &&
+    countPrev90d.value !== null &&
+    !hasEnoughPapers(countLast90d.value, countPrev90d.value)
+  ) {
     warnings.push(
       warnIssue(
         file,
         row,
         "count_last_90d",
         raw.count_last_90d,
-        `fewer than ${MIN_PAPERS_90D} papers in the last 90 days`,
-        "data/README.md says to drop keywords below this threshold"
+        `fewer than ${MIN_PAPERS} papers in both 90-day windows, so scoring ignores this keyword`,
+        "use a broader arxiv_query, or drop the keyword (data/README.md)"
       )
     );
+  }
+
+  if (
+    countLast90d.ok &&
+    countLast90d.value !== null &&
+    countPrev90d.ok &&
+    countPrev90d.value !== null &&
+    (SIGNAL_DIRECTIONS as readonly string[]).includes(raw.direction ?? "")
+  ) {
+    const expected = signalDirection(countLast90d.value, countPrev90d.value);
+    if (raw.direction !== expected) {
+      warnings.push(
+        warnIssue(
+          file,
+          row,
+          "direction",
+          raw.direction,
+          `direction is "${raw.direction}" but ${countLast90d.value} vs ${countPrev90d.value} papers is "${expected}" (±${FLAT_BAND * 100}% is flat)`,
+          "rerun npx tsx scripts/fetch-arxiv.ts, which sets direction from the counts"
+        )
+      );
+    }
   }
 
   const candidate = {
