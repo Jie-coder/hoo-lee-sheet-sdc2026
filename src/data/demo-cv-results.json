@@ -26,8 +26,8 @@
     ],
     "skills": [
       {
-        "label": "Data entry and record keeping",
-        "matched": false
+        "label": "maintain data entry requirements",
+        "matched": true
       },
       {
         "label": "Scheduling and coordination",
@@ -46,12 +46,12 @@
         "matched": false
       },
       {
-        "label": "Teamwork",
-        "matched": false
+        "label": "teamwork principles",
+        "matched": true
       },
       {
-        "label": "Microsoft Excel (sorting, filters, basic formulas)",
-        "matched": false
+        "label": "use spreadsheets software",
+        "matched": true
       },
       {
         "label": "use word processing software",
@@ -62,12 +62,12 @@
         "matched": true
       },
       {
-        "label": "WhatsApp Business",
-        "matched": false
+        "label": "digital communication and collaboration",
+        "matched": true
       },
       {
-        "label": "Google Forms",
-        "matched": false
+        "label": "web based collaborative platforms",
+        "matched": true
       },
       {
         "label": "ChatGPT (tried once)",
@@ -102,56 +102,56 @@
     ],
     "skills": [
       {
-        "label": "Full-set bookkeeping",
-        "matched": false
+        "label": "maintain financial records",
+        "matched": true
       },
       {
-        "label": "Bank and intercompany reconciliation",
-        "matched": false
+        "label": "generate reconciliation reports",
+        "matched": true
       },
       {
-        "label": "Month-end closing",
-        "matched": false
+        "label": "manage the general ledger",
+        "matched": true
       },
       {
-        "label": "Accounts payable and receivable",
-        "matched": false
+        "label": "maintain records of financial transactions",
+        "matched": true
       },
       {
         "label": "SST and e-invoicing compliance",
         "matched": false
       },
       {
-        "label": "Training junior staff",
-        "matched": false
+        "label": "develop staff",
+        "matched": true
       },
       {
-        "label": "AutoCount",
-        "matched": false
+        "label": "use accounting systems",
+        "matched": true
       },
       {
-        "label": "SQL Account",
-        "matched": false
+        "label": "use accounting systems",
+        "matched": true
       },
       {
-        "label": "Microsoft Excel (VLOOKUP, pivot tables)",
-        "matched": false
+        "label": "use spreadsheets software",
+        "matched": true
       },
       {
-        "label": "LHDN MyInvois portal",
-        "matched": false
+        "label": "issue sales invoices",
+        "matched": true
       },
       {
-        "label": "Google Sheets",
-        "matched": false
+        "label": "use spreadsheets software",
+        "matched": true
       },
       {
-        "label": "WeChat",
-        "matched": false
+        "label": "digital communication and collaboration",
+        "matched": true
       },
       {
-        "label": "WhatsApp",
-        "matched": false
+        "label": "digital communication and collaboration",
+        "matched": true
       }
     ]
   },
@@ -185,44 +185,44 @@
         "matched": false
       },
       {
-        "label": "Environmental sampling and analysis",
-        "matched": false
+        "label": "analyse environmental data",
+        "matched": true
       },
       {
-        "label": "Data cleaning and charts",
-        "matched": false
+        "label": "perform data cleansing",
+        "matched": true
       },
       {
-        "label": "Report writing",
-        "matched": false
+        "label": "write work-related reports",
+        "matched": true
       },
       {
-        "label": "Working under KPIs",
-        "matched": false
+        "label": "track key performance indicators",
+        "matched": true
       },
       {
-        "label": "Salesforce Service Cloud",
-        "matched": false
+        "label": "customer relationship management",
+        "matched": true
       },
       {
         "label": "use spreadsheets software",
         "matched": true
       },
       {
-        "label": "PowerPoint",
-        "matched": false
+        "label": "prepare presentation material",
+        "matched": true
       },
       {
-        "label": "R (basic)",
-        "matched": false
+        "label": "R",
+        "matched": true
       },
       {
-        "label": "QGIS (basic)",
-        "matched": false
+        "label": "geographic information systems",
+        "matched": true
       },
       {
-        "label": "Google Workspace",
-        "matched": false
+        "label": "office software",
+        "matched": true
       },
       {
         "label": "ChatGPT",
