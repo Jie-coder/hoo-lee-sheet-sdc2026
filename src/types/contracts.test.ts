@@ -383,6 +383,7 @@ describe("catalogue and pathway", () => {
         skillIds: ["spreadsheets"],
         lastChecked: "2026-10-01",
         mode: "online",
+        aiContent: "digital",
       }).costType,
     ).toBe("free");
 
@@ -399,6 +400,7 @@ describe("catalogue and pathway", () => {
         skillIds: ["spreadsheets"],
         lastChecked: "2026-10-01",
         mode: "online",
+        aiContent: "digital",
       }).success,
     ).toBe(false);
 
@@ -415,6 +417,7 @@ describe("catalogue and pathway", () => {
         skillIds: ["spreadsheets"],
         lastChecked: "2026-10-01",
         mode: "online",
+        aiContent: "digital",
       }).success,
     ).toBe(false);
 

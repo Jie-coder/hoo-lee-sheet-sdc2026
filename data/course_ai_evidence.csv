@@ -1,0 +1,115 @@
+course_id,evidence,check_url
+c001,"Course 'Accelerate Your Job Search with AI'; course 'Introduction to Data Analysis Using Python'; Tools you'll learn: R (Software), Rmarkdown, Ggplot2",https://www.coursera.org/professional-certificates/google-data-analytics
+c002,"Modules 'What is AI?', 'Building AI Projects', 'Building AI In Your Company', 'AI and Society'",https://www.coursera.org/learn/ai-for-everyone
+c003,Skills: 'Describe Azure architecture and services'; 'Describe Azure management and governance',https://learn.microsoft.com/en-us/credentials/certifications/azure-fundamentals/
+c004,"Python: terminal, text editor",https://elatih.hrdcorp.gov.my/courses-details/python-basics-to-brilliance-in-hd
+c005,"data analytics & BI tools, data visualization (ML one of 8 topics)",https://elatih.hrdcorp.gov.my/courses-details/data-analytics-and-business-intelligence-tools-master-class
+c006,"Course headings 'Introduction to AI', 'Generative AI', 'AI Fluency', 'Agentic AI for All', 'AI Safety'",https://rakyatdigital.gov.my/en/literacy-hub
+c007,"Course 'Machine Learning with Python'; 'Generative AI: Elevate Your Data Science Career'; 'Tools for Data Science' (Jupyter, GitHub, R Studio, Watson Studio)",https://www.coursera.org/professional-certificates/ibm-data-science
+c008,"Course 'Accelerate Your Job Search with AI'; Tools you'll learn: Git, Ruby, Chef; course 'Operating Systems and You: Becoming a Power User'",https://www.coursera.org/professional-certificates/google-it-support
+c009,Course 'Tools of the Trade: Linux and SQL'; 'Automate Cybersecurity Tasks with Python'; 'Accelerate Your Job Search with AI',https://www.coursera.org/professional-certificates/google-cybersecurity
+c010,Course 'Advertising with Meta'; Tools you'll learn: Meta Ads Manager,https://www.coursera.org/professional-certificates/facebook-social-media-marketing
+c011,Skills 'Manage and secure Power BI' (Power BI Data Analyst Associate),https://learn.microsoft.com/en-us/credentials/certifications/data-analyst-associate/
+c012,"'12–18 month project-based curriculum covering algorithms, web development, DevOps, AI, and cybersecurity'; 'Piscine (26-Day Coding Bootcamp)'",https://42malaysia.edu.my/admissions
+c013,'About the curriculum' / 'Build skills aligned to AWS Certification' (AWS Cloud),https://aws.amazon.com/training/restart/
+c014,"Course 'Assess for Success: Marketing Analytics and Measurement'; 'Make the Sale: Build, Launch, and Manage E-commerce Stores'; Tools: Google Ads; 'Accelerate Your Job Search with AI'",https://www.coursera.org/professional-certificates/google-digital-marketing-ecommerce
+c015,no specific software named on page (reviewer: none),https://www.coursera.org/professional-certificates/google-project-management
+c017,Course 'Create High-Fidelity Designs and Prototypes in Figma'; 'Accelerate Your Job Search with AI',https://www.coursera.org/professional-certificates/google-ux-design
+c018,Project 'Social Media Sentiment Analysis and Visualization using Machine Learning',https://www.forward.edu.my/programs/applied-data-science
+c019,Learn data analytics and AI skills; building prediction model,https://thelead.io/data-science-360/
+c020,"Excel interface, formulas & functions, pivot tables",https://elatih.hrdcorp.gov.my/courses-details/kursus-microsoft-excel
+c021,Google Sheet customer database & charts,https://elatih.hrdcorp.gov.my/courses-details/google-sheet-untuk-pangkalan-data-pelanggan
+c022,browser-checked: no AI or software tools in outcomes,https://elatih.hrdcorp.gov.my/courses-details/mulakan-perniagaan-online-anda-sendiri-sekarang-jadilah-bos-anda-sendiri
+c023,browser-checked: no AI or software tools in outcomes,https://elatih.hrdcorp.gov.my/courses-details/panduan-perbualan-bahasa-inggeris
+c024,"Unix/Linux for EDA, scripting, logic synthesis; no AI module listed",https://peneraju.org/course-details?id=791
+c025,"retail tech adoption incl. AI-driven engagement; accelerator, no syllabus",https://www.sidec.com.my/retail-x/
+c026,browser-checked: no AI or software tools in outcomes,https://elatih.hrdcorp.gov.my/courses-details/data-privacy-and-protection
+c027,browser-checked: no AI or software tools in outcomes,https://elatih.hrdcorp.gov.my/courses-details/penetapan-matlamat-impian-pelan-pembangunan-kendiri
+c028,browser-checked: no AI or software tools in outcomes,https://www.invested.my/leadership-programme/
+c029,browser-checked: no AI or software tools in outcomes,https://elatih.hrdcorp.gov.my/courses-details/kursus-bahasa-inggeris-kunci-kepada-kejayaan-profesional-dan-akademik
+c030,"Specializations 'Junior Data Scientist', 'Data Analyst', 'Data Engineer'; 'Data Analytics 101'; 'ability to set up and run an analysis using R'",https://v1.cads.ai/datastar
+c031,"Courses 'Supervised Machine Learning: Regression and Classification', 'Advanced Learning Algorithms'; Tools: Scikit Learn, Tensorflow, NumPy",https://www.coursera.org/specializations/machine-learning-introduction
+c032,browser-checked: no AI or software tools in outcomes,https://elatih.hrdcorp.gov.my/courses-details/pengenalan-diri-di-dalam-bahasa-mandarin
+c033,browser-checked: no AI or software tools in outcomes,https://elatih.hrdcorp.gov.my/courses-details/start-a-low-cost-no-cost-online-business
+c034,configure devices to connect to networks,https://www.netacad.com/courses/networking-basics
+c035,browser-checked: no AI or software tools in outcomes,https://elatih.hrdcorp.gov.my/courses-details/human-resource-management-course-human-resource-management-in-a-contemporary-workplace
+c036,"Courses 'Programming for Everybody (Getting Started with Python)', 'Using Databases with Python'",https://www.coursera.org/specializations/python
+c037,"Modules 'Python基础Basics of Python', 'Python数据统计与挖掘Python Data Statistics and Mining'; Tools: NumPy, Pandas",https://www.coursera.org/learn/hipython
+c038,"Module 'Python 程式設計初探'; lessons on installing Python, Notepad++, Sublime",https://www.coursera.org/learn/pbc1
+c039,Module '用 Python 分析財金資料'; '函數 (Functions and Fruitful Functions)',https://www.coursera.org/learn/pbc2
+c040,Module 'C06 機器學習' (machine learning); 'C02 用matplotlib 繪製統計圖'; 'C04 用 tkInter 做視窗程式設計',https://www.coursera.org/learn/pbc3
+c041,"Modules '第一講：The Learning Problem', '第七講：The VC Dimension' (ML theory)",https://www.coursera.org/learn/ntumlone-mathematicalfoundations
+c042,"Modules '第十二講：Neural Network', '第十三講：Deep Learning', '第十講：Random Forest'",https://www.coursera.org/learn/machine-learning-techniques
+c043,"Modules 'Week 3 - Array', 'Week 5 - Pointer'; Tools: C (Programming Language)",https://www.coursera.org/learn/c-bian-cheng
+c044,browser-checked: no AI or software tools in outcomes,https://elatih.hrdcorp.gov.my/courses-details/mastering-company-analysis-with-credit-report-ch-yixinyongbaogaozhangwogongsifenxi
+c045,"Network Vulnerabilities, Threat Detection",https://www.netacad.com/courses/introduction-to-cybersecurity
+c046,"hands-on with ChatGPT, Gemini, Claude, NotebookLM",https://www.netacad.com/courses/introduction-to-modern-ai
+c047,Laporan Kewangan menggunakan Excel,https://elatih.hrdcorp.gov.my/courses-details/fahami-kos-dan-analisis-perniagaan-anda-dengan-excel
+c048,"creativity/IR4.0, AI awareness only",https://elatih.hrdcorp.gov.my/courses-details/kreativiti-dalam-era-revolusi-industri-keempat-ir-4-0
+c049,browser-checked: no AI or software tools in outcomes,https://elatih.hrdcorp.gov.my/courses-details/pengurusan-profesional-dalam-organisasi
+c050,browser-checked: no AI or software tools in outcomes,https://elatih.hrdcorp.gov.my/courses-details/transformasi-kepada-pekerja-produktif-cemerlang
+c051,browser-checked: no AI or software tools in outcomes,https://elatih.hrdcorp.gov.my/courses-details/kepimpinan-mengikut-konteks
+c052,browser-checked: no AI or software tools in outcomes,https://elatih.hrdcorp.gov.my/courses-details/pengurusan-operasi-berkesan
+c053,browser-checked: no AI or software tools in outcomes,https://elatih.hrdcorp.gov.my/courses-details/kursus-inovasi-perniagaan-membangun-kreativiti-untuk-kejayaan-masa-depan
+c054,browser-checked: no AI or software tools in outcomes,https://elatih.hrdcorp.gov.my/courses-details/papan-tanda-keselamatan-di-tempat-kerja
+c055,"syllabus lists 第一课 我要办一张交通卡 … 第五课 我预订了一个单人间 (Mandarin lessons), no AI/digital tools",https://www.coursera.org/learn/intermediate-business-chinese-1
+c056,"syllabus lists Greetings, Introduce yourself, Shopping, Daily Dialogue, no AI/digital tools",https://www.coursera.org/learn/learn-chinese-mandarin
+c057,data science/analytics basics; ML only mentioned,https://www.netacad.com/courses/introduction-data-science
+c058,"Linux, Windows, Android, iOS",https://www.netacad.com/courses/operating-systems-basics
+c059,"IoT, Digital Transformation",https://www.netacad.com/courses/introduction-iot
+c060,Exam 'AI-901: Microsoft Azure AI Fundamentals'; 'features of generative AI workloads on Azure',https://learn.microsoft.com/en-us/credentials/certifications/azure-ai-fundamentals/
+c061,"syllabus lists Introduction to solar power systems, Determining energy needs and sizing a PV system, Infrastructure of Photovoltaics, no AI/digital tools",https://www.coursera.org/learn/solar-energy-basics
+c062,"syllabus lists PV module and array circuits, PV sizing, Grid-tie PV System design, no AI/digital tools",https://www.coursera.org/learn/solar-energy-system-design
+c063,"syllabus lists Energy framework and Buildings foundamentals, Energy management in buildings, Practical applications, no AI/no named software",https://www.coursera.org/learn/energy-management-for-real-estate
+c064,"syllabus lists Physical Elements, Governance Aspects, Organic waste treatment, Strategic Issues and Planning, no AI/digital tools",https://www.coursera.org/learn/solid-waste-management
+c065,"syllabus lists Common-Law Approaches, Property and the Environment, Risk Analysis and Toxic Substances, no AI/digital tools",https://www.coursera.org/learn/environmental-law
+c066,"syllabus lists Understanding the Sustainability Challenge, Why Corporate Sustainability?, Transitioning Organizations, no AI/digital tools",https://www.coursera.org/learn/corporate-sustainability
+c067,"syllabus lists What is Sustainable Development?, Inequality Around the World, Curbing Climate Change, The SDGs, no AI/digital tools",https://www.coursera.org/learn/sustainable-development
+c068,"syllabus lists Module 1: Manager and Owner Perspective, Module 3: Climate-Related Disclosures and Assurance, no AI/digital tools",https://www.coursera.org/learn/sustainability-reporting-from-regulation-to-implementation
+c069,"syllabus lists Module 1: Economies in transition, Module 2: Making the transition just, Module 3: Financing the transition, no AI/digital tools",https://unccelearn.org/course/view.php?id=227&page=overview&lang=en
+c070,browser-checked: no AI or software tools in outcomes,https://elatih.hrdcorp.gov.my/courses-details/esg-practices-and-governance-in-the-workplace
+c071,"Modules 'Getting Started and Selecting & Retrieving Data with SQL', 'Subqueries and Joins in SQL'",https://www.coursera.org/learn/sql-for-data-science
+c072,"Modules 'Data Visualization with Tableau', 'Dynamic Data Manipulation and Presentation in Tableau'",https://www.coursera.org/learn/analytics-tableau
+c073,"syllabus lists Exploring Data, Correlation and Regression, Probability, Significance Tests, no AI/no named software",https://www.coursera.org/learn/basic-statistics
+c074,"Tools you'll learn: Accounting Software; courses 'Tracking assets and sales', 'Reconciling accounts and examining financial statements'",https://www.coursera.org/professional-certificates/intuit-bookkeeping
+c075,"syllabus lists Customer Service Communication with Empathy, Active Listening, Problem-Solving, Effective Time Management, no AI/digital tools",https://www.coursera.org/learn/introduction-to-customer-service
+c076,"syllabus lists About Dementia, Impact on the Person, Caregiving and the Home Environment, no AI/digital tools",https://www.coursera.org/learn/dementia-care
+c077,"syllabus lists Module 1_Fundamental concepts of caregiving … Module 5_Caregiving impact, no AI/digital tools",https://www.coursera.org/learn/learning-to-be-caregivers-for-people-with-chronic-conditions
+c078,"syllabus lists Foundations for Early Childhood, Family Engagement, Guiding Children's Behavior, no AI/digital tools",https://www.coursera.org/learn/teaching-early-home-based-childhood
+c079,"syllabus lists Being a Teacher, Thinking About Learning, How Good is My Classroom?, no AI/digital tools",https://www.coursera.org/learn/teaching
+c080,"Modules 'Using Git Locally', 'Working with Remotes'; Tools: GitHub, Git",https://www.coursera.org/learn/introduction-git-github
+c081,Learning Outcome: 'Explain the syntax of several new Excel functions'; course title 'Formulas and Pivot Tables',https://alison.com/course/mastering-data-analysis-using-microsoft-excel-formulas-and-pivot-tables
+c082,"Modules 'Building Accurate Spreadsheets with Excel References', 'Summarizing Data with Pivot Tables and COUNTIF and SUMIF Formulas'; Tools: Microsoft Excel",https://www.coursera.org/learn/using-excel-for-accounting
+c083,"Module 'Introduction to HTML5'; Tools: Web Development Tools, CSS, HTML",https://www.coursera.org/learn/html-css-javascript-for-web-developers
+c084,"Modules 'HTML Overview', 'JavaScript Programming for Web Applications'; Tools: Bootstrap",https://www.coursera.org/learn/introduction-html-css-javascript
+c085,"Module 'Debugging in Modern Architectures & DevOps'; 'Use advanced debugging, profiling, and analysis tools'",https://www.coursera.org/learn/debugging-testing-for-software-delivery
+c086,"Modules 'Review and Setup', 'The Debugging Framework'; Tools: Python Programming",https://www.coursera.org/learn/python-debugging-a-systematic-approach
+c087,"Module 'Working with Design Patterns & Anti-patterns'; Tools: Java Programming, Unified Modeling Language",https://www.coursera.org/learn/design-patterns
+c088,"syllabus lists Software Design – A Key Knowledge Area, Object-Oriented Design and Design Principles, Basic Architectural Elements and Styles, no AI/digital tools",https://www.coursera.org/learn/software-design-principles-odc
+c089,"syllabus lists Introduction to Recording Transactions, The Statement of Cash Flows, Analysis of Financial Statements, no AI/digital tools",https://www.coursera.org/learn/uva-darden-financial-accounting
+c090,"syllabus lists Understanding the Annual Report, Income Statement and Cashflow Statement, no AI/digital tools",https://www.coursera.org/learn/reading-financial-statements
+c091,"syllabus lists Foundations of Depreciation, Reconciliation & Financial Reporting, Impairment, Depletion & Revaluation, no AI/digital tools",https://www.coursera.org/learn/master-depreciation-accounting-analyze-apply-methods
+c092,"syllabus lists IAS 16 recognition criteria, initial measurement of cost, revaluation model, no AI/digital tools",https://alison.com/course/property-plant-and-equipment-ias-16
+c093,"syllabus lists payroll for salaried and hourly employees, Subsidiary Ledgers and Special Journals, GAAP, no AI/digital tools",https://alison.com/course/effective-bookkeeping-and-payroll
+c094,"syllabus lists ISO 14001 EMS objectives, PDCA cycle, auditor skills, no AI/digital tools",https://alison.com/course/iso-14001-internal-auditing-strategies-and-practices
+c095,"syllabus lists EMS terms, EMS structural requirements, PDCA cycle, no AI/digital tools",https://alison.com/course/understanding-iso-14001-2015-environmental-management-systems-ems
+c096,"syllabus lists Cooperation, Competition, and Comparisons, Trust, Deception, Effective Communication, no AI/digital tools",https://www.coursera.org/learn/wharton-communication-skills
+c097,"syllabus lists Mastering Communication Foundations for Professional Success, Effective Communication: Mastering Advanced Strategies, no AI/digital tools",https://www.coursera.org/learn/communication-skill-course
+c098,"Learning Outcomes: 'Define Zendesk core records…', 'Change ticket status as work is completed in Zendesk'",https://alison.com/course/practical-zendesk-for-customer-service
+c099,Module 'Maximizing Customer Value Through Advanced CRM Solutions'; Tools: Customer Relationship Management (CRM) Software,https://www.coursera.org/learn/customer-relationship-management
+c101,"syllabus lists Foundations of Digital Marketing, Search and Paid Marketing Essentials, Email Marketing and Campaign Optimization; no named software, no AI/digital tools",https://www.coursera.org/learn/learn-digital-marketing-strategy-tools-analytics
+c102,"syllabus lists marketing objectives, marketing budget, marketing programs, no AI/digital tools",https://alison.com/course/marketing-strategy-to-grow-your-business
+c103,"syllabus lists Psychology of Editing, Social Media Video Editing, Invisible Edits; no editing software named, no AI/digital tools",https://www.coursera.org/learn/modern-video-editing-techniques
+c104,Learning Outcome: 'Recognise basic video editing within DaVinci Resolve'; 'basics of Fairlight',https://alison.com/course/video-editing-using-davinci-resolve-18
+c105,"syllabus lists number systems, arithmetic, ratios, measurement, no AI/digital tools",https://alison.com/course/math-basics-for-k-6-to-k-12
+c106,"syllabus lists counting to 100, addition and subtraction, perimeter, time, no AI/digital tools",https://alison.com/course/adult-literacy-mathematics-foundational-numeracy
+c107,"Penetration Testing, Network And Server Profiling",https://www.netacad.com/courses/cyber-threat-management?courseLang=en-US
+c110,"syllabus lists Describe basic cybersecurity threats, attacks, and mitigations, Describe concepts of cryptography, Describe authentication and authorization, no AI/digital tools",https://learn.microsoft.com/en-us/training/paths/describe-basic-concepts-of-cybersecurity/
+c112,"syllabus lists Introduction to Security, Access Control, and Software Development Security, Business Continuity and Disaster Recovery Planning and Cryptography, no AI/digital tools",https://www.coursera.org/learn/cyber-security-domain
+c114,Module 'UML Tools'; Module 'Unit Testing',https://www.coursera.org/learn/software-design-methods-tools
+c115,"Modules 'Prepare on-premises workloads for migration to Azure', 'Migrate SQL Server workloads to Azure SQL Database' (Azure Migrate)",https://learn.microsoft.com/en-us/training/paths/migrate-application-workloads-data-azure/
+c116,Tools you'll learn: Amazon Web Services; modules Week 1–4 cover AWS migration services,https://www.coursera.org/learn/aws-fundamentals-migrating-to-the-cloud
+c117,"syllabus lists environmental risk assessment, monitoring and sampling, chromatography methods, no AI/digital tools",https://alison.com/course/diploma-in-environmental-quality-monitoring-and-analysis
+c118,"syllabus lists spill management, hazardous substances, spill clean-up guideline, no AI/digital tools",https://alison.com/course/fundamentals-of-spill-management
+c119,"syllabus lists key concepts in environmental law, international environmental law, no AI/digital tools",https://alison.com/course/understanding-environmental-law
+c120,"syllabus lists cost-benefit analysis, discounting, externalities, public goods, no AI/digital tools",https://alison.com/course/introduction-to-environmental-economics-and-policy
