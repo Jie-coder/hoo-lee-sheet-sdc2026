@@ -2508,6 +2508,12 @@
   "06358891-8424-43c5-891e-d40f226bef40": "manage IT security compliances",
   "0a43729f-2a79-4dae-9faa-95520daae79f": "apply company policies",
   "79f24a62-7718-46e1-9b41-37be0560a5ca": "organisational resilience",
+  "172020d1-e151-445b-8173-e2a5fb16fe51": "utilise computer-aided software engineering tools",
+  "0b0335f3-0aa1-491e-895e-81fc8774a300": "develop automated migration methods",
+  "4bbb309f-9162-49b9-93da-fb2c371e5c5f": "collect samples for analysis",
+  "77f109c4-3107-4d2a-a512-5160ac103933": "analyse environmental data",
+  "2c8199c8-4e40-49b3-b878-caee6e1c1bc0": "investigate pollution",
+  "75f312e1-622b-4751-8d93-815b32feaf8d": "pollution prevention",
   "9710092c-f174-4e84-95bf-2064d39ad7a0": "manage content metadata",
   "2af29864-c941-40a5-ae7b-2b6c4b92c0d7": "speech recognition",
   "9ff9db9d-d14b-426e-83f3-e7449af6c79f": "manage data",
@@ -2518,7 +2524,6 @@
   "f28617ad-afdd-4041-814c-216153a38998": "analyse software specifications",
   "901105f8-3a08-453e-b1dc-23619e317fd3": "create flowchart diagram",
   "d9e5349e-8791-49c2-8ba4-839fdd1606c2": "define technical requirements",
-  "0b0335f3-0aa1-491e-895e-81fc8774a300": "develop automated migration methods",
   "797a4416-0b8d-44f3-8fcd-eb10bd0be6b4": "develop software prototype",
   "209a5498-3449-4689-8ed9-bd08cab4fd78": "engineering principles",
   "72a74f69-5cf1-43c5-99b9-62a444578919": "engineering processes",
@@ -2531,7 +2536,6 @@
   "59ea80e1-463a-4dba-82c6-d0b6d577d532": "technical drawings",
   "8b94aa1e-89c9-459d-b3b4-1dfab8dec2df": "use software libraries",
   "541561bc-510c-4a99-881c-2d8bf5a85462": "use technical drawing software",
-  "172020d1-e151-445b-8173-e2a5fb16fe51": "utilise computer-aided software engineering tools",
   "f84a433f-34f1-4083-b0a3-24802623509c": "web services",
   "71746a0b-e58d-4dc4-ad03-bd84082eae21": "collect customer feedback on applications",
   "e74f4f21-8d45-412c-b5c3-652e6167ee32": "content development processes",
@@ -2844,7 +2848,6 @@
   "c0ccbd15-36f3-4515-ae0b-b4062d225ee2": "abide by regulations on banned materials",
   "1cebfd4f-2ab3-480a-a3c8-8065a303717d": "address public health issues",
   "b422efe7-b151-4120-86ae-db11a48dd0fa": "advise on environmental remediation",
-  "77f109c4-3107-4d2a-a512-5160ac103933": "analyse environmental data",
   "3181325d-0590-4c6e-8db1-8278427c18ff": "analyse information processes",
   "abdc7ac8-151f-40c6-bc1a-1e9b4b073290": "augmented reality",
   "9433da85-70fa-4a25-8f96-71fa59dd1989": "biology",
@@ -2865,7 +2868,6 @@
   "ce4990a4-bf69-4f5f-becb-e4fd96da3a74": "mining, construction and civil engineering machinery products",
   "d2c81ad1-2439-43cf-9c63-204187b8f771": "mitigate waste of resources",
   "23845010-4c1e-41d3-94a3-940bcab65bce": "monitor nature conservation",
-  "75f312e1-622b-4751-8d93-815b32feaf8d": "pollution prevention",
   "0d6c9508-1cd6-4cea-98d2-d5fe2f5c6a73": "process customer requests based on the REACh Regulation 1907 2006",
   "21e0cad8-4eef-42be-b18b-0f8e37f0dbd0": "product life-cycle",
   "9570e84e-6699-4c9f-9a12-7bc82d53a231": "public health",
@@ -2876,13 +2878,11 @@
   "a366bfc5-8d17-4792-a9f0-db0951528dda": "advise on environmental risk management systems",
   "4d032f82-6279-48e6-9892-116440a071e3": "advise on pollution prevention",
   "edf0690f-629d-4674-a9df-45fd89413e85": "assess groundwater environmental impact",
-  "4bbb309f-9162-49b9-93da-fb2c371e5c5f": "collect samples for analysis",
   "f12f094b-492f-4e88-b36b-50b8e58b7500": "conduct environmental site assessments",
   "c6445183-6a52-49e0-a51c-6b3481ba5c54": "conduct research before survey",
   "e3f2c37f-e484-4b4c-ad82-f565a2b98f89": "environmental management monitors",
   "81af8698-9873-4b3d-b6d2-8eb275bf170b": "environmental threats",
   "f6d7ba88-5234-4994-944d-843ca453c923": "implement environmental protection measures",
-  "2c8199c8-4e40-49b3-b878-caee6e1c1bc0": "investigate pollution",
   "b13e0689-636d-42d0-86c3-df9d6f85a882": "manage environmental management system",
   "3f82a026-8a37-4b54-9ebb-7702b66eeb24": "perform environmental investigations",
   "692ace70-7f97-4214-92bd-88f7637d8a44": "physics",
@@ -7895,6 +7895,95 @@
     "06358891-8424-43c5-891e-d40f226bef40",
     "79f24a62-7718-46e1-9b41-37be0560a5ca",
     "2ddb1226-1117-4eb4-ae65-3a2f5a5a3c80"
+   ],
+   "lastChecked": "2026-10-22",
+   "mode": "online"
+  },
+  {
+   "id": "c114",
+   "title": "Software Design Methods and Tools",
+   "provider": "Coursera",
+   "url": "https://www.coursera.org/learn/software-design-methods-tools",
+   "languages": [
+    "en",
+    "zh"
+   ],
+   "hours": 14,
+   "costType": "free",
+   "certificate": false,
+   "skillIds": [
+    "172020d1-e151-445b-8173-e2a5fb16fe51"
+   ],
+   "lastChecked": "2026-10-22",
+   "mode": "online"
+  },
+  {
+   "id": "c115",
+   "title": "Migrate application workloads and data to Azure",
+   "provider": "Microsoft Learn",
+   "url": "https://learn.microsoft.com/en-us/training/paths/migrate-application-workloads-data-azure/",
+   "languages": [
+    "en"
+   ],
+   "hours": 2.4,
+   "costType": "free",
+   "certificate": false,
+   "skillIds": [
+    "0b0335f3-0aa1-491e-895e-81fc8774a300"
+   ],
+   "lastChecked": "2026-10-22",
+   "mode": "online"
+  },
+  {
+   "id": "c116",
+   "title": "Migrating to the AWS Cloud",
+   "provider": "Coursera",
+   "url": "https://www.coursera.org/learn/aws-fundamentals-migrating-to-the-cloud",
+   "languages": [
+    "en",
+    "zh"
+   ],
+   "hours": 7,
+   "costType": "free",
+   "certificate": false,
+   "skillIds": [
+    "0b0335f3-0aa1-491e-895e-81fc8774a300"
+   ],
+   "lastChecked": "2026-10-22",
+   "mode": "online"
+  },
+  {
+   "id": "c117",
+   "title": "Diploma in Environmental Quality Monitoring and Analysis",
+   "provider": "Alison",
+   "url": "https://alison.com/course/diploma-in-environmental-quality-monitoring-and-analysis",
+   "languages": [
+    "en"
+   ],
+   "hours": 20,
+   "costType": "free",
+   "certificate": false,
+   "skillIds": [
+    "4bbb309f-9162-49b9-93da-fb2c371e5c5f",
+    "77f109c4-3107-4d2a-a512-5160ac103933",
+    "2c8199c8-4e40-49b3-b878-caee6e1c1bc0"
+   ],
+   "lastChecked": "2026-10-22",
+   "mode": "online"
+  },
+  {
+   "id": "c118",
+   "title": "Fundamentals of Spill Management",
+   "provider": "Alison",
+   "url": "https://alison.com/course/fundamentals-of-spill-management",
+   "languages": [
+    "en"
+   ],
+   "hours": 4,
+   "costType": "free",
+   "certificate": false,
+   "skillIds": [
+    "75f312e1-622b-4751-8d93-815b32feaf8d"
    ],
    "lastChecked": "2026-10-22",
    "mode": "online"
