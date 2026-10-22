@@ -1,6 +1,7 @@
 // Picks the AI provider (Gemini by default, RunPod optional) and runs the structured "analyze" call, with a mock mode for demos.
 import "server-only"; // keep this file out of any client-side bundle
 import { generateText, Output, type LanguageModel } from "ai";
+import { createAnthropic } from "@ai-sdk/anthropic";
 import { createGoogle } from "@ai-sdk/google";
 import { createOpenAICompatible } from "@ai-sdk/openai-compatible";
 import { getEnv } from "./env";
@@ -20,14 +21,58 @@ const SYSTEM_PROMPT =
 // state (skeletons) is visible even without a real API call.
 const MOCK_DELAY_MS = 800;
 
+const ANTHROPIC_MODEL = "claude-haiku-4-5";
+
+// Logs the selected provider/model once per process (never keys or URLs).
+let providerLogged = false;
+function logProviderOnce(provider: string, model: string): void {
+  if (providerLogged) return;
+  providerLogged = true;
+  console.info(`[ai] provider=${provider} model=${model}`);
+}
+
+// Test-only: lets tests observe the log line again.
+export function resetProviderLogForTests(): void {
+  providerLogged = false;
+}
+
 type GetModelResult =
   | { ok: true; model: LanguageModel }
   | { ok: false; error: string };
+
+// @ai-sdk/anthropic's own default-baseURL handling only special-cases the
+// literal "https://api.anthropic.com" (see normalizeBaseURL in its source);
+// any other baseURL is used as-is after stripping a trailing slash, with no
+// "/v1" appended. Replit's AI Integrations base URL has no "/v1" suffix, so
+// this adds it (once) ourselves.
+export function resolveAnthropicBaseUrl(base: string): string {
+  const stripped = base.replace(/\/+$/, "");
+  return stripped.endsWith("/v1") ? stripped : `${stripped}/v1`;
+}
+
+// Which provider getModel() will actually use, given the current env.
+export function getActiveProviderName(): "anthropic" | "google" | "runpod" {
+  const env = getEnv();
+  if (env.anthropicApiKey && env.anthropicBaseUrl) return "anthropic";
+  if (env.aiProvider === "runpod") return "runpod";
+  return "google";
+}
 
 // Resolves the configured provider and model into a LanguageModel the AI SDK
 // can call, or a readable error if the configuration is incomplete/unsupported.
 export function getModel(): GetModelResult {
   const env = getEnv();
+
+  // Replit AI Integrations: when both are set, use Claude Haiku regardless
+  // of AI_PROVIDER.
+  if (env.anthropicApiKey && env.anthropicBaseUrl) {
+    const anthropic = createAnthropic({
+      apiKey: env.anthropicApiKey,
+      baseURL: resolveAnthropicBaseUrl(env.anthropicBaseUrl),
+    });
+    logProviderOnce("anthropic", ANTHROPIC_MODEL);
+    return { ok: true, model: anthropic(ANTHROPIC_MODEL) };
+  }
 
   // Optional: a model we host ourselves on RunPod (vLLM), which speaks the
   // same API format as OpenAI. Only used when AI_PROVIDER=runpod.
@@ -44,6 +89,7 @@ export function getModel(): GetModelResult {
       apiKey: env.runpodApiKey,
       supportsStructuredOutputs: true, // vLLM can follow our Zod/JSON schema
     });
+    logProviderOnce("runpod", env.aiModel);
     return { ok: true, model: runpod(env.aiModel) };
   }
 
@@ -61,6 +107,7 @@ export function getModel(): GetModelResult {
 
   const google = createGoogle({ apiKey: env.googleApiKey });
   const modelId = env.aiModel || DEFAULT_GOOGLE_MODEL;
+  logProviderOnce("google", modelId);
   return { ok: true, model: google(modelId) };
 }
 

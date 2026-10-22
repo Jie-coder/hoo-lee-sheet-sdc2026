@@ -313,6 +313,9 @@ export function PathwayView({
                   const CostIcon = COST_ICON[item.costType];
                   const aiContentBadgeKey =
                     step.kind === "course" ? AI_CONTENT_BADGE_KEY[(item as Course).aiContent] : undefined;
+                  const displayHours = step.merged?.hours ?? ("hours" in item ? item.hours : undefined);
+                  const displayLanguages = step.merged?.languages ?? ("languages" in item ? item.languages : undefined);
+                  const displayCertificate = step.merged?.certificate ?? ("certificate" in item ? item.certificate : undefined);
                   return (
                     <li key={step.itemId} className="grid grid-cols-[32px_1fr] gap-x-4">
                       {/* z-10 keeps the station above the route line drawn behind the list */}
@@ -348,8 +351,8 @@ export function PathwayView({
                             )}
                             <span className="flex items-center gap-1 text-grey">
                               <Clock3 className="size-3.5" strokeWidth={1.6} />
-                              {"hours" in item ? (
-                                t("pathway.hoursShort", { hours: String(item.hours) })
+                              {displayHours != null ? (
+                                t("pathway.hoursShort", { hours: String(displayHours) })
                               ) : (
                                 <span className="text-xs text-grey">{t("pathway.hoursNotListed")}</span>
                               )}
@@ -389,17 +392,17 @@ export function PathwayView({
                             )}
 
                             <div className="flex flex-wrap gap-x-5 gap-y-1 text-[12px] text-grey">
-                              {"languages" in item && (
+                              {displayLanguages && (
                                 <span>
                                   {t("pathway.languages", {
-                                    languages: item.languages.map(languageLabel).join(", "),
+                                    languages: displayLanguages.map(languageLabel).join(", "),
                                   })}
                                 </span>
                               )}
-                              {"certificate" in item && (
+                              {displayCertificate != null && (
                                 <span className="flex items-center gap-1">
-                                  {item.certificate ? <Award className="size-3.5" strokeWidth={1.6} /> : <CircleSlash className="size-3.5" strokeWidth={1.6} />}
-                                  {item.certificate ? t("pathway.certificate") : t("pathway.noCertificate")}
+                                  {displayCertificate ? <Award className="size-3.5" strokeWidth={1.6} /> : <CircleSlash className="size-3.5" strokeWidth={1.6} />}
+                                  {displayCertificate ? t("pathway.certificate") : t("pathway.noCertificate")}
                                 </span>
                               )}
                               {sdgLink && (
