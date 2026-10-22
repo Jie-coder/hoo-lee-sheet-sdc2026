@@ -21,7 +21,7 @@ import type {
 } from "./row-schemas";
 import { demandByScenario } from "./scenario-demand";
 import type { Embedder } from "./clients";
-import { EmbeddingQuotaExceededError } from "./embedding-quota";
+import { defaultLogger, EmbeddingQuotaExceededError, type Logger } from "./embedding-quota";
 
 export type SkillRecord = { id: string; escoUri: string; labelEn: string };
 
@@ -53,7 +53,7 @@ export type EmbeddingProgress = {
 export type ApplyResult = {
   tables: TableResult[];
   skipped: SkippedFile[];
-  /** Always one entry for skills and one for occupations, in that order — see applyImport's embedding step. */
+  /** One entry for skills and one for occupations, in that order, unless an existing-skill update failed before embedding was ever reached — see applyImport's embedding step. */
   embeddings: EmbeddingProgress[];
 };
 
@@ -183,11 +183,16 @@ export async function fillEmbeddings(
   supabase: SupabaseClient,
   table: "occupations" | "skills",
   toEmbed: { id: string; text: string }[],
-  embedder: Embedder
+  embedder: Embedder,
+  logger: Logger = defaultLogger
 ): Promise<EmbeddingProgress> {
   let done = 0;
+  const totalBatches = Math.ceil(toEmbed.length / EMBED_BATCH_SIZE);
+  let batchNumber = 0;
   for (let i = 0; i < toEmbed.length; i += EMBED_BATCH_SIZE) {
+    batchNumber += 1;
     const batch = toEmbed.slice(i, i + EMBED_BATCH_SIZE);
+    const startedAt = Date.now();
     let vectors: number[][];
     try {
       vectors = await embedder(batch.map((row) => row.text));
@@ -201,6 +206,11 @@ export async function fillEmbeddings(
     const result = await updateEmbeddingBatch(supabase, table, rows);
     if (result.error) throw new Error(`failed to store ${table} embeddings: ${result.error}`);
     done += batch.length;
+    const durationMs = Date.now() - startedAt;
+    logger.log(
+      `embedding ${table}: batch ${batchNumber}/${totalBatches}, ${batch.length} item(s), ` +
+        `${durationMs}ms (${(durationMs / 1000).toFixed(1)}s)`
+    );
   }
   return { table, total: toEmbed.length, done, remaining: 0, stoppedByQuota: false };
 }
@@ -635,7 +645,7 @@ async function updateExistingRows(
   for (const row of rows) {
     const { id, ...columns } = row;
     const { error } = await supabase.from(table).update(columns).eq("id", id);
-    if (error) return { table, upserted, error: error.message };
+    if (error) return { table, upserted, error: `${table} row ${id}: ${error.message}` };
     upserted += 1;
   }
   return { table, upserted };
@@ -691,11 +701,19 @@ function combineTableResults(table: string, results: TableResult[]): TableResult
  *     embedding but every table above is already durable; the caller
  *     reports done/remaining so a rerun can resume (rows already embedded
  *     are skipped by planEmbeddings).
+ *
+ * If updating an existing skill fails partway (step 1's per-row UPDATE),
+ * the run stops there: it never upserts a new skill or writes any later
+ * table, since a half-written skills table makes every downstream FK
+ * (occupation_skills, signals) suspect. The caller sees this as a `tables`
+ * entry with an `error` naming the failing table/row id; runCli
+ * (import-data.ts) already exits 1 whenever any `tables` entry has an error.
  */
 export async function applyImport(
   input: ApplyInput,
   supabase: SupabaseClient,
-  embedder: Embedder
+  embedder: Embedder,
+  logger: Logger = defaultLogger
 ): Promise<ApplyResult> {
   const tables: TableResult[] = [];
 
@@ -719,6 +737,12 @@ export async function applyImport(
   );
 
   const existingSkillsResult = await updateExistingRows(supabase, "skills", existingSkillRows);
+  if (existingSkillsResult.error) {
+    // Stop here: do not upsert new skills, and do not write any later
+    // table — see the stop-on-first-failure note on this function above.
+    tables.push(existingSkillsResult);
+    return { tables, skipped: APPLY_SKIPPED_FILES, embeddings: [] };
+  }
   const newSkillsResult = await upsert(supabase, "skills", newSkillRows);
   tables.push(combineTableResults("skills", [existingSkillsResult, newSkillsResult]));
 
@@ -773,7 +797,7 @@ export async function applyImport(
     })
   );
 
-  const skillEmbedding = await fillEmbeddings(supabase, "skills", skillPlan.toEmbed, embedder);
+  const skillEmbedding = await fillEmbeddings(supabase, "skills", skillPlan.toEmbed, embedder, logger);
   // A quota hit is global (the same Gemini key, the same quota), so there is
   // no point even trying occupations once skills has already stopped on one.
   const occupationEmbedding = skillEmbedding.stoppedByQuota
@@ -784,7 +808,7 @@ export async function applyImport(
         remaining: occupationPlan.toEmbed.length,
         stoppedByQuota: true,
       }
-    : await fillEmbeddings(supabase, "occupations", occupationPlan.toEmbed, embedder);
+    : await fillEmbeddings(supabase, "occupations", occupationPlan.toEmbed, embedder, logger);
 
   return { tables, skipped: APPLY_SKIPPED_FILES, embeddings: [skillEmbedding, occupationEmbedding] };
 }
