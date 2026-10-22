@@ -6,10 +6,11 @@
 
 import { useEffect, useId, useRef, useState, type ReactNode } from "react";
 import { Info } from "lucide-react";
+import { useT } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 
 export function InfoPopover({
-  label = "More info",
+  label,
   children,
   className,
   panelClassName,
@@ -19,6 +20,7 @@ export function InfoPopover({
   className?: string;
   panelClassName?: string;
 }) {
+  const { t } = useT();
   const [open, setOpen] = useState(false);
   const id = useId();
   const rootRef = useRef<HTMLDivElement>(null);
@@ -65,7 +67,7 @@ export function InfoPopover({
         type="button"
         aria-expanded={open}
         aria-controls={id}
-        aria-label={label}
+        aria-label={label ?? t("infoPopover.moreInfo")}
         onClick={() => {
           // A click right after hover-open pins it open instead of closing it.
           const pin = openedByHover.current;

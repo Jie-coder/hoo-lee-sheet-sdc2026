@@ -7,7 +7,8 @@ import { motion, useReducedMotion } from "framer-motion";
 import { CountUp, EASE_OUT } from "@/components/motion";
 import { InfoPopover } from "@/components/ui/info-popover";
 import { SourcesDisclosure } from "@/components/sources-disclosure";
-import { bandLabel } from "@/lib/display";
+import { bandMessageKey } from "@/lib/display";
+import { useT } from "@/lib/i18n";
 import type { Source } from "@/types/contracts";
 
 export type CurrentWork = {
@@ -20,25 +21,24 @@ export type CurrentWork = {
 
 export function ScoreCard({ currentWork }: { currentWork: CurrentWork }) {
   const reduce = useReducedMotion();
+  const { t } = useT();
+  const bandKey = bandMessageKey(currentWork.exposure);
   const exposurePercent = Math.round(currentWork.exposure * 100);
 
   return (
     <section className="grid grid-cols-1 gap-8 border-y border-line py-8 md:grid-cols-12 md:items-center">
       <div className="md:col-span-5">
         <div className="flex items-center gap-1.5 text-[13px] text-grey">
-          AI exposure of your current job
-          <InfoPopover label="What AI exposure means">
-            The share of a job&rsquo;s tasks that generative AI could perform or assist with, scored 0 to 1 by the ILO
-            from task descriptions. It describes the job, not you.
-          </InfoPopover>
+          {t("scoreCard.exposureLabel")}
+          <InfoPopover label={t("scoreCard.exposureInfoLabel")}>{t("scoreCard.exposureInfoBody")}</InfoPopover>
         </div>
         <p className="mt-2 font-serif text-[52px] leading-none font-medium tracking-tight sm:text-[64px]">
-          {bandLabel(currentWork.exposure)}{" "}
+          {t(bandKey)}{" "}
           <span className="text-[32px] text-grey/60 sm:text-[40px]">
             <CountUp value={currentWork.exposure} decimals={2} />
           </span>
         </p>
-        <p className="mt-3 text-[15px] font-medium">Exposure is not job loss.</p>
+        <p className="mt-3 text-[15px] font-medium">{t("scoreCard.notJobLoss")}</p>
       </div>
 
       <div className="md:col-span-7">
@@ -51,14 +51,15 @@ export function ScoreCard({ currentWork }: { currentWork: CurrentWork }) {
           />
         </div>
         <div className="mt-1.5 flex justify-between text-[11px] text-grey">
-          <span>Low</span>
-          <span>Medium</span>
-          <span>High</span>
+          <span>{t("scoreCard.low")}</span>
+          <span>{t("scoreCard.medium")}</span>
+          <span>{t("scoreCard.high")}</span>
         </div>
         <p className="mt-4 text-[14px] leading-relaxed text-grey">
-          For <span className="font-medium text-ink capitalize">{currentWork.title}</span>
-          {currentWork.groupEstimate ? ", using the closest ILO occupation group." : "."} Medium or high exposure means parts
-          of the job change, so the roles below favour work your skills carry into with lower exposure.
+          {t("scoreCard.forRolePrefix")}
+          <span className="font-medium text-ink capitalize">{currentWork.title}</span>
+          {currentWork.groupEstimate ? t("scoreCard.forRoleGroupSuffix") : t("scoreCard.forRoleSuffix")}{" "}
+          {t("scoreCard.exposureExplanation")}
         </p>
         <div className="mt-3">
           <SourcesDisclosure sources={currentWork.sources} />

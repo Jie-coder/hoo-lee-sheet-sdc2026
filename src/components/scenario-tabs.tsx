@@ -4,13 +4,14 @@
 import { useEffect, useRef, useState, type KeyboardEvent } from "react";
 import { motion } from "framer-motion";
 import { TrendingDown, Users, Zap, type LucideIcon } from "lucide-react";
+import { useT, type MessageKey } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 import { SCENARIO_IDS, type ScenarioId } from "@/types/contracts";
 
-export const SCENARIO_LABEL: Record<ScenarioId, string> = {
-  co: "Co-Pilot Economy",
-  dis: "Age of Displacement",
-  sup: "Supercharged Progress",
+export const SCENARIO_LABEL: Record<ScenarioId, MessageKey> = {
+  co: "scenarioTabs.coLabel",
+  dis: "scenarioTabs.disLabel",
+  sup: "scenarioTabs.supLabel",
 };
 
 const SCENARIO_ICON: Record<ScenarioId, LucideIcon> = {
@@ -19,16 +20,16 @@ const SCENARIO_ICON: Record<ScenarioId, LucideIcon> = {
   sup: Zap,
 };
 
-export const SCENARIO_SUMMARY: Record<ScenarioId, string> = {
-  co: "AI spreads steadily and mostly works alongside people. Digital, data and green roles grow; routine clerical work shrinks.",
-  dis: "AI moves faster than people can retrain. Every field grows less, clerical work shrinks most, and AI exposure counts for more.",
-  sup: "AI advances fast and people are ready for it. Digital and data roles grow fastest.",
+export const SCENARIO_SUMMARY: Record<ScenarioId, MessageKey> = {
+  co: "scenarioTabs.coSummary",
+  dis: "scenarioTabs.disSummary",
+  sup: "scenarioTabs.supSummary",
 };
 
-export const SCENARIO_ILLUSTRATIVE =
-  "Demand uses DOSM employment (2025) and WEF Future of Jobs 2025 figures. Scenarios follow WEF Four Futures (2026).";
+export const SCENARIO_ILLUSTRATIVE: MessageKey = "scenarioTabs.illustrative";
 
 export function ScenarioTabs({ value, onChange }: { value: ScenarioId; onChange: (scenario: ScenarioId) => void }) {
+  const { t } = useT();
   const [stacked, setStacked] = useState(false);
   const tabRefs = useRef<Record<string, HTMLButtonElement | null>>({});
 
@@ -73,7 +74,7 @@ export function ScenarioTabs({ value, onChange }: { value: ScenarioId; onChange:
   return (
     <div
       role="tablist"
-      aria-label="Future scenario"
+      aria-label={t("scenarioTabs.ariaLabel")}
       aria-orientation={stacked ? "vertical" : "horizontal"}
       className="flex w-full flex-col gap-0.5 rounded-full bg-alt p-1 text-[13px] sm:w-auto sm:flex-row sm:items-center"
     >
@@ -105,7 +106,7 @@ export function ScenarioTabs({ value, onChange }: { value: ScenarioId; onChange:
               />
             )}
             <Icon className={cn("relative size-3.5", selected && "text-sage")} strokeWidth={1.6} />
-            <span className="relative">{SCENARIO_LABEL[id]}</span>
+            <span className="relative">{t(SCENARIO_LABEL[id])}</span>
           </button>
         );
       })}

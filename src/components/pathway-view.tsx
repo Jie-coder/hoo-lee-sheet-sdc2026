@@ -32,6 +32,7 @@ import { SourceChip } from "@/components/source-chip";
 import { Disclosure } from "@/components/ui/disclosure";
 import { InfoPopover } from "@/components/ui/info-popover";
 import { useFlow } from "@/context/flow-context";
+import { useT, type MessageKey } from "@/lib/i18n";
 import { buildPathwayPlan, programmeEligibilityStatus } from "@/lib/pathway";
 import { useRoles } from "@/lib/use-roles";
 import { cn } from "@/lib/utils";
@@ -40,16 +41,16 @@ import type { Course, CostType, CourseAiContent, PlanStep, Programme } from "@/t
 /** Course-card badge for ai_content. "none" shows nothing, and this never
  * applies to the AI untuk Rakyat programme step (programmes have no
  * aiContent field; only step.kind === "course" items are checked below). */
-const AI_CONTENT_BADGE: Partial<Record<CourseAiContent, string>> = {
-  ai: "AI",
-  digital: "数字工具",
+const AI_CONTENT_BADGE_KEY: Partial<Record<CourseAiContent, MessageKey>> = {
+  ai: "pathway.aiContent.ai",
+  digital: "pathway.aiContent.digital",
 };
 
-const COST_LABEL: Record<CostType, string> = {
-  free: "Free",
-  subsidised: "Subsidised",
-  hrdcorp_claimable: "HRD Corp claimable",
-  paid: "Paid",
+const COST_LABEL_KEY: Record<CostType, MessageKey> = {
+  free: "pathway.cost.free",
+  subsidised: "pathway.cost.subsidised",
+  hrdcorp_claimable: "pathway.cost.hrdcorpClaimable",
+  paid: "pathway.cost.paid",
 };
 
 const COST_CLASS: Record<CostType, string> = {
@@ -66,7 +67,11 @@ const COST_ICON: Record<CostType, typeof Gift> = {
   paid: Wallet,
 };
 
-const LANGUAGE_LABEL: Record<string, string> = { en: "EN", ms: "BM", zh: "中文" };
+const LANGUAGE_LABEL_KEY: Partial<Record<string, MessageKey>> = {
+  en: "pathway.language.en",
+  ms: "pathway.language.ms",
+  zh: "pathway.language.zh",
+};
 
 export function PathwayView({
   courses,
@@ -81,6 +86,7 @@ export function PathwayView({
   const router = useRouter();
   const searchParams = useSearchParams();
   const reduce = useReducedMotion();
+  const { t } = useT();
   const { hydrated, consent, profile, interviewAnswers, chosenRoleId, setChosenRoleId, resetFlow } = useFlow();
   const { state, retry } = useRoles(profile, interviewAnswers.impact_interest);
   const data = state.status === "ready" ? state.data : null;
@@ -133,25 +139,25 @@ export function PathwayView({
         <main className="mx-auto max-w-[1248px] px-4 pt-10 sm:px-6">
           {state.status === "loading" && (
             <p className="text-[14px] text-grey" aria-live="polite">
-              Building your plan…
+              {t("pathway.buildingPlan")}
             </p>
           )}
           {state.status === "error" && (
             <div className="panel p-6 text-[14px]" role="alert">
-              <p className="font-medium">We couldn&rsquo;t load your roles right now.</p>
+              <p className="font-medium">{t("pathway.loadError")}</p>
               <p className="mt-1 text-grey">{state.message}</p>
               <button type="button" onClick={retry} className="btn-secondary mt-4">
-                Try again
+                {t("pathway.tryAgain")}
               </button>
             </div>
           )}
           {state.status === "ready" && (
             <div className="panel p-6 text-[14px]">
-              <p className="font-medium">That role isn&rsquo;t in your results.</p>
-              <p className="mt-1 text-grey">Pick one of the roles ranked for your profile.</p>
+              <p className="font-medium">{t("pathway.roleNotInResults")}</p>
+              <p className="mt-1 text-grey">{t("pathway.pickRankedRole")}</p>
               <button type="button" onClick={() => router.push("/results")} className="btn-secondary mt-4">
                 <ArrowLeft className="size-4" strokeWidth={1.6} />
-                Back to roles
+                {t("pathway.backToRoles")}
               </button>
             </div>
           )}
@@ -176,10 +182,16 @@ export function PathwayView({
     {} as Partial<Record<CostType, number>>,
   );
   const mostlyFree = (costCounts.free ?? 0) >= plan.steps.length / 2;
-  const languagesLabel = studyLanguages.map((l) => LANGUAGE_LABEL[l] ?? l).join(", ");
+
+  function languageLabel(language: string): string {
+    const key = LANGUAGE_LABEL_KEY[language];
+    return key ? t(key) : language;
+  }
+
+  const languagesLabel = studyLanguages.map(languageLabel).join(", ");
 
   function handleDownload() {
-    toast("Download isn't available in this demo. Use your browser's print or a screenshot instead.");
+    toast(t("pathway.downloadUnavailable"));
   }
 
   function handleDelete() {
@@ -197,19 +209,19 @@ export function PathwayView({
           className="flex flex-col gap-5 pt-10 pb-8 md:flex-row md:items-end md:justify-between"
         >
           <div>
-            <p className="text-[13px] text-grey">{profile.name || "Your profile"}</p>
+            <p className="text-[13px] text-grey">{profile.name || t("pathway.yourProfile")}</p>
             <h1 className="mt-1 font-serif text-[34px] leading-[1.05] font-medium tracking-tight text-balance md:text-[44px]">
-              Your {totalWeeks}-week route to {role.title}
+              {t("pathway.routeTitle", { weeks: String(totalWeeks), title: role.title })}
             </h1>
           </div>
           <div className="flex shrink-0 items-center gap-2">
             <button type="button" onClick={() => router.push("/results")} className="btn-secondary">
               <ArrowLeft className="size-4" strokeWidth={1.6} />
-              Back to roles
+              {t("pathway.backToRoles")}
             </button>
             <button type="button" onClick={handleDownload} className="btn-primary">
               <Download className="size-4" strokeWidth={1.6} />
-              Download PDF
+              {t("pathway.downloadPdf")}
             </button>
           </div>
         </motion.section>
@@ -222,43 +234,44 @@ export function PathwayView({
           className="grid grid-cols-2 gap-x-6 gap-y-6 border-y border-line py-6 md:grid-cols-4"
         >
           <div>
-            <dt className="text-[12px] text-grey">Duration</dt>
+            <dt className="text-[12px] text-grey">{t("pathway.duration")}</dt>
             <dd className="mt-1 font-serif text-[32px] leading-none font-medium tracking-tight">
-              <CountUp value={totalWeeks} /> <span className="text-[18px] text-grey">weeks</span>
+              <CountUp value={totalWeeks} /> <span className="text-[18px] text-grey">{t("pathway.weeks")}</span>
             </dd>
           </div>
           <div>
-            <dt className="text-[12px] text-grey">Pace</dt>
+            <dt className="text-[12px] text-grey">{t("pathway.pace")}</dt>
             <dd className="mt-1 font-serif text-[32px] leading-none font-medium tracking-tight">
-              {hoursPerWeek} <span className="text-[18px] text-grey">h a week</span>
+              {hoursPerWeek} <span className="text-[18px] text-grey">{t("pathway.hoursAWeekShort")}</span>
             </dd>
           </div>
           <div>
             <dt className="flex items-center gap-1 text-[12px] text-grey">
-              Cost
-              <InfoPopover label="Cost types">
+              {t("pathway.cost")}
+              <InfoPopover label={t("pathway.costTypes")}>
                 <span className="flex flex-wrap gap-1.5">
-                  {(Object.keys(COST_LABEL) as CostType[]).map((type) => {
+                  {(Object.keys(COST_LABEL_KEY) as CostType[]).map((type) => {
                     const Icon = COST_ICON[type];
                     return (
                       <span key={type} className={cn("tag", COST_CLASS[type])}>
                         <Icon className="size-3" strokeWidth={1.6} />
-                        {COST_LABEL[type]}
+                        {t(COST_LABEL_KEY[type])}
                       </span>
                     );
                   })}
                 </span>
-                <span className="mt-2 block">Ordered free first. Links come from the Laluan checked catalogue.</span>
+                <span className="mt-2 block">{t("pathway.costTypesHelp")}</span>
               </InfoPopover>
             </dt>
             <dd className={cn("mt-1 font-serif text-[32px] leading-none font-medium tracking-tight", mostlyFree && "text-sage")}>
-              {mostlyFree ? "Mostly free" : "Mixed cost"}
+              {mostlyFree ? t("pathway.mostlyFree") : t("pathway.mixedCost")}
             </dd>
           </div>
           <div>
-            <dt className="text-[12px] text-grey">Skills closed</dt>
+            <dt className="text-[12px] text-grey">{t("pathway.skillsClosed")}</dt>
             <dd className="mt-1 font-serif text-[32px] leading-none font-medium tracking-tight tabular-nums">
-              <CountUp value={closedSkillIds.size} /> <span className="text-[18px] text-grey">of {role.gap.length}</span>
+              <CountUp value={closedSkillIds.size} />{" "}
+              <span className="text-[18px] text-grey">{t("pathway.ofTotal", { count: String(role.gap.length) })}</span>
             </dd>
           </div>
         </motion.dl>
@@ -268,21 +281,19 @@ export function PathwayView({
           <div className="md:col-span-8">
             <div className="mb-6 flex flex-wrap items-center justify-between gap-2">
               <div className="flex items-center gap-1.5">
-                <h2 className="font-serif text-[28px] font-medium tracking-tight">Week by week</h2>
-                <InfoPopover label="How this plan was built">
-                  Only items in {languagesLabel} that fit {hoursPerWeek} h a week. Free first, then subsidised, HRD Corp
-                  claimable, then paid. Eligibility is checked by rules against your answers; a missing answer shows
-                  &ldquo;Check eligibility&rdquo;. Steps are ordered by fixed rules, not by AI.
+                <h2 className="font-serif text-[28px] font-medium tracking-tight">{t("pathway.weekByWeek")}</h2>
+                <InfoPopover label={t("pathway.howBuilt")}>
+                  {t("pathway.howBuiltBody", { languages: languagesLabel, hours: String(hoursPerWeek) })}
                 </InfoPopover>
               </div>
               <div className="flex items-center gap-4 text-[12px] text-grey">
                 <span className="flex items-center gap-1.5">
                   <GraduationCap className="size-3.5" strokeWidth={1.6} />
-                  Course
+                  {t("pathway.course")}
                 </span>
                 <span className="flex items-center gap-1.5">
                   <Landmark className="size-3.5" strokeWidth={1.6} />
-                  Government programme
+                  {t("pathway.governmentProgramme")}
                 </span>
               </div>
             </div>
@@ -295,10 +306,13 @@ export function PathwayView({
                   const closedSkill = role.gap.find((skill) => step.closesSkillIds.includes(skill.skillId));
                   const providerName = "provider" in item ? item.provider : item.agency;
                   const weeksLabel =
-                    step.weekStart === step.weekEnd ? `Week ${step.weekStart}` : `Weeks ${step.weekStart} to ${step.weekEnd}`;
+                    step.weekStart === step.weekEnd
+                      ? t("pathway.week", { week: String(step.weekStart) })
+                      : t("pathway.weeksRange", { start: String(step.weekStart), end: String(step.weekEnd) });
                   const eligibility = step.kind === "program" ? programmeEligibilityStatus(item as Programme, interviewAnswers) : null;
                   const CostIcon = COST_ICON[item.costType];
-                  const aiContentBadge = step.kind === "course" ? AI_CONTENT_BADGE[(item as Course).aiContent] : undefined;
+                  const aiContentBadgeKey =
+                    step.kind === "course" ? AI_CONTENT_BADGE_KEY[(item as Course).aiContent] : undefined;
                   return (
                     <li key={step.itemId} className="grid grid-cols-[32px_1fr] gap-x-4">
                       {/* z-10 keeps the station above the route line drawn behind the list */}
@@ -327,30 +341,37 @@ export function PathwayView({
                           <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-2 text-[13px]">
                             <span className={cn("tag", COST_CLASS[item.costType])}>
                               <CostIcon className="size-3" strokeWidth={1.6} />
-                              {COST_LABEL[item.costType]}
+                              {t(COST_LABEL_KEY[item.costType])}
                             </span>
-                            {aiContentBadge && <span className="tag font-sans text-[11px] font-medium text-ink">{aiContentBadge}</span>}
+                            {aiContentBadgeKey && (
+                              <span className="tag font-sans text-[11px] font-medium text-ink">{t(aiContentBadgeKey)}</span>
+                            )}
                             <span className="flex items-center gap-1 text-grey">
                               <Clock3 className="size-3.5" strokeWidth={1.6} />
-                              {"hours" in item ? `${item.hours} h` : <span className="text-xs text-grey">Hours not listed</span>}
+                              {"hours" in item ? (
+                                t("pathway.hoursShort", { hours: String(item.hours) })
+                              ) : (
+                                <span className="text-xs text-grey">{t("pathway.hoursNotListed")}</span>
+                              )}
                             </span>
                             {closedSkill && (
                               <span className="flex min-w-0 items-center gap-1.5">
                                 <Target className="size-3.5 shrink-0 text-sage" strokeWidth={1.6} />
-                                <span className="text-grey">Closes</span> <span className="font-medium">{closedSkill.label}</span>
+                                <span className="text-grey">{t("pathway.closes")}</span>{" "}
+                                <span className="font-medium">{closedSkill.label}</span>
                               </span>
                             )}
                             {eligibility === "check" && (
                               <span className="inline-flex items-center gap-1 rounded-full border border-ink/60 px-2 py-0.5 text-[11px] font-medium text-ink">
                                 <CircleHelp className="size-3" strokeWidth={1.6} />
-                                Check eligibility
+                                {t("pathway.checkEligibility")}
                               </span>
                             )}
                           </div>
 
                           <Disclosure
                             className="mt-4"
-                            summary={<span className="text-[13px] text-grey hover:text-ink">Details</span>}
+                            summary={<span className="text-[13px] text-grey hover:text-ink">{t("pathway.details")}</span>}
                             summaryClassName="justify-start gap-1"
                             contentClassName="mt-3 space-y-3 text-[13px]"
                           >
@@ -359,27 +380,32 @@ export function PathwayView({
                             {eligibility === "pass" && (
                               <p className="flex items-center gap-1.5 text-[12px] text-sage-dark">
                                 <CircleCheck className="size-3.5" strokeWidth={1.6} />
-                                Eligible based on your answers
+                                {t("pathway.eligible")}
                               </p>
                             )}
-                            {eligibility === "fail" && <p className="text-[12px] text-grey">Not eligible based on your answers.</p>}
+                            {eligibility === "fail" && <p className="text-[12px] text-grey">{t("pathway.notEligible")}</p>}
                             {eligibility === "check" && (
-                              <p className="text-[12px] text-grey">We don&rsquo;t know yet whether you meet every rule for this programme.</p>
+                              <p className="text-[12px] text-grey">{t("pathway.eligibilityUnknown")}</p>
                             )}
 
                             <div className="flex flex-wrap gap-x-5 gap-y-1 text-[12px] text-grey">
                               {"languages" in item && (
-                                <span>Languages: {item.languages.map((language) => LANGUAGE_LABEL[language] ?? language).join(", ")}</span>
+                                <span>
+                                  {t("pathway.languages", {
+                                    languages: item.languages.map(languageLabel).join(", "),
+                                  })}
+                                </span>
                               )}
                               {"certificate" in item && (
                                 <span className="flex items-center gap-1">
                                   {item.certificate ? <Award className="size-3.5" strokeWidth={1.6} /> : <CircleSlash className="size-3.5" strokeWidth={1.6} />}
-                                  {item.certificate ? "Certificate" : "No certificate"}
+                                  {item.certificate ? t("pathway.certificate") : t("pathway.noCertificate")}
                                 </span>
                               )}
                               {sdgLink && (
                                 <span className="flex items-center gap-1.5">
-                                  SDG <SdgBadge link={sdgLink} label={targetLabels[sdgLink.target] ?? sdgLink.target} />
+                                  {t("pathway.sdg")}{" "}
+                                  <SdgBadge link={sdgLink} label={targetLabels[sdgLink.target] ?? sdgLink.target} />
                                 </span>
                               )}
                             </div>
@@ -399,7 +425,7 @@ export function PathwayView({
                                 rel="noreferrer"
                                 className="flex items-center gap-1 text-[12px] text-grey underline underline-offset-4 hover:text-ink"
                               >
-                                Open source
+                                {t("pathway.openSource")}
                                 <ArrowUpRight className="size-3" strokeWidth={1.6} />
                               </a>
                             </div>
@@ -417,9 +443,12 @@ export function PathwayView({
             <div className="panel space-y-6 p-6">
               <div>
                 <p className="flex items-baseline justify-between text-[12px] text-grey">
-                  Your skill gap
+                  {t("pathway.yourSkillGap")}
                   <span className="font-serif text-[18px] font-medium text-ink">
-                    {closedSkillIds.size} <span className="font-sans text-[12px] font-normal text-grey">of {role.gap.length} covered</span>
+                    {closedSkillIds.size}{" "}
+                    <span className="font-sans text-[12px] font-normal text-grey">
+                      {t("pathway.ofCovered", { count: String(role.gap.length) })}
+                    </span>
                   </span>
                 </p>
                 <ul className="mt-3 space-y-2 text-[13px]">
@@ -436,7 +465,9 @@ export function PathwayView({
                           {skill.label}
                         </span>
                         <span className="shrink-0 text-[11px] whitespace-nowrap text-grey">
-                          {stepIndex >= 0 ? `Step ${stepIndex + 1}` : "Not in this plan"}
+                          {stepIndex >= 0
+                            ? t("pathway.step", { step: String(stepIndex + 1) })
+                            : t("pathway.notInPlan")}
                         </span>
                       </li>
                     );
@@ -445,7 +476,7 @@ export function PathwayView({
               </div>
 
               <div className="border-t border-line pt-5">
-                <p className="text-[12px] text-grey">SDG targets this move advances</p>
+                <p className="text-[12px] text-grey">{t("pathway.sdgTargetsMove")}</p>
                 <div className="mt-3 flex flex-wrap gap-1.5 text-[12px]">
                   {role.sdg.map((link) => (
                     <SdgBadge key={link.target} link={link} label={targetLabels[link.target] ?? link.target} />
@@ -458,8 +489,8 @@ export function PathwayView({
 
               <div className="border-t border-line pt-5 text-[12px] text-grey">
                 <p>
-                  Built for {languagesLabel}, {hoursPerWeek} h a week, free first.
-                  {role.robust ? " This role is robust in all 3 futures." : ""}
+                  {t("pathway.builtFor", { languages: languagesLabel, hours: String(hoursPerWeek) })}
+                  {role.robust ? ` ${t("pathway.robustNote")}` : ""}
                 </p>
                 <button
                   type="button"
@@ -467,17 +498,14 @@ export function PathwayView({
                   className="mt-4 flex items-center gap-1.5 underline underline-offset-4 hover:text-ink"
                 >
                   <Trash2 className="size-3.5" strokeWidth={1.6} />
-                  Delete my data
+                  {t("pathway.deleteMyData")}
                 </button>
               </div>
             </div>
           </Reveal>
         </section>
 
-        <p className="mt-10 text-[12px] leading-relaxed text-grey/80">
-          Catalogue items were checked by the team on the date shown on each step. Weeks are estimated from listed
-          hours at your pace. Confirm cost and eligibility on the provider&rsquo;s site before you enrol.
-        </p>
+        <p className="mt-10 text-[12px] leading-relaxed text-grey/80">{t("pathway.catalogueNote")}</p>
       </main>
       <EstimateFooter />
     </div>

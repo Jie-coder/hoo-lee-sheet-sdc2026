@@ -33,14 +33,14 @@ export function SiteHeader() {
   return (
     <header className="sticky top-0 z-40 border-b border-line/80 bg-paper/90 backdrop-blur-md">
       <div className="mx-auto flex h-16 max-w-[1248px] items-center justify-between gap-4 px-4 sm:px-6">
-        <Link href="/" className="shrink-0" aria-label="Laluan home">
+        <Link href="/" className="shrink-0" aria-label={t("header.homeAria")}>
           {/* Official wordmark. next/image refuses SVG without extra config. */}
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/brand/laluan-logo.svg" alt="Laluan" className="h-7 w-auto" />
+          <img src="/brand/laluan-logo.svg" alt={t("header.logoAlt")} className="h-7 w-auto" />
         </Link>
 
         {onFlow && (
-          <nav aria-label="Progress" className="hidden min-w-0 flex-1 justify-center md:flex">
+          <nav aria-label={t("header.progressAria")} className="hidden min-w-0 flex-1 justify-center md:flex">
             <ol className="relative grid w-full max-w-[420px] grid-cols-4">
               {/* guide + fill, drawn between the first and last station centres */}
               <span aria-hidden className="absolute top-[7px] right-[12.5%] left-[12.5%] h-px bg-line" />

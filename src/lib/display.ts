@@ -1,23 +1,44 @@
 // Formatting for scores and source dates. Bands come from the shared contracts.
+import { translate, type MessageKey } from "@/lib/i18n";
 import { scoreBand, type IsoDate, type UnitScore } from "@/types/contracts";
 
-const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"] as const;
+type Translate = (key: MessageKey, vars?: Record<string, string>) => string;
+const defaultT: Translate = (key, vars) => translate("en", key, vars);
 
-export function bandLabel(value: number): "Low" | "Medium" | "High" {
+const MONTH_KEYS: ReadonlyArray<MessageKey> = [
+  "display.monthJan",
+  "display.monthFeb",
+  "display.monthMar",
+  "display.monthApr",
+  "display.monthMay",
+  "display.monthJun",
+  "display.monthJul",
+  "display.monthAug",
+  "display.monthSep",
+  "display.monthOct",
+  "display.monthNov",
+  "display.monthDec",
+];
+
+export function bandMessageKey(value: number): MessageKey {
   const band = scoreBand(value);
-  if (band === "low") return "Low";
-  if (band === "high") return "High";
-  return "Medium";
+  if (band === "low") return "display.bandLow";
+  if (band === "high") return "display.bandHigh";
+  return "display.bandMedium";
+}
+
+export function bandLabel(value: number, t: Translate = defaultT): string {
+  return t(bandMessageKey(value));
 }
 
 /** Band plus at most two decimals, e.g. "Medium · 0.48". */
-export function formatBandScore(value: number): string {
-  const parts = formatBandScoreParts(value);
+export function formatBandScore(value: number, t: Translate = defaultT): string {
+  const parts = formatBandScoreParts(value, t);
   return `${parts.band} · ${parts.value}`;
 }
 
-export function formatBandScoreParts(value: number): { band: "Low" | "Medium" | "High"; value: string } {
-  return { band: bandLabel(value), value: value.toFixed(2) };
+export function formatBandScoreParts(value: number, t: Translate = defaultT): { band: string; value: string } {
+  return { band: bandLabel(value, t), value: value.toFixed(2) };
 }
 
 export function formatFitPercent(fit: UnitScore): string {
@@ -25,24 +46,26 @@ export function formatFitPercent(fit: UnitScore): string {
 }
 
 /** One line reading the augmentation band, for the always-visible spot the long definition left. */
-export function augmentationSummary(value: UnitScore): string {
-  const band = bandLabel(value);
-  if (band === "High") return "AI can speed up most of your tasks.";
-  if (band === "Medium") return "AI can speed up some of your tasks.";
-  return "AI changes little of your daily tasks.";
+export function augmentationSummary(value: UnitScore, t: Translate = defaultT): string {
+  const band = scoreBand(value);
+  if (band === "high") return t("display.augmentationHigh");
+  if (band === "medium") return t("display.augmentationMedium");
+  return t("display.augmentationLow");
 }
 
 /** "Sep 2026" from an ISO date. */
-export function formatMonthYear(iso: IsoDate): string {
+export function formatMonthYear(iso: IsoDate, t: Translate = defaultT): string {
   const [year, month] = iso.split("-");
-  const name = MONTHS[Number(month) - 1] ?? month;
+  const key = MONTH_KEYS[Number(month) - 1];
+  const name = key ? t(key) : month;
   return `${name} ${year}`;
 }
 
 /** "19 Oct 2026" from an ISO date. */
-export function formatDayMonthYear(iso: IsoDate): string {
+export function formatDayMonthYear(iso: IsoDate, t: Translate = defaultT): string {
   const [year, month, day] = iso.split("-");
-  const name = MONTHS[Number(month) - 1] ?? month;
+  const key = MONTH_KEYS[Number(month) - 1];
+  const name = key ? t(key) : month;
   return `${Number(day)} ${name} ${year}`;
 }
 
@@ -50,14 +73,15 @@ export function formatDayMonthYear(iso: IsoDate): string {
  * Source chips read "Dataset · Month Year". A date that is not the first of
  * the month (a daily signal such as arXiv) keeps the day.
  */
-export function formatSourceDate(iso: IsoDate): string {
-  if (iso.endsWith("-01")) return formatMonthYear(iso);
-  return formatDayMonthYear(iso);
+export function formatSourceDate(iso: IsoDate, t: Translate = defaultT): string {
+  if (iso.endsWith("-01")) return formatMonthYear(iso, t);
+  return formatDayMonthYear(iso, t);
 }
 
 /** "19 Sep" from an ISO date: for tight controls where the year is obvious. */
-export function formatShortDate(iso: IsoDate): string {
+export function formatShortDate(iso: IsoDate, t: Translate = defaultT): string {
   const [, month, day] = iso.split("-");
-  const name = MONTHS[Number(month) - 1] ?? month;
+  const key = MONTH_KEYS[Number(month) - 1];
+  const name = key ? t(key) : month;
   return `${Number(day)} ${name}`;
 }

@@ -7,6 +7,7 @@ import { motion } from "framer-motion";
 import { Activity } from "lucide-react";
 import type { SignalDate } from "@/lib/analyze";
 import { formatDayMonthYear, formatShortDate } from "@/lib/display";
+import { useT } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 import type { IsoDate } from "@/types/contracts";
 
@@ -26,8 +27,9 @@ export function SignalDateToggle({
   /** Unique per page when the toggle appears more than once. */
   layoutId?: string;
 }) {
+  const { t } = useT();
   if (!dates.prior) {
-    return <span className="tag">arXiv signal · {formatDayMonthYear(dates.today)}</span>;
+    return <span className="tag">{t("signalDate.tag", { date: formatDayMonthYear(dates.today, t) })}</span>;
   }
   const iso = (date: SignalDate) => (date === "today" ? dates.today : (dates.prior as IsoDate));
 
@@ -35,9 +37,13 @@ export function SignalDateToggle({
     <div className="flex items-center gap-2">
       <span className="flex items-center gap-1 text-[12px] whitespace-nowrap text-grey">
         <Activity className="size-3.5" strokeWidth={1.6} />
-        arXiv signal
+        {t("signalDate.label")}
       </span>
-      <div role="group" aria-label="Trend signal date" className="flex items-center gap-0.5 rounded-full bg-alt p-1 text-[13px]">
+      <div
+        role="group"
+        aria-label={t("signalDate.groupLabel")}
+        className="flex items-center gap-0.5 rounded-full bg-alt p-1 text-[13px]"
+      >
         {ORDER.map((date) => {
           const selected = value === date;
           return (
@@ -45,7 +51,9 @@ export function SignalDateToggle({
               key={date}
               type="button"
               aria-pressed={selected}
-              aria-label={`${formatDayMonthYear(iso(date))}${date === "today" ? ", latest" : ", 30 days earlier"}`}
+              aria-label={t(date === "today" ? "signalDate.latest" : "signalDate.earlier", {
+                date: formatDayMonthYear(iso(date), t),
+              })}
               disabled={disabled}
               onClick={() => onChange(date)}
               className={cn(
@@ -60,7 +68,7 @@ export function SignalDateToggle({
                   transition={{ type: "spring", stiffness: 500, damping: 40 }}
                 />
               )}
-              <span className="relative">{formatShortDate(iso(date))}</span>
+              <span className="relative">{formatShortDate(iso(date), t)}</span>
             </button>
           );
         })}

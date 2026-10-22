@@ -12,6 +12,7 @@ import { Disclosure } from "@/components/ui/disclosure";
 import { SdgBadge, sdgFlagId } from "@/components/sdg-badge";
 import { SourcesDisclosure } from "@/components/sources-disclosure";
 import { formatFitPercent } from "@/lib/display";
+import { useT, type MessageKey } from "@/lib/i18n";
 import { formatMonthlyRm, salaryForRole } from "@/lib/salary";
 import { cn } from "@/lib/utils";
 import type { RoleResult, SdgLink } from "@/types/contracts";
@@ -24,7 +25,11 @@ const STATUS_ICON = {
   interest: Sprout,
 } as const;
 
-const TIER_LABEL = { direct: "Direct", supporting: "Supporting", inferred: "AI-suggested" } as const;
+const TIER_LABEL_KEY: Record<SdgLink["tier"], MessageKey> = {
+  direct: "roleCard.tier.direct",
+  supporting: "roleCard.tier.supporting",
+  inferred: "roleCard.tier.inferred",
+};
 
 const SKILLS_COLLAPSED = 3;
 
@@ -52,6 +57,7 @@ export function RoleCard({
   onFlag: (link: SdgLink) => void;
 }) {
   const reduceMotion = useReducedMotion();
+  const { t } = useT();
   const [skillsExpanded, setSkillsExpanded] = useState(false);
   const [sdgExpanded, setSdgExpanded] = useState(false);
   const fitPercent = Math.round(role.fit * 100);
@@ -92,7 +98,7 @@ export function RoleCard({
           {status.label}
         </span>
         <span className="shrink-0 font-serif text-[14px] text-grey tabular-nums">
-          #{rank} of {total}
+          {t("roleCard.rankOf", { rank: String(rank), total: String(total) })}
         </span>
       </div>
 
@@ -109,7 +115,7 @@ export function RoleCard({
               transition={{ duration: 1, ease: EASE_OUT, delay: 0.3 + (rank - 1) * 0.1 }}
             />
           </div>
-          <p className="mt-1 text-[12px] text-grey">fit with your skills</p>
+          <p className="mt-1 text-[12px] text-grey">{t("roleCard.fitWithSkills")}</p>
         </div>
       </div>
 
@@ -125,7 +131,7 @@ export function RoleCard({
             onClick={() => setSdgExpanded((current) => !current)}
             className="tag"
           >
-            {sdgExpanded ? "Show less" : `+${extraSdgCount}`}
+            {sdgExpanded ? t("roleCard.showLess") : `+${extraSdgCount}`}
           </button>
         )}
         {sdgExpanded &&
@@ -136,7 +142,7 @@ export function RoleCard({
             ))}
       </div>
 
-      <p className="mt-5 text-[12px] text-grey">Skills to build</p>
+      <p className="mt-5 text-[12px] text-grey">{t("roleCard.skillsToBuild")}</p>
       <ul className="mt-1 text-[14px]">
         {visibleSkills.map((skill) => {
           const link = skillTarget(skill.skillId);
@@ -169,23 +175,23 @@ export function RoleCard({
             onClick={() => setSkillsExpanded((current) => !current)}
             className="flex w-full items-center justify-start gap-2 py-1.5 text-left text-[13px] text-grey hover:text-ink"
           >
-            {skillsExpanded ? "Show less" : `+${extraSkills.length} more`}
+            {skillsExpanded ? t("roleCard.showLess") : t("roleCard.more", { count: String(extraSkills.length) })}
           </button>
         </div>
       )}
 
       <div className="mt-5">
-        <Disclosure summary={<span className="text-[13px] font-medium">Details</span>}>
+        <Disclosure summary={<span className="text-[13px] font-medium">{t("roleCard.details")}</span>}>
           <div className="mt-3 space-y-4 text-[13px]">
             <div>
-              <p className="mb-1 text-[12px] text-grey">Why this role</p>
+              <p className="mb-1 text-[12px] text-grey">{t("roleCard.whyThisRole")}</p>
               <p className="leading-relaxed">
                 {status.label}
                 {role.explanation ? `. ${role.explanation}` : ""}
               </p>
             </div>
             <div>
-              <p className="mb-1 text-[12px] text-grey">SDG targets and why</p>
+              <p className="mb-1 text-[12px] text-grey">{t("roleCard.sdgTargetsAndWhy")}</p>
               <ul>
                 {role.sdg.map((link) => (
                   <li key={link.target} className="flex items-start gap-2 py-1">
@@ -193,7 +199,7 @@ export function RoleCard({
                       <SdgBadge link={link} label={targetLabels[link.target] ?? link.target} plain />
                     </span>
                     <span className="pt-0.5 text-[12px] text-grey">
-                      {TIER_LABEL[link.tier]}: {link.reason}
+                      {t(TIER_LABEL_KEY[link.tier])}: {link.reason}
                     </span>
                   </li>
                 ))}
@@ -207,7 +213,7 @@ export function RoleCard({
                 className="inline-flex items-center gap-1 text-[12px] text-grey underline underline-offset-4 disabled:no-underline"
               >
                 <Flag className="size-3.5" strokeWidth={1.6} />
-                {inferredFlagged ? "Flagged" : "Flag this"}
+                {inferredFlagged ? t("roleCard.flagged") : t("roleCard.flagThis")}
               </button>
             )}
           </div>
@@ -222,15 +228,15 @@ export function RoleCard({
               <p className="text-[12px] text-grey">
                 MASCO {salary.mascoMajor} {salary.mascoMajorName} · DOSM {salary.year}
               </p>
-              <p className="text-[11px] text-grey/80">Average for the whole occupation group</p>
+              <p className="text-[11px] text-grey/80">{t("roleCard.averageOccupationGroup")}</p>
             </>
           ) : (
-            <p className="text-[13px] text-grey">Salary data not available</p>
+            <p className="text-[13px] text-grey">{t("roleCard.salaryUnavailable")}</p>
           )}
         </div>
         <button type="button" aria-pressed={chosen} onClick={() => onChoose(role)} className="btn-primary w-full">
           {chosen && <Check className="size-4" strokeWidth={2} />}
-          {chosen ? "Chosen" : "Choose this role"}
+          {chosen ? t("roleCard.chosen") : t("roleCard.chooseThisRole")}
         </button>
         <div className="pt-3">
           <SourcesDisclosure sources={role.sources} />

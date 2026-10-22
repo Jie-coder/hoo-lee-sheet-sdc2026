@@ -22,14 +22,14 @@ import {
   taskSharesFromLevels,
 } from "@/lib/interview";
 import { personaKnownSlots } from "@/lib/persona-slots";
-import { useT } from "@/lib/i18n";
+import { useT, type MessageKey } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 import { MAX_INTERVIEW_TURNS, type LanguageCode, type PartialSlots } from "@/types/contracts";
 
-const STUDY_LANGUAGES: ReadonlyArray<{ value: LanguageCode; label: string }> = [
-  { value: "en", label: "EN" },
-  { value: "ms", label: "BM" },
-  { value: "zh", label: "中文" },
+const STUDY_LANGUAGES: ReadonlyArray<{ value: LanguageCode; labelKey: MessageKey }> = [
+  { value: "en", labelKey: "interview.languageEn" },
+  { value: "ms", labelKey: "interview.languageMs" },
+  { value: "zh", labelKey: "interview.languageZh" },
 ];
 
 export function InterviewView() {
@@ -62,8 +62,8 @@ export function InterviewView() {
         return true;
       });
     const capped = unique.slice(0, 5);
-    return capped.length > 0 ? capped : ["Main task", "Secondary task"];
-  }, [profile]);
+    return capped.length > 0 ? capped : [t("interview.mainTask"), t("interview.secondaryTask")];
+  }, [profile, t]);
   const [mainTaskIndex, setMainTaskIndex] = useState(0);
   const [taskLevels, setTaskLevels] = useState<string[]>(() => tasks.map(() => "some"));
 
@@ -163,15 +163,22 @@ export function InterviewView() {
   }
 
   // Answers so far, as short chips under the card.
+  const aiUsageChip = AI_USAGE_CHIPS.find((chip) => chip.value === aiUsage);
+  const employmentChip = EMPLOYMENT_STATUS_CHIPS.find((chip) => chip.value === employmentStatus);
+  const impactChip = IMPACT_INTEREST_CHIPS.find((chip) => chip.value === impactInterest);
   const soFar: string[] = [
     activeProfile.roles[0]?.title ?? "",
-    known.ageBand ? `Age ${known.ageBand}` : "",
-    hours != null ? `${hours} h/week` : "",
-    budget != null ? (budget === 0 ? "Free only" : `Up to RM${budget}`) : "",
-    turn > 2 ? `${tasks.length} tasks weighted` : "",
-    aiUsage ? AI_USAGE_CHIPS.find((chip) => chip.value === aiUsage)?.label ?? "" : "",
-    employmentStatus ? EMPLOYMENT_STATUS_CHIPS.find((chip) => chip.value === employmentStatus)?.label.split(" (")[0] ?? "" : "",
-    impactInterest ? IMPACT_INTEREST_CHIPS.find((chip) => chip.value === impactInterest)?.label ?? "" : "",
+    known.ageBand ? t("interview.ageTag", { age: known.ageBand }) : "",
+    hours != null ? t("interview.hoursPerWeekTag", { hours: String(hours) }) : "",
+    budget != null
+      ? budget === 0
+        ? t("interview.budgetFreeOnly")
+        : t("interview.budgetUpTo", { budget: String(budget) })
+      : "",
+    turn > 2 ? t("interview.tasksWeighted", { count: String(tasks.length) }) : "",
+    aiUsageChip ? t(aiUsageChip.labelKey) : "",
+    employmentChip ? t(employmentChip.labelKey).split(" (")[0] : "",
+    impactChip ? t(impactChip.labelKey) : "",
   ].filter(Boolean);
 
   const question = INTERVIEW_QUESTIONS[turn];
@@ -204,7 +211,7 @@ export function InterviewView() {
           progress={(turn - 1) / (MAX_INTERVIEW_TURNS - 1)}
           className="absolute top-[11px] right-[2px] left-[2px] h-[2px] w-[calc(100%-4px)]"
         />
-        <ol className="absolute inset-x-0 top-0 flex justify-between" aria-label="Progress">
+        <ol className="absolute inset-x-0 top-0 flex justify-between" aria-label={t("interview.progress")}>
           {Array.from({ length: MAX_INTERVIEW_TURNS }, (_, index) => {
             const step = index + 1;
             const done = step < turn;
@@ -243,25 +250,29 @@ export function InterviewView() {
             className="p-6 sm:p-8"
           >
             <p className="text-[12px] text-grey">
-              Question <span className="tabular-nums">{turn}</span> of <span className="tabular-nums">{MAX_INTERVIEW_TURNS}</span>
+              {t("interview.questionCount", { current: String(turn), total: String(MAX_INTERVIEW_TURNS) })}
             </p>
-            <h2 className="mt-2 font-serif text-[24px] leading-snug font-medium text-balance sm:text-[28px]">{question.title}</h2>
-            {question.subtitle && <p className="mt-1.5 text-[14px] text-grey">{question.subtitle}</p>}
+            <h2 className="mt-2 font-serif text-[24px] leading-snug font-medium text-balance sm:text-[28px]">
+              {t(question.titleKey)}
+            </h2>
+            {question.subtitleKey && (
+              <p className="mt-1.5 text-[14px] text-grey">{t(question.subtitleKey)}</p>
+            )}
 
             <div className="mt-6">
               {turn === 1 && (
                 <div className="flex flex-col gap-5">
-                  <ChipRow label="Hours a week">
+                  <ChipRow label={t("interview.hoursLabel")}>
                     {HOURS_PER_WEEK_CHIPS.map((value) => (
                       <Chip key={value} selected={hours === value} onClick={() => setHours(value)}>
-                        {value} h
+                        {t("interview.hoursChip", { hours: String(value) })}
                       </Chip>
                     ))}
                   </ChipRow>
-                  <ChipRow label="Budget for courses">
+                  <ChipRow label={t("interview.budgetLabel")}>
                     {BUDGET_CHIPS.map((chip) => (
-                      <Chip key={chip.label} selected={budget === chip.value} onClick={() => setBudget(chip.value)}>
-                        {chip.label}
+                      <Chip key={chip.labelKey} selected={budget === chip.value} onClick={() => setBudget(chip.value)}>
+                        {t(chip.labelKey)}
                       </Chip>
                     ))}
                   </ChipRow>
@@ -276,7 +287,7 @@ export function InterviewView() {
                         <span className="text-[14px]">{task}</span>
                         <div className="flex flex-wrap items-center gap-1.5">
                           <Chip compact selected={mainTaskIndex === index} onClick={() => setMainTaskIndex(index)}>
-                            Main task
+                            {t("interview.mainTask")}
                           </Chip>
                           {mainTaskIndex !== index &&
                             TASK_WEIGHT_LEVELS.map((level) => (
@@ -290,7 +301,7 @@ export function InterviewView() {
                                   )
                                 }
                               >
-                                {level.label}
+                                {t(level.labelKey)}
                               </Chip>
                             ))}
                         </div>
@@ -302,36 +313,38 @@ export function InterviewView() {
 
               {turn === 3 && (
                 <div className="flex flex-col gap-5">
-                  <ChipRow label="Tools you use">
+                  <ChipRow label={t("interview.toolsLabel")}>
                     {TOOL_CHIPS.map((tool) => (
                       <Chip
-                        key={tool}
-                        selected={selectedTools.includes(tool)}
+                        key={tool.value}
+                        selected={selectedTools.includes(tool.value)}
                         onClick={() =>
                           setSelectedTools((current) =>
-                            current.includes(tool) ? current.filter((item) => item !== tool) : [...current, tool],
+                            current.includes(tool.value)
+                              ? current.filter((item) => item !== tool.value)
+                              : [...current, tool.value],
                           )
                         }
                       >
-                        {tool}
+                        {t(tool.labelKey)}
                       </Chip>
                     ))}
                   </ChipRow>
                   {selectedTools.includes("Other") && (
                     <label className="block text-[12px] text-grey">
-                      Other tools, comma separated
+                      {t("interview.otherToolsLabel")}
                       <input
                         value={otherTools}
                         onChange={(event) => setOtherTools(event.target.value)}
-                        placeholder="Notion, Airtable, Figma"
+                        placeholder={t("interview.otherToolsPlaceholder")}
                         className="field mt-1.5"
                       />
                     </label>
                   )}
-                  <ChipRow label="How much have you used AI tools?">
+                  <ChipRow label={t("interview.aiUsageLabel")}>
                     {AI_USAGE_CHIPS.map((chip) => (
                       <Chip key={chip.value} selected={aiUsage === chip.value} onClick={() => setAiUsage(chip.value)}>
-                        {chip.label}
+                        {t(chip.labelKey)}
                       </Chip>
                     ))}
                   </ChipRow>
@@ -340,17 +353,17 @@ export function InterviewView() {
 
               {turn === 4 && (
                 <div className="flex flex-col gap-5">
-                  <ChipRow label="Work status">
+                  <ChipRow label={t("interview.workStatusLabel")}>
                     {EMPLOYMENT_STATUS_CHIPS.map((chip) => (
                       <Chip key={chip.value} selected={employmentStatus === chip.value} onClick={() => setEmploymentStatus(chip.value)}>
-                        {chip.label}
+                        {t(chip.labelKey)}
                       </Chip>
                     ))}
                   </ChipRow>
-                  <ChipRow label="Registered with PERKESO?">
+                  <ChipRow label={t("interview.perkesoLabel")}>
                     {PERKESO_CHIPS.map((chip) => (
-                      <Chip key={chip.label} selected={perkeso === chip.value} onClick={() => setPerkeso(chip.value)}>
-                        {chip.label}
+                      <Chip key={chip.labelKey} selected={perkeso === chip.value} onClick={() => setPerkeso(chip.value)}>
+                        {t(chip.labelKey)}
                       </Chip>
                     ))}
                   </ChipRow>
@@ -359,21 +372,21 @@ export function InterviewView() {
 
               {turn === 5 && (
                 <div className="flex flex-col gap-5">
-                  <ChipRow label="A cause you care about">
+                  <ChipRow label={t("interview.causeLabel")}>
                     {IMPACT_INTEREST_CHIPS.map((chip) => (
                       <Chip key={chip.value} selected={impactInterest === chip.value} onClick={() => setImpactInterest(chip.value)}>
-                        {chip.label}
+                        {t(chip.labelKey)}
                       </Chip>
                     ))}
                   </ChipRow>
-                  <ChipRow label="Course language for your pathway">
+                  <ChipRow label={t("interview.courseLanguageLabel")}>
                     {STUDY_LANGUAGES.map((language) => (
                       <Chip
                         key={language.value}
                         selected={studyLanguage === language.value}
                         onClick={() => setCourseLanguages([language.value])}
                       >
-                        {language.label}
+                        {t(language.labelKey)}
                       </Chip>
                     ))}
                   </ChipRow>
@@ -381,20 +394,22 @@ export function InterviewView() {
               )}
             </div>
 
-            <p className="mt-6 text-[12px] text-grey">Why we ask: {question.why}</p>
+            <p className="mt-6 text-[12px] text-grey">
+              {t("interview.whyWeAsk", { why: t(question.whyKey) })}
+            </p>
           </motion.div>
         </AnimatePresence>
 
         <div className="flex items-center justify-between gap-3 border-t border-line px-6 py-4 sm:px-8">
           <button type="button" onClick={handleBack} disabled={turn === 1} className="btn-ghost -ml-3">
-            Back
+            {t("interview.back")}
           </button>
           <div className="flex items-center gap-2">
             <button type="button" onClick={handleSkip} className="btn-ghost">
-              Skip
+              {t("interview.skip")}
             </button>
             <button type="button" onClick={handleNext} className="btn-primary">
-              {isInterviewDone(turn) ? "See results" : "Next"}
+              {isInterviewDone(turn) ? t("interview.seeResults") : t("interview.next")}
               <ArrowRight className="size-4" strokeWidth={1.8} />
             </button>
           </div>
@@ -403,7 +418,7 @@ export function InterviewView() {
 
       {/* So far */}
       <div className="mt-5 flex flex-wrap items-center gap-1.5 text-[12px] text-grey">
-        <span className="mr-1">So far:</span>
+        <span className="mr-1">{t("interview.soFar")}</span>
         <AnimatePresence initial={false}>
           {soFar.map((item) => (
             <motion.span

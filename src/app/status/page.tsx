@@ -5,13 +5,14 @@ import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { connection } from "next/server";
 import { runHealthChecks } from "@/lib/health";
+import { translate } from "@/lib/i18n";
 
 export default function StatusPage() {
   return (
     <div className="mx-auto flex w-full max-w-2xl flex-1 flex-col gap-4 px-4 py-10">
-      <h1 className="text-2xl font-semibold tracking-tight">Status</h1>
+      <h1 className="text-2xl font-semibold tracking-tight">{translate("en", "status.title")}</h1>
       <p className="text-sm text-muted-foreground">
-        Live checks for every integration this starter depends on.
+        {translate("en", "status.lede")}
       </p>
 
       {/* Each check makes a network call, so this streams in at request
@@ -38,7 +39,7 @@ async function StatusChecks() {
                 variant={check.ok ? "default" : "destructive"}
                 className={check.ok ? "bg-green-600 text-white" : undefined}
               >
-                {check.ok ? "OK" : "Error"}
+                {check.ok ? translate("en", "status.ok") : translate("en", "status.error")}
               </Badge>
             </CardTitle>
           </CardHeader>

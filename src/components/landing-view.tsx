@@ -10,7 +10,7 @@ import { ArrowRight, Check, Database, HardDrive, ShieldCheck, UserX } from "luci
 import { CountUp, EASE_OUT, Reveal, RouteDot, RouteLine, Stagger, StaggerItem } from "@/components/motion";
 import { bandLabel, formatDayMonthYear } from "@/lib/display";
 import { useFlow } from "@/context/flow-context";
-import { useT } from "@/lib/i18n";
+import { useT, type MessageKey } from "@/lib/i18n";
 import type { LandingPreview } from "@/lib/landing-preview";
 
 const STOPS = [
@@ -26,7 +26,12 @@ const PROMISES = [
   { icon: Database, key: "landing.promise3" },
 ] as const;
 
-const BUILT_ON = ["ESCO v1.2.1", "ILO GenAI Exposure 2025", "arXiv 90-day counts", "HRD Corp e-LATiH + 11 providers"];
+const BUILT_ON: ReadonlyArray<MessageKey> = [
+  "landing.builtOnEsco",
+  "landing.builtOnIlo",
+  "landing.builtOnArxiv",
+  "landing.builtOnHrdCorp",
+];
 
 export function LandingView({ preview }: { preview: LandingPreview }) {
   const router = useRouter();
@@ -148,17 +153,19 @@ export function LandingView({ preview }: { preview: LandingPreview }) {
               ))}
             </ul>
             <div className="flex flex-wrap gap-1.5">
-              {BUILT_ON.map((label) => (
-                <span key={label} className="tag">
-                  {label}
+              {BUILT_ON.map((labelKey) => (
+                <span key={labelKey} className="tag">
+                  {t(labelKey)}
                 </span>
               ))}
             </div>
           </Reveal>
         </div>
         <p className="mt-4 text-[12px] text-grey/80">
-          Trend signal checked {formatDayMonthYear(preview.signalsAsOf)}. The preview above is the real result for
-          Aisyah, a synthetic sample profile.
+          {t("landing.trendChecked", {
+            date: formatDayMonthYear(preview.signalsAsOf, t),
+            name: preview.personaName,
+          })}
         </p>
       </section>
     </div>
@@ -170,6 +177,7 @@ export function LandingView({ preview }: { preview: LandingPreview }) {
  * role (top right), built from the sample persona's real result.
  */
 function PreviewRoute({ preview }: { preview: LandingPreview }) {
+  const { t } = useT();
   const role = preview.role;
   return (
     <div className="panel relative aspect-[5/4] w-full overflow-hidden p-5 sm:p-6">
@@ -191,18 +199,21 @@ function PreviewRoute({ preview }: { preview: LandingPreview }) {
       <div className="absolute bottom-[19%] left-[6%] max-w-[48%]">
         <p className="text-[12px] text-grey capitalize">{preview.currentTitle}</p>
         <p className="mt-0.5 font-serif text-[30px] leading-none font-medium tracking-tight sm:text-[36px]">
-          {bandLabel(preview.currentExposure)}{" "}
+          {bandLabel(preview.currentExposure, t)}{" "}
           <span className="text-[20px] text-grey/70 sm:text-[22px]">
             <CountUp value={preview.currentExposure} decimals={2} />
           </span>
         </p>
-        <p className="mt-1 text-[12px] text-grey">AI exposure today</p>
+        <p className="mt-1 text-[12px] text-grey">{t("landing.exposureToday")}</p>
       </div>
 
       {/* the plan */}
       <div className="absolute top-5 left-5 sm:top-6 sm:left-6">
         <span className="tag bg-sage-wash text-sage-dark">
-          {preview.planWeeks} weeks, {preview.mostlyFree ? "mostly free" : "mixed cost"}
+          {t("landing.planChip", {
+            weeks: String(preview.planWeeks),
+            cost: preview.mostlyFree ? t("pathway.mostlyFree") : t("pathway.mixedCost"),
+          })}
         </span>
       </div>
 
@@ -210,12 +221,12 @@ function PreviewRoute({ preview }: { preview: LandingPreview }) {
       <div className="absolute top-[12%] right-[13%] max-w-[56%] text-right">
         <p className="font-serif text-[20px] leading-tight font-medium capitalize sm:text-[24px]">{role.title}</p>
         <p className="mt-1 font-serif text-[30px] leading-none font-medium tracking-tight text-sage sm:text-[36px]">
-          {bandLabel(role.exposure)}{" "}
+          {bandLabel(role.exposure, t)}{" "}
           <span className="text-[20px] text-sage/70 sm:text-[22px]">
             <CountUp value={role.exposure} decimals={2} />
           </span>
         </p>
-        <p className="mt-1 text-[12px] text-grey">AI exposure after the move</p>
+        <p className="mt-1 text-[12px] text-grey">{t("landing.exposureAfterMove")}</p>
         {preview.robust && (
           <span className="mt-2 inline-flex items-center gap-1 rounded-full bg-sage-soft px-2.5 py-1 text-[11px] font-medium text-sage-dark">
             <ShieldCheck className="size-3" strokeWidth={1.8} />
@@ -224,7 +235,9 @@ function PreviewRoute({ preview }: { preview: LandingPreview }) {
         )}
       </div>
 
-      <p className="absolute right-5 bottom-4 text-[11px] text-grey/70 sm:right-6">Exposure is not job loss.</p>
+      <p className="absolute right-5 bottom-4 text-[11px] text-grey/70 sm:right-6">
+        {t("landing.exposureNotJobLoss")}
+      </p>
     </div>
   );
 }
