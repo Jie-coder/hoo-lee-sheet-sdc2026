@@ -1,6 +1,6 @@
-import { afterEach, describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import type { LanguageModel } from "ai";
-import { getActiveProviderName, getModel, resolveAnthropicBaseUrl } from "@/lib/ai";
+import { getActiveProviderName, getModel, resetProviderLogForTests, resolveAnthropicBaseUrl } from "@/lib/ai";
 
 // getModel() always returns a model object, never the string-shorthand branch
 // of the LanguageModel union, so this narrows it for the provider/modelId/
@@ -117,5 +117,38 @@ describe("getActiveProviderName and getModel", () => {
     expect(result.ok).toBe(true);
     if (!result.ok) return;
     expect(modelFields(result.model).provider).toBe("google.generative-ai");
+  });
+});
+
+describe("provider log line", () => {
+  afterEach(() => {
+    vi.restoreAllMocks();
+    resetProviderLogForTests();
+  });
+
+  it("logs provider and model once per process, without key or baseURL", () => {
+    const info = vi.spyOn(console, "info").mockImplementation(() => {});
+    resetProviderLogForTests();
+    process.env.AI_INTEGRATIONS_ANTHROPIC_API_KEY = "secret-key";
+    process.env.AI_INTEGRATIONS_ANTHROPIC_BASE_URL = BASE;
+    getModel();
+    getModel();
+    expect(info).toHaveBeenCalledTimes(1);
+    const line = String(info.mock.calls[0][0]);
+    expect(line).toBe("[ai] provider=anthropic model=claude-haiku-4-5");
+    expect(line).not.toContain("secret-key");
+    expect(line).not.toContain(BASE);
+  });
+
+  it("logs the gemini equivalent", () => {
+    const info = vi.spyOn(console, "info").mockImplementation(() => {});
+    resetProviderLogForTests();
+    delete process.env.AI_INTEGRATIONS_ANTHROPIC_API_KEY;
+    delete process.env.AI_INTEGRATIONS_ANTHROPIC_BASE_URL;
+    delete process.env.AI_PROVIDER;
+    process.env.GOOGLE_GENERATIVE_AI_API_KEY = "g-key";
+    getModel();
+    expect(info).toHaveBeenCalledTimes(1);
+    expect(String(info.mock.calls[0][0])).toMatch(/^\[ai\] provider=google model=\S+$/);
   });
 });

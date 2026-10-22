@@ -23,6 +23,19 @@ const MOCK_DELAY_MS = 800;
 
 const ANTHROPIC_MODEL = "claude-haiku-4-5";
 
+// Logs the selected provider/model once per process (never keys or URLs).
+let providerLogged = false;
+function logProviderOnce(provider: string, model: string): void {
+  if (providerLogged) return;
+  providerLogged = true;
+  console.info(`[ai] provider=${provider} model=${model}`);
+}
+
+// Test-only: lets tests observe the log line again.
+export function resetProviderLogForTests(): void {
+  providerLogged = false;
+}
+
 type GetModelResult =
   | { ok: true; model: LanguageModel }
   | { ok: false; error: string };
@@ -57,6 +70,7 @@ export function getModel(): GetModelResult {
       apiKey: env.anthropicApiKey,
       baseURL: resolveAnthropicBaseUrl(env.anthropicBaseUrl),
     });
+    logProviderOnce("anthropic", ANTHROPIC_MODEL);
     return { ok: true, model: anthropic(ANTHROPIC_MODEL) };
   }
 
@@ -75,6 +89,7 @@ export function getModel(): GetModelResult {
       apiKey: env.runpodApiKey,
       supportsStructuredOutputs: true, // vLLM can follow our Zod/JSON schema
     });
+    logProviderOnce("runpod", env.aiModel);
     return { ok: true, model: runpod(env.aiModel) };
   }
 
@@ -92,6 +107,7 @@ export function getModel(): GetModelResult {
 
   const google = createGoogle({ apiKey: env.googleApiKey });
   const modelId = env.aiModel || DEFAULT_GOOGLE_MODEL;
+  logProviderOnce("google", modelId);
   return { ok: true, model: google(modelId) };
 }
 
