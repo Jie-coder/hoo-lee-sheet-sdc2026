@@ -15,7 +15,7 @@
     "test": "vitest run",
     "import-data": "tsx scripts/import-data.ts",
     "build-catalogue": "tsx scripts/build-catalogue.ts",
-    "precompute-demo-cvs": "tsx scripts/precompute-demo-cvs.ts"
+    "precompute-demo-cvs": "tsx --conditions=react-server scripts/precompute-demo-cvs.ts"
   },
   "dependencies": {
     "@ai-sdk/google": "^4.0.99",
