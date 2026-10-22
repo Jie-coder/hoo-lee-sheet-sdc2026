@@ -1,1 +1,233 @@
-{}
+{
+  "c15a9bf0cb319deb514f17c93a32dce8e00e7ec1f1f9b510c6adea5d029d1dcf": {
+    "name": "Aisyah binti Rahman",
+    "roles": [
+      {
+        "title": "Administrative Clerk",
+        "years": 0.8,
+        "tasks": []
+      },
+      {
+        "title": "Customer Service Assistant (part-time)",
+        "years": 1.5,
+        "tasks": []
+      },
+      {
+        "title": "Industrial Trainee",
+        "years": 0.4,
+        "tasks": []
+      }
+    ],
+    "education": [
+      {
+        "level": "Diploma in Business Studies",
+        "field": "Business Studies"
+      }
+    ],
+    "skills": [
+      {
+        "label": "Data entry and record keeping",
+        "matched": false
+      },
+      {
+        "label": "Scheduling and coordination",
+        "matched": false
+      },
+      {
+        "label": "Report filing",
+        "matched": false
+      },
+      {
+        "label": "Customer correspondence (BM, English)",
+        "matched": false
+      },
+      {
+        "label": "Attention to detail",
+        "matched": false
+      },
+      {
+        "label": "Teamwork",
+        "matched": false
+      },
+      {
+        "label": "Microsoft Excel (sorting, filters, basic formulas)",
+        "matched": false
+      },
+      {
+        "label": "use word processing software",
+        "matched": true
+      },
+      {
+        "label": "use personal organization software",
+        "matched": true
+      },
+      {
+        "label": "WhatsApp Business",
+        "matched": false
+      },
+      {
+        "label": "Google Forms",
+        "matched": false
+      },
+      {
+        "label": "ChatGPT (tried once)",
+        "matched": false
+      }
+    ]
+  },
+  "1a38a3c8f92c7461c2ee1c81308716b9eea82ed097aaf9d57c30d215de4e6f49": {
+    "name": "Lim Jia Hui 林佳慧",
+    "roles": [
+      {
+        "title": "Senior Accounts Assistant",
+        "years": 3.9,
+        "tasks": []
+      },
+      {
+        "title": "Accounts Assistant",
+        "years": 2.7,
+        "tasks": []
+      },
+      {
+        "title": "Accounts Clerk",
+        "years": 1.4,
+        "tasks": []
+      }
+    ],
+    "education": [
+      {
+        "level": "Diploma",
+        "field": "Accounting"
+      }
+    ],
+    "skills": [
+      {
+        "label": "Full-set bookkeeping",
+        "matched": false
+      },
+      {
+        "label": "Bank and intercompany reconciliation",
+        "matched": false
+      },
+      {
+        "label": "Month-end closing",
+        "matched": false
+      },
+      {
+        "label": "Accounts payable and receivable",
+        "matched": false
+      },
+      {
+        "label": "SST and e-invoicing compliance",
+        "matched": false
+      },
+      {
+        "label": "Training junior staff",
+        "matched": false
+      },
+      {
+        "label": "AutoCount",
+        "matched": false
+      },
+      {
+        "label": "SQL Account",
+        "matched": false
+      },
+      {
+        "label": "Microsoft Excel (VLOOKUP, pivot tables)",
+        "matched": false
+      },
+      {
+        "label": "LHDN MyInvois portal",
+        "matched": false
+      },
+      {
+        "label": "Google Sheets",
+        "matched": false
+      },
+      {
+        "label": "WeChat",
+        "matched": false
+      },
+      {
+        "label": "WhatsApp",
+        "matched": false
+      }
+    ]
+  },
+  "c18a3a89000f6ed2b80df6bf85c59a063eeda5aca0524a3bb5fc65fd772d0879": {
+    "name": "Pravin a/l Murugan",
+    "roles": [
+      {
+        "title": "Customer Support Agent",
+        "years": 0.3,
+        "tasks": []
+      },
+      {
+        "title": "Warehouse Assistant",
+        "years": 1.2,
+        "tasks": []
+      }
+    ],
+    "education": [
+      {
+        "level": "Bachelor of Science (Hons)",
+        "field": "Environmental Science"
+      }
+    ],
+    "skills": [
+      {
+        "label": "communicate with customers",
+        "matched": true
+      },
+      {
+        "label": "Case logging and problem solving",
+        "matched": false
+      },
+      {
+        "label": "Environmental sampling and analysis",
+        "matched": false
+      },
+      {
+        "label": "Data cleaning and charts",
+        "matched": false
+      },
+      {
+        "label": "Report writing",
+        "matched": false
+      },
+      {
+        "label": "Working under KPIs",
+        "matched": false
+      },
+      {
+        "label": "Salesforce Service Cloud",
+        "matched": false
+      },
+      {
+        "label": "use spreadsheets software",
+        "matched": true
+      },
+      {
+        "label": "PowerPoint",
+        "matched": false
+      },
+      {
+        "label": "R (basic)",
+        "matched": false
+      },
+      {
+        "label": "QGIS (basic)",
+        "matched": false
+      },
+      {
+        "label": "Google Workspace",
+        "matched": false
+      },
+      {
+        "label": "ChatGPT",
+        "matched": false
+      }
+    ]
+  }
+}
