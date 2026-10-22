@@ -15,7 +15,7 @@ import demoResultsJson from "@/data/demo-cv-results.json";
 import mockFixture from "@/fixtures/parse-cv-mock.json";
 
 /** Current stable Gemini Flash (https://ai.google.dev/gemini-api/docs/models). */
-const DEFAULT_CV_MODEL = "gemini-2.5-flash";
+const DEFAULT_CV_MODEL = "gemini-3.8-flash";
 
 /** How long the sha256-hit and AI_MOCK paths wait before responding, so the
  * upload area's "Reading / Extracting / Matching" steps are visible even
