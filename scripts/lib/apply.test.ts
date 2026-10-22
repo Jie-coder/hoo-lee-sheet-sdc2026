@@ -5,7 +5,9 @@ import {
   applyImport,
   buildExposureRows,
   buildSourceRows,
-  computeEmbeddingsWithReuse,
+  planEmbeddings,
+  fillEmbeddings,
+  EMBED_BATCH_SIZE,
   computeWouldWriteCounts,
   buildSkillRows,
   buildOccupationSkillRows,
@@ -19,6 +21,7 @@ import {
   type ApplyInput,
   type SignalRow,
 } from "./apply";
+import { EmbeddingQuotaExceededError } from "./embedding-quota";
 import type { Embedder } from "./clients";
 import type { ExposureRow, OccupationRow, OccupationSkillRow, SourceRow } from "./row-schemas";
 import { roleFitScore, skillImportance } from "../../src/lib/scoring";
@@ -77,48 +80,35 @@ const SKILL_SELECT = "id, label_en, embedding";
 const rebuildSkillText = (row: Record<string, unknown>) =>
   skillEmbeddingText({ labelEn: String(row.label_en ?? "") });
 
-describe("computeEmbeddingsWithReuse", () => {
-  it("embeds every row when the table is empty, in one batched call", async () => {
+describe("planEmbeddings", () => {
+  it("sends every row to toEmbed when the table is empty, with nothing to reuse", async () => {
     const { client } = fakeSupabase({});
-    const embedder: Embedder = vi.fn(async (texts: string[]) => texts.map((_, i) => vector(i)));
 
-    const result = await computeEmbeddingsWithReuse(
-      client,
-      "skills",
-      SKILL_SELECT,
-      rebuildSkillText,
-      [
-        { id: "s1", text: "Data analysis" },
-        { id: "s2", text: "Communication" },
-      ],
-      embedder
-    );
+    const result = await planEmbeddings(client, "skills", SKILL_SELECT, rebuildSkillText, [
+      { id: "s1", text: "Data analysis" },
+      { id: "s2", text: "Communication" },
+    ]);
 
-    expect(embedder).toHaveBeenCalledTimes(1);
-    expect(embedder).toHaveBeenCalledWith(["Data analysis", "Communication"]);
-    expect(result.embeddings.get("s1")).toHaveLength(EMBEDDING_DIMENSIONS);
-    expect(result.embeddings.get("s2")).toHaveLength(EMBEDDING_DIMENSIONS);
+    expect(result.toEmbed).toEqual([
+      { id: "s1", text: "Data analysis" },
+      { id: "s2", text: "Communication" },
+    ]);
+    expect(result.rowEmbeddings.size).toBe(0);
     expect(result.existingIds.size).toBe(0);
   });
 
-  it("reuses a stored embedding when the text has not changed", async () => {
+  it("resumes: skips a row whose text is unchanged and already has a stored vector", async () => {
     const stored = vector(7);
     const { client } = fakeSupabase({
       skills: [{ id: "s1", label_en: "Data analysis", embedding: stored }],
     });
-    const embedder: Embedder = vi.fn(async (texts: string[]) => texts.map((_, i) => vector(99 + i)));
 
-    const result = await computeEmbeddingsWithReuse(
-      client,
-      "skills",
-      SKILL_SELECT,
-      rebuildSkillText,
-      [{ id: "s1", text: "Data analysis" }],
-      embedder
-    );
+    const result = await planEmbeddings(client, "skills", SKILL_SELECT, rebuildSkillText, [
+      { id: "s1", text: "Data analysis" },
+    ]);
 
-    expect(embedder).not.toHaveBeenCalled();
-    expect(result.embeddings.get("s1")).toEqual(stored);
+    expect(result.toEmbed).toEqual([]);
+    expect(result.rowEmbeddings.get("s1")).toEqual(stored);
     expect(result.existingIds).toEqual(new Set(["s1"]));
   });
 
@@ -126,19 +116,41 @@ describe("computeEmbeddingsWithReuse", () => {
     const { client } = fakeSupabase({
       skills: [{ id: "s1", label_en: "Old label", embedding: vector(1) }],
     });
-    const embedder: Embedder = vi.fn(async (texts: string[]) => texts.map((_, i) => vector(50 + i)));
 
-    const result = await computeEmbeddingsWithReuse(
-      client,
-      "skills",
-      SKILL_SELECT,
-      rebuildSkillText,
-      [{ id: "s1", text: "New label" }],
-      embedder
-    );
+    const result = await planEmbeddings(client, "skills", SKILL_SELECT, rebuildSkillText, [
+      { id: "s1", text: "New label" },
+    ]);
 
-    expect(embedder).toHaveBeenCalledWith(["New label"]);
-    expect(result.embeddings.get("s1")).toEqual(vector(50));
+    expect(result.toEmbed).toEqual([{ id: "s1", text: "New label" }]);
+  });
+
+  it("preserves the stale-but-valid stored vector for a changed-text row, instead of nulling it out", async () => {
+    const stale = vector(1);
+    const { client } = fakeSupabase({
+      skills: [{ id: "s1", label_en: "Old label", embedding: stale }],
+    });
+
+    const result = await planEmbeddings(client, "skills", SKILL_SELECT, rebuildSkillText, [
+      { id: "s1", text: "New label" },
+    ]);
+
+    // Still queued for a fresh embedding...
+    expect(result.toEmbed).toEqual([{ id: "s1", text: "New label" }]);
+    // ...but the non-embedding upsert must not write null in the meantime.
+    expect(result.rowEmbeddings.get("s1")).toEqual(stale);
+  });
+
+  it("queues a row for embedding with nothing to preserve when the stored embedding is missing or the wrong size", async () => {
+    const { client } = fakeSupabase({
+      skills: [{ id: "s1", label_en: "Data analysis", embedding: null }],
+    });
+
+    const result = await planEmbeddings(client, "skills", SKILL_SELECT, rebuildSkillText, [
+      { id: "s1", text: "Data analysis" },
+    ]);
+
+    expect(result.toEmbed).toEqual([{ id: "s1", text: "Data analysis" }]);
+    expect(result.rowEmbeddings.has("s1")).toBe(false);
   });
 
   it("reuses a stored occupation embedding when title_en + description together are unchanged", async () => {
@@ -148,21 +160,19 @@ describe("computeEmbeddingsWithReuse", () => {
         { id: "o1", title_en: "Data Analyst", description: "Analyses data.", embedding: stored },
       ],
     });
-    const embedder: Embedder = vi.fn(async (texts: string[]) => texts.map((_, i) => vector(99 + i)));
 
     const occupation = { titleEn: "Data Analyst", description: "Analyses data." };
-    const result = await computeEmbeddingsWithReuse(
+    const result = await planEmbeddings(
       client,
       "occupations",
       "id, title_en, description, embedding",
       (row) =>
         occupationEmbeddingText({ titleEn: String(row.title_en ?? ""), description: String(row.description ?? "") }),
-      [{ id: "o1", text: occupationEmbeddingText(occupation) }],
-      embedder
+      [{ id: "o1", text: occupationEmbeddingText(occupation) }]
     );
 
-    expect(embedder).not.toHaveBeenCalled();
-    expect(result.embeddings.get("o1")).toEqual(stored);
+    expect(result.toEmbed).toEqual([]);
+    expect(result.rowEmbeddings.get("o1")).toEqual(stored);
   });
 
   it("re-embeds an occupation when only the description changed (title_en alone still matches)", async () => {
@@ -171,21 +181,81 @@ describe("computeEmbeddingsWithReuse", () => {
         { id: "o1", title_en: "Data Analyst", description: "Old description.", embedding: vector(1) },
       ],
     });
-    const embedder: Embedder = vi.fn(async (texts: string[]) => texts.map((_, i) => vector(50 + i)));
 
     const occupation = { titleEn: "Data Analyst", description: "New description." };
-    const result = await computeEmbeddingsWithReuse(
+    const result = await planEmbeddings(
       client,
       "occupations",
       "id, title_en, description, embedding",
       (row) =>
         occupationEmbeddingText({ titleEn: String(row.title_en ?? ""), description: String(row.description ?? "") }),
-      [{ id: "o1", text: occupationEmbeddingText(occupation) }],
-      embedder
+      [{ id: "o1", text: occupationEmbeddingText(occupation) }]
     );
 
-    expect(embedder).toHaveBeenCalledWith([occupationEmbeddingText(occupation)]);
-    expect(result.embeddings.get("o1")).toEqual(vector(50));
+    expect(result.toEmbed).toEqual([{ id: "o1", text: occupationEmbeddingText(occupation) }]);
+  });
+});
+
+describe("fillEmbeddings", () => {
+  it("writes each batch as soon as it's computed, in batches of EMBED_BATCH_SIZE", async () => {
+    const { client, upserts } = fakeSupabase({});
+    const toEmbed = Array.from({ length: EMBED_BATCH_SIZE + 10 }, (_, i) => ({ id: `s${i}`, text: `text ${i}` }));
+    const embedCalls: string[][] = [];
+    const embedder: Embedder = vi.fn(async (texts: string[]) => {
+      embedCalls.push(texts);
+      return texts.map((_, i) => vector(i));
+    });
+
+    const result = await fillEmbeddings(client, "skills", toEmbed, embedder);
+
+    expect(result).toEqual({
+      table: "skills",
+      total: EMBED_BATCH_SIZE + 10,
+      done: EMBED_BATCH_SIZE + 10,
+      remaining: 0,
+      stoppedByQuota: false,
+    });
+    expect(embedCalls).toHaveLength(2);
+    expect(embedCalls[0]).toHaveLength(EMBED_BATCH_SIZE);
+    expect(embedCalls[1]).toHaveLength(10);
+    const skillsUpserts = upserts.filter((u) => u.table === "skills");
+    expect(skillsUpserts).toHaveLength(2);
+    expect(skillsUpserts[0].rows).toHaveLength(EMBED_BATCH_SIZE);
+    expect(skillsUpserts[1].rows).toHaveLength(10);
+  });
+
+  it("stops cleanly on a daily/non-recoverable quota, keeping already-written batches and reporting done/remaining", async () => {
+    const { client, upserts } = fakeSupabase({});
+    const toEmbed = Array.from({ length: EMBED_BATCH_SIZE + 10 }, (_, i) => ({ id: `s${i}`, text: `text ${i}` }));
+    let calls = 0;
+    const embedder: Embedder = vi.fn(async (texts: string[]) => {
+      calls += 1;
+      if (calls === 2) throw new EmbeddingQuotaExceededError("Gemini daily embedding quota exceeded");
+      return texts.map((_, i) => vector(i));
+    });
+
+    const result = await fillEmbeddings(client, "skills", toEmbed, embedder);
+
+    expect(result).toEqual({
+      table: "skills",
+      total: EMBED_BATCH_SIZE + 10,
+      done: EMBED_BATCH_SIZE,
+      remaining: 10,
+      stoppedByQuota: true,
+    });
+    // The first, successful batch must already be durable.
+    expect(upserts.filter((u) => u.table === "skills")).toHaveLength(1);
+  });
+
+  it("lets a non-quota error propagate instead of swallowing it", async () => {
+    const { client } = fakeSupabase({});
+    const embedder: Embedder = vi.fn(async () => {
+      throw new Error("network down");
+    });
+
+    await expect(fillEmbeddings(client, "skills", [{ id: "s1", text: "x" }], embedder)).rejects.toThrow(
+      "network down"
+    );
   });
 });
 
@@ -367,7 +437,7 @@ describe("buildOccupationSkillRows", () => {
     ]);
   });
 
-  it("upserts occupation_skills last, onConflict occupation_id,skill_id, after skills and occupations", async () => {
+  it("upserts occupation_skills onConflict occupation_id,skill_id, after skills/occupations are written but before their embeddings are filled in", async () => {
     const { client, upserts } = fakeSupabase({});
     const embedder: Embedder = vi.fn(async (texts: string[]) => texts.map((_, i) => vector(i)));
 
@@ -390,9 +460,12 @@ describe("buildOccupationSkillRows", () => {
 
     const tables = upserts.map((u) => u.table);
     const linkIndex = tables.indexOf("occupation_skills");
-    expect(linkIndex).toBe(tables.length - 1);
+    // skills and occupations are each upserted twice: once with the catalogue
+    // row (before any embedding call), once more to fill in the embedding.
     expect(tables.indexOf("skills")).toBeLessThan(linkIndex);
     expect(tables.indexOf("occupations")).toBeLessThan(linkIndex);
+    expect(linkIndex).toBeLessThan(tables.lastIndexOf("skills"));
+    expect(linkIndex).toBeLessThan(tables.lastIndexOf("occupations"));
     expect(upserts[linkIndex].onConflict).toBe(OCCUPATION_SKILLS_ON_CONFLICT);
     expect(OCCUPATION_SKILLS_ON_CONFLICT).toBe("occupation_id,skill_id");
   });
@@ -471,7 +544,8 @@ describe("applyImport", () => {
       },
     ]);
 
-    // A brand-new skill: gets defaults for the NOT NULL columns (neutral importance, not 0).
+    // A brand-new skill: the main upsert gets defaults for the NOT NULL
+    // columns (neutral importance, not 0) with no embedding yet...
     const skillsUpserts = upserts.filter((u) => u.table === "skills");
     const newSkillRow = skillsUpserts.flatMap((u) => u.rows).find((row) => row.id === "00000000-0000-0000-0000-000000000001");
     expect(newSkillRow).toMatchObject({
@@ -480,10 +554,14 @@ describe("applyImport", () => {
       is_green: false,
       base_importance: DEFAULT_BASE_IMPORTANCE,
     });
-    expect((newSkillRow?.embedding as number[]).length).toBe(EMBEDDING_DIMENSIONS);
 
-    const occupationsUpsert = upserts.find((u) => u.table === "occupations");
-    expect((occupationsUpsert?.rows[0].embedding as number[]).length).toBe(EMBEDDING_DIMENSIONS);
+    // ...and a later upsert (fillEmbeddings) sets the embedding once computed.
+    const embeddedSkillRow = skillsUpserts.flatMap((u) => u.rows).findLast((row) => row.id === "00000000-0000-0000-0000-000000000001");
+    expect((embeddedSkillRow?.embedding as number[]).length).toBe(EMBEDDING_DIMENSIONS);
+
+    const occupationsUpserts = upserts.filter((u) => u.table === "occupations");
+    const embeddedOccupationRow = occupationsUpserts.flatMap((u) => u.rows).findLast((row) => row.id === "o001");
+    expect((embeddedOccupationRow?.embedding as number[]).length).toBe(EMBEDDING_DIMENSIONS);
 
     expect(result.skipped).toEqual([]);
   });
@@ -698,5 +776,123 @@ describe("applyImport", () => {
     for (const row of exposureRows) {
       expect(sourceNames.has(row.source_name as string)).toBe(true);
     }
+  });
+
+  it("resumes: never calls the embedder for a skill/occupation whose text is unchanged and already has a vector", async () => {
+    const storedSkillEmbedding = vector(1);
+    const storedOccupationEmbedding = vector(2);
+    const { client, upserts } = fakeSupabase({
+      skills: [{ id: "s1", label_en: "Data analysis", embedding: storedSkillEmbedding }],
+      occupations: [
+        { id: "o001", title_en: "software developer", description: "Writes software.", embedding: storedOccupationEmbedding },
+      ],
+    });
+    const embedder: Embedder = vi.fn(async (texts: string[]) => texts.map((_, i) => vector(99 + i)));
+
+    const input: ApplyInput = {
+      ...EMPTY_INPUT,
+      skills: [{ id: "s1", escoUri: "https://data.europa.eu/esco/skill/s1", labelEn: "Data analysis" }],
+      occupations: [occupationRow({ id: "o001", description: "Writes software." })],
+    };
+
+    const result = await applyImport(input, client, embedder);
+
+    expect(embedder).not.toHaveBeenCalled();
+    expect(result.embeddings).toEqual([
+      { table: "skills", total: 0, done: 0, remaining: 0, stoppedByQuota: false },
+      { table: "occupations", total: 0, done: 0, remaining: 0, stoppedByQuota: false },
+    ]);
+    const skillRow = upserts.filter((u) => u.table === "skills").flatMap((u) => u.rows).find((r) => r.id === "s1");
+    const occupationRowUpserted = upserts
+      .filter((u) => u.table === "occupations")
+      .flatMap((u) => u.rows)
+      .find((r) => r.id === "o001");
+    expect(skillRow?.embedding).toEqual(storedSkillEmbedding);
+    expect(occupationRowUpserted?.embedding).toEqual(storedOccupationEmbedding);
+  });
+
+  it("writes every non-embedding table even when the embedder fails immediately, and reports the quota stop", async () => {
+    const { client, upserts } = fakeSupabase({});
+    const embedder: Embedder = vi.fn(async () => {
+      throw new EmbeddingQuotaExceededError("Gemini daily embedding quota exceeded: limit 100");
+    });
+
+    const input: ApplyInput = {
+      ...EMPTY_INPUT,
+      skills: [{ id: "s1", escoUri: "https://data.europa.eu/esco/skill/s1", labelEn: "Data analysis" }],
+      occupations: [occupationRow()],
+      sources: [sourceRow()],
+      exposure: [exposureRow()],
+      signals: [signalRow()],
+      occupationSkills: [occupationSkillRow({ occupationId: "o001", skillUri: "https://data.europa.eu/esco/skill/s1" })],
+    };
+
+    const result = await applyImport(input, client, embedder);
+
+    // Every non-embedding table still landed, with no error.
+    for (const table of ["sources", "exposure", "signals", "occupation_skills"]) {
+      const tableResult = result.tables.find((t) => t.table === table);
+      expect(tableResult).toMatchObject({ upserted: 1 });
+      expect(tableResult?.error).toBeUndefined();
+    }
+    // Both skills and occupations rows are still written (with embedding null: brand new rows, nothing to preserve).
+    expect(result.tables.find((t) => t.table === "skills")).toMatchObject({ upserted: 1 });
+    expect(result.tables.find((t) => t.table === "occupations")).toMatchObject({ upserted: 1 });
+    const skillRow = upserts.filter((u) => u.table === "skills")[0]?.rows[0];
+    expect(skillRow?.embedding).toBeNull();
+
+    // Embedding itself stopped immediately; occupations is never even attempted once skills has already hit the quota.
+    expect(result.embeddings).toEqual([
+      { table: "skills", total: 1, done: 0, remaining: 1, stoppedByQuota: true },
+      { table: "occupations", total: 1, done: 0, remaining: 1, stoppedByQuota: true },
+    ]);
+    expect(embedder).toHaveBeenCalledTimes(1);
+  });
+
+  it("stops embedding partway through a large skills batch on a quota error, with every table already written", async () => {
+    const { client, upserts } = fakeSupabase({});
+    const skillCount = EMBED_BATCH_SIZE + 5;
+    const skills = Array.from({ length: skillCount }, (_, i) => ({
+      id: `s${i}`,
+      escoUri: `https://data.europa.eu/esco/skill/s${i}`,
+      labelEn: `skill ${i}`,
+    }));
+    let embedCalls = 0;
+    const embedder: Embedder = vi.fn(async (texts: string[]) => {
+      embedCalls += 1;
+      if (embedCalls === 2) throw new EmbeddingQuotaExceededError("Gemini daily embedding quota exceeded");
+      return texts.map((_, i) => vector(i));
+    });
+
+    const input: ApplyInput = {
+      ...EMPTY_INPUT,
+      skills,
+      courses: [
+        {
+          id: "c001",
+          title: "t",
+          provider: "p",
+          url: "https://example.com",
+          languages: ["en"],
+          hours: 1,
+          costType: "free",
+          certificate: true,
+          skillIds: [],
+          lastChecked: "2026-10-01",
+          mode: "online",
+        },
+      ],
+    };
+
+    const result = await applyImport(input, client, embedder);
+
+    expect(result.tables.find((t) => t.table === "courses")).toMatchObject({ upserted: 1 });
+    expect(result.embeddings).toEqual([
+      { table: "skills", total: skillCount, done: EMBED_BATCH_SIZE, remaining: 5, stoppedByQuota: true },
+      { table: "occupations", total: 0, done: 0, remaining: 0, stoppedByQuota: true },
+    ]);
+    // The first batch's vectors are already durable, written as their own upsert.
+    const embeddingFillUpserts = upserts.filter((u) => u.table === "skills" && u.rows.length === EMBED_BATCH_SIZE);
+    expect(embeddingFillUpserts).toHaveLength(1);
   });
 });

@@ -5,8 +5,9 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { EMBEDDING_DIMENSIONS } from "../src/types/contracts";
 import { pathToFileURL } from "node:url";
-import { isDirectRun, runCli, runImport } from "./import-data";
+import { EXIT_CODE_EMBEDDINGS_INCOMPLETE, isDirectRun, runCli, runImport } from "./import-data";
 import type { Embedder } from "./lib/clients";
+import { EmbeddingQuotaExceededError } from "./lib/embedding-quota";
 
 describe("isDirectRun", () => {
   const scriptPath = join(process.cwd(), "scripts", "import-data.ts");
@@ -253,16 +254,69 @@ describe("runImport (--apply)", () => {
     const coursesUpsert = upserts.find((u) => u.table === "courses");
     expect(coursesUpsert?.rows.length).toBe(3);
 
-    const occupationsUpsert = upserts.find((u) => u.table === "occupations");
-    expect(occupationsUpsert?.rows.every((row) => (row.embedding as number[]).length === EMBEDDING_DIMENSIONS)).toBe(
-      true
-    );
+    // occupations/skills are upserted twice: once before any embedding call
+    // (so the catalogue is durable even if Gemini never answers), and once
+    // more — the last upsert for that table — once embeddings are computed.
+    const occupationsUpserts = upserts.filter((u) => u.table === "occupations");
+    const finalOccupationsUpsert = occupationsUpserts[occupationsUpserts.length - 1];
+    expect(
+      finalOccupationsUpsert?.rows.every((row) => (row.embedding as number[]).length === EMBEDDING_DIMENSIONS)
+    ).toBe(true);
 
     const signalsUpsert = upserts.find((u) => u.table === "signals");
     expect(signalsUpsert?.rows.length).toBeGreaterThan(0);
     expect(signalsUpsert?.rows.every((row) => !("id" in row))).toBe(true);
 
     expect(result.applyResult?.skipped).toEqual([]);
+    expect(result.applyResult?.embeddings).toEqual([
+      { table: "skills", total: 3, done: 3, remaining: 0, stoppedByQuota: false },
+      { table: "occupations", total: 2, done: 2, remaining: 0, stoppedByQuota: false },
+    ]);
+  });
+
+  it("writes every table but exits 3 with an INCOMPLETE message when Gemini's quota stops embeddings partway", async () => {
+    const cwd = mkdtempSync(join(tmpdir(), "laluan-cli-"));
+    try {
+      writeFileSync(
+        join(cwd, ".env.local"),
+        "SUPABASE_URL=https://example.supabase.co\nSUPABASE_SERVICE_ROLE_KEY=service-role-key\nGEMINI_API_KEY=gemini-key\n"
+      );
+      const createSupabaseClient = vi.fn(
+        () =>
+          ({
+            from() {
+              return {
+                upsert() {
+                  return Promise.resolve({ error: null });
+                },
+                select() {
+                  return { in() { return Promise.resolve({ data: [] }); } };
+                },
+              };
+            },
+          }) as unknown as SupabaseClient
+      );
+      const createEmbedder = vi.fn(
+        () =>
+          (async () => {
+            throw new EmbeddingQuotaExceededError("Gemini daily embedding quota exceeded: limit 100");
+          }) as Embedder
+      );
+
+      const result = await runCli(["--apply", "--dir", join(process.cwd(), VALID_DIR)], cwd, {
+        createSupabaseClient,
+        createEmbedder,
+      });
+
+      expect(result.exitCode).toBe(EXIT_CODE_EMBEDDINGS_INCOMPLETE);
+      const output = result.stdout.join("\n");
+      expect(output).toContain("INCOMPLETE");
+      expect(output).toMatch(/skills: embedded 0\/3/);
+      expect(output).toMatch(/occupations: embedded 0\/2/);
+      expect(output).toContain("Rerun the same command to resume");
+    } finally {
+      rmSync(cwd, { recursive: true, force: true });
+    }
   });
 });
 
