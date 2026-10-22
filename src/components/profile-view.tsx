@@ -1,24 +1,33 @@
-// Profile: pick a sample CV (or upload a synthetic one), then check and
-// edit what was read from it before continuing to the interview.
+// Profile: upload a synthetic CV (drag & drop or browse), watch it parse,
+// then check and edit what was read from it before continuing to the interview.
 "use client";
 
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
-import { ArrowRight, Check, FileText, Plus, Upload, X } from "lucide-react";
+import { ArrowRight, Check, Loader2, Plus, Upload, X } from "lucide-react";
 import { toast } from "sonner";
 import { CourseLanguageToggle } from "@/components/course-language-toggle";
 import { EASE_OUT, SlideIn, SPRING } from "@/components/motion";
 import { cn } from "@/lib/utils";
-import { useFlow } from "@/context/flow-context";
-import { PERSONA_IDS, PERSONAS, type PersonaId } from "@/mocks/personas";
+import { CV_MIME_TYPE, MAX_CV_BYTES } from "@/lib/cv-upload-limits";
+import { useFlow, type UploadedCv } from "@/context/flow-context";
+
+/** Shown one at a time while POST /api/parse-cv is in flight. */
+const UPLOAD_STEPS = ["Reading CV", "Extracting skills", "Matching to ESCO"] as const;
+
+/** How often the step indicator advances while waiting for the response. The
+ * server does the real work in one call; this just keeps the wait legible. */
+const STEP_INTERVAL_MS = 900;
 
 export function ProfileView() {
   const router = useRouter();
-  const { hydrated, consent, profile, selectPersona, startUploadProfile, updateProfile, addSkill, removeSkill, toggleCourseLanguage } =
+  const { hydrated, consent, profile, setUploadedProfile, updateProfile, addSkill, removeSkill, toggleCourseLanguage } =
     useFlow();
   const [addingSkill, setAddingSkill] = useState(false);
   const [skillDraft, setSkillDraft] = useState("");
+  const [uploading, setUploading] = useState(false);
+  const [stepIndex, setStepIndex] = useState(0);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const reduce = useReducedMotion();
 
@@ -26,9 +35,39 @@ export function ProfileView() {
     if (hydrated && !consent) router.replace("/");
   }, [hydrated, consent, router]);
 
-  function handleUploadFile() {
-    startUploadProfile();
-    toast.success("Mock parse complete. Fill in or edit the details below.");
+  async function handleFile(file: File) {
+    if (file.type !== CV_MIME_TYPE) {
+      toast.error("Please upload a PDF.");
+      return;
+    }
+    if (file.size > MAX_CV_BYTES) {
+      toast.error("That CV is over 2 MB. Please upload a smaller PDF.");
+      return;
+    }
+
+    setUploading(true);
+    setStepIndex(0);
+    const stepTimer = setInterval(() => {
+      setStepIndex((index) => Math.min(index + 1, UPLOAD_STEPS.length - 1));
+    }, STEP_INTERVAL_MS);
+
+    try {
+      const formData = new FormData();
+      formData.append("file", file, file.name);
+      const response = await fetch("/api/parse-cv", { method: "POST", body: formData });
+      const body = await response.json().catch(() => null);
+      if (!response.ok || !body) {
+        toast.error(body?.error ?? "Could not read that CV. Please try another file.");
+        return;
+      }
+      setUploadedProfile(body as UploadedCv);
+      toast.success("Parsed. Check the details below.");
+    } catch {
+      toast.error("Could not reach the server. Please try again.");
+    } finally {
+      clearInterval(stepTimer);
+      setUploading(false);
+    }
   }
 
   function handleAddSkillSubmit() {
@@ -70,7 +109,6 @@ export function ProfileView() {
     updateProfile({ education: profile.education.filter((_, i) => i !== index) });
   }
 
-  const persona = profile && profile.personaId !== "upload" ? PERSONAS[profile.personaId] : null;
   const matchedCount = profile?.skills.filter((skill) => skill.matched).length ?? 0;
 
   return (
@@ -81,51 +119,53 @@ export function ProfileView() {
         transition={{ duration: 0.6, ease: EASE_OUT }}
         className="pt-10 pb-8"
       >
-        <h1 className="font-serif text-[34px] leading-[1.05] font-medium tracking-tight md:text-[44px]">Pick a sample CV</h1>
-        <p className="mt-2 text-[15px] text-grey">Three fictional people, three different situations.</p>
+        <h1 className="font-serif text-[34px] leading-[1.05] font-medium tracking-tight md:text-[44px]">Upload your CV</h1>
+        <p className="mt-2 text-[15px] text-grey">A synthetic PDF. We read the skills so you can check them.</p>
       </motion.section>
 
-      <motion.section
-        initial={reduce ? false : "hidden"}
-        animate="show"
-        variants={{ show: { transition: { staggerChildren: 0.08, delayChildren: 0.1 } } }}
-        className="grid grid-cols-1 gap-4 md:grid-cols-3"
-      >
-        {PERSONA_IDS.map((id) => (
-          <PersonaCard key={id} id={id} selected={profile?.personaId === id} onSelect={() => selectPersona(id)} />
-        ))}
-      </motion.section>
-
-      {/* Upload (secondary) */}
       <motion.div
         initial={reduce ? false : { opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ delay: 0.5, duration: 0.5 }}
+        transition={{ duration: 0.5 }}
+        data-testid="profile-upload-dropzone"
         onDragOver={(event) => event.preventDefault()}
         onDrop={(event) => {
           event.preventDefault();
-          handleUploadFile();
+          const file = event.dataTransfer.files?.[0];
+          if (file && !uploading) void handleFile(file);
         }}
-        className="mt-4 flex flex-col gap-3 rounded-3xl border border-dashed border-line px-5 py-4 text-[13px] text-grey sm:flex-row sm:items-center sm:justify-between"
+        className="flex flex-col items-center gap-3 rounded-3xl border border-dashed border-line px-5 py-10 text-center text-[13px] text-grey"
       >
-        <span className="flex items-center gap-2.5">
-          <Upload className="size-4" strokeWidth={1.6} />
-          <span>
-            Or drop a synthetic CV here, or{" "}
-            <button type="button" onClick={() => fileInputRef.current?.click()} className="text-ink underline underline-offset-4">
-              browse
-            </button>
-            . PDF, up to 2 MB.
-          </span>
-        </span>
-        <span>Never a real CV: no real names, IC or phone numbers.</span>
+        {uploading ? (
+          <UploadProgress stepIndex={stepIndex} />
+        ) : (
+          <>
+            <Upload className="size-6" strokeWidth={1.6} />
+            <span>
+              Drop a synthetic CV here, or{" "}
+              <button
+                type="button"
+                data-testid="profile-upload-browse"
+                onClick={() => fileInputRef.current?.click()}
+                className="text-ink underline underline-offset-4"
+              >
+                browse
+              </button>
+              . PDF, up to 2 MB.
+            </span>
+            <span>Never a real CV: no real names, IC or phone numbers.</span>
+          </>
+        )}
         <input
           ref={fileInputRef}
           type="file"
-          accept="application/pdf"
+          accept={CV_MIME_TYPE}
+          data-testid="profile-upload-input"
           className="hidden"
+          disabled={uploading}
           onChange={(event) => {
-            if (event.target.files?.length) handleUploadFile();
+            const file = event.target.files?.[0];
+            if (file) void handleFile(file);
             event.target.value = "";
           }}
         />
@@ -137,19 +177,14 @@ export function ProfileView() {
           <SlideIn key={profile.personaId} className="panel mt-8 p-6 sm:p-8">
             <div className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
               <div>
-                <h2 className="font-serif text-[26px] font-medium tracking-tight">
-                  {persona ? `Read from ${persona.name.split(" ")[0]}'s CV` : "Your uploaded profile"}
-                </h2>
+                <h2 className="font-serif text-[26px] font-medium tracking-tight">Your profile</h2>
                 <p className="mt-1 text-[14px] text-grey">Remove anything wrong, add what is missing.</p>
               </div>
-              {persona && (
-                <div className="flex flex-wrap gap-1.5">
-                  <span className="tag">
-                    {matchedCount} of {profile.skills.length} skills matched to ESCO
-                  </span>
-                  <span className="tag">Parsed {persona.parsedOn}</span>
-                </div>
-              )}
+              <div className="flex flex-wrap gap-1.5">
+                <span className="tag">
+                  {matchedCount} of {profile.skills.length} skills matched to ESCO
+                </span>
+              </div>
             </div>
 
             <div className="mt-7 grid grid-cols-1 gap-8 md:grid-cols-12">
@@ -271,7 +306,7 @@ export function ProfileView() {
                         <textarea
                           value={item.field}
                           onChange={(event) => updateEducation(index, { field: event.target.value })}
-                          placeholder="Institution"
+                          placeholder="Field of study"
                           rows={1}
                           className="field field-sizing-content min-w-[8rem] flex-1 resize-none px-2 py-1 text-[13px]"
                         />
@@ -312,75 +347,24 @@ export function ProfileView() {
   );
 }
 
-function PersonaCard({ id, selected, onSelect }: { id: PersonaId; selected: boolean; onSelect: () => void }) {
-  const persona = PERSONAS[id];
-  const reduce = useReducedMotion();
+function UploadProgress({ stepIndex }: { stepIndex: number }) {
   return (
-    <motion.article
-      variants={{ hidden: { opacity: 0, y: 16 }, show: { opacity: 1, y: 0, transition: { duration: 0.55, ease: EASE_OUT } } }}
-      whileHover={reduce ? undefined : { y: -3 }}
-      className={cn(
-        "panel relative flex cursor-pointer flex-col p-6 transition-[border-color,box-shadow] duration-200",
-        selected ? "border-ink shadow-[0_0_0_1px_var(--color-ink)]" : "hover:border-grey/40",
-      )}
-      onClick={onSelect}
-      role="radio"
-      aria-checked={selected}
-      tabIndex={0}
-      onKeyDown={(event) => {
-        if (event.key === "Enter" || event.key === " ") {
-          event.preventDefault();
-          onSelect();
-        }
-      }}
-    >
-      <div className="flex items-start justify-between gap-3">
-        <span
-          aria-hidden
-          className={cn(
-            "flex size-11 items-center justify-center rounded-full font-serif text-[16px] font-medium transition-colors",
-            selected ? "bg-ink text-paper" : "bg-alt text-grey",
+    <ul className="flex flex-col gap-2" data-testid="profile-upload-progress">
+      {UPLOAD_STEPS.map((step, index) => (
+        <li
+          key={step}
+          className={cn("flex items-center gap-2", index === stepIndex ? "text-ink" : "text-grey")}
+        >
+          {index < stepIndex ? (
+            <Check className="size-3.5" strokeWidth={2} />
+          ) : index === stepIndex ? (
+            <Loader2 className="size-3.5 animate-spin" strokeWidth={2} />
+          ) : (
+            <span className="size-3.5" />
           )}
-        >
-          {persona.initials}
-        </span>
-        <motion.span
-          initial={false}
-          animate={{ scale: selected ? 1 : 0.6, opacity: selected ? 1 : 0 }}
-          transition={SPRING}
-          className="flex size-6 items-center justify-center rounded-full bg-sage text-paper"
-        >
-          <Check className="size-3.5" strokeWidth={2.4} />
-        </motion.span>
-      </div>
-      <h3 className="mt-5 font-serif text-[24px] leading-tight font-medium">
-        {persona.name}
-        {persona.nameLocal && <span className="ml-2 font-sans text-[16px] font-normal text-grey">{persona.nameLocal}</span>}
-      </h3>
-      <p className="mt-1.5 text-[14px]">
-        {persona.jobTitle}, <span className="tabular-nums">{persona.age}</span>
-      </p>
-      <p className="text-[13px] text-grey">{persona.location}</p>
-      <p className="mt-3 text-[13px] leading-relaxed text-grey">{persona.summary}</p>
-      <div className="mt-5 flex items-center justify-between border-t border-line pt-4 text-[12px]">
-        <a
-          href={persona.cvUrl}
-          target="_blank"
-          rel="noreferrer"
-          onClick={(event) => event.stopPropagation()}
-          className="flex items-center gap-1.5 text-grey underline-offset-4 hover:text-ink hover:underline"
-        >
-          <FileText className="size-3.5" strokeWidth={1.6} />
-          View CV
-        </a>
-        <span className="flex gap-1">
-          {persona.courseLanguages.map((language) => (
-            <span key={language} className="tag">
-              {language === "en" ? "EN" : language === "ms" ? "BM" : "中文"}
-            </span>
-          ))}
-        </span>
-      </div>
-    </motion.article>
+          {step}
+        </li>
+      ))}
+    </ul>
   );
 }
