@@ -13,6 +13,7 @@ import {
   buildCourseRows,
   buildExposureRows,
   buildOccupationRows,
+  buildOccupationSkillRows,
   buildProgramRows,
   buildSignalRows,
   buildSkillRows,
@@ -104,6 +105,7 @@ const programmesOutcome = runFile("programmes", DATA_DIR);
 const keywordsOutcome = runFile("keywords", DATA_DIR);
 const sourcesOutcome = runFile("sources", DATA_DIR);
 const exposureOutcome = runFile("exposure", DATA_DIR);
+const occupationSkillsOutcome = runFile("occupation_skills", DATA_DIR);
 
 const skills = deriveSkills([...coursesOutcome.skillPairs, ...keywordsOutcome.skillPairs]);
 const emptyEmbeddings = new Map<string, number[]>();
@@ -298,6 +300,41 @@ describe("built rows match scripts/fixtures/live-schema.json", () => {
 
   it("applyImport's signals upsert onConflict matches signals_reading_key's columns", () => {
     expect(SIGNALS_ON_CONFLICT).toBe("skill_id,source,metric,window_end");
+  });
+});
+
+describe("data/occupation_skills.csv (ESCO) feeds scoring", () => {
+  const occupationSkillRows = buildOccupationSkillRows(occupationSkillsOutcome.validOccupationSkills);
+  const allSkills = deriveSkills([
+    ...coursesOutcome.skillPairs,
+    ...keywordsOutcome.skillPairs,
+    ...occupationSkillsOutcome.skillPairs,
+  ]);
+
+  it("occupation_skills.csv -> public.occupation_skills", () => {
+    expect(occupationSkillsOutcome.fileReport.invalidRows).toBe(0);
+    assertRowsMatchSchema("occupation_skills", occupationSkillRows);
+  });
+
+  it("every occupation in occupations.csv has at least 5 essential skills (T14 done-when)", () => {
+    for (const occupation of occupationsOutcome.validOccupations) {
+      const essential = occupationSkillRows.filter(
+        (row) => row.occupation_id === occupation.id && row.relation === "essential"
+      );
+      expect(essential.length, `${occupation.id} ${occupation.titleEn}`).toBeGreaterThanOrEqual(5);
+    }
+  });
+
+  it("every occupation_skills skill_id is a built skill row id, so the foreign key holds", () => {
+    const { newRows } = buildSkillRows(allSkills, new Set(), emptyEmbeddings);
+    const skillIds = new Set(newRows.map((row) => row.id));
+    const missing = occupationSkillRows.filter((row) => !skillIds.has(row.skill_id as string));
+    expect(missing).toEqual([]);
+  });
+
+  it("data/occupation_skills.csv is unique on (occupation_id, skill_id), matching the primary key", () => {
+    const keys = occupationSkillRows.map((row) => `${row.occupation_id}|${row.skill_id}`);
+    expect(new Set(keys).size).toBe(keys.length);
   });
 });
 

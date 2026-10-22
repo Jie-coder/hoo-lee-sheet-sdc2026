@@ -4,6 +4,7 @@
 // for how Tiffany and Henry should use this day to day.
 import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
+import { pathToFileURL } from "node:url";
 import { parseCsv } from "./lib/csv";
 import { diffHeaders, FILE_SPECS, resolveOnly, type FileKey } from "./lib/files";
 import {
@@ -11,6 +12,7 @@ import {
   mapExposureRow,
   mapKeywordRow,
   mapOccupationRow,
+  mapOccupationSkillRow,
   mapProgrammeRow,
   mapSourceRow,
 } from "./lib/mappers";
@@ -35,7 +37,7 @@ import {
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { Embedder } from "./lib/clients";
 import type { Course, Programme } from "../src/types/contracts";
-import type { ExposureRow, OccupationRow, SourceRow } from "./lib/row-schemas";
+import type { ExposureRow, OccupationRow, OccupationSkillRow, SourceRow } from "./lib/row-schemas";
 
 export type RunOptions = {
   dir: string;
@@ -63,6 +65,7 @@ export type FileRunOutcome = {
   validOccupations: OccupationRow[];
   validSources: SourceRow[];
   validExposures: ExposureRow[];
+  validOccupationSkills: OccupationSkillRow[];
   skillPairs: { skills: string[]; skillUris: string[] }[];
   signalRows: SignalRow[];
 };
@@ -117,6 +120,15 @@ type KeywordRecord = {
   skillUris: string[];
   raw: Record<string, string>;
 };
+type OccupationSkillRecord = {
+  row: number;
+  /** occupation_id + skill_uri, for the duplicate check. */
+  key: string;
+  valid: boolean;
+  value: OccupationSkillRow | null;
+  occupationId: string;
+  sourceName: string;
+};
 type OccupationRecord = {
   row: number;
   id: string;
@@ -147,6 +159,7 @@ export function runFile(key: FileKey, dir: string): FileRunOutcome {
     validOccupations: [],
     validSources: [],
     validExposures: [],
+    validOccupationSkills: [],
     skillPairs: [],
     signalRows: [],
   };
@@ -184,6 +197,7 @@ export function runFile(key: FileKey, dir: string): FileRunOutcome {
   const exposureCross: { row: number; occupation: string; code: string; sourceName: string }[] = [];
   const exposureRecords: ExposureRecord[] = [];
   const occupationRecords: OccupationRecord[] = [];
+  const occupationSkillRecords: OccupationSkillRecord[] = [];
 
   rows.forEach((row, index) => {
     const rowNumber = index + 2;
@@ -251,6 +265,17 @@ export function runFile(key: FileKey, dir: string): FileRunOutcome {
         iscoCode: isBlankCell(raw.isco_code) ? null : raw.isco_code ?? null,
         titleEn: raw.title_en ?? "",
       });
+    } else if (key === "occupation_skills") {
+      const result = mapOccupationSkillRow(raw, rowNumber);
+      issues.push(...result.issues);
+      occupationSkillRecords.push({
+        row: rowNumber,
+        key: `${(raw.occupation_id ?? "").trim()} ${(raw.skill_uri ?? "").trim()}`,
+        valid: result.value !== null,
+        value: result.value,
+        occupationId: raw.occupation_id ?? "",
+        sourceName: raw.source_name ?? "",
+      });
     }
   });
 
@@ -261,6 +286,7 @@ export function runFile(key: FileKey, dir: string): FileRunOutcome {
   let validOccupations: OccupationRow[] = [];
   let validSources: SourceRow[] = [];
   let validExposures: ExposureRow[] = [];
+  let validOccupationSkills: OccupationSkillRow[] = [];
   let skillPairs: { skills: string[]; skillUris: string[] }[] = [];
   let signalRows: SignalRow[] = [];
   let cross: Partial<CrossCheckInput> = {};
@@ -316,6 +342,30 @@ export function runFile(key: FileKey, dir: string): FileRunOutcome {
     invalidRows = rows.length - validRows;
     validExposures = exposureRecords.filter((r) => r.value).map((r) => r.value as ExposureRow);
     cross = { exposure: exposureCross };
+  } else if (key === "occupation_skills") {
+    // One row per (occupation, skill): the same pair twice is a duplicate.
+    const dup = finalizeDuplicates(
+      "occupation_skills.csv",
+      "occupation_id + skill_uri",
+      (r) => r.key,
+      occupationSkillRecords
+    );
+    issues.push(...dup.issues);
+    validRows = dup.validRows;
+    invalidRows = dup.invalidRows;
+    validOccupationSkills = dup.kept
+      .filter((r) => r.value)
+      .map((r) => r.value as OccupationSkillRow);
+    // Feeds deriveSkills: ESCO skills that no course or keyword mentions
+    // still need a public.skills row before occupation_skills can point at them.
+    skillPairs = validOccupationSkills.map((r) => ({ skills: [r.skillLabel], skillUris: [r.skillUri] }));
+    cross = {
+      occupationSkills: occupationSkillRecords.map((r) => ({
+        row: r.row,
+        occupationId: r.occupationId,
+        sourceName: r.sourceName,
+      })),
+    };
   } else {
     const dup = finalizeDuplicates("occupations.csv", "id", (r) => r.id, occupationRecords);
     issues.push(...dup.issues);
@@ -348,6 +398,7 @@ export function runFile(key: FileKey, dir: string): FileRunOutcome {
     validOccupations,
     validSources,
     validExposures,
+    validOccupationSkills,
     skillPairs,
     signalRows,
   };
@@ -404,6 +455,7 @@ export async function runImport(options: RunOptions): Promise<RunResult> {
     signals: outcomes.flatMap(({ outcome }) => outcome.signalRows),
     sources: outcomes.flatMap(({ outcome }) => outcome.validSources),
     exposure: outcomes.flatMap(({ outcome }) => outcome.validExposures),
+    occupationSkills: outcomes.flatMap(({ outcome }) => outcome.validOccupationSkills),
   };
   result.wouldWrite = computeWouldWriteCounts(applyInput);
 
@@ -552,8 +604,18 @@ async function main() {
   process.exit(exitCode);
 }
 
-const isMain = process.argv[1] && import.meta.url === `file://${process.argv[1]}`;
-if (isMain) {
+/**
+ * True when this file is the script being run (not imported by a test).
+ * Compares file URLs, not strings: on Windows argv[1] is "C:\dev\…" while
+ * import.meta.url is "file:///C:/dev/…", so a plain `file://${argv[1]}`
+ * never matched and the script silently did nothing.
+ */
+export function isDirectRun(moduleUrl: string, scriptPath: string | undefined): boolean {
+  if (!scriptPath) return false;
+  return moduleUrl === pathToFileURL(scriptPath).href;
+}
+
+if (isDirectRun(import.meta.url, process.argv[1])) {
   main().catch((error) => {
     console.error(error instanceof Error ? error.message : error);
     process.exit(1);

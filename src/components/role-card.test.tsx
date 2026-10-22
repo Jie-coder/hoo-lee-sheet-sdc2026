@@ -1,11 +1,20 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
-import { AISYAH_RESULTS } from "@/mocks/aisyah";
+import { analyzeProfile } from "@/lib/analyze";
+import { CATALOGUE } from "@/lib/catalogue";
 import { RoleCard } from "./role-card";
 
-const snapshot = AISYAH_RESULTS.today;
-const role = snapshot.response.roles[0]; // Data Operations Analyst: robust, 3 SDG links, 5 gap skills
+// Real pipeline: a profile with five of a nurse's essential skills ranks
+// "nurse responsible for general care", which has 2 SDG targets and a full gap.
+const nurse = CATALOGUE.occupations.find((occupation) => occupation.id === "o025")!;
+const result = analyzeProfile(CATALOGUE, {
+  skills: nurse.essentialSkillIds.slice(0, 5).map((skillId) => ({ skillId, level: 1 })),
+  currentOccupationId: null,
+  impactInterest: "health",
+});
+const role = { ...result.roles.find((item) => item.occupationId === "o025")!, explanation: "Why this role, in one line." };
+const breakdown = result.breakdown[role.occupationId];
 
 function renderCard() {
   return render(
@@ -13,9 +22,9 @@ function renderCard() {
       role={role}
       rank={1}
       total={3}
-      status={snapshot.roleStatus[role.occupationId]}
-      skillLinks={snapshot.skillLinks}
-      targetLabels={snapshot.targetLabels}
+      status={breakdown.status}
+      skillLinks={[]}
+      targetLabels={result.targetLabels}
       chosen={false}
       onChoose={vi.fn()}
       flaggedIds={new Set()}

@@ -4,7 +4,7 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 import { EMBEDDING_DIMENSIONS, type Course, type Programme } from "../../src/types/contracts";
 import { escoUriToId, isBlank, splitNames } from "./cells";
 import type { Issue } from "./report";
-import type { ExposureRow, OccupationRow, SourceRow } from "./row-schemas";
+import type { ExposureRow, OccupationRow, OccupationSkillRow, SourceRow } from "./row-schemas";
 import type { Embedder } from "./clients";
 
 export type SkillRecord = { id: string; escoUri: string; labelEn: string };
@@ -17,6 +17,7 @@ export type ApplyInput = {
   signals: SignalRow[];
   sources: SourceRow[];
   exposure: ExposureRow[];
+  occupationSkills: OccupationSkillRow[];
 };
 
 export type TableResult = { table: string; upserted: number; error?: string };
@@ -108,10 +109,19 @@ export async function computeEmbeddingsWithReuse(
 }
 
 /**
+ * base_importance b_s for a newly imported skill. 1 = neutral weight: every
+ * essential skill counts the same, and arXiv momentum moves it up or down
+ * (imp_s = b_s (1 + λ tanh(m_s)), src/lib/scoring.ts). It must not be 0:
+ * fit divides by the importance total, so 0 makes every role's fit 0.
+ */
+export const DEFAULT_BASE_IMPORTANCE = 1;
+
+/**
  * Builds the two skills upsert row sets: existing skills only get the columns
  * this importer owns (id, esco_uri, label_en, embedding), while a brand-new
  * skill also seeds label_ms / is_green / base_importance — all NOT NULL with
- * no default in the live schema — with placeholders so the insert succeeds.
+ * no default in the live schema — so the insert succeeds. label_ms and
+ * is_green are placeholders; base_importance is the neutral weight above.
  */
 export function buildSkillRows(
   skills: SkillRecord[],
@@ -135,7 +145,7 @@ export function buildSkillRows(
       label_en: skill.labelEn,
       label_ms: skill.labelEn,
       is_green: false,
-      base_importance: 0,
+      base_importance: DEFAULT_BASE_IMPORTANCE,
       embedding: embeddings.get(skill.id) ?? null,
     }));
 
@@ -227,6 +237,19 @@ export function buildExposureRows(exposures: ExposureRow[], occupations: Occupat
     table_or_page: exposure.tableOrPage,
     as_of: exposure.asOf,
     notes: exposure.notes,
+  }));
+}
+
+/**
+ * Builds public.occupation_skills upsert rows. skill_id uses the same
+ * escoUriToId as the skills table, so it matches the row deriveSkills makes
+ * for the same URI.
+ */
+export function buildOccupationSkillRows(rows: OccupationSkillRow[]): Record<string, unknown>[] {
+  return rows.map((row) => ({
+    occupation_id: row.occupationId,
+    skill_id: escoUriToId(row.skillUri),
+    relation: row.relation,
   }));
 }
 
@@ -409,6 +432,9 @@ export const EXPOSURE_ON_CONFLICT = "occupation,source_name";
 /** onConflict for the sources upsert: public.sources's primary key is name, not id. */
 export const SOURCES_ON_CONFLICT = "name";
 
+/** onConflict for the occupation_skills upsert: its primary key (occupation_id, skill_id). */
+export const OCCUPATION_SKILLS_ON_CONFLICT = "occupation_id,skill_id";
+
 const SIGNALS_MIGRATION = "20261021150000";
 
 /** True for the Postgres error an upsert gets when its onConflict columns have no matching unique constraint yet. */
@@ -515,6 +541,13 @@ export async function applyImport(
     })
   );
 
+  // Last: both foreign keys (occupations, skills) were upserted above.
+  tables.push(
+    await upsert(supabase, "occupation_skills", buildOccupationSkillRows(input.occupationSkills), {
+      onConflict: OCCUPATION_SKILLS_ON_CONFLICT,
+    })
+  );
+
   return { tables, skipped: APPLY_SKIPPED_FILES };
 }
 
@@ -535,8 +568,7 @@ export type WouldWriteCounts = Record<(typeof WOULD_WRITE_TABLES)[number], numbe
 /**
  * Row counts a dry run would write, built from the same functions --apply
  * uses (minus the embedding calls, which do not change how many rows are
- * written). occupation_skills is always 0: no data/*.csv supplies an
- * occupation->skill relation yet — see data/README.md.
+ * written).
  */
 export function computeWouldWriteCounts(input: ApplyInput): WouldWriteCounts {
   const noEmbeddings = new Map<string, number[]>();
@@ -549,6 +581,6 @@ export function computeWouldWriteCounts(input: ApplyInput): WouldWriteCounts {
     courses: buildCourseRows(input.courses).length,
     programs: buildProgramRows(input.programmes).length,
     signals: input.signals.length,
-    occupation_skills: 0,
+    occupation_skills: buildOccupationSkillRows(input.occupationSkills).length,
   };
 }

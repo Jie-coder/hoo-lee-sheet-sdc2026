@@ -1,0 +1,38 @@
+persona_id,cv_skill,esco_uri,esco_label,note
+aisyah,Data entry and record keeping,http://data.europa.eu/esco/skill/f2d57f41-43b4-4f5b-8100-3df5c21eda50,process data,ESCO: enter information into a data storage system by keying or scanning
+aisyah,Data entry and record keeping,http://data.europa.eu/esco/skill/43b13058-68d0-40c6-8031-caf5a7b7d20c,keep task records,the record-keeping half of the CV line
+aisyah,Scheduling and coordination,http://data.europa.eu/esco/skill/0e1fe34b-f4e7-4642-8c8b-5a05ac3438e5,manage schedule of tasks,
+aisyah,Report filing,http://data.europa.eu/esco/skill/3d427a49-4f85-42cd-8a92-62d4a34f41a1,file documents,
+aisyah,"Customer correspondence (BM, English)",http://data.europa.eu/esco/skill/ec0bbf39-0edd-4015-a2c3-82ad563ce3a8,draft corporate emails,correspondence on her CV is by email
+aisyah,Attention to detail,http://data.europa.eu/esco/skill/83e6510b-ffeb-4aec-959c-4265fd0ff7b7,attend to detail,
+aisyah,Teamwork,http://data.europa.eu/esco/skill/a5b0cd5c-e13a-4ab3-8d93-4d242adcfb01,teamwork principles,
+aisyah,"Microsoft Excel (filters, basic formulas)",http://data.europa.eu/esco/skill/1973c966-f236-40c9-b2d4-5d71a89019be,use spreadsheets software,
+aisyah,Microsoft Word,http://data.europa.eu/esco/skill/81633a44-f1db-4a01-a940-804c6905e330,use word processing software,
+aisyah,Outlook calendar,http://data.europa.eu/esco/skill/fdf15b35-9028-4acb-bfd2-43f00a015cd9,use personal organization software,ESCO names calendar and to-do tools this way
+aisyah,Google Forms,http://data.europa.eu/esco/skill/cf310cff-0d28-4dbc-9dbb-cc500a3196c2,office software,
+aisyah,Stock list updates,http://data.europa.eu/esco/skill/f60416d5-2d98-4401-ba0d-b92b53e01d86,keep stock records,
+aisyah,Volunteer coordination,http://data.europa.eu/esco/skill/232f854a-f5b9-4d8a-8499-23f59852273c,manage volunteers,
+lim-jia-hui,Bookkeeping,http://data.europa.eu/esco/skill/99b163e8-7815-43e2-83f3-a47f3076354c,accounting entries,ESCO: the record of each transaction in the accounts
+lim-jia-hui,Bank reconciliation,http://data.europa.eu/esco/skill/909c2e48-262e-4ebe-be05-5324ab086c1d,generate reconciliation reports,
+lim-jia-hui,Accounts payable and receivable,http://data.europa.eu/esco/skill/68b51538-b056-4cb3-bb15-ab8c3e576cc9,follow up accounts receivables,
+lim-jia-hui,e-Invoicing (MyInvois),http://data.europa.eu/esco/skill/e3e42d54-78bd-4337-aa87-bb31a7670c9a,issue sales invoices,
+lim-jia-hui,SST and e-filing,http://data.europa.eu/esco/skill/22a173f5-868c-4d82-87e6-beed500ce070,prepare tax returns forms,
+lim-jia-hui,"Microsoft Excel (VLOOKUP, pivot tables)",http://data.europa.eu/esco/skill/1973c966-f236-40c9-b2d4-5d71a89019be,use spreadsheets software,
+lim-jia-hui,SQL Accounting software,http://data.europa.eu/esco/skill/a0d79341-8398-4019-ad1b-27888ec35aaa,use accounting systems,SQL Accounting is a Malaysian accounting package
+lim-jia-hui,Audit support,http://data.europa.eu/esco/skill/6a536b36-c5c7-4d10-bf67-a4fb0f8549b2,audit techniques,
+lim-jia-hui,Payroll processing,http://data.europa.eu/esco/skill/9d916d7c-89b3-4084-a6d9-e2b0b3091404,manage payroll,
+lim-jia-hui,Vendor management,http://data.europa.eu/esco/skill/3cd35f5d-ce6d-4f14-9a09-53d7a28d834c,maintain relationship with suppliers,
+lim-jia-hui,"Report writing (Chinese, English)",http://data.europa.eu/esco/skill/918f5211-b99f-4b29-9a34-6e475583ef55,write work-related reports,
+lim-jia-hui,UBS Accounting,http://data.europa.eu/esco/skill/a0d79341-8398-4019-ad1b-27888ec35aaa,use accounting systems,UBS is a Malaysian accounting package
+pravin,Customer service (call handling),http://data.europa.eu/esco/skill/15a33d76-4640-438d-ae64-fdc0c1d3eebc,customer service,
+pravin,CRM software (Zendesk),http://data.europa.eu/esco/skill/dc9a236c-c640-43c3-812f-269403591edb,customer relationship management,
+pravin,Email support,http://data.europa.eu/esco/skill/0da516ee-e70e-4384-be13-f5ff80be8127,communicate with customers,
+pravin,Problem-solving,http://data.europa.eu/esco/skill/adc6dc11-3376-467b-96c5-9b0a21edc869,solve problems,
+pravin,Data entry,http://data.europa.eu/esco/skill/f2d57f41-43b4-4f5b-8100-3df5c21eda50,process data,
+pravin,Environmental sampling techniques,http://data.europa.eu/esco/skill/4bbb309f-9162-49b9-93da-fb2c371e5c5f,collect samples for analysis,
+pravin,R programming (basic),http://data.europa.eu/esco/skill/51586df8-1c46-4b47-8583-773cb63bf00b,R,
+pravin,QGIS mapping,http://data.europa.eu/esco/skill/377861af-f966-4c87-a2db-7e99904312b9,geographic information systems,QGIS is a GIS tool
+pravin,Report writing,http://data.europa.eu/esco/skill/918f5211-b99f-4b29-9a34-6e475583ef55,write work-related reports,
+pravin,Water quality testing,http://data.europa.eu/esco/skill/e80f9e50-71ff-4bb7-8b7d-eb232685d17f,perform water testing procedures,
+pravin,Microsoft Excel (data analysis),http://data.europa.eu/esco/skill/1973c966-f236-40c9-b2d4-5d71a89019be,use spreadsheets software,
+pravin,English proficiency (academic writing),http://data.europa.eu/esco/skill/6d3edede-8951-4621-a835-e04323300fa0,English,

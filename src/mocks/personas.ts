@@ -3,7 +3,8 @@
 // comment, so here `field` carries the institution (e.g. "Diploma in
 // Business Studies" · "Politeknik Seberang Perai") to match the wireframe.
 import { ParsedCVSchema, type LanguageCode, type ParsedCV } from "@/types/contracts";
-import { EXAMPLE_AS_OF } from "@/mocks/aisyah";
+/** Date the three sample CVs were written and parsed (synthetic). */
+export const PERSONA_PARSED_ON = "2026-10-19";
 
 export const PERSONA_IDS = ["aisyah", "lim-jia-hui", "pravin"] as const;
 export type PersonaId = (typeof PERSONA_IDS)[number];
@@ -20,7 +21,9 @@ export type PersonaCard = {
   summary: string;
   cvUrl: string;
   courseLanguages: LanguageCode[];
-  /** Base CV skills that did not clear the ESCO match threshold. */
+  /** The persona's current job in data/occupations.csv: its exposure is shown, and it is never recommended back. */
+  currentOccupationId: string;
+  /** CV skills with no row in data/persona_skills.csv (no fitting ESCO skill). */
   unmatchedSkills: string[];
   parsed: ParsedCV;
   parsedOn: string;
@@ -37,8 +40,9 @@ export const PERSONAS: Record<PersonaId, PersonaCard> = {
     summary: "Data entry, scheduling, reports and customer emails at a trading office.",
     cvUrl: "/samples/cv-aisyah-binti-rahman.pdf",
     courseLanguages: ["ms", "en"],
-    unmatchedSkills: ["WhatsApp Business", "Volunteer coordination"],
-    parsedOn: EXAMPLE_AS_OF,
+    currentOccupationId: "o038", // administrative assistant
+    unmatchedSkills: ["WhatsApp Business"],
+    parsedOn: PERSONA_PARSED_ON,
     parsed: ParsedCVSchema.parse({
       name: "Aisyah binti Rahman",
       roles: [
@@ -88,8 +92,9 @@ export const PERSONAS: Record<PersonaId, PersonaCard> = {
     summary: "Eight years of bookkeeping, reconciliations and e-invoicing for SMEs.",
     cvUrl: "/samples/cv-lim-jia-hui.pdf",
     courseLanguages: ["zh"],
-    unmatchedSkills: ["SQL Accounting software", "UBS Accounting"],
-    parsedOn: EXAMPLE_AS_OF,
+    currentOccupationId: "o034", // bookkeeper
+    unmatchedSkills: [],
+    parsedOn: PERSONA_PARSED_ON,
     parsed: ParsedCVSchema.parse({
       name: "Lim Jia Hui",
       roles: [
@@ -137,8 +142,9 @@ export const PERSONAS: Record<PersonaId, PersonaCard> = {
     summary: "Environmental science graduate (2025) in a contract call-centre job.",
     cvUrl: "/samples/cv-pravin-a-l-murugan.pdf",
     courseLanguages: ["en"],
-    unmatchedSkills: ["CRM software (Zendesk)", "R programming (basic)"],
-    parsedOn: EXAMPLE_AS_OF,
+    currentOccupationId: "o036", // call centre agent
+    unmatchedSkills: [],
+    parsedOn: PERSONA_PARSED_ON,
     parsed: ParsedCVSchema.parse({
       name: "Pravin a/l Murugan",
       roles: [

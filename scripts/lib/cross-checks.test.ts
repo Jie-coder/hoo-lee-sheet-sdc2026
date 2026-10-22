@@ -87,3 +87,42 @@ describe("runCrossChecks", () => {
     expect(issues).toEqual([]);
   });
 });
+
+describe("runCrossChecks: occupation_skills.csv", () => {
+  const occupations = [{ row: 2, id: "o001", escoUri: null, iscoCode: "2512", titleEn: "Data Analyst" }];
+  const sources = [{ row: 2, name: "ESCO" }];
+
+  it("errors on an occupation_id that is not in occupations.csv (a foreign key --apply would reject)", () => {
+    const issues = runCrossChecks({
+      occupations,
+      sources,
+      occupationSkills: [
+        { row: 2, occupationId: "o001", sourceName: "ESCO" },
+        { row: 3, occupationId: "o999", sourceName: "ESCO" },
+      ],
+    });
+    expect(issues).toEqual([
+      expect.objectContaining({
+        file: "occupation_skills.csv",
+        row: 3,
+        column: "occupation_id",
+        value: "o999",
+        severity: "error",
+      }),
+    ]);
+  });
+
+  it("warns once per unknown source_name, not once per row", () => {
+    const issues = runCrossChecks({
+      occupations,
+      sources,
+      occupationSkills: [
+        { row: 2, occupationId: "o001", sourceName: "Esco" },
+        { row: 3, occupationId: "o001", sourceName: "Esco" },
+      ],
+    });
+    expect(issues).toEqual([
+      expect.objectContaining({ file: "occupation_skills.csv", row: 2, column: "source_name", severity: "warning" }),
+    ]);
+  });
+});

@@ -1,4 +1,4 @@
-// Fixed line on results (and later pathway): scores are estimates, not decisions.
+// Fixed line on results and pathway: scores are estimates, not decisions.
 import { Scale } from "lucide-react";
 
 export function EstimateFooter() {
@@ -10,7 +10,7 @@ export function EstimateFooter() {
           All scores and forecasts are estimates. Laluan supports your decision; it does not make hiring decisions.
         </p>
         <span className="self-end rounded border border-line px-1.5 py-0.5 text-[11px] whitespace-nowrap sm:self-auto">
-          Example data
+          Public data · synthetic sample profiles
         </span>
       </div>
     </footer>

@@ -87,12 +87,36 @@ function sdgTargetForSkills(skillIds: readonly string[], skillLinks: readonly Sd
   return undefined;
 }
 
+/** programmes.csv id of AI untuk Rakyat, the free AI-basics opener every plan starts with. */
+export const AI_READINESS_PROGRAMME_ID = "p001";
+
 /**
- * Builds the PathwayPlan for one chosen role: a general AI-readiness
- * programme, one course per gap skill (cheapest and shortest in the
- * learner's study language), then a career-counselling programme, all
- * ordered free -> subsidised -> HRD Corp claimable -> paid and laid out at
- * `hoursPerWeek` a week.
+ * Cheapest, then shortest, course that teaches a skill in the same ESCO
+ * skill group as `skillId`. Used only when no course teaches the skill
+ * itself; such a step builds related skills and does not close the gap.
+ */
+export function pickRelatedCourse(
+  skillId: string,
+  courses: readonly Course[],
+  languages: readonly LanguageCode[],
+  skillGroups: Readonly<Record<string, string>>,
+): Course | null {
+  const group = skillGroups[skillId];
+  if (!group) return null;
+  const matches = courses.filter((course) => course.skillIds.some((id) => skillGroups[id] === group));
+  const inLanguage = filterCoursesByLanguage(matches, languages);
+  const pool = inLanguage.length > 0 ? inLanguage : matches;
+  if (pool.length === 0) return null;
+  return [...pool].sort((a, b) => COST_ORDER[a.costType] - COST_ORDER[b.costType] || a.hours - b.hours)[0];
+}
+
+/**
+ * Builds the PathwayPlan for one chosen role: the AI-readiness programme,
+ * then one course per gap skill (cheapest and shortest in the learner's
+ * study language). When no course teaches a gap skill, a course from the
+ * same ESCO skill group is suggested instead, without claiming to close
+ * the gap. Ordered free -> subsidised -> HRD Corp claimable -> paid and
+ * laid out at `hoursPerWeek` a week. A course is never listed twice.
  */
 export function buildPathwayPlan({
   role,
@@ -101,6 +125,8 @@ export function buildPathwayPlan({
   studyLanguages,
   hoursPerWeek,
   skillLinks,
+  skillGroups = {},
+  groupLabels = {},
 }: {
   role: RoleResult;
   courses: readonly Course[];
@@ -108,6 +134,8 @@ export function buildPathwayPlan({
   studyLanguages: readonly LanguageCode[];
   hoursPerWeek: number;
   skillLinks: readonly SdgLink[];
+  skillGroups?: Readonly<Record<string, string>>;
+  groupLabels?: Readonly<Record<string, string>>;
 }): PathwayPlan {
   const pace = hoursPerWeek > 0 ? hoursPerWeek : 6;
 
@@ -115,31 +143,38 @@ export function buildPathwayPlan({
 
   const picks: Pick[] = [];
 
-  const aiProgramme = programmes.find((programme) => programme.id === "ai-untuk-rakyat");
+  const aiProgramme = programmes.find((programme) => programme.id === AI_READINESS_PROGRAMME_ID);
   if (aiProgramme) {
     picks.push({ kind: "program", item: aiProgramme, closesSkillIds: [], hours: 1.5, why: aiProgramme.benefits });
   }
 
   for (const skill of role.gap) {
-    const course = pickCourseForSkill(skill.skillId, courses, studyLanguages);
-    if (!course) continue;
+    const exact = pickCourseForSkill(skill.skillId, courses, studyLanguages);
+    const existing = exact ? picks.find((pick) => pick.item.id === exact.id) : undefined;
+    if (existing) {
+      existing.closesSkillIds.push(skill.skillId);
+      existing.why = `${existing.why.replace(/\.$/, "")}, ${skill.label}.`;
+      continue;
+    }
+    if (exact) {
+      picks.push({
+        kind: "course",
+        item: exact,
+        closesSkillIds: [skill.skillId],
+        hours: exact.hours,
+        why: `Closes the gap skill: ${skill.label}.`,
+      });
+      continue;
+    }
+    const related = pickRelatedCourse(skill.skillId, courses, studyLanguages, skillGroups);
+    if (!related || picks.some((pick) => pick.item.id === related.id)) continue;
+    const groupLabel = groupLabels[skillGroups[skill.skillId] ?? ""] ?? "the same ESCO skill group";
     picks.push({
       kind: "course",
-      item: course,
-      closesSkillIds: [skill.skillId],
-      hours: course.hours,
-      why: `Closes the gap skill: ${skill.label}.`,
-    });
-  }
-
-  const counsellingProgramme = programmes.find((programme) => programme.id === "career-counselling");
-  if (counsellingProgramme) {
-    picks.push({
-      kind: "program",
-      item: counsellingProgramme,
+      item: related,
       closesSkillIds: [],
-      hours: 1.5,
-      why: counsellingProgramme.benefits,
+      hours: related.hours,
+      why: `No course in our catalogue teaches "${skill.label}" yet. This one builds related skills (ESCO group: ${groupLabel}).`,
     });
   }
 

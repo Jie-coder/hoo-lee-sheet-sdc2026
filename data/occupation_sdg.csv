@@ -1,0 +1,46 @@
+occupation_id,target,target_label,tier,reason,source_url,checked_on
+o001,8.2,Productivity through technology,supporting,Software is one of the main ways firms upgrade technology and raise productivity.,https://sdgs.un.org/goals/goal8,2026-10-21
+o002,8.2,Productivity through technology,supporting,Web services help firms reach customers and work more productively.,https://sdgs.un.org/goals/goal8,2026-10-21
+o003,8.2,Productivity through technology,supporting,Mobile apps are a common way small firms digitalise and raise productivity.,https://sdgs.un.org/goals/goal8,2026-10-21
+o004,9.5,Research and technology,supporting,Designing AI systems builds the technological capability target 9.5 is about.,https://sdgs.un.org/goals/goal9,2026-10-21
+o005,9.1,Resilient infrastructure,supporting,Keeping systems secure keeps digital infrastructure reliable and resilient.,https://sdgs.un.org/goals/goal9,2026-10-21
+o006,9.c,Access to ICT,supporting,Network administrators keep the internet and ICT access that target 9.c is about running.,https://sdgs.un.org/goals/goal9,2026-10-21
+o007,8.2,Productivity through technology,supporting,Usable interfaces help people and firms get value from digital tools.,https://sdgs.un.org/goals/goal8,2026-10-21
+o008,8.3,Small business growth,supporting,Online marketing is how many micro and small enterprises find customers.,https://sdgs.un.org/goals/goal8,2026-10-21
+o009,8.2,Productivity through technology,supporting,Data analysis helps organisations decide better and work more productively.,https://sdgs.un.org/goals/goal8,2026-10-21
+o010,9.5,Research and technology,supporting,Data science builds the research and technological capability target 9.5 is about.,https://sdgs.un.org/goals/goal9,2026-10-21
+o011,8.2,Productivity through technology,supporting,Business intelligence turns data into decisions that raise productivity.,https://sdgs.un.org/goals/goal8,2026-10-21
+o012,17.18,Data for development,supporting,Statisticians produce the reliable data target 17.18 asks countries to have more of.,https://sdgs.un.org/goals/goal17,2026-10-21
+o013,8.10,Access to finance,supporting,Financial analysis supports the domestic financial institutions target 8.10 strengthens.,https://sdgs.un.org/goals/goal8,2026-10-21
+o014,8.2,Productivity through technology,supporting,Market research helps firms target products and work more productively.,https://sdgs.un.org/goals/goal8,2026-10-21
+o015,9.1,Resilient infrastructure,supporting,Databases are core digital infrastructure that must stay reliable.,https://sdgs.un.org/goals/goal9,2026-10-21
+o016,8.2,Productivity through technology,supporting,Business analysis improves how organisations work and adopt new tools.,https://sdgs.un.org/goals/goal8,2026-10-21
+o017,7.2,Renewable energy,direct,The work itself is designing solar energy systems: more renewable energy is target 7.2.,https://sdgs.un.org/goals/goal7,2026-10-21
+o018,7.2,Renewable energy,direct,The work itself is installing and maintaining solar systems: more renewable energy is target 7.2.,https://sdgs.un.org/goals/goal7,2026-10-21
+o019,6.3,Water quality,supporting,Environmental engineers design ways to cut pollution and treat wastewater.,https://sdgs.un.org/goals/goal6,2026-10-21
+o019,12.4,Chemicals and waste,supporting,The role manages hazardous substances and waste in line with regulations.,https://sdgs.un.org/goals/goal12,2026-10-21
+o020,6.3,Water quality,supporting,Environmental scientists sample and assess water and pollution.,https://sdgs.un.org/goals/goal6,2026-10-21
+o020,15.1,Protect ecosystems,supporting,The role studies and protects land and freshwater ecosystems.,https://sdgs.un.org/goals/goal15,2026-10-21
+o021,7.3,Energy efficiency,direct,The work itself is cutting an organisation's energy use: energy efficiency is target 7.3.,https://sdgs.un.org/goals/goal7,2026-10-21
+o022,7.3,Energy efficiency,direct,The work itself is assessing buildings' energy performance: energy efficiency is target 7.3.,https://sdgs.un.org/goals/goal7,2026-10-21
+o023,12.5,Less waste,direct,The work itself is recycling and reducing waste: target 12.5.,https://sdgs.un.org/goals/goal12,2026-10-21
+o024,12.6,Sustainability reporting,direct,The work itself is helping companies adopt sustainable practices and report on them: target 12.6.,https://sdgs.un.org/goals/goal12,2026-10-21
+o025,3.8,Health care for all,direct,Nurses deliver the health care that universal health coverage is about.,https://sdgs.un.org/goals/goal3,2026-10-21
+o025,3.c,Health workforce,direct,Target 3.c asks for more health workers; nurses are the largest group.,https://sdgs.un.org/goals/goal3,2026-10-21
+o026,3.8,Health care for all,supporting,Home care brings basic care to people who cannot travel to it.,https://sdgs.un.org/goals/goal3,2026-10-21
+o027,10.2,Inclusion,supporting,Gerontology social work keeps older people included and supported.,https://sdgs.un.org/goals/goal10,2026-10-21
+o028,4.1,Quality schooling,direct,The work itself is primary education: target 4.1.,https://sdgs.un.org/goals/goal4,2026-10-21
+o028,4.c,Qualified teachers,direct,Target 4.c asks for more qualified teachers.,https://sdgs.un.org/goals/goal4,2026-10-21
+o029,4.2,Early childhood education,direct,The work itself is early childhood care and education: target 4.2.,https://sdgs.un.org/goals/goal4,2026-10-21
+o030,3.8,Health care for all,supporting,Physiotherapy is part of the health services universal coverage includes.,https://sdgs.un.org/goals/goal3,2026-10-21
+o031,3.8,Health care for all,direct,Pharmacists give access to safe and affordable medicines; target 3.8 names them.,https://sdgs.un.org/goals/goal3,2026-10-21
+o032,4.3,Technical and vocational training,direct,The work itself is technical and vocational education: target 4.3.,https://sdgs.un.org/goals/goal4,2026-10-21
+o032,4.4,Skills for work,direct,Vocational teachers give people the job skills target 4.4 counts.,https://sdgs.un.org/goals/goal4,2026-10-21
+o033,8.5,Decent work,supporting,Any decent and productive job counts toward 8.5; this role has no stronger SDG link.,https://sdgs.un.org/goals/goal8,2026-10-21
+o034,8.3,Small business growth,supporting,Bookkeeping helps micro and small firms stay formal and grow.,https://sdgs.un.org/goals/goal8,2026-10-21
+o035,8.10,Access to finance,supporting,Bank tellers give people everyday access to banking.,https://sdgs.un.org/goals/goal8,2026-10-21
+o036,8.5,Decent work,supporting,Any decent and productive job counts toward 8.5; this role has no stronger SDG link.,https://sdgs.un.org/goals/goal8,2026-10-21
+o037,8.5,Decent work,supporting,Any decent and productive job counts toward 8.5; this role has no stronger SDG link.,https://sdgs.un.org/goals/goal8,2026-10-21
+o038,8.5,Decent work,supporting,Any decent and productive job counts toward 8.5; this role has no stronger SDG link.,https://sdgs.un.org/goals/goal8,2026-10-21
+o039,8.5,Decent work,supporting,Any decent and productive job counts toward 8.5; this role has no stronger SDG link.,https://sdgs.un.org/goals/goal8,2026-10-21
+o040,8.8,Labour rights,supporting,Paying workers correctly and on time protects the labour rights in target 8.8.,https://sdgs.un.org/goals/goal8,2026-10-21

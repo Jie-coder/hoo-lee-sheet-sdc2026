@@ -17,12 +17,15 @@ export type OccupationCrossRow = {
   titleEn: string;
 };
 
+export type OccupationSkillCrossRow = { row: number; occupationId: string; sourceName: string };
+
 export type CrossCheckInput = {
   courses?: CourseCrossRow[];
   sources?: SourceCrossRow[];
   keywords?: KeywordCrossRow[];
   exposure?: ExposureCrossRow[];
   occupations?: OccupationCrossRow[];
+  occupationSkills?: OccupationSkillCrossRow[];
 };
 
 /**
@@ -130,6 +133,45 @@ export function runCrossChecks(input: CrossCheckInput): Issue[] {
           value: row.occupation,
           message: `"${row.occupation}" (code "${row.code}") does not match any row in occupations.csv`,
           hint: "check occupations.csv for a matching title_en, id, esco_uri, or isco_code",
+          severity: "warning",
+        });
+      }
+    }
+  }
+
+  // occupation_skills.occupation_id must be an id in occupations.csv: it is a
+  // foreign key, so --apply would reject the row. An error, not a warning.
+  if (input.occupationSkills && input.occupations) {
+    const occupationIds = new Set(input.occupations.map((row) => row.id));
+    for (const row of input.occupationSkills) {
+      if (row.occupationId.length > 0 && !occupationIds.has(row.occupationId)) {
+        issues.push({
+          file: "occupation_skills.csv",
+          row: row.row,
+          column: "occupation_id",
+          value: row.occupationId,
+          message: `"${row.occupationId}" is not an id in occupations.csv`,
+          hint: "regenerate occupation_skills.csv with scripts/fetch-esco-skills.ts after changing occupations.csv",
+          severity: "error",
+        });
+      }
+    }
+  }
+
+  // occupation_skills.source_name should name a row in sources.csv.
+  if (input.occupationSkills && input.sources) {
+    const sourceNames = new Set(input.sources.map((row) => row.name));
+    const reported = new Set<string>();
+    for (const row of input.occupationSkills) {
+      if (row.sourceName.length > 0 && !sourceNames.has(row.sourceName) && !reported.has(row.sourceName)) {
+        reported.add(row.sourceName);
+        issues.push({
+          file: "occupation_skills.csv",
+          row: row.row,
+          column: "source_name",
+          value: row.sourceName,
+          message: `"${row.sourceName}" is not a name in sources.csv`,
+          hint: "add it to sources.csv (use_for: skills), or check for a typo",
           severity: "warning",
         });
       }

@@ -45,7 +45,7 @@ Language mix: at least 10 BM courses, at least 5 Chinese courses, the rest Engli
 ## Henry: AI-trend signals (due: sources 20 Oct, keywords 21 Oct, exposure 22 Oct)
 
 ### `sources.csv`
-`name, url, publisher, what_it_measures, update_frequency, last_updated, data_format (API / CSV / PDF only), licence, use_for (exposure / trend / scenario), notes`
+`name, url, publisher, what_it_measures, update_frequency, last_updated, data_format (API / CSV / PDF only), licence, use_for (exposure / trend / scenario / skills), notes`
 
 The licence must be filled in. A source with unclear or no-reuse terms can't be used for scoring.
 
@@ -87,17 +87,71 @@ should change before Peter starts filling it in.
 | last_checked | YYYY-MM-DD |
 | notes | anything uncertain, including how a fuzzy exposure.csv match was chosen |
 
-## `public.occupation_skills` has no CSV yet
+## `occupation_skills.csv` (generated from ESCO: never edit by hand)
+`occupation_id, skill_uri, skill_label, relation (essential / optional), source_name, as_of`
 
-`public.occupation_skills` (essential/optional ESCO skill per occupation — the
-gap in section 05 reads `relation = 'essential'` from it) is not wired into
-`--apply`, and `computeWouldWriteCounts` always reports it as 0. None of the
-files above collect an occupation->skill link: `courses.csv` and
-`keywords.csv` attach skills to a course or an arXiv keyword, not to an
-occupation, and `occupations.csv` has no skills column. Filling this table
-needs a new source — for example ESCO's own occupation-skill relations
-export — and a CSV + mapper + builder the same shape as the ones above. Do
-not fabricate rows here in the meantime.
+The skills ESCO lists for each occupation in `occupations.csv`. Scoring needs
+it: fit and the skills gap are computed over a role's **essential** skills,
+and the arXiv trend can only change a ranking through them.
+
+Regenerate it whenever `occupations.csv` changes:
+
+```
+npx tsx scripts/fetch-esco-skills.ts                    # essential skills, ESCO v1.2.1
+npx tsx scripts/fetch-esco-skills.ts --include-optional # also optional skills
+```
+
+- It reads the official ESCO API (`selectedVersion=v1.2.1`, pinned so the file
+  can be rebuilt exactly; the API's unversioned default returns a slightly
+  different list).
+- An occupation with a blank `esco_uri` is skipped and named in the output.
+- If any occupation fails to load, nothing is written.
+- Every row cites `ESCO` in `sources.csv` (`use_for: skills`, which needs
+  migration `20261021190000_sources_use_for_skills.sql` on the live database).
+- Lands in `public.occupation_skills` via `--apply`, upserted on
+  `(occupation_id, skill_id)`. ESCO skills that no course or keyword mentions
+  are added to `public.skills` first, with their ESCO label.
+
+## `skill_groups.csv` (generated from ESCO: never edit by hand)
+`skill_uri, group_uri, group_label, source_name, as_of`
+
+Each skill's group in ESCO's own skills hierarchy (`broaderHierarchyConcept`).
+Scoring gives **half credit** when a user's skill is in the same ESCO group as
+a role's essential skill (for example "use spreadsheets software" and "perform
+data analysis" are both in "managing, gathering and storing digital data").
+The pathway also uses it to suggest a related course when no course teaches a
+gap skill. Rerun after `fetch-esco-skills.ts`:
+
+```
+npx tsx scripts/fetch-esco-skill-groups.ts
+```
+
+## `occupation_sdg.csv` (drafted by the team: Henry reviews in T18)
+`occupation_id, target, target_label, tier (direct / supporting), reason, source_url, checked_on`
+
+One to three UN SDG targets per occupation, each with a one-line reason and the
+UN goal page. `direct` means the work itself delivers the target (solar
+installer → 7.2); `supporting` means it contributes. A clerical job with no
+stronger link gets 8.5 (decent work), and the reason says so.
+
+## `persona_skills.csv` (demo only)
+`persona_id, cv_skill, esco_uri, esco_label, note`
+
+The three synthetic sample CVs' skills, matched to ESCO skills by hand (ESCO
+search candidates, checked by a person). A CV skill with no fitting ESCO skill
+has no row and shows as unmatched on the profile page. Replaced by Gemini
+matching once T06 lands.
+
+## The app reads `src/data/catalogue.json`, not these CSVs
+
+After changing anything in `data/`, rebuild it (a test fails if you forget):
+
+```
+npm run build-catalogue
+```
+
+It runs the same checks as `import-data.ts` and refuses to write if any file has
+an error. The app needs no database or API key to rank roles.
 
 ## Checking your file before you hand it in
 
