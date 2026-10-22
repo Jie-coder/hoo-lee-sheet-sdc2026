@@ -3,6 +3,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { LayoutGroup, motion, useReducedMotion } from "framer-motion";
 import { RefreshCw } from "lucide-react";
@@ -151,7 +152,10 @@ export function ResultsView() {
                       </>
                     ) : (
                       <>Same order as on {formatShortDate(data.signalDates.prior)}. New arXiv counts only nudged the scores.</>
-                    )}
+                    )}{" "}
+                    <Link href="/radar" className="whitespace-nowrap text-ink underline decoration-line underline-offset-4 hover:decoration-ink">
+                      Skills radar
+                    </Link>
                   </p>
                   <SignalDateToggle value={data.signalDate} dates={data.signalDates} onChange={setSignalDate} />
                 </div>
