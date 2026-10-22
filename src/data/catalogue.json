@@ -7985,6 +7985,41 @@
    ],
    "lastChecked": "2026-10-22",
    "mode": "online"
+  },
+  {
+   "id": "c119",
+   "title": "Understanding Environmental Law",
+   "provider": "Alison",
+   "url": "https://alison.com/course/understanding-environmental-law",
+   "languages": [
+    "en"
+   ],
+   "hours": 4,
+   "costType": "free",
+   "certificate": false,
+   "skillIds": [
+    "5641a2af-9eb2-4209-9fc6-856f78f2d2f2",
+    "081d7679-5070-4777-bece-a28c49f15636"
+   ],
+   "lastChecked": "2026-10-22",
+   "mode": "online"
+  },
+  {
+   "id": "c120",
+   "title": "Introduction to Environmental Economics and Policy",
+   "provider": "Alison",
+   "url": "https://alison.com/course/introduction-to-environmental-economics-and-policy",
+   "languages": [
+    "en"
+   ],
+   "hours": 3,
+   "costType": "free",
+   "certificate": false,
+   "skillIds": [
+    "081d7679-5070-4777-bece-a28c49f15636"
+   ],
+   "lastChecked": "2026-10-22",
+   "mode": "online"
   }
  ],
  "programmes": [
