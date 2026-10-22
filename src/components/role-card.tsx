@@ -4,6 +4,7 @@
 // the Details expander below, collapsed, never deleted.
 "use client";
 
+import { useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import { ArrowDownRight, Check, Flag, ShieldCheck, Sprout } from "lucide-react";
 import { EASE_OUT } from "@/components/motion";
@@ -11,6 +12,7 @@ import { Disclosure } from "@/components/ui/disclosure";
 import { SdgBadge, sdgFlagId } from "@/components/sdg-badge";
 import { SourcesDisclosure } from "@/components/sources-disclosure";
 import { formatFitPercent } from "@/lib/display";
+import { formatMonthlyRm, salaryForRole } from "@/lib/salary";
 import { cn } from "@/lib/utils";
 import type { RoleResult, SdgLink } from "@/types/contracts";
 
@@ -50,6 +52,8 @@ export function RoleCard({
   onFlag: (link: SdgLink) => void;
 }) {
   const reduceMotion = useReducedMotion();
+  const [skillsExpanded, setSkillsExpanded] = useState(false);
+  const [sdgExpanded, setSdgExpanded] = useState(false);
   const fitPercent = Math.round(role.fit * 100);
   const StatusIcon = STATUS_ICON[status.tone];
 
@@ -57,6 +61,7 @@ export function RoleCard({
   const extraSdgCount = role.sdg.length - 1;
   const visibleSkills = role.gap.slice(0, SKILLS_COLLAPSED);
   const extraSkills = role.gap.slice(SKILLS_COLLAPSED);
+  const salary = salaryForRole(role.occupationId);
   const inferredLink = role.sdg.find((link) => link.tier === "inferred");
   const inferredFlagged = inferredLink ? flaggedIds.has(sdgFlagId(inferredLink)) : false;
 
@@ -111,9 +116,24 @@ export function RoleCard({
       {/* Two lines at a glance; the full reason is repeated under Details. */}
       {role.explanation && <p className="mt-4 line-clamp-2 text-[14px] leading-relaxed text-grey">{role.explanation}</p>}
 
-      <div className="mt-4 flex items-center gap-1.5">
+      <div className="mt-4 flex flex-wrap items-center gap-1.5">
         <SdgBadge link={topSdg} label={targetLabels[topSdg.target] ?? topSdg.target} plain />
-        {extraSdgCount > 0 && <span className="tag">+{extraSdgCount}</span>}
+        {extraSdgCount > 0 && (
+          <button
+            type="button"
+            aria-expanded={sdgExpanded}
+            onClick={() => setSdgExpanded((current) => !current)}
+            className="tag"
+          >
+            {sdgExpanded ? "Show less" : `+${extraSdgCount}`}
+          </button>
+        )}
+        {sdgExpanded &&
+          role.sdg
+            .slice(1)
+            .map((link) => (
+              <SdgBadge key={link.target} link={link} label={targetLabels[link.target] ?? link.target} plain />
+            ))}
       </div>
 
       <p className="mt-5 text-[12px] text-grey">Skills to build</p>
@@ -129,23 +149,29 @@ export function RoleCard({
         })}
       </ul>
       {extraSkills.length > 0 && (
-        <Disclosure
-          chevron={false}
-          summary={`+${extraSkills.length} more`}
-          summaryClassName="justify-start py-1.5 text-[13px] text-grey hover:text-ink"
-        >
-          <ul className="text-[14px]">
-            {extraSkills.map((skill) => {
-              const link = skillTarget(skill.skillId);
-              return (
-                <li key={skill.skillId} className="flex items-center justify-between gap-3 py-1.5">
-                  <span>{skill.label}</span>
-                  {link && <span className="text-[11px] text-grey tabular-nums">{link.target}</span>}
-                </li>
-              );
-            })}
-          </ul>
-        </Disclosure>
+        <div>
+          {skillsExpanded && (
+            <ul className="text-[14px]">
+              {extraSkills.map((skill) => {
+                const link = skillTarget(skill.skillId);
+                return (
+                  <li key={skill.skillId} className="flex items-center justify-between gap-3 py-1.5">
+                    <span>{skill.label}</span>
+                    {link && <span className="text-[11px] text-grey tabular-nums">{link.target}</span>}
+                  </li>
+                );
+              })}
+            </ul>
+          )}
+          <button
+            type="button"
+            aria-expanded={skillsExpanded}
+            onClick={() => setSkillsExpanded((current) => !current)}
+            className="flex w-full items-center justify-start gap-2 py-1.5 text-left text-[13px] text-grey hover:text-ink"
+          >
+            {skillsExpanded ? "Show less" : `+${extraSkills.length} more`}
+          </button>
+        </div>
       )}
 
       <div className="mt-5">
@@ -189,6 +215,19 @@ export function RoleCard({
       </div>
 
       <div className="mt-auto pt-6">
+        <div className="mb-4 border-t border-line pt-4">
+          {salary ? (
+            <>
+              <p className="font-serif text-[26px] font-medium tabular-nums">{formatMonthlyRm(salary.avgMonthlyRm)}</p>
+              <p className="text-[12px] text-grey">
+                MASCO {salary.mascoMajor} {salary.mascoMajorName} · DOSM {salary.year}
+              </p>
+              <p className="text-[11px] text-grey/80">Average for the whole occupation group</p>
+            </>
+          ) : (
+            <p className="text-[13px] text-grey">Salary data not available</p>
+          )}
+        </div>
         <button type="button" aria-pressed={chosen} onClick={() => onChoose(role)} className="btn-primary w-full">
           {chosen && <Check className="size-4" strokeWidth={2} />}
           {chosen ? "Chosen" : "Choose this role"}

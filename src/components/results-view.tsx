@@ -23,6 +23,7 @@ import type { SignalDate } from "@/lib/analyze";
 import { describeChangeShort, rankChanges } from "@/lib/compare-snapshots";
 import { formatDayMonthYear, formatShortDate } from "@/lib/display";
 import { explainRole } from "@/lib/explain";
+import { useT } from "@/lib/i18n";
 import { rankRoles } from "@/lib/rank-roles";
 import { useRoles } from "@/lib/use-roles";
 import { PERSONAS } from "@/mocks/personas";
@@ -31,6 +32,7 @@ import type { RoleResult, ScenarioId, SdgLink } from "@/types/contracts";
 export function ResultsView() {
   const router = useRouter();
   const reduce = useReducedMotion();
+  const { t } = useT();
   const { hydrated, consent, profile, interviewAnswers, setChosenRoleId } = useFlow();
   const [signalDate, setSignalDate] = useState<SignalDate>("today");
   const { state, retry } = useRoles(profile, interviewAnswers.impact_interest, signalDate);
@@ -84,12 +86,12 @@ export function ResultsView() {
           transition={{ duration: 0.6, ease: EASE_OUT }}
           className="pt-10 pb-8"
         >
-          <p className="text-[13px] text-grey">
-            {[profile.name || "Your profile", persona?.jobTitle, persona?.location].filter(Boolean).join(", ")}
-          </p>
-          <h1 className="mt-1 font-serif text-[34px] leading-[1.05] font-medium tracking-tight md:text-[44px]">
-            Where your skills can take you
+          <h1 className="font-serif text-[34px] leading-[1.05] font-medium tracking-tight md:text-[44px]">
+            {profile.name ? t("results.headingNamed", { name: profile.name }) : t("results.heading")}
           </h1>
+          {(profile.roles[0]?.title || persona?.jobTitle) && (
+            <p className="mt-2 text-[14px] text-grey">{profile.roles[0]?.title || persona?.jobTitle}</p>
+          )}
           <p className="mt-2 text-[15px] text-grey">
             {data
               ? `${matchedCount} of ${profile.skills.length} skills matched. Signal checked ${formatDayMonthYear(data.signalsAsOf)}.`

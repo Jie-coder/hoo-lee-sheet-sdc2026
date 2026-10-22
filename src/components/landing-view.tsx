@@ -10,19 +10,20 @@ import { ArrowRight, Check, Database, HardDrive, ShieldCheck, UserX } from "luci
 import { CountUp, EASE_OUT, Reveal, RouteDot, RouteLine, Stagger, StaggerItem } from "@/components/motion";
 import { bandLabel, formatDayMonthYear } from "@/lib/display";
 import { useFlow } from "@/context/flow-context";
+import { useT } from "@/lib/i18n";
 import type { LandingPreview } from "@/lib/landing-preview";
 
 const STOPS = [
-  { title: "Profile", body: "Upload your CV. Check the skills we read." },
-  { title: "Interview", body: "Five quick questions, tap to answer." },
-  { title: "Results", body: "AI exposure today, three roles under three futures." },
-  { title: "Pathway", body: "Your week-by-week route, free courses first." },
+  { titleKey: "nav.profile", bodyKey: "landing.stop1.body" },
+  { titleKey: "nav.interview", bodyKey: "landing.stop2.body" },
+  { titleKey: "nav.results", bodyKey: "landing.stop3.body" },
+  { titleKey: "nav.pathway", bodyKey: "landing.stop4.body" },
 ] as const;
 
 const PROMISES = [
-  { icon: UserX, text: "Synthetic CVs only" },
-  { icon: HardDrive, text: "Nothing stored, no login" },
-  { icon: Database, text: "Public data, every score dated" },
+  { icon: UserX, key: "landing.promise1" },
+  { icon: HardDrive, key: "landing.promise2" },
+  { icon: Database, key: "landing.promise3" },
 ] as const;
 
 const BUILT_ON = ["ESCO v1.2.1", "ILO GenAI Exposure 2025", "arXiv 90-day counts", "HRD Corp e-LATiH + 11 providers"];
@@ -30,6 +31,7 @@ const BUILT_ON = ["ESCO v1.2.1", "ILO GenAI Exposure 2025", "arXiv 90-day counts
 export function LandingView({ preview }: { preview: LandingPreview }) {
   const router = useRouter();
   const reduce = useReducedMotion();
+  const { t } = useT();
   const { consent, setConsent } = useFlow();
   const consentRef = useRef<HTMLLabelElement>(null);
 
@@ -57,21 +59,20 @@ export function LandingView({ preview }: { preview: LandingPreview }) {
       <section className="grid grid-cols-1 items-center gap-10 pt-12 pb-16 md:grid-cols-12 md:gap-8 md:pt-20 md:pb-24">
         <div className="md:col-span-6">
           <motion.p {...rise(0)} className="text-[12px] font-medium tracking-[0.14em] text-sage uppercase">
-            Free, 3 minutes, no login
+            {t("landing.eyebrow")}
           </motion.p>
           <motion.h1
             {...rise(0.08)}
             className="mt-4 font-serif text-[42px] leading-[1.02] font-medium tracking-tight text-balance sm:text-[56px] md:text-[64px]"
           >
-            Your route through AI at work.
+            {t("landing.title")}
           </motion.h1>
           <motion.p {...rise(0.16)} className="mt-5 max-w-[46ch] text-[17px] leading-relaxed text-grey">
-            Laluan reads a CV, scores how much AI touches your tasks, and draws a free week-by-week path to a role
-            that fits.
+            {t("landing.lede")}
           </motion.p>
           <motion.div {...rise(0.24)} className="mt-8 flex flex-col gap-4">
             <button type="button" onClick={handleStart} className="btn-primary self-start px-6 py-3 text-[15px]">
-              Start
+              {t("landing.start")}
               <ArrowRight className="size-4" strokeWidth={1.8} />
             </button>
             <label
@@ -92,7 +93,7 @@ export function LandingView({ preview }: { preview: LandingPreview }) {
               >
                 {consent && <Check className="size-3" strokeWidth={2.4} />}
               </button>
-              I understand Laluan uses synthetic CVs, gives estimates, and does not make hiring decisions.
+              {t("landing.consent")}
             </label>
           </motion.div>
         </div>
@@ -108,9 +109,9 @@ export function LandingView({ preview }: { preview: LandingPreview }) {
       </section>
 
       {/* The four stops, drawn as one line */}
-      <section className="border-t border-line py-16 md:py-20">
+      <section id="about" className="border-t border-line py-16 md:py-20">
         <Reveal>
-          <h2 className="font-serif text-[28px] font-medium tracking-tight md:text-[32px]">Four stops. About three minutes.</h2>
+          <h2 className="font-serif text-[28px] font-medium tracking-tight md:text-[32px]">{t("landing.stopsTitle")}</h2>
         </Reveal>
         <div className="relative mt-10">
           <RouteLine
@@ -123,36 +124,38 @@ export function LandingView({ preview }: { preview: LandingPreview }) {
           />
           <Stagger className="grid grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-4 md:gap-6" delay={0.3} gap={0.18}>
             {STOPS.map((stop, index) => (
-              <StaggerItem key={stop.title} className="relative flex gap-4 md:flex-col md:items-center md:text-center">
+              <StaggerItem key={stop.titleKey} className="relative flex gap-4 md:flex-col md:items-center md:text-center">
                 <span
                   className={`mt-0.5 flex size-4 shrink-0 items-center justify-center rounded-full border-2 bg-paper ${index === 0 ? "border-sage bg-sage" : "border-sage"}`}
                 />
                 <div className="md:mt-2">
-                  <p className="text-[15px] font-medium">{stop.title}</p>
-                  <p className="mt-1 text-[13px] leading-relaxed text-grey">{stop.body}</p>
+                  <p className="text-[15px] font-medium">{t(stop.titleKey)}</p>
+                  <p className="mt-1 text-[13px] leading-relaxed text-grey">{t(stop.bodyKey)}</p>
                 </div>
               </StaggerItem>
             ))}
           </Stagger>
         </div>
 
-        <Reveal delay={0.1} className="mt-16 flex flex-col gap-5 border-t border-line pt-6 md:flex-row md:items-center md:justify-between">
-          <ul className="flex flex-wrap gap-x-6 gap-y-2 text-[13px]">
-            {PROMISES.map((item) => (
-              <li key={item.text} className="flex items-center gap-2">
-                <item.icon className="size-4 text-sage" strokeWidth={1.6} />
-                {item.text}
-              </li>
-            ))}
-          </ul>
-          <div className="flex flex-wrap gap-1.5">
-            {BUILT_ON.map((label) => (
-              <span key={label} className="tag">
-                {label}
-              </span>
-            ))}
-          </div>
-        </Reveal>
+        <div id="privacy">
+          <Reveal delay={0.1} className="mt-16 flex flex-col gap-5 border-t border-line pt-6 md:flex-row md:items-center md:justify-between">
+            <ul className="flex flex-wrap gap-x-6 gap-y-2 text-[13px]">
+              {PROMISES.map((item) => (
+                <li key={item.key} className="flex items-center gap-2">
+                  <item.icon className="size-4 text-sage" strokeWidth={1.6} />
+                  {t(item.key)}
+                </li>
+              ))}
+            </ul>
+            <div className="flex flex-wrap gap-1.5">
+              {BUILT_ON.map((label) => (
+                <span key={label} className="tag">
+                  {label}
+                </span>
+              ))}
+            </div>
+          </Reveal>
+        </div>
         <p className="mt-4 text-[12px] text-grey/80">
           Trend signal checked {formatDayMonthYear(preview.signalsAsOf)}. The preview above is the real result for
           Aisyah, a synthetic sample profile.

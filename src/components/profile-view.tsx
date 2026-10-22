@@ -7,7 +7,6 @@ import { useRouter } from "next/navigation";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { ArrowRight, Check, Loader2, Plus, Upload, X } from "lucide-react";
 import { toast } from "sonner";
-import { CourseLanguageToggle } from "@/components/course-language-toggle";
 import { EASE_OUT, SlideIn, SPRING } from "@/components/motion";
 import { cn } from "@/lib/utils";
 import { CV_MIME_TYPE, MAX_CV_BYTES } from "@/lib/cv-upload-limits";
@@ -22,9 +21,9 @@ const STEP_INTERVAL_MS = 900;
 
 export function ProfileView() {
   const router = useRouter();
-  const { hydrated, consent, profile, setUploadedProfile, updateProfile, addSkill, removeSkill, toggleCourseLanguage } =
-    useFlow();
+  const { hydrated, consent, profile, setUploadedProfile, updateProfile, addSkill, removeSkill } = useFlow();
   const [addingSkill, setAddingSkill] = useState(false);
+  const [skillsExpanded, setSkillsExpanded] = useState(false);
   const [skillDraft, setSkillDraft] = useState("");
   const [uploading, setUploading] = useState(false);
   const [stepIndex, setStepIndex] = useState(0);
@@ -110,6 +109,17 @@ export function ProfileView() {
   }
 
   const matchedCount = profile?.skills.filter((skill) => skill.matched).length ?? 0;
+  const initials =
+    profile?.name
+      .trim()
+      .split(/\s+/)
+      .filter(Boolean)
+      .slice(0, 2)
+      .map((word) => word[0])
+      .join("")
+      .toUpperCase() || "?";
+  const totalYears = (profile?.roles.reduce((sum, role) => sum + role.years, 0) ?? 0).toFixed(1);
+  const visibleSkills = skillsExpanded ? (profile?.skills ?? []) : (profile?.skills.slice(0, 6) ?? []);
 
   return (
     <main className="mx-auto max-w-[1248px] px-4 pb-20 sm:px-6">
@@ -175,16 +185,37 @@ export function ProfileView() {
       <AnimatePresence mode="wait">
         {profile && (
           <SlideIn key={profile.personaId} className="panel mt-8 p-6 sm:p-8">
-            <div className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
-              <div>
-                <h2 className="font-serif text-[26px] font-medium tracking-tight">Your profile</h2>
-                <p className="mt-1 text-[14px] text-grey">Remove anything wrong, add what is missing.</p>
+            <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
+              <div className="flex items-center gap-4">
+                <div className="flex size-[60px] shrink-0 items-center justify-center rounded-full bg-[#E6EFEA] font-serif text-[22px] text-[#24634A] md:size-[76px] md:text-[26px]">
+                  {initials}
+                </div>
+                <div>
+                  <p className="font-serif text-[28px] leading-[1.1] md:text-[34px]">{profile.name}</p>
+                  <p className="mt-1.5 text-grey">{profile.roles[0]?.title}</p>
+                </div>
               </div>
-              <div className="flex flex-wrap gap-1.5">
-                <span className="tag">
-                  {matchedCount} of {profile.skills.length} skills matched to ESCO
-                </span>
+              <div className="grid grid-cols-2 gap-3 md:flex">
+                <div className="rounded-xl border border-line px-4 py-3 md:min-w-[132px] md:max-w-[220px]">
+                  <p className="font-serif text-[28px] tabular-nums">{profile.skills.length}</p>
+                  <p className="text-[12px] text-grey">Skills from CV</p>
+                </div>
+                <div className="rounded-xl border border-line px-4 py-3 md:min-w-[132px] md:max-w-[220px]">
+                  <p className="font-serif text-[28px] tabular-nums">{totalYears}</p>
+                  <p className="text-[12px] text-grey">Years of experience</p>
+                </div>
+                <div className="col-span-2 rounded-xl border border-line px-4 py-3 md:col-span-1 md:min-w-[132px] md:max-w-[220px]">
+                  <p className="font-serif text-[16px] leading-snug">{profile.education[0]?.level || "—"}</p>
+                  <p className="text-[12px] text-grey">{profile.education[0]?.field || "Education"}</p>
+                </div>
               </div>
+            </div>
+
+            <div className="mt-4 flex flex-wrap items-center gap-x-3 gap-y-1.5">
+              <span className="tag">
+                {matchedCount} of {profile.skills.length} skills matched to ESCO
+              </span>
+              <p className="text-[12px] text-grey">Remove anything wrong, add what is missing.</p>
             </div>
 
             <div className="mt-7 grid grid-cols-1 gap-8 md:grid-cols-12">
@@ -204,7 +235,7 @@ export function ProfileView() {
                 </p>
                 <motion.div layout className="flex flex-wrap gap-2">
                   <AnimatePresence initial={true}>
-                    {profile.skills.map((skill, index) => (
+                    {visibleSkills.map((skill, index) => (
                       <motion.span
                         key={skill.id}
                         layout
@@ -227,6 +258,15 @@ export function ProfileView() {
                       </motion.span>
                     ))}
                   </AnimatePresence>
+                  {profile.skills.length > 6 && (
+                    <button
+                      type="button"
+                      onClick={() => setSkillsExpanded((expanded) => !expanded)}
+                      className="chip border-[#B9CFC6] bg-[#F1F6F3] font-medium text-[#24634A]"
+                    >
+                      {skillsExpanded ? "Show less" : `+${profile.skills.length - 6}`}
+                    </button>
+                  )}
                   {addingSkill ? (
                     <span className="inline-flex items-center rounded-full border border-dashed border-grey/50 py-1 pr-2 pl-3 text-[13px]">
                       <input
@@ -252,7 +292,6 @@ export function ProfileView() {
                     </button>
                   )}
                 </motion.div>
-                <p className="mt-3 text-[12px] text-grey">Skills you add count at half weight until a course confirms them.</p>
 
                 <p className="mt-7 mb-1 text-[12px] text-grey">Roles</p>
                 <ul className="divide-y divide-line text-[14px]">
@@ -325,10 +364,6 @@ export function ProfileView() {
                     <Plus className="size-3.5" strokeWidth={1.8} />
                     Add education
                   </button>
-                </div>
-                <div>
-                  <p className="mb-2 text-[12px] text-grey">Course language</p>
-                  <CourseLanguageToggle value={profile.courseLanguages} onToggle={toggleCourseLanguage} />
                 </div>
               </div>
             </div>

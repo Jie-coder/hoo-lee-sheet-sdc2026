@@ -1,4 +1,4 @@
-// Click-to-open "ⓘ" popover for long explanations (scenario descriptions,
+// Hover (desktop) or tap (mobile) "ⓘ" popover for long explanations (scenario descriptions,
 // "Why we ask", "How this plan was built"). A real button with
 // aria-expanded/aria-controls so it's keyboard operable; closes on Escape
 // or an outside click/focus.
@@ -22,6 +22,7 @@ export function InfoPopover({
   const [open, setOpen] = useState(false);
   const id = useId();
   const rootRef = useRef<HTMLDivElement>(null);
+  const openedByHover = useRef(false);
 
   useEffect(() => {
     if (!open) return;
@@ -45,13 +46,32 @@ export function InfoPopover({
   }, [open]);
 
   return (
-    <div ref={rootRef} className={cn("relative inline-flex", className)}>
+    <div
+      ref={rootRef}
+      className={cn("relative inline-flex", className)}
+      // Desktop: open on hover. Touch keeps tap-to-toggle via the button.
+      onPointerEnter={(event) => {
+        if (event.pointerType !== "mouse") return;
+        openedByHover.current = true;
+        setOpen(true);
+      }}
+      onPointerLeave={(event) => {
+        if (event.pointerType !== "mouse") return;
+        openedByHover.current = false;
+        setOpen(false);
+      }}
+    >
       <button
         type="button"
         aria-expanded={open}
         aria-controls={id}
         aria-label={label}
-        onClick={() => setOpen((current) => !current)}
+        onClick={() => {
+          // A click right after hover-open pins it open instead of closing it.
+          const pin = openedByHover.current;
+          openedByHover.current = false;
+          setOpen((current) => (pin ? true : !current));
+        }}
         className="inline-flex items-center text-grey hover:text-ink"
       >
         <Info className="size-4" strokeWidth={1.6} />

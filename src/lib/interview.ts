@@ -23,12 +23,23 @@ export const BUDGET_CHIPS = [
   { label: "No limit", value: 2000 },
 ] as const;
 
-/** Quick-reply percentages for a task's time share, as fractions of the week. */
-export const TASK_SHARE_CHIPS = [
-  { label: "~10%", value: 0.1 },
-  { label: "~25%", value: 0.25 },
-  { label: "~40%", value: 0.4 },
-  { label: "50%+", value: 0.5 },
+/** Three-level choices for how much time a non-main task takes. */
+export const TASK_WEIGHT_LEVELS = [
+  { value: "lot", label: "A lot", weight: 0.6 },
+  { value: "some", label: "Some", weight: 0.35 },
+  { value: "little", label: "A little", weight: 0.15 },
+] as const;
+
+/** Multi-select tools that can be picked in turn 3. */
+export const TOOL_CHIPS = [
+  "Microsoft Office",
+  "Google Workspace",
+  "Excel/Sheets",
+  "Canva",
+  "ChatGPT/Claude/Gemini",
+  "Zoom/Teams",
+  "Accounting software",
+  "Other",
 ] as const;
 
 export const AI_USAGE_CHIPS: ReadonlyArray<{ value: AiUsage; label: string }> = [
@@ -68,8 +79,8 @@ export const INTERVIEW_QUESTIONS: Readonly<Record<number, InterviewQuestionCopy>
     why: "Sets the pace and budget for your pathway plan.",
   },
   2: {
-    title: "Roughly how much of your week goes to each task?",
-    subtitle: "I found these tasks in your CV. A rough guess is fine.",
+    title: "Which task takes most of your week?",
+    subtitle: "I found these tasks in your CV. Pick your main one, then say how much time the others take.",
     why: "The time you spend on each task weights your AI exposure and augmentation scores.",
   },
   3: {
@@ -100,4 +111,17 @@ export function normalizeTaskShares(shares: readonly number[]): number[] {
   const total = shares.reduce((sum, value) => sum + value, 0);
   if (total <= 0) return splitTaskSharesEvenly(shares.length);
   return shares.map((value) => value / total);
+}
+
+/**
+ * Task shares from a main task plus a weight level for each other task.
+ * The main task weighs 1.0; others use their level weight, then normalise.
+ */
+export function taskSharesFromLevels(mainIndex: number, levels: string[]): number[] {
+  const shares = levels.map((level, index) => {
+    if (index === mainIndex) return 1;
+    const match = TASK_WEIGHT_LEVELS.find((entry) => entry.value === level);
+    return match?.weight ?? 0.35;
+  });
+  return normalizeTaskShares(shares);
 }
