@@ -6,6 +6,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import type { RolesRequest, RolesResponse } from "@/app/api/roles/route";
 import type { FlowProfile } from "@/context/flow-context";
+import type { SignalDate } from "@/lib/analyze";
 import type { ImpactInterest } from "@/types/contracts";
 
 const cache = new Map<string, RolesResponse>();
@@ -15,18 +16,27 @@ export type RolesState =
   | { status: "error"; message: string }
   | { status: "ready"; data: RolesResponse };
 
-export function rolesRequest(profile: FlowProfile, impactInterest: ImpactInterest | undefined): RolesRequest {
+export function rolesRequest(
+  profile: FlowProfile,
+  impactInterest: ImpactInterest | undefined,
+  signalDate: SignalDate = "today",
+): RolesRequest {
   return {
     personaId: profile.personaId,
     skills: profile.skills.map((skill) => ({ label: skill.label, selfReported: skill.selfReported })),
     impactInterest: impactInterest ?? "none",
+    signalDate,
   };
 }
 
-export function useRoles(profile: FlowProfile | null, impactInterest: ImpactInterest | undefined) {
+export function useRoles(
+  profile: FlowProfile | null,
+  impactInterest: ImpactInterest | undefined,
+  signalDate: SignalDate = "today",
+) {
   const key = useMemo(
-    () => (profile ? JSON.stringify(rolesRequest(profile, impactInterest)) : null),
-    [profile, impactInterest],
+    () => (profile ? JSON.stringify(rolesRequest(profile, impactInterest, signalDate)) : null),
+    [profile, impactInterest, signalDate],
   );
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [, setLoaded] = useState(0);

@@ -17,7 +17,10 @@ import { sdgFlagId } from "@/components/sdg-badge";
 import { SdgLegend } from "@/components/sdg-legend";
 import { Skeleton } from "@/components/ui/skeleton";
 import { InfoPopover } from "@/components/ui/info-popover";
-import { formatDayMonthYear } from "@/lib/display";
+import { SignalDateToggle } from "@/components/signal-date-toggle";
+import type { SignalDate } from "@/lib/analyze";
+import { describeChangeShort, rankChanges } from "@/lib/compare-snapshots";
+import { formatDayMonthYear, formatShortDate } from "@/lib/display";
 import { explainRole } from "@/lib/explain";
 import { rankRoles } from "@/lib/rank-roles";
 import { useRoles } from "@/lib/use-roles";
@@ -28,7 +31,11 @@ export function ResultsView() {
   const router = useRouter();
   const reduce = useReducedMotion();
   const { hydrated, consent, profile, interviewAnswers, setChosenRoleId } = useFlow();
-  const { state, retry } = useRoles(profile, interviewAnswers.impact_interest);
+  const [signalDate, setSignalDate] = useState<SignalDate>("today");
+  const { state, retry } = useRoles(profile, interviewAnswers.impact_interest, signalDate);
+  // Both snapshots, so the page can say what moved between them (cached per request).
+  const todayRoles = useRoles(profile, interviewAnswers.impact_interest, "today").state;
+  const priorRoles = useRoles(profile, interviewAnswers.impact_interest, "prior").state;
   const [scenario, setScenario] = useState<ScenarioId>("co");
   const [chosenId, setChosenId] = useState<string | null>(null);
   const [flaggedIds, setFlaggedIds] = useState<Set<string>>(() => new Set());
@@ -43,6 +50,10 @@ export function ResultsView() {
 
   const data = state.status === "ready" ? state.data : null;
   const ranked = data ? rankRoles(data.roles, scenario) : [];
+  const changes =
+    todayRoles.status === "ready" && priorRoles.status === "ready" && todayRoles.data.signalDates.prior
+      ? rankChanges(priorRoles.data.roles, todayRoles.data.roles, scenario)
+      : null;
   const persona = profile.personaId === "upload" ? null : PERSONAS[profile.personaId];
   const matchedCount = data?.skillMatches.filter((match) => match.escoLabels.length > 0).length ?? 0;
 
@@ -129,6 +140,22 @@ export function ResultsView() {
                   </InfoPopover>
                 </div>
               </div>
+
+              {data.signalDates.prior && (
+                <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                  <p className="text-[13px] text-grey" aria-live="polite">
+                    {changes && changes.length > 0 ? (
+                      <>
+                        <span className="text-ink">Since {formatShortDate(data.signalDates.prior)}:</span>{" "}
+                        {changes.slice(0, 3).map(describeChangeShort).join(" · ")}
+                      </>
+                    ) : (
+                      <>Same order as on {formatShortDate(data.signalDates.prior)}. New arXiv counts only nudged the scores.</>
+                    )}
+                  </p>
+                  <SignalDateToggle value={data.signalDate} dates={data.signalDates} onChange={setSignalDate} />
+                </div>
+              )}
 
               <LayoutGroup>
                 <div className="mt-6 grid grid-cols-1 gap-5 lg:grid-cols-3">

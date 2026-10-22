@@ -4495,6 +4495,92 @@
    "checkedOn": "2026-10-19"
   }
  },
+ "priorSignalsAsOf": "2026-09-19",
+ "priorSignals": {
+  "9710092c-f174-4e84-95bf-2064d39ad7a0": {
+   "momentum": -0.05505977718302743,
+   "keywords": [
+    "document understanding"
+   ],
+   "checkedOn": "2026-09-19"
+  },
+  "e465a154-93f7-4973-9ce1-31659fe16dd2": {
+   "momentum": 0.00982467999500744,
+   "keywords": [
+    "AI agents",
+    "prompt engineering",
+    "multi-modal AI",
+    "AI ethics"
+   ],
+   "checkedOn": "2026-09-19"
+  },
+  "2af29864-c941-40a5-ae7b-2b6c4b92c0d7": {
+   "momentum": -0.04732065619007196,
+   "keywords": [
+    "speech recognition"
+   ],
+   "checkedOn": "2026-09-19"
+  },
+  "21d2f96d-35f7-4e3f-9745-c533d2dd6e97": {
+   "momentum": -0.3202906537699712,
+   "keywords": [
+    "code generation"
+   ],
+   "checkedOn": "2026-09-19"
+  },
+  "9ff9db9d-d14b-426e-83f3-e7449af6c79f": {
+   "momentum": -0.12102961592769601,
+   "keywords": [
+    "retrieval augmented generation",
+    "knowledge graphs",
+    "federated learning",
+    "AI governance",
+    "data labeling"
+   ],
+   "checkedOn": "2026-09-19"
+  },
+  "38d49d88-9069-467b-b29e-3cae739bdd4d": {
+   "momentum": 0.5653138090500605,
+   "keywords": [
+    "predictive maintenance"
+   ],
+   "checkedOn": "2026-09-19"
+  },
+  "2b92a5b2-6758-4ee3-9fb4-b6387a55cc8f": {
+   "momentum": -0.31265329098971717,
+   "keywords": [
+    "sentiment analysis",
+    "synthetic data",
+    "anomaly detection",
+    "time series forecasting"
+   ],
+   "checkedOn": "2026-09-19"
+  },
+  "8369c2d6-c100-4cf6-bd83-9668d8678433": {
+   "momentum": -0.16047483778622743,
+   "keywords": [
+    "reinforcement learning",
+    "autonomous vehicles",
+    "few-shot learning",
+    "vision language models"
+   ],
+   "checkedOn": "2026-09-19"
+  },
+  "32a2c63d-2d13-4784-abb8-678ef2cd8a46": {
+   "momentum": -0.033616610798984974,
+   "keywords": [
+    "machine translation"
+   ],
+   "checkedOn": "2026-09-19"
+  },
+  "1d6c7de4-350e-4868-a47b-333b4b0d9650": {
+   "momentum": -0.020834086902842025,
+   "keywords": [
+    "explainable AI"
+   ],
+   "checkedOn": "2026-09-19"
+  }
+ },
  "sources": {
   "Anthropic Economic Index": {
    "name": "Anthropic Economic Index",

@@ -73,6 +73,9 @@ export type Catalogue = {
   /** ESCO group id -> label, e.g. "managing, gathering and storing digital data". */
   groupLabels: Record<string, string>;
   signals: Record<string, CatalogueSignal>;
+  /** The same keywords counted about 30 days earlier (data/keywords_prior.csv), or null when not collected. */
+  priorSignalsAsOf: IsoDate | null;
+  priorSignals: Record<string, CatalogueSignal> | null;
   sources: Record<string, CatalogueSource>;
   courses: Course[];
   programmes: Programme[];

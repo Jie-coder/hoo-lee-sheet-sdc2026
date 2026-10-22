@@ -39,7 +39,13 @@ export type AnalyzeInput = {
   /** The user's current job in occupations.csv; it is never recommended back to them. */
   currentOccupationId: string | null;
   impactInterest: ImpactInterest;
+  /** Which arXiv snapshot to rank with: today's, or the one ~30 days earlier. Defaults to today. */
+  signalDate?: SignalDate;
 };
+
+/** "prior" is the snapshot in data/keywords_prior.csv, about 30 days before "today". */
+export const SIGNAL_DATES = ["today", "prior"] as const;
+export type SignalDate = (typeof SIGNAL_DATES)[number];
 
 export type RoleStatusTone = "robust" | "shift" | "interest";
 
@@ -61,7 +67,10 @@ export type RoleBreakdown = {
 };
 
 export type AnalyzeResult = {
+  signalDate: SignalDate;
   signalsAsOf: IsoDate;
+  /** Both snapshot dates, so the page can label the toggle. prior is null when it wasn't collected. */
+  signalDates: { today: IsoDate; prior: IsoDate | null };
   currentWork: { occupationId: string; title: string; exposure: number; groupEstimate: boolean; sources: Source[] } | null;
   roles: RoleResult[];
   breakdown: Record<string, RoleBreakdown>;
@@ -123,6 +132,12 @@ function topIds(roles: readonly RoleResult[], scenario: ScenarioId): Set<string>
 export const RELATED_SKILL_CREDIT = 0.5;
 
 export function analyzeProfile(catalogue: Catalogue, input: AnalyzeInput): AnalyzeResult {
+  // The prior snapshot falls back to today's when it wasn't collected.
+  const usePrior = input.signalDate === "prior" && catalogue.priorSignals != null && catalogue.priorSignalsAsOf != null;
+  const signalDate: SignalDate = usePrior ? "prior" : "today";
+  const signals = usePrior ? (catalogue.priorSignals as Catalogue["signals"]) : catalogue.signals;
+  const signalsAsOf = usePrior ? (catalogue.priorSignalsAsOf as IsoDate) : catalogue.signalsAsOf;
+
   const userLevel = new Map<string, number>();
   const groupLevel = new Map<string, number>();
   for (const skill of input.skills) {
@@ -156,7 +171,7 @@ export function analyzeProfile(catalogue: Catalogue, input: AnalyzeInput): Analy
         skillId,
         label: catalogue.skills[skillId] ?? skillId,
         baseImportance: BASE_IMPORTANCE,
-        momentum: catalogue.signals[skillId]?.momentum ?? 0,
+        momentum: signals[skillId]?.momentum ?? 0,
         level: levelFor(skillId),
         teachable: teachable.has(skillId),
       }),
@@ -166,7 +181,7 @@ export function analyzeProfile(catalogue: Catalogue, input: AnalyzeInput): Analy
 
   const scored = scoreRoles(candidates, input.impactInterest);
   const byId = new Map(scorable.map((occupation) => [occupation.id, occupation]));
-  const asOf = catalogue.signalsAsOf;
+  const asOf = signalsAsOf;
 
   const roles: RoleResult[] = scored.map((role) => {
     const occupation = byId.get(role.occupationId) as CatalogueOccupation;
@@ -210,11 +225,11 @@ export function analyzeProfile(catalogue: Catalogue, input: AnalyzeInput): Analy
       ) as ScenarioScores,
       exposureGroupEstimate: occupation.exposure?.groupEstimate ?? false,
       trendSkills: occupation.essentialSkillIds
-        .filter((id) => catalogue.signals[id])
+        .filter((id) => signals[id])
         .map((id) => ({
           label: catalogue.skills[id] ?? id,
-          momentum: catalogue.signals[id].momentum,
-          keywords: catalogue.signals[id].keywords,
+          momentum: signals[id].momentum,
+          keywords: signals[id].keywords,
         })),
       interestMatch,
       status: statusFor(role, topByScenario, interestMatch, input.impactInterest),
@@ -235,7 +250,9 @@ export function analyzeProfile(catalogue: Catalogue, input: AnalyzeInput): Analy
   );
 
   return {
+    signalDate,
     signalsAsOf: asOf,
+    signalDates: { today: catalogue.signalsAsOf, prior: catalogue.priorSignalsAsOf },
     currentWork:
       current?.exposure != null
         ? {

@@ -12,6 +12,7 @@ export const FILE_KEYS = [
   "exposure",
   "occupations",
   "occupation_skills",
+  "keywords_prior",
 ] as const;
 export type FileKey = (typeof FILE_KEYS)[number];
 
@@ -140,6 +141,24 @@ export const FILE_SPECS: Record<FileKey, FileSpec> = {
     filename: "occupation_skills.csv",
     aliases: ["occupation_skills", "occupation-skills"],
     headers: ["occupation_id", "skill_uri", "skill_label", "relation", "source_name", "as_of"],
+  },
+  // The same keywords counted 30 days earlier (scripts/fetch-arxiv.ts --as-of … --out),
+  // so the results page can compare two dated snapshots (T10).
+  keywords_prior: {
+    key: "keywords_prior",
+    filename: "keywords_prior.csv",
+    aliases: ["keywords_prior", "keywords-prior"],
+    headers: [
+      "keyword",
+      "arxiv_query",
+      "skills",
+      "skill_uris",
+      "direction",
+      "count_last_90d",
+      "count_prev_90d",
+      "checked_on",
+      "notes",
+    ],
   },
 };
 
