@@ -64,6 +64,16 @@ export const COURSE_MODES = ["online", "physical", "hybrid"] as const;
 export const CourseModeSchema = z.enum(COURSE_MODES);
 export type CourseMode = z.infer<typeof CourseModeSchema>;
 
+/**
+ * How much AI content a course actually teaches, hand-reviewed per course
+ * against its own page (see data/course_ai_evidence.csv for the evidence
+ * and the URL checked): "ai" teaches AI concepts/tools directly, "digital"
+ * teaches non-AI digital tools/software, "none" teaches neither.
+ */
+export const COURSE_AI_CONTENT_LEVELS = ["ai", "digital", "none"] as const;
+export const CourseAiContentSchema = z.enum(COURSE_AI_CONTENT_LEVELS);
+export type CourseAiContent = z.infer<typeof CourseAiContentSchema>;
+
 /** How the user already uses AI tools. Sets a starting level, not a score. */
 export const AI_USAGE_LEVELS = ["none", "tried", "occasional", "regular"] as const;
 export const AiUsageSchema = z.enum(AI_USAGE_LEVELS);
@@ -455,6 +465,7 @@ export const CourseSchema = z
     skillIds: z.array(z.string().min(1)),
     lastChecked: IsoDateSchema,
     mode: CourseModeSchema,
+    aiContent: CourseAiContentSchema,
   })
   .describe("Curated course the pathway may cite by id.");
 export type Course = z.infer<typeof CourseSchema>;

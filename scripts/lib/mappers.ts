@@ -152,6 +152,7 @@ export function mapCourseRow(raw: Record<string, string>, row: number): CourseRo
     skillIds: skillUris.map(escoUriToId),
     lastChecked: raw.last_checked ?? "",
     mode: (raw.mode ?? "").trim().toLowerCase(),
+    aiContent: (raw.ai_content ?? "").trim().toLowerCase(),
   };
 
   const parsed = CourseSchema.safeParse(candidate);

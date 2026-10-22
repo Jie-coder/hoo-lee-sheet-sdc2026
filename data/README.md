@@ -23,8 +23,17 @@ Lists inside one cell use a comma for codes (`en,ms`) and a semicolon for names 
 | last_checked | YYYY-MM-DD |
 | notes | anything uncertain |
 | mode | online, physical, or hybrid (how the course is delivered) |
+| ai_content | ai, digital, or none (ai = teaches AI concepts/tools directly, digital = teaches non-AI digital tools/software, none = neither). See `course_ai_evidence.csv` for the evidence and checked URL behind each value; not shown in the UI. |
 
 Language mix: at least 10 BM courses, at least 5 Chinese courses, the rest English.
+
+### `course_ai_evidence.csv`
+Evidence backing each course's `ai_content` value in `courses.csv`. Not part of the import/validation pipeline and not shown in the UI — a paper trail for reviewers only.
+| column | values |
+|---|---|
+| course_id | matches a courses.csv id |
+| evidence | quoted module/tool names or skills found on the course page |
+| check_url | the URL checked for evidence |
 
 ### `programmes.csv`
 | column | values |

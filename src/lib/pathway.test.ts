@@ -21,6 +21,7 @@ function course(overrides: Partial<Course>): Course {
     skillIds: ["example-skill"],
     lastChecked: "2026-10-01",
     mode: "online",
+    aiContent: "none",
     ...overrides,
   };
 }
@@ -64,6 +65,31 @@ describe("course study-language filter", () => {
   it("falls back across languages when nothing matches the study language", () => {
     const pool: Course[] = [course({ id: "zh-only-skill", skillIds: ["s2"], languages: ["zh"] })];
     expect(pickCourseForSkill("s2", pool, ["en"])?.id).toBe("zh-only-skill");
+  });
+
+  it("among equal cost and gap-fill, tie-breaks ai > digital > none", () => {
+    const pool: Course[] = [
+      course({ id: "none-tier", skillIds: ["s1"], costType: "free", hours: 5, aiContent: "none" }),
+      course({ id: "digital-tier", skillIds: ["s1"], costType: "free", hours: 5, aiContent: "digital" }),
+      course({ id: "ai-tier", skillIds: ["s1"], costType: "free", hours: 5, aiContent: "ai" }),
+    ];
+    expect(pickCourseForSkill("s1", pool, ["en"])?.id).toBe("ai-tier");
+  });
+
+  it("the AI-content tie-break never beats cost: a cheaper none-tier course still wins over a pricier ai-tier one", () => {
+    const pool: Course[] = [
+      course({ id: "paid-ai", skillIds: ["s1"], costType: "paid", hours: 5, aiContent: "ai" }),
+      course({ id: "free-none", skillIds: ["s1"], costType: "free", hours: 5, aiContent: "none" }),
+    ];
+    expect(pickCourseForSkill("s1", pool, ["en"])?.id).toBe("free-none");
+  });
+
+  it("the AI-content tie-break outranks hours: a longer ai-tier course beats a shorter digital-tier one at the same cost", () => {
+    const pool: Course[] = [
+      course({ id: "short-digital", skillIds: ["s1"], costType: "free", hours: 1, aiContent: "digital" }),
+      course({ id: "long-ai", skillIds: ["s1"], costType: "free", hours: 10, aiContent: "ai" }),
+    ];
+    expect(pickCourseForSkill("s1", pool, ["en"])?.id).toBe("long-ai");
   });
 });
 

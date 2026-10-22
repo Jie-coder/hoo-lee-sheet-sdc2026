@@ -35,7 +35,15 @@ import { useFlow } from "@/context/flow-context";
 import { buildPathwayPlan, programmeEligibilityStatus } from "@/lib/pathway";
 import { useRoles } from "@/lib/use-roles";
 import { cn } from "@/lib/utils";
-import type { Course, CostType, PlanStep, Programme } from "@/types/contracts";
+import type { Course, CostType, CourseAiContent, PlanStep, Programme } from "@/types/contracts";
+
+/** Course-card badge for ai_content. "none" shows nothing, and this never
+ * applies to the AI untuk Rakyat programme step (programmes have no
+ * aiContent field; only step.kind === "course" items are checked below). */
+const AI_CONTENT_BADGE: Partial<Record<CourseAiContent, string>> = {
+  ai: "AI",
+  digital: "数字工具",
+};
 
 const COST_LABEL: Record<CostType, string> = {
   free: "Free",
@@ -290,6 +298,7 @@ export function PathwayView({
                     step.weekStart === step.weekEnd ? `Week ${step.weekStart}` : `Weeks ${step.weekStart} to ${step.weekEnd}`;
                   const eligibility = step.kind === "program" ? programmeEligibilityStatus(item as Programme, interviewAnswers) : null;
                   const CostIcon = COST_ICON[item.costType];
+                  const aiContentBadge = step.kind === "course" ? AI_CONTENT_BADGE[(item as Course).aiContent] : undefined;
                   return (
                     <li key={step.itemId} className="grid grid-cols-[32px_1fr] gap-x-4">
                       {/* z-10 keeps the station above the route line drawn behind the list */}
@@ -320,6 +329,7 @@ export function PathwayView({
                               <CostIcon className="size-3" strokeWidth={1.6} />
                               {COST_LABEL[item.costType]}
                             </span>
+                            {aiContentBadge && <span className="tag font-sans text-[11px] font-medium text-ink">{aiContentBadge}</span>}
                             <span className="flex items-center gap-1 text-grey">
                               <Clock3 className="size-3.5" strokeWidth={1.6} />
                               {"hours" in item ? `${item.hours} h` : <span className="text-xs text-grey">Hours not listed</span>}

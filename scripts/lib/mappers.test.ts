@@ -26,6 +26,7 @@ const VALID_COURSE_ROW = {
   last_checked: "2026-10-01",
   notes: "",
   mode: "online",
+  ai_content: "digital",
 };
 
 describe("mapCourseRow", () => {

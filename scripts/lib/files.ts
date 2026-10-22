@@ -50,6 +50,7 @@ export const FILE_SPECS: Record<FileKey, FileSpec> = {
       "last_checked",
       "notes",
       "mode",
+      "ai_content",
     ],
   },
   programmes: {

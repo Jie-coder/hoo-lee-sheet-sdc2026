@@ -2426,9 +2426,9 @@
   "b1272de4-1f5f-408b-8b26-061f2550fc72": "e-commerce systems",
   "7111b95d-0ce3-441a-9d92-4c75d05c4388": "project management",
   "0a9acb6b-1139-4be9-b431-3a80a959f2f4": "Agile project management",
-  "29fb0fb5-dfc4-4098-ac9b-3a712000f48f": "manage database",
   "7364cc39-b9c0-449f-9416-57723e2fd9c4": "utilise methodologies for user centered design",
   "bacbfc27-4b5d-47de-8bfd-af5fa27562a2": "design prototypes",
+  "29fb0fb5-dfc4-4098-ac9b-3a712000f48f": "manage database",
   "15d76317-c71a-4fa2-aadc-2ecc34e627b7": "communication",
   "0da516ee-e70e-4384-be13-f5ff80be8127": "communicate with customers",
   "a4346013-a967-4a58-a533-6b32ad1364c5": "data protection",
@@ -5952,7 +5952,8 @@
     "2b92a5b2-6758-4ee3-9fb4-b6387a55cc8f"
    ],
    "lastChecked": "2026-10-21",
-   "mode": "online"
+   "mode": "online",
+   "aiContent": "ai"
   },
   {
    "id": "c002",
@@ -5971,7 +5972,8 @@
     "3c76296d-4bbd-44ba-8eaa-95bf275f79b7"
    ],
    "lastChecked": "2026-10-21",
-   "mode": "online"
+   "mode": "online",
+   "aiContent": "ai"
   },
   {
    "id": "c003",
@@ -5990,7 +5992,8 @@
     "a7f0fbe0-c546-4f30-8e41-34a58c64567e"
    ],
    "lastChecked": "2026-10-21",
-   "mode": "online"
+   "mode": "online",
+   "aiContent": "digital"
   },
   {
    "id": "c004",
@@ -6008,7 +6011,8 @@
     "5b9cde20-f1b9-4adc-bfb3-dbf70b14138d"
    ],
    "lastChecked": "2026-10-21",
-   "mode": "online"
+   "mode": "online",
+   "aiContent": "digital"
   },
   {
    "id": "c005",
@@ -6026,7 +6030,8 @@
     "382c11ed-20d5-4ae7-b60e-15fec527fa6c"
    ],
    "lastChecked": "2026-10-21",
-   "mode": "online"
+   "mode": "online",
+   "aiContent": "digital"
   },
   {
    "id": "c006",
@@ -6046,7 +6051,8 @@
     "d15ce60f-ddab-41ce-ba56-398451b77b60"
    ],
    "lastChecked": "2026-10-21",
-   "mode": "online"
+   "mode": "online",
+   "aiContent": "ai"
   },
   {
    "id": "c007",
@@ -6064,7 +6070,8 @@
     "8369c2d6-c100-4cf6-bd83-9668d8678433"
    ],
    "lastChecked": "2026-10-21",
-   "mode": "online"
+   "mode": "online",
+   "aiContent": "ai"
   },
   {
    "id": "c008",
@@ -6082,7 +6089,8 @@
     "0868eef3-2213-4572-9343-74931345a7d3"
    ],
    "lastChecked": "2026-10-21",
-   "mode": "online"
+   "mode": "online",
+   "aiContent": "digital"
   },
   {
    "id": "c009",
@@ -6100,7 +6108,8 @@
     "21d2f96d-35f7-4e3f-9745-c533d2dd6e97"
    ],
    "lastChecked": "2026-10-21",
-   "mode": "online"
+   "mode": "online",
+   "aiContent": "digital"
   },
   {
    "id": "c010",
@@ -6118,7 +6127,8 @@
     "5303169c-75d6-4751-9136-a4b88343388c"
    ],
    "lastChecked": "2026-10-21",
-   "mode": "online"
+   "mode": "online",
+   "aiContent": "digital"
   },
   {
    "id": "c011",
@@ -6137,7 +6147,8 @@
     "2b92a5b2-6758-4ee3-9fb4-b6387a55cc8f"
    ],
    "lastChecked": "2026-10-21",
-   "mode": "online"
+   "mode": "online",
+   "aiContent": "digital"
   },
   {
    "id": "c012",
@@ -6155,7 +6166,8 @@
     "8ff015a0-98ea-4d80-a23e-1f68110a919e"
    ],
    "lastChecked": "2026-10-21",
-   "mode": "physical"
+   "mode": "physical",
+   "aiContent": "ai"
   },
   {
    "id": "c013",
@@ -6173,7 +6185,8 @@
     "0868eef3-2213-4572-9343-74931345a7d3"
    ],
    "lastChecked": "2026-10-21",
-   "mode": "hybrid"
+   "mode": "hybrid",
+   "aiContent": "digital"
   },
   {
    "id": "c014",
@@ -6191,7 +6204,8 @@
     "b1272de4-1f5f-408b-8b26-061f2550fc72"
    ],
    "lastChecked": "2026-10-21",
-   "mode": "online"
+   "mode": "online",
+   "aiContent": "ai"
   },
   {
    "id": "c015",
@@ -6209,25 +6223,8 @@
     "0a9acb6b-1139-4be9-b431-3a80a959f2f4"
    ],
    "lastChecked": "2026-10-21",
-   "mode": "online"
-  },
-  {
-   "id": "c016",
-   "title": "Microsoft Certified Power Automate RPA Developer",
-   "provider": "Yayasan Peneraju",
-   "url": "https://peneraju.org/course-details?id=165",
-   "languages": [
-    "en"
-   ],
-   "hours": 40,
-   "costType": "free",
-   "certificate": true,
-   "skillIds": [
-    "21d2f96d-35f7-4e3f-9745-c533d2dd6e97",
-    "29fb0fb5-dfc4-4098-ac9b-3a712000f48f"
-   ],
-   "lastChecked": "2026-10-21",
-   "mode": "hybrid"
+   "mode": "online",
+   "aiContent": "none"
   },
   {
    "id": "c017",
@@ -6245,7 +6242,8 @@
     "bacbfc27-4b5d-47de-8bfd-af5fa27562a2"
    ],
    "lastChecked": "2026-10-21",
-   "mode": "online"
+   "mode": "online",
+   "aiContent": "ai"
   },
   {
    "id": "c018",
@@ -6263,13 +6261,14 @@
     "8369c2d6-c100-4cf6-bd83-9668d8678433"
    ],
    "lastChecked": "2026-10-21",
-   "mode": "online"
+   "mode": "online",
+   "aiContent": "ai"
   },
   {
    "id": "c019",
    "title": "Data Science 360 Certification",
    "provider": "The LEAD",
-   "url": "https://thelead.io/online-courses/",
+   "url": "https://thelead.io/data-science-360/",
    "languages": [
     "en"
    ],
@@ -6281,7 +6280,8 @@
     "8369c2d6-c100-4cf6-bd83-9668d8678433"
    ],
    "lastChecked": "2026-10-21",
-   "mode": "online"
+   "mode": "online",
+   "aiContent": "ai"
   },
   {
    "id": "c020",
@@ -6299,7 +6299,8 @@
     "2b92a5b2-6758-4ee3-9fb4-b6387a55cc8f"
    ],
    "lastChecked": "2026-10-21",
-   "mode": "online"
+   "mode": "online",
+   "aiContent": "digital"
   },
   {
    "id": "c021",
@@ -6317,7 +6318,8 @@
     "29fb0fb5-dfc4-4098-ac9b-3a712000f48f"
    ],
    "lastChecked": "2026-10-21",
-   "mode": "online"
+   "mode": "online",
+   "aiContent": "digital"
   },
   {
    "id": "c022",
@@ -6335,7 +6337,8 @@
     "43dfbe7f-9e10-4871-b171-e5076737b4cf"
    ],
    "lastChecked": "2026-10-21",
-   "mode": "online"
+   "mode": "online",
+   "aiContent": "none"
   },
   {
    "id": "c023",
@@ -6354,13 +6357,14 @@
     "0da516ee-e70e-4384-be13-f5ff80be8127"
    ],
    "lastChecked": "2026-10-21",
-   "mode": "online"
+   "mode": "online",
+   "aiContent": "none"
   },
   {
    "id": "c024",
    "title": "Semiconductor IC Design and AI for Semiconductor Engineering (Designated Prog)",
    "provider": "Yayasan Peneraju",
-   "url": "https://peneraju.org/courses?interest=Digital%20Technology%20Builder",
+   "url": "https://peneraju.org/course-details?id=791",
    "languages": [
     "en",
     "ms"
@@ -6373,7 +6377,8 @@
     "21d2f96d-35f7-4e3f-9745-c533d2dd6e97"
    ],
    "lastChecked": "2026-10-21",
-   "mode": "hybrid"
+   "mode": "hybrid",
+   "aiContent": "digital"
   },
   {
    "id": "c025",
@@ -6393,7 +6398,8 @@
     "43dfbe7f-9e10-4871-b171-e5076737b4cf"
    ],
    "lastChecked": "2026-10-21",
-   "mode": "physical"
+   "mode": "physical",
+   "aiContent": "digital"
   },
   {
    "id": "c026",
@@ -6411,7 +6417,8 @@
     "6833e58b-eceb-4599-9375-1b7e6ec64087"
    ],
    "lastChecked": "2026-10-21",
-   "mode": "online"
+   "mode": "online",
+   "aiContent": "none"
   },
   {
    "id": "c027",
@@ -6429,7 +6436,8 @@
     "656b2dab-4ace-4afa-bad4-d9ddef577e2b"
    ],
    "lastChecked": "2026-10-21",
-   "mode": "online"
+   "mode": "online",
+   "aiContent": "none"
   },
   {
    "id": "c028",
@@ -6447,7 +6455,8 @@
     "2b92a5b2-6758-4ee3-9fb4-b6387a55cc8f"
    ],
    "lastChecked": "2026-10-21",
-   "mode": "physical"
+   "mode": "physical",
+   "aiContent": "none"
   },
   {
    "id": "c029",
@@ -6466,7 +6475,8 @@
     "fd446407-b08e-49da-b8e3-7e7c79618c3f"
    ],
    "lastChecked": "2026-10-21",
-   "mode": "online"
+   "mode": "online",
+   "aiContent": "none"
   },
   {
    "id": "c030",
@@ -6484,7 +6494,8 @@
     "143769cb-b61e-47d8-a61e-eedfbec1016c"
    ],
    "lastChecked": "2026-10-21",
-   "mode": "hybrid"
+   "mode": "hybrid",
+   "aiContent": "digital"
   },
   {
    "id": "c031",
@@ -6503,7 +6514,8 @@
     "21d2f96d-35f7-4e3f-9745-c533d2dd6e97"
    ],
    "lastChecked": "2026-10-21",
-   "mode": "online"
+   "mode": "online",
+   "aiContent": "ai"
   },
   {
    "id": "c032",
@@ -6522,7 +6534,8 @@
     "0da516ee-e70e-4384-be13-f5ff80be8127"
    ],
    "lastChecked": "2026-10-21",
-   "mode": "online"
+   "mode": "online",
+   "aiContent": "none"
   },
   {
    "id": "c033",
@@ -6540,7 +6553,8 @@
     "0a48d064-dd04-47fb-a00d-85e9b4874033"
    ],
    "lastChecked": "2026-10-21",
-   "mode": "online"
+   "mode": "online",
+   "aiContent": "none"
   },
   {
    "id": "c034",
@@ -6559,7 +6573,8 @@
     "c2296e2e-5fef-4f24-a24f-e5b3792268be"
    ],
    "lastChecked": "2026-10-21",
-   "mode": "online"
+   "mode": "online",
+   "aiContent": "digital"
   },
   {
    "id": "c035",
@@ -6577,7 +6592,8 @@
     "656b2dab-4ace-4afa-bad4-d9ddef577e2b"
    ],
    "lastChecked": "2026-10-21",
-   "mode": "online"
+   "mode": "online",
+   "aiContent": "none"
   },
   {
    "id": "c036",
@@ -6596,7 +6612,8 @@
     "29fb0fb5-dfc4-4098-ac9b-3a712000f48f"
    ],
    "lastChecked": "2026-10-21",
-   "mode": "online"
+   "mode": "online",
+   "aiContent": "digital"
   },
   {
    "id": "c037",
@@ -6614,7 +6631,8 @@
     "21d2f96d-35f7-4e3f-9745-c533d2dd6e97"
    ],
    "lastChecked": "2026-10-21",
-   "mode": "online"
+   "mode": "online",
+   "aiContent": "digital"
   },
   {
    "id": "c038",
@@ -6632,7 +6650,8 @@
     "0a48d064-dd04-47fb-a00d-85e9b4874033"
    ],
    "lastChecked": "2026-10-21",
-   "mode": "online"
+   "mode": "online",
+   "aiContent": "digital"
   },
   {
    "id": "c039",
@@ -6650,7 +6669,8 @@
     "99571e68-801f-49af-a897-5f75996642e1"
    ],
    "lastChecked": "2026-10-21",
-   "mode": "online"
+   "mode": "online",
+   "aiContent": "digital"
   },
   {
    "id": "c040",
@@ -6668,7 +6688,8 @@
     "8369c2d6-c100-4cf6-bd83-9668d8678433"
    ],
    "lastChecked": "2026-10-21",
-   "mode": "online"
+   "mode": "online",
+   "aiContent": "ai"
   },
   {
    "id": "c041",
@@ -6686,7 +6707,8 @@
     "382c11ed-20d5-4ae7-b60e-15fec527fa6c"
    ],
    "lastChecked": "2026-10-21",
-   "mode": "online"
+   "mode": "online",
+   "aiContent": "ai"
   },
   {
    "id": "c042",
@@ -6704,7 +6726,8 @@
     "2b92a5b2-6758-4ee3-9fb4-b6387a55cc8f"
    ],
    "lastChecked": "2026-10-21",
-   "mode": "online"
+   "mode": "online",
+   "aiContent": "ai"
   },
   {
    "id": "c043",
@@ -6722,7 +6745,8 @@
     "8ff015a0-98ea-4d80-a23e-1f68110a919e"
    ],
    "lastChecked": "2026-10-21",
-   "mode": "online"
+   "mode": "online",
+   "aiContent": "digital"
   },
   {
    "id": "c044",
@@ -6740,7 +6764,8 @@
     "0a48d064-dd04-47fb-a00d-85e9b4874033"
    ],
    "lastChecked": "2026-10-21",
-   "mode": "online"
+   "mode": "online",
+   "aiContent": "none"
   },
   {
    "id": "c045",
@@ -6759,7 +6784,8 @@
     "a4346013-a967-4a58-a533-6b32ad1364c5"
    ],
    "lastChecked": "2026-10-21",
-   "mode": "online"
+   "mode": "online",
+   "aiContent": "digital"
   },
   {
    "id": "c046",
@@ -6778,7 +6804,8 @@
     "d15ce60f-ddab-41ce-ba56-398451b77b60"
    ],
    "lastChecked": "2026-10-21",
-   "mode": "online"
+   "mode": "online",
+   "aiContent": "ai"
   },
   {
    "id": "c047",
@@ -6796,7 +6823,8 @@
     "99571e68-801f-49af-a897-5f75996642e1"
    ],
    "lastChecked": "2026-10-21",
-   "mode": "online"
+   "mode": "online",
+   "aiContent": "digital"
   },
   {
    "id": "c048",
@@ -6814,7 +6842,8 @@
     "d15ce60f-ddab-41ce-ba56-398451b77b60"
    ],
    "lastChecked": "2026-10-21",
-   "mode": "online"
+   "mode": "online",
+   "aiContent": "none"
   },
   {
    "id": "c049",
@@ -6832,7 +6861,8 @@
     "656b2dab-4ace-4afa-bad4-d9ddef577e2b"
    ],
    "lastChecked": "2026-10-21",
-   "mode": "online"
+   "mode": "online",
+   "aiContent": "none"
   },
   {
    "id": "c050",
@@ -6850,7 +6880,8 @@
     "15d76317-c71a-4fa2-aadc-2ecc34e627b7"
    ],
    "lastChecked": "2026-10-21",
-   "mode": "online"
+   "mode": "online",
+   "aiContent": "none"
   },
   {
    "id": "c051",
@@ -6868,7 +6899,8 @@
     "656b2dab-4ace-4afa-bad4-d9ddef577e2b"
    ],
    "lastChecked": "2026-10-21",
-   "mode": "online"
+   "mode": "online",
+   "aiContent": "none"
   },
   {
    "id": "c052",
@@ -6886,7 +6918,8 @@
     "7111b95d-0ce3-441a-9d92-4c75d05c4388"
    ],
    "lastChecked": "2026-10-21",
-   "mode": "online"
+   "mode": "online",
+   "aiContent": "none"
   },
   {
    "id": "c053",
@@ -6904,7 +6937,8 @@
     "43dfbe7f-9e10-4871-b171-e5076737b4cf"
    ],
    "lastChecked": "2026-10-21",
-   "mode": "online"
+   "mode": "online",
+   "aiContent": "none"
   },
   {
    "id": "c054",
@@ -6922,7 +6956,8 @@
     "15d76317-c71a-4fa2-aadc-2ecc34e627b7"
    ],
    "lastChecked": "2026-10-21",
-   "mode": "online"
+   "mode": "online",
+   "aiContent": "none"
   },
   {
    "id": "c055",
@@ -6940,7 +6975,8 @@
     "0da516ee-e70e-4384-be13-f5ff80be8127"
    ],
    "lastChecked": "2026-10-21",
-   "mode": "online"
+   "mode": "online",
+   "aiContent": "none"
   },
   {
    "id": "c056",
@@ -6958,7 +6994,8 @@
     "0da516ee-e70e-4384-be13-f5ff80be8127"
    ],
    "lastChecked": "2026-10-21",
-   "mode": "online"
+   "mode": "online",
+   "aiContent": "none"
   },
   {
    "id": "c057",
@@ -6977,7 +7014,8 @@
     "e465a154-93f7-4973-9ce1-31659fe16dd2"
    ],
    "lastChecked": "2026-10-21",
-   "mode": "online"
+   "mode": "online",
+   "aiContent": "digital"
   },
   {
    "id": "c058",
@@ -6996,7 +7034,8 @@
     "6833e58b-eceb-4599-9375-1b7e6ec64087"
    ],
    "lastChecked": "2026-10-21",
-   "mode": "online"
+   "mode": "online",
+   "aiContent": "digital"
   },
   {
    "id": "c059",
@@ -7015,7 +7054,8 @@
     "bd14968e-e409-45af-b362-3495ed7b10e0"
    ],
    "lastChecked": "2026-10-21",
-   "mode": "online"
+   "mode": "online",
+   "aiContent": "digital"
   },
   {
    "id": "c060",
@@ -7034,7 +7074,8 @@
     "8369c2d6-c100-4cf6-bd83-9668d8678433"
    ],
    "lastChecked": "2026-10-21",
-   "mode": "online"
+   "mode": "online",
+   "aiContent": "ai"
   },
   {
    "id": "c061",
@@ -7053,7 +7094,8 @@
     "8f585def-6ade-41b3-b897-3d71fba4151d"
    ],
    "lastChecked": "2026-10-22",
-   "mode": "online"
+   "mode": "online",
+   "aiContent": "none"
   },
   {
    "id": "c062",
@@ -7072,7 +7114,8 @@
     "50ac5186-bb18-4ffb-9f29-00636853c8ea"
    ],
    "lastChecked": "2026-10-22",
-   "mode": "online"
+   "mode": "online",
+   "aiContent": "none"
   },
   {
    "id": "c063",
@@ -7092,7 +7135,8 @@
     "29bfe2cd-f011-4f94-a3aa-f77768e60460"
    ],
    "lastChecked": "2026-10-22",
-   "mode": "online"
+   "mode": "online",
+   "aiContent": "none"
   },
   {
    "id": "c064",
@@ -7110,7 +7154,8 @@
     "f82b05a7-128b-4a72-a815-044ff6062f62"
    ],
    "lastChecked": "2026-10-22",
-   "mode": "online"
+   "mode": "online",
+   "aiContent": "none"
   },
   {
    "id": "c065",
@@ -7129,7 +7174,8 @@
     "081d7679-5070-4777-bece-a28c49f15636"
    ],
    "lastChecked": "2026-10-22",
-   "mode": "online"
+   "mode": "online",
+   "aiContent": "none"
   },
   {
    "id": "c066",
@@ -7148,7 +7194,8 @@
     "469e19ed-a0bd-445a-ae2d-4ba9430e296b"
    ],
    "lastChecked": "2026-10-22",
-   "mode": "online"
+   "mode": "online",
+   "aiContent": "none"
   },
   {
    "id": "c067",
@@ -7166,7 +7213,8 @@
     "8abdc43c-2bfd-417c-97c2-27fcdaf53171"
    ],
    "lastChecked": "2026-10-22",
-   "mode": "online"
+   "mode": "online",
+   "aiContent": "none"
   },
   {
    "id": "c068",
@@ -7185,7 +7233,8 @@
     "d53eab76-e8ff-4e28-af26-7e012951c763"
    ],
    "lastChecked": "2026-10-22",
-   "mode": "online"
+   "mode": "online",
+   "aiContent": "none"
   },
   {
    "id": "c069",
@@ -7203,7 +7252,8 @@
     "469e19ed-a0bd-445a-ae2d-4ba9430e296b"
    ],
    "lastChecked": "2026-10-22",
-   "mode": "online"
+   "mode": "online",
+   "aiContent": "none"
   },
   {
    "id": "c070",
@@ -7222,7 +7272,8 @@
     "b2f05068-c409-43ec-ba58-b5dfe991ca5e"
    ],
    "lastChecked": "2026-10-22",
-   "mode": "online"
+   "mode": "online",
+   "aiContent": "none"
   },
   {
    "id": "c071",
@@ -7240,7 +7291,8 @@
     "4463a721-69f3-413d-8321-43e3af13a4f1"
    ],
    "lastChecked": "2026-10-22",
-   "mode": "online"
+   "mode": "online",
+   "aiContent": "digital"
   },
   {
    "id": "c072",
@@ -7259,7 +7311,8 @@
     "c0326e27-5fa8-4dca-aecb-ed89ab491513"
    ],
    "lastChecked": "2026-10-22",
-   "mode": "online"
+   "mode": "online",
+   "aiContent": "digital"
   },
   {
    "id": "c073",
@@ -7278,7 +7331,8 @@
     "31c69100-b612-4a61-8db5-fd314318854c"
    ],
    "lastChecked": "2026-10-22",
-   "mode": "online"
+   "mode": "online",
+   "aiContent": "none"
   },
   {
    "id": "c074",
@@ -7298,7 +7352,8 @@
     "a0d79341-8398-4019-ad1b-27888ec35aaa"
    ],
    "lastChecked": "2026-10-22",
-   "mode": "online"
+   "mode": "online",
+   "aiContent": "digital"
   },
   {
    "id": "c075",
@@ -7316,7 +7371,8 @@
     "a17286c5-238d-4f0b-bc24-29e9121345de"
    ],
    "lastChecked": "2026-10-22",
-   "mode": "online"
+   "mode": "online",
+   "aiContent": "none"
   },
   {
    "id": "c076",
@@ -7334,7 +7390,8 @@
     "52c19dc8-651f-4095-98fe-dcb2799d702e"
    ],
    "lastChecked": "2026-10-22",
-   "mode": "online"
+   "mode": "online",
+   "aiContent": "none"
   },
   {
    "id": "c077",
@@ -7352,7 +7409,8 @@
     "fbdfc3bf-56a0-4454-a17d-2f513fe57b53"
    ],
    "lastChecked": "2026-10-22",
-   "mode": "online"
+   "mode": "online",
+   "aiContent": "none"
   },
   {
    "id": "c078",
@@ -7371,7 +7429,8 @@
     "6b58a6d2-89cf-4ab5-bb62-eb29ae968934"
    ],
    "lastChecked": "2026-10-22",
-   "mode": "online"
+   "mode": "online",
+   "aiContent": "none"
   },
   {
    "id": "c079",
@@ -7390,7 +7449,8 @@
     "6fe019dd-027f-45f3-b19c-d27f7ae00980"
    ],
    "lastChecked": "2026-10-22",
-   "mode": "online"
+   "mode": "online",
+   "aiContent": "none"
   },
   {
    "id": "c080",
@@ -7407,7 +7467,8 @@
     "9d2e926f-53d9-41f5-98f3-19dfaa687f3f"
    ],
    "lastChecked": "2026-10-22",
-   "mode": "online"
+   "mode": "online",
+   "aiContent": "digital"
   },
   {
    "id": "c081",
@@ -7424,7 +7485,8 @@
     "04fe962b-4017-4eb7-9139-7d69b6922bc9"
    ],
    "lastChecked": "2026-10-22",
-   "mode": "online"
+   "mode": "online",
+   "aiContent": "digital"
   },
   {
    "id": "c082",
@@ -7442,7 +7504,8 @@
     "08371fe9-c658-4f6a-966f-71dbb0ab683d"
    ],
    "lastChecked": "2026-10-22",
-   "mode": "online"
+   "mode": "online",
+   "aiContent": "digital"
   },
   {
    "id": "c083",
@@ -7459,7 +7522,8 @@
     "0af062de-eb43-41e9-9b96-249e2cd22d26"
    ],
    "lastChecked": "2026-10-22",
-   "mode": "online"
+   "mode": "online",
+   "aiContent": "digital"
   },
   {
    "id": "c084",
@@ -7476,7 +7540,8 @@
     "0af062de-eb43-41e9-9b96-249e2cd22d26"
    ],
    "lastChecked": "2026-10-22",
-   "mode": "online"
+   "mode": "online",
+   "aiContent": "digital"
   },
   {
    "id": "c085",
@@ -7493,7 +7558,8 @@
     "2522a6ce-3202-4ac8-9f5b-b9cb5a3a83a1"
    ],
    "lastChecked": "2026-10-22",
-   "mode": "online"
+   "mode": "online",
+   "aiContent": "digital"
   },
   {
    "id": "c086",
@@ -7510,7 +7576,8 @@
     "2522a6ce-3202-4ac8-9f5b-b9cb5a3a83a1"
    ],
    "lastChecked": "2026-10-22",
-   "mode": "online"
+   "mode": "online",
+   "aiContent": "digital"
   },
   {
    "id": "c087",
@@ -7527,7 +7594,8 @@
     "2b7a79e5-84d8-4880-be66-3d9bb05bea17"
    ],
    "lastChecked": "2026-10-22",
-   "mode": "online"
+   "mode": "online",
+   "aiContent": "digital"
   },
   {
    "id": "c088",
@@ -7544,7 +7612,8 @@
     "2b7a79e5-84d8-4880-be66-3d9bb05bea17"
    ],
    "lastChecked": "2026-10-22",
-   "mode": "online"
+   "mode": "online",
+   "aiContent": "none"
   },
   {
    "id": "c089",
@@ -7563,7 +7632,8 @@
     "4a460161-eaea-4fe2-bd0e-164ccc635be1"
    ],
    "lastChecked": "2026-10-22",
-   "mode": "online"
+   "mode": "online",
+   "aiContent": "none"
   },
   {
    "id": "c090",
@@ -7580,7 +7650,8 @@
     "4a460161-eaea-4fe2-bd0e-164ccc635be1"
    ],
    "lastChecked": "2026-10-22",
-   "mode": "online"
+   "mode": "online",
+   "aiContent": "none"
   },
   {
    "id": "c091",
@@ -7597,7 +7668,8 @@
     "64be6a06-52e8-4f5c-b64d-caa516cfa291"
    ],
    "lastChecked": "2026-10-22",
-   "mode": "online"
+   "mode": "online",
+   "aiContent": "none"
   },
   {
    "id": "c092",
@@ -7614,7 +7686,8 @@
     "64be6a06-52e8-4f5c-b64d-caa516cfa291"
    ],
    "lastChecked": "2026-10-22",
-   "mode": "online"
+   "mode": "online",
+   "aiContent": "none"
   },
   {
    "id": "c093",
@@ -7632,7 +7705,8 @@
     "2ff405ec-f59c-4a7b-84b6-9776a49582c4"
    ],
    "lastChecked": "2026-10-22",
-   "mode": "online"
+   "mode": "online",
+   "aiContent": "none"
   },
   {
    "id": "c094",
@@ -7649,7 +7723,8 @@
     "089ee650-297e-4716-87d1-440743b70a0d"
    ],
    "lastChecked": "2026-10-22",
-   "mode": "online"
+   "mode": "online",
+   "aiContent": "none"
   },
   {
    "id": "c095",
@@ -7666,7 +7741,8 @@
     "089ee650-297e-4716-87d1-440743b70a0d"
    ],
    "lastChecked": "2026-10-22",
-   "mode": "online"
+   "mode": "online",
+   "aiContent": "none"
   },
   {
    "id": "c096",
@@ -7683,7 +7759,8 @@
     "415abd43-e8e5-4643-b5da-5f11307af57a"
    ],
    "lastChecked": "2026-10-22",
-   "mode": "online"
+   "mode": "online",
+   "aiContent": "none"
   },
   {
    "id": "c097",
@@ -7700,7 +7777,8 @@
     "415abd43-e8e5-4643-b5da-5f11307af57a"
    ],
    "lastChecked": "2026-10-22",
-   "mode": "online"
+   "mode": "online",
+   "aiContent": "none"
   },
   {
    "id": "c098",
@@ -7718,7 +7796,8 @@
     "debb8d81-ed7f-447d-853a-5d107fda6fcf"
    ],
    "lastChecked": "2026-10-22",
-   "mode": "online"
+   "mode": "online",
+   "aiContent": "digital"
   },
   {
    "id": "c099",
@@ -7736,7 +7815,8 @@
     "debb8d81-ed7f-447d-853a-5d107fda6fcf"
    ],
    "lastChecked": "2026-10-22",
-   "mode": "online"
+   "mode": "online",
+   "aiContent": "digital"
   },
   {
    "id": "c101",
@@ -7754,7 +7834,8 @@
     "13e2378e-0d10-450d-843a-b3592575826e"
    ],
    "lastChecked": "2026-10-22",
-   "mode": "online"
+   "mode": "online",
+   "aiContent": "digital"
   },
   {
    "id": "c102",
@@ -7771,7 +7852,8 @@
     "13e2378e-0d10-450d-843a-b3592575826e"
    ],
    "lastChecked": "2026-10-22",
-   "mode": "online"
+   "mode": "online",
+   "aiContent": "none"
   },
   {
    "id": "c103",
@@ -7788,7 +7870,8 @@
     "5ce80f97-b385-4a41-9339-a6593d0709c1"
    ],
    "lastChecked": "2026-10-22",
-   "mode": "online"
+   "mode": "online",
+   "aiContent": "digital"
   },
   {
    "id": "c104",
@@ -7805,7 +7888,8 @@
     "5ce80f97-b385-4a41-9339-a6593d0709c1"
    ],
    "lastChecked": "2026-10-22",
-   "mode": "online"
+   "mode": "online",
+   "aiContent": "digital"
   },
   {
    "id": "c105",
@@ -7822,7 +7906,8 @@
     "5dd01a1e-7ba0-4b7f-a76c-ed811c12bfde"
    ],
    "lastChecked": "2026-10-22",
-   "mode": "online"
+   "mode": "online",
+   "aiContent": "none"
   },
   {
    "id": "c106",
@@ -7839,7 +7924,8 @@
     "5dd01a1e-7ba0-4b7f-a76c-ed811c12bfde"
    ],
    "lastChecked": "2026-10-22",
-   "mode": "online"
+   "mode": "online",
+   "aiContent": "none"
   },
   {
    "id": "c107",
@@ -7859,7 +7945,8 @@
     "06358891-8424-43c5-891e-d40f226bef40"
    ],
    "lastChecked": "2026-10-22",
-   "mode": "online"
+   "mode": "online",
+   "aiContent": "digital"
   },
   {
    "id": "c110",
@@ -7877,7 +7964,8 @@
     "2ddb1226-1117-4eb4-ae65-3a2f5a5a3c80"
    ],
    "lastChecked": "2026-10-22",
-   "mode": "online"
+   "mode": "online",
+   "aiContent": "none"
   },
   {
    "id": "c112",
@@ -7897,7 +7985,8 @@
     "2ddb1226-1117-4eb4-ae65-3a2f5a5a3c80"
    ],
    "lastChecked": "2026-10-22",
-   "mode": "online"
+   "mode": "online",
+   "aiContent": "none"
   },
   {
    "id": "c114",
@@ -7914,7 +8003,8 @@
     "172020d1-e151-445b-8173-e2a5fb16fe51"
    ],
    "lastChecked": "2026-10-22",
-   "mode": "online"
+   "mode": "online",
+   "aiContent": "digital"
   },
   {
    "id": "c115",
@@ -7931,7 +8021,8 @@
     "0b0335f3-0aa1-491e-895e-81fc8774a300"
    ],
    "lastChecked": "2026-10-22",
-   "mode": "online"
+   "mode": "online",
+   "aiContent": "digital"
   },
   {
    "id": "c116",
@@ -7948,7 +8039,8 @@
     "0b0335f3-0aa1-491e-895e-81fc8774a300"
    ],
    "lastChecked": "2026-10-22",
-   "mode": "online"
+   "mode": "online",
+   "aiContent": "digital"
   },
   {
    "id": "c117",
@@ -7967,7 +8059,8 @@
     "2c8199c8-4e40-49b3-b878-caee6e1c1bc0"
    ],
    "lastChecked": "2026-10-22",
-   "mode": "online"
+   "mode": "online",
+   "aiContent": "none"
   },
   {
    "id": "c118",
@@ -7984,7 +8077,8 @@
     "75f312e1-622b-4751-8d93-815b32feaf8d"
    ],
    "lastChecked": "2026-10-22",
-   "mode": "online"
+   "mode": "online",
+   "aiContent": "none"
   },
   {
    "id": "c119",
@@ -8002,7 +8096,8 @@
     "081d7679-5070-4777-bece-a28c49f15636"
    ],
    "lastChecked": "2026-10-22",
-   "mode": "online"
+   "mode": "online",
+   "aiContent": "none"
   },
   {
    "id": "c120",
@@ -8019,7 +8114,8 @@
     "081d7679-5070-4777-bece-a28c49f15636"
    ],
    "lastChecked": "2026-10-22",
-   "mode": "online"
+   "mode": "online",
+   "aiContent": "none"
   }
  ],
  "programmes": [

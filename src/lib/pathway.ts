@@ -6,6 +6,7 @@ import {
   PathwayPlanSchema,
   type Course,
   type CostType,
+  type CourseAiContent,
   type LanguageCode,
   type PartialSlots,
   type PathwayPlan,
@@ -24,14 +25,32 @@ export function filterCoursesByLanguage(courses: readonly Course[], languages: r
 const COST_ORDER: Record<CostType, number> = { free: 0, subsidised: 1, hrdcorp_claimable: 2, paid: 3 };
 
 /**
+ * AI-content tie-break: ai, then digital, then none. rankCourses is only
+ * ever called with courses that already equally fill one gap skill (either
+ * all teach it exactly, or all teach a related skill in the same ESCO
+ * group), so this is always a tie-break among equal gap-fill, never a
+ * reason to prefer a course that closes a different (or no) gap. It sits
+ * between cost and hours: cost stays the dominant sort key (unchanged from
+ * before this field existed), and among same-cost options we'd rather
+ * nudge the learner toward more AI/digital exposure than save a little
+ * time, so it outranks the hours tie-break.
+ */
+const AI_CONTENT_ORDER: Record<CourseAiContent, number> = { ai: 0, digital: 1, none: 2 };
+
+/**
  * Preference order for course choices: in the learner's study language first
  * (courses outside it are only considered when none are in it), then
- * cheapest, then shortest.
+ * cheapest, then the AI-content tie-break, then shortest.
  */
 function rankCourses(matches: readonly Course[], languages: readonly LanguageCode[]): Course[] {
   const inLanguage = filterCoursesByLanguage(matches, languages);
   const pool = inLanguage.length > 0 ? inLanguage : matches;
-  return [...pool].sort((a, b) => COST_ORDER[a.costType] - COST_ORDER[b.costType] || a.hours - b.hours);
+  return [...pool].sort(
+    (a, b) =>
+      COST_ORDER[a.costType] - COST_ORDER[b.costType] ||
+      AI_CONTENT_ORDER[a.aiContent] - AI_CONTENT_ORDER[b.aiContent] ||
+      a.hours - b.hours,
+  );
 }
 
 /** Cheapest, then shortest, course that closes `skillId` in the learner's language. */
