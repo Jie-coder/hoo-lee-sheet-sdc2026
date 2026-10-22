@@ -30,20 +30,20 @@
         "matched": true
       },
       {
-        "label": "Scheduling and coordination",
-        "matched": false
+        "label": "plan schedule",
+        "matched": true
       },
       {
-        "label": "Report filing",
-        "matched": false
+        "label": "file documents",
+        "matched": true
       },
       {
-        "label": "Customer correspondence (BM, English)",
-        "matched": false
+        "label": "communicate with customers",
+        "matched": true
       },
       {
-        "label": "Attention to detail",
-        "matched": false
+        "label": "attend to detail",
+        "matched": true
       },
       {
         "label": "teamwork principles",

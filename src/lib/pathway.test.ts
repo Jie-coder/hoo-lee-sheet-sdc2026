@@ -170,6 +170,118 @@ describe("buildPathwayPlan with real-data rules", () => {
     expect(plan.steps[0].why).toContain("Skill three");
   });
 
+  it("suggests at most 3 courses per gap skill, cheapest and shortest first", () => {
+    const oneSkillRole = {
+      occupationId: "role-caps",
+      gap: [{ skillId: "s1", label: "Skill one", importance: 1 }],
+    } as import("@/types/contracts").RoleResult;
+    const fourCourses: Course[] = [
+      course({ id: "c1", skillIds: ["s1"], costType: "free", hours: 10, languages: ["en"] }),
+      course({ id: "c2", skillIds: ["s1"], costType: "free", hours: 2, languages: ["en"] }),
+      course({ id: "c3", skillIds: ["s1"], costType: "subsidised", hours: 1, languages: ["en"] }),
+      course({ id: "c4", skillIds: ["s1"], costType: "paid", hours: 1, languages: ["en"] }),
+    ];
+    const plan = buildPathwayPlan({
+      role: oneSkillRole,
+      courses: fourCourses,
+      programmes: [],
+      studyLanguages: ["en"],
+      hoursPerWeek: 6,
+      skillLinks: [],
+    });
+    // c2 (free, 2h) beats c1 (free, 10h) on hours; c3 is subsidised; c4 (paid) is excluded by the cap of 3.
+    expect(plan.steps.map((step) => step.itemId)).toEqual(["c2", "c1", "c3"]);
+  });
+
+  it("never lists the same course twice, even when it is top-3 for more than one gap skill", () => {
+    const role2: import("@/types/contracts").RoleResult = {
+      occupationId: "role-dedup",
+      gap: [
+        { skillId: "s1", label: "Skill one", importance: 1 },
+        { skillId: "s2", label: "Skill two", importance: 1 },
+      ],
+    } as import("@/types/contracts").RoleResult;
+    const courses: Course[] = [
+      course({ id: "shared1", skillIds: ["s1", "s2"], costType: "free", hours: 2, languages: ["en"] }),
+      course({ id: "shared2", skillIds: ["s1", "s2"], costType: "free", hours: 3, languages: ["en"] }),
+      course({ id: "only-s2", skillIds: ["s2"], costType: "free", hours: 5, languages: ["en"] }),
+    ];
+    const plan = buildPathwayPlan({
+      role: role2,
+      courses,
+      programmes: [],
+      studyLanguages: ["en"],
+      hoursPerWeek: 6,
+      skillLinks: [],
+    });
+    const ids = plan.steps.map((step) => step.itemId);
+    expect(ids).toEqual(["shared1", "shared2", "only-s2"]);
+    expect(new Set(ids).size).toBe(ids.length);
+    expect(plan.steps.find((step) => step.itemId === "shared1")?.closesSkillIds).toEqual(["s1", "s2"]);
+    expect(plan.steps.find((step) => step.itemId === "shared2")?.closesSkillIds).toEqual(["s1", "s2"]);
+    expect(plan.steps.find((step) => step.itemId === "only-s2")?.closesSkillIds).toEqual(["s2"]);
+  });
+
+  it("falls back to up to 3 same-ESCO-group courses when nothing teaches the skill exactly", () => {
+    const role3 = {
+      occupationId: "role-related",
+      gap: [{ skillId: "s1", label: "Skill one", importance: 1 }],
+    } as import("@/types/contracts").RoleResult;
+    const courses: Course[] = [
+      course({ id: "r1", skillIds: ["other"], costType: "free", hours: 5, languages: ["en"] }),
+      course({ id: "r2", skillIds: ["other"], costType: "free", hours: 1, languages: ["en"] }),
+      course({ id: "r3", skillIds: ["other"], costType: "subsidised", hours: 1, languages: ["en"] }),
+      course({ id: "r4", skillIds: ["other"], costType: "paid", hours: 1, languages: ["en"] }),
+    ];
+    const plan = buildPathwayPlan({
+      role: role3,
+      courses,
+      programmes: [],
+      studyLanguages: ["en"],
+      hoursPerWeek: 6,
+      skillLinks: [],
+      skillGroups: { s1: "g1", other: "g1" },
+      groupLabels: { g1: "managing data" },
+    });
+    expect(plan.steps.map((step) => step.itemId)).toEqual(["r2", "r1", "r3"]);
+    expect(plan.steps.every((step) => step.closesSkillIds.length === 0)).toBe(true);
+  });
+
+  it("stops adding once 8 courses are in the plan; the AI-readiness programme does not count toward the cap", () => {
+    const gap = Array.from({ length: 4 }, (_, i) => ({ skillId: `s${i}`, label: `Skill ${i}`, importance: 1 }));
+    const role4 = { occupationId: "role-cap8", gap } as import("@/types/contracts").RoleResult;
+    const manyCourses: Course[] = gap.flatMap((skill) =>
+      Array.from({ length: 3 }, (_, j) =>
+        course({ id: `${skill.skillId}-${j}`, skillIds: [skill.skillId], costType: "free", hours: 1, languages: ["en"] }),
+      ),
+    );
+    const aiProgramme: Programme = {
+      id: AI_READINESS_PROGRAMME_ID,
+      name: "AI untuk Rakyat Programme",
+      agency: "Ministry of Digital",
+      url: "https://rakyatdigital.gov.my/en/literacy-hub",
+      benefits: "Free AI basics.",
+      eligibility: { age_min: null, age_max: null, citizen: true, employment: ["any"], perkeso_contributor: null, states: ["all"] },
+      costType: "free",
+      deadline: null,
+      lastChecked: "2026-10-20",
+    };
+    const plan = buildPathwayPlan({
+      role: role4,
+      courses: manyCourses,
+      programmes: [aiProgramme],
+      studyLanguages: ["en"],
+      hoursPerWeek: 6,
+      skillLinks: [],
+    });
+    const courseSteps = plan.steps.filter((step) => step.kind === "course");
+    expect(courseSteps).toHaveLength(8);
+    expect(plan.steps.some((step) => step.kind === "program")).toBe(true);
+    expect(courseSteps.map((step) => step.itemId).sort()).toEqual(
+      ["s0-0", "s0-1", "s0-2", "s1-0", "s1-1", "s1-2", "s2-0", "s2-1"].sort(),
+    );
+  });
+
   it("opens on the AI untuk Rakyat programme (p001) when it is in the catalogue", () => {
     const aiProgramme = {
       id: AI_READINESS_PROGRAMME_ID,

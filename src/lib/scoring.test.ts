@@ -15,8 +15,10 @@ import {
   skillImportance,
   skillMomentum,
   skillsMatch,
+  topRoleIdsForScenario,
   type CandidateRole,
   type EssentialSkillInput,
+  type ScenarioRankable,
 } from "./scoring";
 
 describe("SCORING_PARAMS", () => {
@@ -32,6 +34,8 @@ describe("SCORING_PARAMS", () => {
     expect(SCORING_PARAMS.relatedSkillCredit).toBe(0.5);
     expect(SCORING_PARAMS.relatedSkillCap).toBe(6);
     expect(SCORING_PARAMS.essentialSkillCap).toBe(25);
+    expect(SCORING_PARAMS.minFit).toBe(0.13);
+    expect(SCORING_PARAMS.minFitFallback).toBe(0.1);
     expect(SCORING_PARAMS.theta).toEqual({ co: 1, dis: 1.4, sup: 1.2 });
     // demandByCluster is checked against data/*.csv in scripts/lib/scenario-demand.test.ts.
   });
@@ -280,6 +284,46 @@ describe("scenarioRank", () => {
     expect(
       scenarioRank({ fit: 0.5, demand: 0.15, exposure: 0.4, theta: 1.4 }),
     ).toBeCloseTo(0.383, 10);
+  });
+});
+
+describe("topRoleIdsForScenario", () => {
+  function rankable(occupationId: string, fit: number, score: number): ScenarioRankable {
+    return { occupationId, fit, byScenario: { co: score, dis: score, sup: score } };
+  }
+
+  it("drops a near-zero-fit role (e.g. F=0) even when it would otherwise rank in the top 3", () => {
+    const roles = [
+      rankable("a", 0.5, 0.9),
+      rankable("b", 0.2, 0.8),
+      rankable("c", 0.15, 0.7),
+      rankable("d", 0, 0.95), // highest raw score, but fit is 0: a demand/exposure-only match
+    ];
+    expect(topRoleIdsForScenario(roles, "co")).toEqual(new Set(["a", "b", "c"]));
+  });
+
+  it("falls back to minFitFallback (0.10) when minFit (0.13) leaves fewer than topN eligible", () => {
+    const roles = [
+      rankable("a", 0.5, 0.9),
+      rankable("b", 0.11, 0.8),
+      rankable("c", 0.12, 0.7),
+      rankable("d", 0.01, 0.95), // excluded: below minFitFallback too
+    ];
+    // Only "a" clears minFit (0.13), so the scenario retries at minFitFallback,
+    // where a, b, and c all clear it — exactly topN, so d still stays out.
+    expect(topRoleIdsForScenario(roles, "co")).toEqual(new Set(["a", "b", "c"]));
+  });
+
+  it("falls back to no fit filter when even minFitFallback leaves fewer than topN eligible", () => {
+    const roles = [rankable("a", 0.5, 0.9), rankable("b", 0.05, 0.8), rankable("c", 0.02, 0.95)];
+    // Only "a" clears minFitFallback, so with just 3 candidates total the
+    // scenario falls back to no filter at all so a full top 3 is still shown.
+    expect(topRoleIdsForScenario(roles, "co")).toEqual(new Set(["a", "b", "c"]));
+  });
+
+  it("breaks score ties by occupationId ascending, same as the unfiltered ranking", () => {
+    const roles = [rankable("b", 0.5, 0.5), rankable("a", 0.5, 0.5)];
+    expect([...topRoleIdsForScenario(roles, "co")]).toEqual(["a", "b"]);
   });
 });
 

@@ -27,6 +27,7 @@ import {
   scoreRoles,
   sdgInterestMatches,
   skillImportance,
+  topRoleIdsForScenario,
   type CandidateRole,
   type EssentialSkillInput,
 } from "@/lib/scoring";
@@ -121,13 +122,6 @@ function statusFor(
   if (interestMatch) return { label: `Matches your interest: ${INTEREST_LABEL[interest]}`, tone: "interest" };
   const inTop = SCENARIO_IDS.filter((scenario) => topByScenario[scenario].has(role.occupationId));
   return { label: `Top 3 in ${inTop.map((scenario) => SCENARIO_SHORT[scenario]).join(" and ")} only`, tone: "shift" };
-}
-
-function topIds(roles: readonly RoleResult[], scenario: ScenarioId): Set<string> {
-  const ordered = [...roles].sort(
-    (a, b) => b.byScenario[scenario] - a.byScenario[scenario] || (a.occupationId < b.occupationId ? -1 : 1),
-  );
-  return new Set(ordered.slice(0, SCORING_PARAMS.topN).map((role) => role.occupationId));
 }
 
 /** Half credit for an essential skill in the same ESCO group as a user skill, times that skill's level. */
@@ -251,7 +245,7 @@ export function analyzeProfile(catalogue: Catalogue, input: AnalyzeInput): Analy
   });
 
   const topByScenario = Object.fromEntries(
-    SCENARIO_IDS.map((scenario) => [scenario, topIds(roles, scenario)]),
+    SCENARIO_IDS.map((scenario) => [scenario, topRoleIdsForScenario(roles, scenario)]),
   ) as Record<ScenarioId, Set<string>>;
 
   const breakdown: Record<string, RoleBreakdown> = {};
