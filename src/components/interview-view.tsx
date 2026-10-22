@@ -362,14 +362,14 @@ export function InterviewView() {
         </AnimatePresence>
 
         <div className="flex items-center justify-between gap-3 border-t border-line px-6 py-4 sm:px-8">
-          <button type="button" onClick={handleBack} disabled={turn === 1} className="btn-ghost -ml-3">
+          <button type="button" data-testid="interview-back" onClick={handleBack} disabled={turn === 1} className="btn-ghost -ml-3">
             Back
           </button>
           <div className="flex items-center gap-2">
-            <button type="button" onClick={handleSkip} className="btn-ghost">
+            <button type="button" data-testid="interview-skip" onClick={handleSkip} className="btn-ghost">
               Skip
             </button>
-            <button type="button" onClick={handleNext} className="btn-primary">
+            <button type="button" data-testid="interview-next" onClick={handleNext} className="btn-primary">
               {isInterviewDone(turn) ? "See results" : "Next"}
               <ArrowRight className="size-4" strokeWidth={1.8} />
             </button>

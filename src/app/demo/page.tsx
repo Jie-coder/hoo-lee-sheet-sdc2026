@@ -81,6 +81,7 @@ export default function DemoPage() {
       </div>
 
       <Textarea
+        data-testid="demo-input"
         value={input}
         onChange={(event) => setInput(event.target.value)}
         placeholder="Paste or type some text to analyze..."
@@ -88,10 +89,10 @@ export default function DemoPage() {
       />
 
       <div className="flex flex-wrap gap-2">
-        <Button onClick={handleSubmit} disabled={loading || input.trim().length === 0}>
+        <Button data-testid="demo-submit" onClick={handleSubmit} disabled={loading || input.trim().length === 0}>
           {loading ? "Analyzing..." : "Submit"}
         </Button>
-        <Button variant="outline" onClick={() => setInput(EXAMPLE_INPUT)} disabled={loading}>
+        <Button data-testid="demo-load-example" variant="outline" onClick={() => setInput(EXAMPLE_INPUT)} disabled={loading}>
           Load example
         </Button>
       </div>
@@ -107,7 +108,7 @@ export default function DemoPage() {
       {!loading && result && (
         <div className="flex flex-col gap-4">
           <ResultCards result={result} />
-          <Button onClick={handleSave} disabled={saving} variant="outline">
+          <Button data-testid="demo-save" onClick={handleSave} disabled={saving} variant="outline">
             {saving ? "Saving..." : "Save result"}
           </Button>
         </div>

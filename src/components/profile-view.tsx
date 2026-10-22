@@ -112,7 +112,7 @@ export function ProfileView() {
           <Upload className="size-4" strokeWidth={1.6} />
           <span>
             Or drop a synthetic CV here, or{" "}
-            <button type="button" onClick={() => fileInputRef.current?.click()} className="text-ink underline underline-offset-4">
+            <button type="button" data-testid="profile-upload-browse" onClick={() => fileInputRef.current?.click()} className="text-ink underline underline-offset-4">
               browse
             </button>
             . PDF, up to 2 MB.
@@ -300,7 +300,7 @@ export function ProfileView() {
 
             <div className="mt-8 flex flex-col-reverse items-center justify-between gap-3 border-t border-line pt-5 sm:flex-row">
               <p className="text-[13px] text-grey">Next: five quick questions.</p>
-              <button type="button" onClick={() => router.push("/interview")} className="btn-primary w-full sm:w-auto">
+              <button type="button" data-testid="profile-continue" onClick={() => router.push("/interview")} className="btn-primary w-full sm:w-auto">
                 Continue
                 <ArrowRight className="size-4" strokeWidth={1.8} />
               </button>
@@ -324,6 +324,7 @@ function PersonaCard({ id, selected, onSelect }: { id: PersonaId; selected: bool
         selected ? "border-ink shadow-[0_0_0_1px_var(--color-ink)]" : "hover:border-grey/40",
       )}
       onClick={onSelect}
+      data-testid={`persona-card-${id}`}
       role="radio"
       aria-checked={selected}
       tabIndex={0}

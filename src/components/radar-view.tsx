@@ -224,7 +224,7 @@ export function RadarView({
                   </>
                 )}
               </div>
-              <Link href="/" className="btn-primary self-start sm:self-auto">
+              <Link href="/" data-testid="radar-match-skills" className="btn-primary self-start sm:self-auto">
                 Match your own skills
                 <ArrowRight className="size-4" strokeWidth={1.6} />
               </Link>

@@ -42,7 +42,7 @@ export function SiteHeader() {
   return (
     <header className="sticky top-0 z-40 border-b border-line/80 bg-paper/90 backdrop-blur-md">
       <div className="mx-auto flex h-16 max-w-[1248px] items-center justify-between gap-4 px-4 sm:px-6">
-        <Link href="/" className="shrink-0" aria-label="Laluan home">
+        <Link href="/" data-testid="header-home" className="shrink-0" aria-label="Laluan home">
           {/* Official wordmark. next/image refuses SVG without extra config. */}
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src="/brand/laluan-logo.svg" alt="Laluan" className="h-7 w-auto" />

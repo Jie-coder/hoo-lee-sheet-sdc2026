@@ -101,7 +101,7 @@ export function ResultsView() {
           <div className="panel p-6 text-[14px]" role="alert">
             <p className="font-medium">We couldn&rsquo;t rank roles right now.</p>
             <p className="mt-1 text-grey">{state.message}</p>
-            <button type="button" onClick={retry} className="btn-secondary mt-4">
+            <button type="button" data-testid="results-retry" onClick={retry} className="btn-secondary mt-4">
               <RefreshCw className="size-4" strokeWidth={1.6} />
               Try again
             </button>
@@ -153,7 +153,7 @@ export function ResultsView() {
                     ) : (
                       <>Same order as on {formatShortDate(data.signalDates.prior)}. New arXiv counts only nudged the scores.</>
                     )}{" "}
-                    <Link href="/radar" className="whitespace-nowrap text-ink underline decoration-line underline-offset-4 hover:decoration-ink">
+                    <Link href="/radar" data-testid="results-radar-link" className="whitespace-nowrap text-ink underline decoration-line underline-offset-4 hover:decoration-ink">
                       Skills radar
                     </Link>
                   </p>

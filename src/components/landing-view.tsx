@@ -70,7 +70,7 @@ export function LandingView({ preview }: { preview: LandingPreview }) {
             that fits.
           </motion.p>
           <motion.div {...rise(0.24)} className="mt-8 flex flex-col gap-4">
-            <button type="button" onClick={handleStart} className="btn-primary self-start px-6 py-3 text-[15px]">
+            <button type="button" data-testid="landing-start" onClick={handleStart} className="btn-primary self-start px-6 py-3 text-[15px]">
               Start
               <ArrowRight className="size-4" strokeWidth={1.8} />
             </button>
@@ -82,6 +82,7 @@ export function LandingView({ preview }: { preview: LandingPreview }) {
               <button
                 type="button"
                 role="checkbox"
+                data-testid="landing-consent"
                 aria-checked={consent}
                 onClick={() => setConsent(!consent)}
                 className={

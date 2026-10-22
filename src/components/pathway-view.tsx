@@ -195,11 +195,11 @@ export function PathwayView({
             </h1>
           </div>
           <div className="flex shrink-0 items-center gap-2">
-            <button type="button" onClick={() => router.push("/results")} className="btn-secondary">
+            <button type="button" data-testid="pathway-back-to-roles" onClick={() => router.push("/results")} className="btn-secondary">
               <ArrowLeft className="size-4" strokeWidth={1.6} />
               Back to roles
             </button>
-            <button type="button" onClick={handleDownload} className="btn-primary">
+            <button type="button" data-testid="pathway-download" onClick={handleDownload} className="btn-primary">
               <Download className="size-4" strokeWidth={1.6} />
               Download PDF
             </button>
@@ -453,6 +453,7 @@ export function PathwayView({
                 </p>
                 <button
                   type="button"
+                  data-testid="pathway-delete-data"
                   onClick={handleDelete}
                   className="mt-4 flex items-center gap-1.5 underline underline-offset-4 hover:text-ink"
                 >

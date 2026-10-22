@@ -88,6 +88,7 @@ export function ScenarioTabs({ value, onChange }: { value: ScenarioId; onChange:
             }}
             type="button"
             role="tab"
+            data-testid={`scenario-tab-${id}`}
             aria-selected={selected}
             tabIndex={selected ? 0 : -1}
             onClick={() => select(id)}

@@ -189,7 +189,7 @@ export function RoleCard({
       </div>
 
       <div className="mt-auto pt-6">
-        <button type="button" aria-pressed={chosen} onClick={() => onChoose(role)} className="btn-primary w-full">
+        <button type="button" aria-pressed={chosen} data-testid="role-choose" onClick={() => onChoose(role)} className="btn-primary w-full">
           {chosen && <Check className="size-4" strokeWidth={2} />}
           {chosen ? "Chosen" : "Choose this role"}
         </button>

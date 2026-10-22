@@ -1,0 +1,22 @@
+# Free GitHub Actions CI: lint, typecheck, unit tests, feature-map freshness, build.
+name: CI
+on:
+  pull_request:
+  push:
+    branches: [main]
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run typecheck
+      - run: npm test
+      # Fails if a page or data-testid was added without updating the feature map.
+      - run: npm run feature-map:check
+      - run: npm run build

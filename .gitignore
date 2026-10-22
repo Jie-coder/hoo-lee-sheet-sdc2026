@@ -58,3 +58,6 @@ venv/
 # editors
 .vscode/
 .idea/
+
+# feature-map driver output (screenshots, traces)
+/artifacts
