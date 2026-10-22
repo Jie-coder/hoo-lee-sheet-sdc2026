@@ -490,6 +490,19 @@ export const ProgrammeSchema = z
 export type Programme = z.infer<typeof ProgrammeSchema>;
 
 /**
+ * A course folded into a programme step because the two cite the same URL
+ * (see AI_READINESS_PROGRAMME_ID / mergeDuplicateUrlCourse in pathway.ts).
+ * The programme itself has no hours/certificate/languages fields, so the
+ * merged course's are carried here for the UI to show on the programme card.
+ */
+export const MergedCourseInfoSchema = z.strictObject({
+  hours: z.number().positive(),
+  certificate: z.boolean(),
+  languages: z.array(LanguageCodeSchema).min(1),
+});
+export type MergedCourseInfo = z.infer<typeof MergedCourseInfoSchema>;
+
+/**
  * One ID-only pathway step. kind "program" matches the frozen contract
  * (the catalogue type is Programme). Weeks are 1-based and weekEnd >= weekStart.
  */
@@ -502,6 +515,7 @@ export const PlanStepSchema = z
     closesSkillIds: z.array(z.string().min(1)),
     sdgTarget: SdgTargetIdSchema.optional(),
     why: z.string().min(1),
+    merged: MergedCourseInfoSchema.optional(),
   })
   .superRefine((step, ctx) => {
     if (step.weekEnd < step.weekStart) {
