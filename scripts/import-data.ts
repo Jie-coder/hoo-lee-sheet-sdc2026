@@ -268,7 +268,7 @@ export function runFile(key: FileKey, dir: string): FileRunOutcome {
         valid: result.value !== null,
         value: result.value,
       });
-    } else if (key === "keywords") {
+    } else if (key === "keywords" || key === "keywords_prior") {
       const result = mapKeywordRow(raw, rowNumber);
       issues.push(...result.issues, ...result.warnings);
       keywordRecords.push({
@@ -364,8 +364,8 @@ export function runFile(key: FileKey, dir: string): FileRunOutcome {
     invalidRows = dup.invalidRows;
     validSources = dup.kept.filter((r) => r.value).map((r) => r.value as SourceRow);
     cross = { sources: sourceRecords.map((r) => ({ row: r.row, name: r.name })) };
-  } else if (key === "keywords") {
-    const dup = finalizeDuplicates("keywords.csv", "keyword", (r) => r.keyword, keywordRecords);
+  } else if (key === "keywords" || key === "keywords_prior") {
+    const dup = finalizeDuplicates(spec.filename, "keyword", (r) => r.keyword, keywordRecords);
     issues.push(...dup.issues);
     validRows = dup.validRows;
     invalidRows = dup.invalidRows;
@@ -375,7 +375,8 @@ export function runFile(key: FileKey, dir: string): FileRunOutcome {
     const signalsResult = buildSignalRows(signalInputs);
     issues.push(...signalsResult.warnings);
     signalRows = signalsResult.rows;
-    cross = {
+    // Cross-file checks look at keywords.csv only: the prior snapshot has the same keywords.
+    cross = key === "keywords_prior" ? {} : {
       keywords: keywordRecords.map((r) => ({
         row: r.row,
         keyword: r.keyword,

@@ -4495,6 +4495,1098 @@
    "checkedOn": "2026-10-19"
   }
  },
+ "priorSignalsAsOf": "2026-09-19",
+ "priorSignals": {
+  "9710092c-f174-4e84-95bf-2064d39ad7a0": {
+   "momentum": -0.05505977718302743,
+   "keywords": [
+    "document understanding"
+   ],
+   "checkedOn": "2026-09-19"
+  },
+  "e465a154-93f7-4973-9ce1-31659fe16dd2": {
+   "momentum": 0.00982467999500744,
+   "keywords": [
+    "AI agents",
+    "prompt engineering",
+    "multi-modal AI",
+    "AI ethics"
+   ],
+   "checkedOn": "2026-09-19"
+  },
+  "2af29864-c941-40a5-ae7b-2b6c4b92c0d7": {
+   "momentum": -0.04732065619007196,
+   "keywords": [
+    "speech recognition"
+   ],
+   "checkedOn": "2026-09-19"
+  },
+  "21d2f96d-35f7-4e3f-9745-c533d2dd6e97": {
+   "momentum": -0.3202906537699712,
+   "keywords": [
+    "code generation"
+   ],
+   "checkedOn": "2026-09-19"
+  },
+  "9ff9db9d-d14b-426e-83f3-e7449af6c79f": {
+   "momentum": -0.12102961592769601,
+   "keywords": [
+    "retrieval augmented generation",
+    "knowledge graphs",
+    "federated learning",
+    "AI governance",
+    "data labeling"
+   ],
+   "checkedOn": "2026-09-19"
+  },
+  "38d49d88-9069-467b-b29e-3cae739bdd4d": {
+   "momentum": 0.5653138090500605,
+   "keywords": [
+    "predictive maintenance"
+   ],
+   "checkedOn": "2026-09-19"
+  },
+  "2b92a5b2-6758-4ee3-9fb4-b6387a55cc8f": {
+   "momentum": -0.31265329098971717,
+   "keywords": [
+    "sentiment analysis",
+    "synthetic data",
+    "anomaly detection",
+    "time series forecasting"
+   ],
+   "checkedOn": "2026-09-19"
+  },
+  "8369c2d6-c100-4cf6-bd83-9668d8678433": {
+   "momentum": -0.16047483778622743,
+   "keywords": [
+    "reinforcement learning",
+    "autonomous vehicles",
+    "few-shot learning",
+    "vision language models"
+   ],
+   "checkedOn": "2026-09-19"
+  },
+  "32a2c63d-2d13-4784-abb8-678ef2cd8a46": {
+   "momentum": -0.033616610798984974,
+   "keywords": [
+    "machine translation"
+   ],
+   "checkedOn": "2026-09-19"
+  },
+  "1d6c7de4-350e-4868-a47b-333b4b0d9650": {
+   "momentum": -0.020834086902842025,
+   "keywords": [
+    "explainable AI"
+   ],
+   "checkedOn": "2026-09-19"
+  }
+ },
+ "keywords": {
+  "today": [
+   {
+    "keyword": "document understanding",
+    "skillIds": [
+     "9710092c-f174-4e84-95bf-2064d39ad7a0"
+    ],
+    "recent": 45,
+    "previous": 46,
+    "direction": "flat",
+    "momentum": -0.02150620522096362,
+    "enough": true,
+    "recentWindow": {
+     "start": "2026-07-22",
+     "end": "2026-10-19"
+    },
+    "previousWindow": {
+     "start": "2026-04-23",
+     "end": "2026-07-21"
+    },
+    "url": "https://export.arxiv.org/api/query?search_query=all%3A%28%22document+understanding%22%29+AND+submittedDate%3A%5B202607220000+TO+202610192359%5D&start=0&max_results=1"
+   },
+   {
+    "keyword": "AI agents",
+    "skillIds": [
+     "e465a154-93f7-4973-9ce1-31659fe16dd2"
+    ],
+    "recent": 712,
+    "previous": 676,
+    "direction": "flat",
+    "momentum": 0.05181014750202089,
+    "enough": true,
+    "recentWindow": {
+     "start": "2026-07-22",
+     "end": "2026-10-19"
+    },
+    "previousWindow": {
+     "start": "2026-04-23",
+     "end": "2026-07-21"
+    },
+    "url": "https://export.arxiv.org/api/query?search_query=all%3A%28%22AI+agent%22%29+AND+submittedDate%3A%5B202607220000+TO+202610192359%5D&start=0&max_results=1"
+   },
+   {
+    "keyword": "speech recognition",
+    "skillIds": [
+     "2af29864-c941-40a5-ae7b-2b6c4b92c0d7"
+    ],
+    "recent": 282,
+    "previous": 239,
+    "direction": "up",
+    "momentum": 0.16480797430124633,
+    "enough": true,
+    "recentWindow": {
+     "start": "2026-07-22",
+     "end": "2026-10-19"
+    },
+    "previousWindow": {
+     "start": "2026-04-23",
+     "end": "2026-07-21"
+    },
+    "url": "https://export.arxiv.org/api/query?search_query=all%3A%28%22speech+recognition%22%29+AND+submittedDate%3A%5B202607220000+TO+202610192359%5D&start=0&max_results=1"
+   },
+   {
+    "keyword": "code generation",
+    "skillIds": [
+     "21d2f96d-35f7-4e3f-9745-c533d2dd6e97"
+    ],
+    "recent": 526,
+    "previous": 555,
+    "direction": "flat",
+    "momentum": -0.05356774570922006,
+    "enough": true,
+    "recentWindow": {
+     "start": "2026-07-22",
+     "end": "2026-10-19"
+    },
+    "previousWindow": {
+     "start": "2026-04-23",
+     "end": "2026-07-21"
+    },
+    "url": "https://export.arxiv.org/api/query?search_query=all%3A%28%22code+generation%22%29+AND+submittedDate%3A%5B202607220000+TO+202610192359%5D&start=0&max_results=1"
+   },
+   {
+    "keyword": "retrieval augmented generation",
+    "skillIds": [
+     "9ff9db9d-d14b-426e-83f3-e7449af6c79f"
+    ],
+    "recent": 617,
+    "previous": 714,
+    "direction": "down",
+    "momentum": -0.14579408523631687,
+    "enough": true,
+    "recentWindow": {
+     "start": "2026-07-22",
+     "end": "2026-10-19"
+    },
+    "previousWindow": {
+     "start": "2026-04-23",
+     "end": "2026-07-21"
+    },
+    "url": "https://export.arxiv.org/api/query?search_query=all%3A%28%22retrieval+augmented+generation%22+OR+%22retrieval-augmented+generation%22%29+AND+submittedDate%3A%5B202607220000+TO+202610192359%5D&start=0&max_results=1"
+   },
+   {
+    "keyword": "predictive maintenance",
+    "skillIds": [
+     "38d49d88-9069-467b-b29e-3cae739bdd4d"
+    ],
+    "recent": 40,
+    "previous": 31,
+    "direction": "up",
+    "momentum": 0.24783616390458124,
+    "enough": true,
+    "recentWindow": {
+     "start": "2026-07-22",
+     "end": "2026-10-19"
+    },
+    "previousWindow": {
+     "start": "2026-04-23",
+     "end": "2026-07-21"
+    },
+    "url": "https://export.arxiv.org/api/query?search_query=all%3A%28%22predictive+maintenance%22%29+AND+submittedDate%3A%5B202607220000+TO+202610192359%5D&start=0&max_results=1"
+   },
+   {
+    "keyword": "sentiment analysis",
+    "skillIds": [
+     "2b92a5b2-6758-4ee3-9fb4-b6387a55cc8f"
+    ],
+    "recent": 69,
+    "previous": 102,
+    "direction": "down",
+    "momentum": -0.3862337461802767,
+    "enough": true,
+    "recentWindow": {
+     "start": "2026-07-22",
+     "end": "2026-10-19"
+    },
+    "previousWindow": {
+     "start": "2026-04-23",
+     "end": "2026-07-21"
+    },
+    "url": "https://export.arxiv.org/api/query?search_query=all%3A%28%22sentiment+analysis%22%29+AND+submittedDate%3A%5B202607220000+TO+202610192359%5D&start=0&max_results=1"
+   },
+   {
+    "keyword": "prompt engineering",
+    "skillIds": [
+     "e465a154-93f7-4973-9ce1-31659fe16dd2"
+    ],
+    "recent": 102,
+    "previous": 157,
+    "direction": "down",
+    "momentum": -0.427866044797331,
+    "enough": true,
+    "recentWindow": {
+     "start": "2026-07-22",
+     "end": "2026-10-19"
+    },
+    "previousWindow": {
+     "start": "2026-04-23",
+     "end": "2026-07-21"
+    },
+    "url": "https://export.arxiv.org/api/query?search_query=all%3A%28%22prompt+engineering%22%29+AND+submittedDate%3A%5B202607220000+TO+202610192359%5D&start=0&max_results=1"
+   },
+   {
+    "keyword": "robotic process automation",
+    "skillIds": [
+     "9ff9db9d-d14b-426e-83f3-e7449af6c79f"
+    ],
+    "recent": 1,
+    "previous": 2,
+    "direction": "down",
+    "momentum": -0.40546510810816444,
+    "enough": false,
+    "recentWindow": {
+     "start": "2026-07-22",
+     "end": "2026-10-19"
+    },
+    "previousWindow": {
+     "start": "2026-04-23",
+     "end": "2026-07-21"
+    },
+    "url": "https://export.arxiv.org/api/query?search_query=all%3A%28%22robotic+process+automation%22%29+AND+submittedDate%3A%5B202607220000+TO+202610192359%5D&start=0&max_results=1"
+   },
+   {
+    "keyword": "text summarization",
+    "skillIds": [
+     "fff0e2cd-d0bd-4b02-9daf-158b79d9688a"
+    ],
+    "recent": 15,
+    "previous": 19,
+    "direction": "down",
+    "momentum": -0.2231435513142097,
+    "enough": false,
+    "recentWindow": {
+     "start": "2026-07-22",
+     "end": "2026-10-19"
+    },
+    "previousWindow": {
+     "start": "2026-04-23",
+     "end": "2026-07-21"
+    },
+    "url": "https://export.arxiv.org/api/query?search_query=all%3A%28%22text+summarization%22%29+AND+submittedDate%3A%5B202607220000+TO+202610192359%5D&start=0&max_results=1"
+   },
+   {
+    "keyword": "knowledge graphs",
+    "skillIds": [
+     "9ff9db9d-d14b-426e-83f3-e7449af6c79f"
+    ],
+    "recent": 449,
+    "previous": 452,
+    "direction": "flat",
+    "momentum": -0.006644542718668613,
+    "enough": true,
+    "recentWindow": {
+     "start": "2026-07-22",
+     "end": "2026-10-19"
+    },
+    "previousWindow": {
+     "start": "2026-04-23",
+     "end": "2026-07-21"
+    },
+    "url": "https://export.arxiv.org/api/query?search_query=all%3A%28%22knowledge+graph%22%29+AND+submittedDate%3A%5B202607220000+TO+202610192359%5D&start=0&max_results=1"
+   },
+   {
+    "keyword": "reinforcement learning",
+    "skillIds": [
+     "8369c2d6-c100-4cf6-bd83-9668d8678433"
+    ],
+    "recent": 3278,
+    "previous": 3390,
+    "direction": "flat",
+    "momentum": -0.03358636528099038,
+    "enough": true,
+    "recentWindow": {
+     "start": "2026-07-22",
+     "end": "2026-10-19"
+    },
+    "previousWindow": {
+     "start": "2026-04-23",
+     "end": "2026-07-21"
+    },
+    "url": "https://export.arxiv.org/api/query?search_query=all%3A%28%22reinforcement+learning%22%29+AND+submittedDate%3A%5B202607220000+TO+202610192359%5D&start=0&max_results=1"
+   },
+   {
+    "keyword": "synthetic data",
+    "skillIds": [
+     "2b92a5b2-6758-4ee3-9fb4-b6387a55cc8f"
+    ],
+    "recent": 115,
+    "previous": 132,
+    "direction": "down",
+    "momentum": -0.13675893711538917,
+    "enough": true,
+    "recentWindow": {
+     "start": "2026-07-22",
+     "end": "2026-10-19"
+    },
+    "previousWindow": {
+     "start": "2026-04-23",
+     "end": "2026-07-21"
+    },
+    "url": "https://export.arxiv.org/api/query?search_query=all%3A%28%22synthetic+data+generation%22%29+AND+submittedDate%3A%5B202607220000+TO+202610192359%5D&start=0&max_results=1"
+   },
+   {
+    "keyword": "multi-modal AI",
+    "skillIds": [
+     "e465a154-93f7-4973-9ce1-31659fe16dd2"
+    ],
+    "recent": 314,
+    "previous": 343,
+    "direction": "flat",
+    "momentum": -0.08806901854776533,
+    "enough": true,
+    "recentWindow": {
+     "start": "2026-07-22",
+     "end": "2026-10-19"
+    },
+    "previousWindow": {
+     "start": "2026-04-23",
+     "end": "2026-07-21"
+    },
+    "url": "https://export.arxiv.org/api/query?search_query=all%3A%28%22multimodal+AI%22+OR+%22multimodal+model%22%29+AND+submittedDate%3A%5B202607220000+TO+202610192359%5D&start=0&max_results=1"
+   },
+   {
+    "keyword": "machine translation",
+    "skillIds": [
+     "32a2c63d-2d13-4784-abb8-678ef2cd8a46"
+    ],
+    "recent": 135,
+    "previous": 107,
+    "direction": "up",
+    "momentum": 0.23052365861183235,
+    "enough": true,
+    "recentWindow": {
+     "start": "2026-07-22",
+     "end": "2026-10-19"
+    },
+    "previousWindow": {
+     "start": "2026-04-23",
+     "end": "2026-07-21"
+    },
+    "url": "https://export.arxiv.org/api/query?search_query=all%3A%28%22machine+translation%22%29+AND+submittedDate%3A%5B202607220000+TO+202610192359%5D&start=0&max_results=1"
+   },
+   {
+    "keyword": "autonomous vehicles",
+    "skillIds": [
+     "8369c2d6-c100-4cf6-bd83-9668d8678433"
+    ],
+    "recent": 163,
+    "previous": 206,
+    "direction": "down",
+    "momentum": -0.2328523654411707,
+    "enough": true,
+    "recentWindow": {
+     "start": "2026-07-22",
+     "end": "2026-10-19"
+    },
+    "previousWindow": {
+     "start": "2026-04-23",
+     "end": "2026-07-21"
+    },
+    "url": "https://export.arxiv.org/api/query?search_query=all%3A%28%22autonomous+vehicle%22%29+AND+submittedDate%3A%5B202607220000+TO+202610192359%5D&start=0&max_results=1"
+   },
+   {
+    "keyword": "AI ethics",
+    "skillIds": [
+     "e465a154-93f7-4973-9ce1-31659fe16dd2"
+    ],
+    "recent": 54,
+    "previous": 29,
+    "direction": "up",
+    "momentum": 0.6061358035703155,
+    "enough": true,
+    "recentWindow": {
+     "start": "2026-07-22",
+     "end": "2026-10-19"
+    },
+    "previousWindow": {
+     "start": "2026-04-23",
+     "end": "2026-07-21"
+    },
+    "url": "https://export.arxiv.org/api/query?search_query=all%3A%28%22AI+ethics%22+OR+%22fairness+in+AI%22%29+AND+submittedDate%3A%5B202607220000+TO+202610192359%5D&start=0&max_results=1"
+   },
+   {
+    "keyword": "federated learning",
+    "skillIds": [
+     "9ff9db9d-d14b-426e-83f3-e7449af6c79f"
+    ],
+    "recent": 422,
+    "previous": 382,
+    "direction": "up",
+    "momentum": 0.09933718986563204,
+    "enough": true,
+    "recentWindow": {
+     "start": "2026-07-22",
+     "end": "2026-10-19"
+    },
+    "previousWindow": {
+     "start": "2026-04-23",
+     "end": "2026-07-21"
+    },
+    "url": "https://export.arxiv.org/api/query?search_query=all%3A%28%22federated+learning%22%29+AND+submittedDate%3A%5B202607220000+TO+202610192359%5D&start=0&max_results=1"
+   },
+   {
+    "keyword": "anomaly detection",
+    "skillIds": [
+     "2b92a5b2-6758-4ee3-9fb4-b6387a55cc8f"
+    ],
+    "recent": 423,
+    "previous": 424,
+    "direction": "flat",
+    "momentum": -0.0023557136924590365,
+    "enough": true,
+    "recentWindow": {
+     "start": "2026-07-22",
+     "end": "2026-10-19"
+    },
+    "previousWindow": {
+     "start": "2026-04-23",
+     "end": "2026-07-21"
+    },
+    "url": "https://export.arxiv.org/api/query?search_query=all%3A%28%22anomaly+detection%22%29+AND+submittedDate%3A%5B202607220000+TO+202610192359%5D&start=0&max_results=1"
+   },
+   {
+    "keyword": "few-shot learning",
+    "skillIds": [
+     "8369c2d6-c100-4cf6-bd83-9668d8678433"
+    ],
+    "recent": 54,
+    "previous": 52,
+    "direction": "flat",
+    "momentum": 0.037041271680349076,
+    "enough": true,
+    "recentWindow": {
+     "start": "2026-07-22",
+     "end": "2026-10-19"
+    },
+    "previousWindow": {
+     "start": "2026-04-23",
+     "end": "2026-07-21"
+    },
+    "url": "https://export.arxiv.org/api/query?search_query=all%3A%28%22few-shot+learning%22%29+AND+submittedDate%3A%5B202607220000+TO+202610192359%5D&start=0&max_results=1"
+   },
+   {
+    "keyword": "vision language models",
+    "skillIds": [
+     "8369c2d6-c100-4cf6-bd83-9668d8678433"
+    ],
+    "recent": 1758,
+    "previous": 1563,
+    "direction": "up",
+    "momentum": 0.11749882363230174,
+    "enough": true,
+    "recentWindow": {
+     "start": "2026-07-22",
+     "end": "2026-10-19"
+    },
+    "previousWindow": {
+     "start": "2026-04-23",
+     "end": "2026-07-21"
+    },
+    "url": "https://export.arxiv.org/api/query?search_query=all%3A%28%22vision+language+model%22+OR+%22vision-language+model%22%29+AND+submittedDate%3A%5B202607220000+TO+202610192359%5D&start=0&max_results=1"
+   },
+   {
+    "keyword": "AI governance",
+    "skillIds": [
+     "9ff9db9d-d14b-426e-83f3-e7449af6c79f"
+    ],
+    "recent": 58,
+    "previous": 93,
+    "direction": "down",
+    "momentum": -0.4657573383642845,
+    "enough": true,
+    "recentWindow": {
+     "start": "2026-07-22",
+     "end": "2026-10-19"
+    },
+    "previousWindow": {
+     "start": "2026-04-23",
+     "end": "2026-07-21"
+    },
+    "url": "https://export.arxiv.org/api/query?search_query=all%3A%28%22AI+governance%22%29+AND+submittedDate%3A%5B202607220000+TO+202610192359%5D&start=0&max_results=1"
+   },
+   {
+    "keyword": "data labeling",
+    "skillIds": [
+     "9ff9db9d-d14b-426e-83f3-e7449af6c79f"
+    ],
+    "recent": 48,
+    "previous": 50,
+    "direction": "flat",
+    "momentum": -0.04000533461369913,
+    "enough": true,
+    "recentWindow": {
+     "start": "2026-07-22",
+     "end": "2026-10-19"
+    },
+    "previousWindow": {
+     "start": "2026-04-23",
+     "end": "2026-07-21"
+    },
+    "url": "https://export.arxiv.org/api/query?search_query=all%3A%28%22data+labeling%22+OR+%22data+annotation%22%29+AND+submittedDate%3A%5B202607220000+TO+202610192359%5D&start=0&max_results=1"
+   },
+   {
+    "keyword": "explainable AI",
+    "skillIds": [
+     "1d6c7de4-350e-4868-a47b-333b4b0d9650"
+    ],
+    "recent": 161,
+    "previous": 194,
+    "direction": "down",
+    "momentum": -0.18540322333136267,
+    "enough": true,
+    "recentWindow": {
+     "start": "2026-07-22",
+     "end": "2026-10-19"
+    },
+    "previousWindow": {
+     "start": "2026-04-23",
+     "end": "2026-07-21"
+    },
+    "url": "https://export.arxiv.org/api/query?search_query=all%3A%28%22explainable+AI%22+OR+%22explainable+artificial+intelligence%22%29+AND+submittedDate%3A%5B202607220000+TO+202610192359%5D&start=0&max_results=1"
+   },
+   {
+    "keyword": "time series forecasting",
+    "skillIds": [
+     "2b92a5b2-6758-4ee3-9fb4-b6387a55cc8f"
+    ],
+    "recent": 216,
+    "previous": 200,
+    "direction": "flat",
+    "momentum": 0.07659244548138387,
+    "enough": true,
+    "recentWindow": {
+     "start": "2026-07-22",
+     "end": "2026-10-19"
+    },
+    "previousWindow": {
+     "start": "2026-04-23",
+     "end": "2026-07-21"
+    },
+    "url": "https://export.arxiv.org/api/query?search_query=all%3A%28%22time+series+forecasting%22%29+AND+submittedDate%3A%5B202607220000+TO+202610192359%5D&start=0&max_results=1"
+   }
+  ],
+  "prior": [
+   {
+    "keyword": "document understanding",
+    "skillIds": [
+     "9710092c-f174-4e84-95bf-2064d39ad7a0"
+    ],
+    "recent": 52,
+    "previous": 55,
+    "direction": "flat",
+    "momentum": -0.05505977718302743,
+    "enough": true,
+    "recentWindow": {
+     "start": "2026-06-22",
+     "end": "2026-09-19"
+    },
+    "previousWindow": {
+     "start": "2026-03-24",
+     "end": "2026-06-21"
+    },
+    "url": "https://export.arxiv.org/api/query?search_query=all%3A%28%22document+understanding%22%29+AND+submittedDate%3A%5B202606220000+TO+202609192359%5D&start=0&max_results=1"
+   },
+   {
+    "keyword": "AI agents",
+    "skillIds": [
+     "e465a154-93f7-4973-9ce1-31659fe16dd2"
+    ],
+    "recent": 609,
+    "previous": 722,
+    "direction": "down",
+    "momentum": -0.16995026499140775,
+    "enough": true,
+    "recentWindow": {
+     "start": "2026-06-22",
+     "end": "2026-09-19"
+    },
+    "previousWindow": {
+     "start": "2026-03-24",
+     "end": "2026-06-21"
+    },
+    "url": "https://export.arxiv.org/api/query?search_query=all%3A%28%22AI+agent%22%29+AND+submittedDate%3A%5B202606220000+TO+202609192359%5D&start=0&max_results=1"
+   },
+   {
+    "keyword": "speech recognition",
+    "skillIds": [
+     "2af29864-c941-40a5-ae7b-2b6c4b92c0d7"
+    ],
+    "recent": 226,
+    "previous": 237,
+    "direction": "flat",
+    "momentum": -0.04732065619007196,
+    "enough": true,
+    "recentWindow": {
+     "start": "2026-06-22",
+     "end": "2026-09-19"
+    },
+    "previousWindow": {
+     "start": "2026-03-24",
+     "end": "2026-06-21"
+    },
+    "url": "https://export.arxiv.org/api/query?search_query=all%3A%28%22speech+recognition%22%29+AND+submittedDate%3A%5B202606220000+TO+202609192359%5D&start=0&max_results=1"
+   },
+   {
+    "keyword": "code generation",
+    "skillIds": [
+     "21d2f96d-35f7-4e3f-9745-c533d2dd6e97"
+    ],
+    "recent": 444,
+    "previous": 612,
+    "direction": "down",
+    "momentum": -0.3202906537699712,
+    "enough": true,
+    "recentWindow": {
+     "start": "2026-06-22",
+     "end": "2026-09-19"
+    },
+    "previousWindow": {
+     "start": "2026-03-24",
+     "end": "2026-06-21"
+    },
+    "url": "https://export.arxiv.org/api/query?search_query=all%3A%28%22code+generation%22%29+AND+submittedDate%3A%5B202606220000+TO+202609192359%5D&start=0&max_results=1"
+   },
+   {
+    "keyword": "retrieval augmented generation",
+    "skillIds": [
+     "9ff9db9d-d14b-426e-83f3-e7449af6c79f"
+    ],
+    "recent": 616,
+    "previous": 807,
+    "direction": "down",
+    "momentum": -0.26969303461570754,
+    "enough": true,
+    "recentWindow": {
+     "start": "2026-06-22",
+     "end": "2026-09-19"
+    },
+    "previousWindow": {
+     "start": "2026-03-24",
+     "end": "2026-06-21"
+    },
+    "url": "https://export.arxiv.org/api/query?search_query=all%3A%28%22retrieval+augmented+generation%22+OR+%22retrieval-augmented+generation%22%29+AND+submittedDate%3A%5B202606220000+TO+202609192359%5D&start=0&max_results=1"
+   },
+   {
+    "keyword": "predictive maintenance",
+    "skillIds": [
+     "38d49d88-9069-467b-b29e-3cae739bdd4d"
+    ],
+    "recent": 43,
+    "previous": 24,
+    "direction": "up",
+    "momentum": 0.5653138090500605,
+    "enough": true,
+    "recentWindow": {
+     "start": "2026-06-22",
+     "end": "2026-09-19"
+    },
+    "previousWindow": {
+     "start": "2026-03-24",
+     "end": "2026-06-21"
+    },
+    "url": "https://export.arxiv.org/api/query?search_query=all%3A%28%22predictive+maintenance%22%29+AND+submittedDate%3A%5B202606220000+TO+202609192359%5D&start=0&max_results=1"
+   },
+   {
+    "keyword": "sentiment analysis",
+    "skillIds": [
+     "2b92a5b2-6758-4ee3-9fb4-b6387a55cc8f"
+    ],
+    "recent": 79,
+    "previous": 113,
+    "direction": "down",
+    "momentum": -0.3541718137206139,
+    "enough": true,
+    "recentWindow": {
+     "start": "2026-06-22",
+     "end": "2026-09-19"
+    },
+    "previousWindow": {
+     "start": "2026-03-24",
+     "end": "2026-06-21"
+    },
+    "url": "https://export.arxiv.org/api/query?search_query=all%3A%28%22sentiment+analysis%22%29+AND+submittedDate%3A%5B202606220000+TO+202609192359%5D&start=0&max_results=1"
+   },
+   {
+    "keyword": "prompt engineering",
+    "skillIds": [
+     "e465a154-93f7-4973-9ce1-31659fe16dd2"
+    ],
+    "recent": 111,
+    "previous": 182,
+    "direction": "down",
+    "momentum": -0.49098728154632637,
+    "enough": true,
+    "recentWindow": {
+     "start": "2026-06-22",
+     "end": "2026-09-19"
+    },
+    "previousWindow": {
+     "start": "2026-03-24",
+     "end": "2026-06-21"
+    },
+    "url": "https://export.arxiv.org/api/query?search_query=all%3A%28%22prompt+engineering%22%29+AND+submittedDate%3A%5B202606220000+TO+202609192359%5D&start=0&max_results=1"
+   },
+   {
+    "keyword": "robotic process automation",
+    "skillIds": [
+     "9ff9db9d-d14b-426e-83f3-e7449af6c79f"
+    ],
+    "recent": 1,
+    "previous": 3,
+    "direction": "down",
+    "momentum": -0.6931471805599453,
+    "enough": false,
+    "recentWindow": {
+     "start": "2026-06-22",
+     "end": "2026-09-19"
+    },
+    "previousWindow": {
+     "start": "2026-03-24",
+     "end": "2026-06-21"
+    },
+    "url": "https://export.arxiv.org/api/query?search_query=all%3A%28%22robotic+process+automation%22%29+AND+submittedDate%3A%5B202606220000+TO+202609192359%5D&start=0&max_results=1"
+   },
+   {
+    "keyword": "text summarization",
+    "skillIds": [
+     "fff0e2cd-d0bd-4b02-9daf-158b79d9688a"
+    ],
+    "recent": 17,
+    "previous": 15,
+    "direction": "up",
+    "momentum": 0.11778303565638346,
+    "enough": false,
+    "recentWindow": {
+     "start": "2026-06-22",
+     "end": "2026-09-19"
+    },
+    "previousWindow": {
+     "start": "2026-03-24",
+     "end": "2026-06-21"
+    },
+    "url": "https://export.arxiv.org/api/query?search_query=all%3A%28%22text+summarization%22%29+AND+submittedDate%3A%5B202606220000+TO+202609192359%5D&start=0&max_results=1"
+   },
+   {
+    "keyword": "knowledge graphs",
+    "skillIds": [
+     "9ff9db9d-d14b-426e-83f3-e7449af6c79f"
+    ],
+    "recent": 448,
+    "previous": 454,
+    "direction": "flat",
+    "momentum": -0.013274531208696075,
+    "enough": true,
+    "recentWindow": {
+     "start": "2026-06-22",
+     "end": "2026-09-19"
+    },
+    "previousWindow": {
+     "start": "2026-03-24",
+     "end": "2026-06-21"
+    },
+    "url": "https://export.arxiv.org/api/query?search_query=all%3A%28%22knowledge+graph%22%29+AND+submittedDate%3A%5B202606220000+TO+202609192359%5D&start=0&max_results=1"
+   },
+   {
+    "keyword": "reinforcement learning",
+    "skillIds": [
+     "8369c2d6-c100-4cf6-bd83-9668d8678433"
+    ],
+    "recent": 2656,
+    "previous": 3409,
+    "direction": "down",
+    "momentum": -0.24951462451774897,
+    "enough": true,
+    "recentWindow": {
+     "start": "2026-06-22",
+     "end": "2026-09-19"
+    },
+    "previousWindow": {
+     "start": "2026-03-24",
+     "end": "2026-06-21"
+    },
+    "url": "https://export.arxiv.org/api/query?search_query=all%3A%28%22reinforcement+learning%22%29+AND+submittedDate%3A%5B202606220000+TO+202609192359%5D&start=0&max_results=1"
+   },
+   {
+    "keyword": "synthetic data",
+    "skillIds": [
+     "2b92a5b2-6758-4ee3-9fb4-b6387a55cc8f"
+    ],
+    "recent": 98,
+    "previous": 168,
+    "direction": "down",
+    "momentum": -0.5347788647884836,
+    "enough": true,
+    "recentWindow": {
+     "start": "2026-06-22",
+     "end": "2026-09-19"
+    },
+    "previousWindow": {
+     "start": "2026-03-24",
+     "end": "2026-06-21"
+    },
+    "url": "https://export.arxiv.org/api/query?search_query=all%3A%28%22synthetic+data+generation%22%29+AND+submittedDate%3A%5B202606220000+TO+202609192359%5D&start=0&max_results=1"
+   },
+   {
+    "keyword": "multi-modal AI",
+    "skillIds": [
+     "e465a154-93f7-4973-9ce1-31659fe16dd2"
+    ],
+    "recent": 301,
+    "previous": 345,
+    "direction": "down",
+    "momentum": -0.13601175768285467,
+    "enough": true,
+    "recentWindow": {
+     "start": "2026-06-22",
+     "end": "2026-09-19"
+    },
+    "previousWindow": {
+     "start": "2026-03-24",
+     "end": "2026-06-21"
+    },
+    "url": "https://export.arxiv.org/api/query?search_query=all%3A%28%22multimodal+AI%22+OR+%22multimodal+model%22%29+AND+submittedDate%3A%5B202606220000+TO+202609192359%5D&start=0&max_results=1"
+   },
+   {
+    "keyword": "machine translation",
+    "skillIds": [
+     "32a2c63d-2d13-4784-abb8-678ef2cd8a46"
+    ],
+    "recent": 116,
+    "previous": 120,
+    "direction": "flat",
+    "momentum": -0.033616610798984974,
+    "enough": true,
+    "recentWindow": {
+     "start": "2026-06-22",
+     "end": "2026-09-19"
+    },
+    "previousWindow": {
+     "start": "2026-03-24",
+     "end": "2026-06-21"
+    },
+    "url": "https://export.arxiv.org/api/query?search_query=all%3A%28%22machine+translation%22%29+AND+submittedDate%3A%5B202606220000+TO+202609192359%5D&start=0&max_results=1"
+   },
+   {
+    "keyword": "autonomous vehicles",
+    "skillIds": [
+     "8369c2d6-c100-4cf6-bd83-9668d8678433"
+    ],
+    "recent": 186,
+    "previous": 197,
+    "direction": "flat",
+    "momentum": -0.05715841383994864,
+    "enough": true,
+    "recentWindow": {
+     "start": "2026-06-22",
+     "end": "2026-09-19"
+    },
+    "previousWindow": {
+     "start": "2026-03-24",
+     "end": "2026-06-21"
+    },
+    "url": "https://export.arxiv.org/api/query?search_query=all%3A%28%22autonomous+vehicle%22%29+AND+submittedDate%3A%5B202606220000+TO+202609192359%5D&start=0&max_results=1"
+   },
+   {
+    "keyword": "AI ethics",
+    "skillIds": [
+     "e465a154-93f7-4973-9ce1-31659fe16dd2"
+    ],
+    "recent": 59,
+    "previous": 25,
+    "direction": "up",
+    "momentum": 0.8362480242006185,
+    "enough": true,
+    "recentWindow": {
+     "start": "2026-06-22",
+     "end": "2026-09-19"
+    },
+    "previousWindow": {
+     "start": "2026-03-24",
+     "end": "2026-06-21"
+    },
+    "url": "https://export.arxiv.org/api/query?search_query=all%3A%28%22AI+ethics%22+OR+%22fairness+in+AI%22%29+AND+submittedDate%3A%5B202606220000+TO+202609192359%5D&start=0&max_results=1"
+   },
+   {
+    "keyword": "federated learning",
+    "skillIds": [
+     "9ff9db9d-d14b-426e-83f3-e7449af6c79f"
+    ],
+    "recent": 366,
+    "previous": 405,
+    "direction": "flat",
+    "momentum": -0.10099131154716243,
+    "enough": true,
+    "recentWindow": {
+     "start": "2026-06-22",
+     "end": "2026-09-19"
+    },
+    "previousWindow": {
+     "start": "2026-03-24",
+     "end": "2026-06-21"
+    },
+    "url": "https://export.arxiv.org/api/query?search_query=all%3A%28%22federated+learning%22%29+AND+submittedDate%3A%5B202606220000+TO+202609192359%5D&start=0&max_results=1"
+   },
+   {
+    "keyword": "anomaly detection",
+    "skillIds": [
+     "2b92a5b2-6758-4ee3-9fb4-b6387a55cc8f"
+    ],
+    "recent": 398,
+    "previous": 455,
+    "direction": "down",
+    "momentum": -0.13353139262452263,
+    "enough": true,
+    "recentWindow": {
+     "start": "2026-06-22",
+     "end": "2026-09-19"
+    },
+    "previousWindow": {
+     "start": "2026-03-24",
+     "end": "2026-06-21"
+    },
+    "url": "https://export.arxiv.org/api/query?search_query=all%3A%28%22anomaly+detection%22%29+AND+submittedDate%3A%5B202606220000+TO+202609192359%5D&start=0&max_results=1"
+   },
+   {
+    "keyword": "few-shot learning",
+    "skillIds": [
+     "8369c2d6-c100-4cf6-bd83-9668d8678433"
+    ],
+    "recent": 50,
+    "previous": 64,
+    "direction": "down",
+    "momentum": -0.24256163717131135,
+    "enough": true,
+    "recentWindow": {
+     "start": "2026-06-22",
+     "end": "2026-09-19"
+    },
+    "previousWindow": {
+     "start": "2026-03-24",
+     "end": "2026-06-21"
+    },
+    "url": "https://export.arxiv.org/api/query?search_query=all%3A%28%22few-shot+learning%22%29+AND+submittedDate%3A%5B202606220000+TO+202609192359%5D&start=0&max_results=1"
+   },
+   {
+    "keyword": "vision language models",
+    "skillIds": [
+     "8369c2d6-c100-4cf6-bd83-9668d8678433"
+    ],
+    "recent": 1513,
+    "previous": 1660,
+    "direction": "flat",
+    "momentum": -0.09266467561590074,
+    "enough": true,
+    "recentWindow": {
+     "start": "2026-06-22",
+     "end": "2026-09-19"
+    },
+    "previousWindow": {
+     "start": "2026-03-24",
+     "end": "2026-06-21"
+    },
+    "url": "https://export.arxiv.org/api/query?search_query=all%3A%28%22vision+language+model%22+OR+%22vision-language+model%22%29+AND+submittedDate%3A%5B202606220000+TO+202609192359%5D&start=0&max_results=1"
+   },
+   {
+    "keyword": "AI governance",
+    "skillIds": [
+     "9ff9db9d-d14b-426e-83f3-e7449af6c79f"
+    ],
+    "recent": 84,
+    "previous": 88,
+    "direction": "flat",
+    "momentum": -0.04598511324182338,
+    "enough": true,
+    "recentWindow": {
+     "start": "2026-06-22",
+     "end": "2026-09-19"
+    },
+    "previousWindow": {
+     "start": "2026-03-24",
+     "end": "2026-06-21"
+    },
+    "url": "https://export.arxiv.org/api/query?search_query=all%3A%28%22AI+governance%22%29+AND+submittedDate%3A%5B202606220000+TO+202609192359%5D&start=0&max_results=1"
+   },
+   {
+    "keyword": "data labeling",
+    "skillIds": [
+     "9ff9db9d-d14b-426e-83f3-e7449af6c79f"
+    ],
+    "recent": 46,
+    "previous": 55,
+    "direction": "down",
+    "momentum": -0.17520408902509063,
+    "enough": true,
+    "recentWindow": {
+     "start": "2026-06-22",
+     "end": "2026-09-19"
+    },
+    "previousWindow": {
+     "start": "2026-03-24",
+     "end": "2026-06-21"
+    },
+    "url": "https://export.arxiv.org/api/query?search_query=all%3A%28%22data+labeling%22+OR+%22data+annotation%22%29+AND+submittedDate%3A%5B202606220000+TO+202609192359%5D&start=0&max_results=1"
+   },
+   {
+    "keyword": "explainable AI",
+    "skillIds": [
+     "1d6c7de4-350e-4868-a47b-333b4b0d9650"
+    ],
+    "recent": 189,
+    "previous": 193,
+    "direction": "flat",
+    "momentum": -0.020834086902842025,
+    "enough": true,
+    "recentWindow": {
+     "start": "2026-06-22",
+     "end": "2026-09-19"
+    },
+    "previousWindow": {
+     "start": "2026-03-24",
+     "end": "2026-06-21"
+    },
+    "url": "https://export.arxiv.org/api/query?search_query=all%3A%28%22explainable+AI%22+OR+%22explainable+artificial+intelligence%22%29+AND+submittedDate%3A%5B202606220000+TO+202609192359%5D&start=0&max_results=1"
+   },
+   {
+    "keyword": "time series forecasting",
+    "skillIds": [
+     "2b92a5b2-6758-4ee3-9fb4-b6387a55cc8f"
+    ],
+    "recent": 159,
+    "previous": 200,
+    "direction": "down",
+    "momentum": -0.2281310928252488,
+    "enough": true,
+    "recentWindow": {
+     "start": "2026-06-22",
+     "end": "2026-09-19"
+    },
+    "previousWindow": {
+     "start": "2026-03-24",
+     "end": "2026-06-21"
+    },
+    "url": "https://export.arxiv.org/api/query?search_query=all%3A%28%22time+series+forecasting%22%29+AND+submittedDate%3A%5B202606220000+TO+202609192359%5D&start=0&max_results=1"
+   }
+  ]
+ },
  "sources": {
   "Anthropic Economic Index": {
    "name": "Anthropic Economic Index",

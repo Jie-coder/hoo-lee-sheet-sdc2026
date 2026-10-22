@@ -2,12 +2,13 @@
 // Uses the importer's own validation (runFile), so the app can only ship
 // data that passes the same checks as --apply. Pure: reads files, returns an
 // object; scripts/build-catalogue.ts writes it to src/data/catalogue.json.
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { z } from "zod";
 import { IsoDateSchema, SdgTargetIdSchema } from "../../src/types/contracts";
 import type {
   Catalogue,
+  CatalogueKeyword,
   CatalogueOccupation,
   CataloguePersonaSkill,
   CatalogueSignal,
@@ -15,7 +16,7 @@ import type {
 import { SOURCE_NAMES } from "../../src/lib/catalogue";
 import { skillMomentum } from "../../src/lib/scoring";
 import { deriveSkills, runFile } from "../import-data";
-import { hasEnoughPapers } from "./arxiv";
+import { arxivCountUrl, arxivWindows, hasEnoughPapers } from "./arxiv";
 import { escoUriToId, isEscoUri } from "./cells";
 import { parseCsv } from "./csv";
 import { mapKeywordRow } from "./mappers";
@@ -65,11 +66,72 @@ function parseRows<T>(dir: string, filename: string, schema: z.ZodType<T>): T[] 
   });
 }
 
+/**
+ * Momentum per skill from one keywords file: the mean of each mapped
+ * keyword's own momentum. Null when the file has no usable rows.
+ */
+/** Every valid keyword row of one keywords file, with its counts, windows and a checkable arXiv URL. */
+function keywordRows(dir: string, filename: string): CatalogueKeyword[] {
+  const rows: CatalogueKeyword[] = [];
+  for (const [index, raw] of readRows(dir, filename).entries()) {
+    const { value } = mapKeywordRow(raw, index + 2);
+    if (!value) continue;
+    const windows = arxivWindows(value.checkedOn);
+    rows.push({
+      keyword: value.keyword,
+      skillIds: value.skillUris.map(escoUriToId),
+      recent: value.countLast90d,
+      previous: value.countPrev90d,
+      direction: value.direction,
+      momentum: skillMomentum(value.countLast90d, value.countPrev90d),
+      enough: hasEnoughPapers(value.countLast90d, value.countPrev90d),
+      recentWindow: windows.recent,
+      previousWindow: windows.previous,
+      url: arxivCountUrl(value.arxivQuery, windows.recent),
+    });
+  }
+  return rows;
+}
+
+function signalSnapshot(dir: string, filename: string): { signals: Record<string, CatalogueSignal>; asOf: string } | null {
+  const perSkill = new Map<string, { momenta: number[]; keywords: string[]; checkedOn: string }>();
+  for (const [index, raw] of readRows(dir, filename).entries()) {
+    const { value } = mapKeywordRow(raw, index + 2);
+    // Too few papers in both windows to read as a trend: 1 vs 3 would look like a huge swing.
+    if (!value || !hasEnoughPapers(value.countLast90d, value.countPrev90d)) continue;
+    const momentum = skillMomentum(value.countLast90d, value.countPrev90d);
+    for (const uri of value.skillUris) {
+      const id = escoUriToId(uri);
+      const entry = perSkill.get(id) ?? { momenta: [], keywords: [], checkedOn: value.checkedOn };
+      entry.momenta.push(momentum);
+      entry.keywords.push(value.keyword);
+      if (value.checkedOn > entry.checkedOn) entry.checkedOn = value.checkedOn;
+      perSkill.set(id, entry);
+    }
+  }
+  const asOf = [...perSkill.values()].reduce((latest, entry) => (entry.checkedOn > latest ? entry.checkedOn : latest), "");
+  if (!asOf) return null;
+  const signals = Object.fromEntries(
+    [...perSkill].map(([id, entry]) => [
+      id,
+      {
+        momentum: entry.momenta.reduce((sum, m) => sum + m, 0) / entry.momenta.length,
+        keywords: entry.keywords,
+        checkedOn: entry.checkedOn,
+      },
+    ])
+  );
+  return { signals, asOf };
+}
+
 /** Throws with every problem listed when any importer-checked file has errors. */
-function checkedOutcome(key: FileKey, dir: string) {
+function checkedOutcome(key: FileKey, dir: string, options: { optional?: boolean } = {}) {
   const outcome = runFile(key, dir);
   const errors = outcome.fileReport.issues.filter((issue) => issue.severity === "error");
-  if (!outcome.fileReport.present) throw new Error(`${outcome.fileReport.file} is missing from ${dir}`);
+  if (!outcome.fileReport.present) {
+    if (options.optional) return outcome;
+    throw new Error(`${outcome.fileReport.file} is missing from ${dir}`);
+  }
   if (errors.length > 0) {
     throw new Error(
       `${outcome.fileReport.file} has ${errors.length} error(s); run npx tsx scripts/import-data.ts --dir ${dir}`
@@ -105,34 +167,15 @@ export function buildCatalogue(dir: string): Catalogue {
     ])
   );
 
-  // Momentum per skill: the mean of each mapped keyword's own momentum.
-  const perSkill = new Map<string, { momenta: number[]; keywords: string[]; checkedOn: string }>();
-  for (const [index, raw] of readRows(dir, "keywords.csv").entries()) {
-    const { value } = mapKeywordRow(raw, index + 2);
-    // Too few papers in both windows to read as a trend: 1 vs 3 would look like a huge swing.
-    if (!value || !hasEnoughPapers(value.countLast90d, value.countPrev90d)) continue;
-    const momentum = skillMomentum(value.countLast90d, value.countPrev90d);
-    for (const uri of value.skillUris) {
-      const id = escoUriToId(uri);
-      const entry = perSkill.get(id) ?? { momenta: [], keywords: [], checkedOn: value.checkedOn };
-      entry.momenta.push(momentum);
-      entry.keywords.push(value.keyword);
-      if (value.checkedOn > entry.checkedOn) entry.checkedOn = value.checkedOn;
-      perSkill.set(id, entry);
-    }
+  const today = signalSnapshot(dir, "keywords.csv");
+  if (!today) throw new Error("keywords.csv has no valid rows, so there is no trend signal");
+  const { signals, asOf: signalsAsOf } = today;
+  // Optional: the same keywords counted 30 days earlier (T10).
+  checkedOutcome("keywords_prior", dir, { optional: true });
+  const prior = existsSync(join(dir, "keywords_prior.csv")) ? signalSnapshot(dir, "keywords_prior.csv") : null;
+  if (prior && prior.asOf >= signalsAsOf) {
+    throw new Error(`keywords_prior.csv (as of ${prior.asOf}) must be older than keywords.csv (as of ${signalsAsOf})`);
   }
-  const signals: Record<string, CatalogueSignal> = Object.fromEntries(
-    [...perSkill].map(([id, entry]) => [
-      id,
-      {
-        momentum: entry.momenta.reduce((sum, m) => sum + m, 0) / entry.momenta.length,
-        keywords: entry.keywords,
-        checkedOn: entry.checkedOn,
-      },
-    ])
-  );
-  const signalsAsOf = [...perSkill.values()].reduce((latest, entry) => (entry.checkedOn > latest ? entry.checkedOn : latest), "");
-  if (!signalsAsOf) throw new Error("keywords.csv has no valid rows, so there is no trend signal");
 
   const sdgRows = parseRows(dir, "occupation_sdg.csv", OccupationSdgRowSchema);
   const occupationIds = new Set(occupations.validOccupations.map((occupation) => occupation.id));
@@ -203,6 +246,12 @@ export function buildCatalogue(dir: string): Catalogue {
     skillGroups,
     groupLabels,
     signals,
+    priorSignalsAsOf: prior?.asOf ?? null,
+    priorSignals: prior?.signals ?? null,
+    keywords: {
+      today: keywordRows(dir, "keywords.csv"),
+      prior: prior ? keywordRows(dir, "keywords_prior.csv") : null,
+    },
     sources: sourceByName,
     courses: courses.validCourses,
     programmes: programmes.validProgrammes,

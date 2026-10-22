@@ -6,6 +6,8 @@
 //   npx tsx scripts/fetch-arxiv.ts                      # windows ending today
 //   npx tsx scripts/fetch-arxiv.ts --as-of 2026-09-19   # windows ending on a past date
 //   npx tsx scripts/fetch-arxiv.ts --dry-run            # print, don't write
+//   npx tsx scripts/fetch-arxiv.ts --as-of 2026-09-19 --out data/keywords_prior.csv
+//                                                       # the "30 days ago" snapshot (T10)
 //
 // arXiv asks for one request every 3 seconds, so 25 keywords take ~2.5 minutes.
 // Writes nothing if any request fails, so the file is never half-updated.
@@ -19,14 +21,15 @@ const DELAY_MS = 3100;
 const RETRIES = 3;
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
-type Args = { dir: string; asOf: string; dryRun: boolean };
+type Args = { dir: string; asOf: string; dryRun: boolean; out: string | null };
 
 function parseArgs(argv: string[]): Args {
-  const args: Args = { dir: "data", asOf: new Date().toISOString().slice(0, 10), dryRun: false };
+  const args: Args = { dir: "data", asOf: new Date().toISOString().slice(0, 10), dryRun: false, out: null };
   for (let i = 0; i < argv.length; i += 1) {
     if (argv[i] === "--dir") args.dir = argv[++i];
     else if (argv[i] === "--as-of") args.asOf = argv[++i];
     else if (argv[i] === "--dry-run") args.dryRun = true;
+    else if (argv[i] === "--out") args.out = argv[++i];
     else throw new Error(`unknown argument: ${argv[i]}`);
   }
   if (!/^\d{4}-\d{2}-\d{2}$/.test(args.asOf)) throw new Error(`--as-of must be YYYY-MM-DD, got ${args.asOf}`);
@@ -100,8 +103,10 @@ async function main() {
     console.log("\ndry run: keywords.csv not changed");
     return;
   }
-  writeFileSync(path, formatCsv({ header: csv.header, rows }));
-  console.log(`\nwrote ${rows.length} keyword(s) to ${path} (as of ${args.asOf}). Next: npm run build-catalogue`);
+  // Keywords always come from keywords.csv; --out writes the counts to another file (a past snapshot).
+  const outPath = args.out ?? path;
+  writeFileSync(outPath, formatCsv({ header: csv.header, rows }));
+  console.log(`\nwrote ${rows.length} keyword(s) to ${outPath} (as of ${args.asOf}). Next: npm run build-catalogue`);
 }
 
 if (isDirectRun(import.meta.url, process.argv[1])) {
