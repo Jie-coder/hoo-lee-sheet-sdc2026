@@ -5,17 +5,14 @@
 import "server-only";
 import { createHash } from "node:crypto";
 import { generateObject } from "ai";
-import { createGoogle } from "@ai-sdk/google";
 import { getDocumentProxy, extractText } from "unpdf";
 import { z } from "zod";
 import { getEnv } from "@/lib/env";
+import { getModel } from "@/lib/ai";
 import { mapSkillsToEsco, type SkillMatchDeps } from "@/lib/skill-match";
 import type { ParsedCvEducation, ParsedCvRole } from "@/types/contracts";
 import demoResultsJson from "@/data/demo-cv-results.json";
 import mockFixture from "@/fixtures/parse-cv-mock.json";
-
-/** Current stable Gemini Flash (https://ai.google.dev/gemini-api/docs/models). */
-const DEFAULT_CV_MODEL = "gemini-3.8-flash";
 
 /** How long the sha256-hit and AI_MOCK paths wait before responding, so the
  * upload area's "Reading / Extracting / Matching" steps are visible even
@@ -164,14 +161,12 @@ async function defaultExtractPdfText(bytes: Uint8Array): Promise<string> {
 }
 
 async function defaultExtractCv(text: string): Promise<CvExtraction> {
-  const env = getEnv();
-  if (!env.googleApiKey) {
-    throw new Error("GOOGLE_GENERATIVE_AI_API_KEY is not set.");
+  const modelResult = getModel();
+  if (!modelResult.ok) {
+    throw new Error(modelResult.error);
   }
-  const google = createGoogle({ apiKey: env.googleApiKey });
-  const model = google(env.aiModel || DEFAULT_CV_MODEL);
   const { object } = await generateObject({
-    model,
+    model: modelResult.model,
     schema: CvExtractionSchema,
     system: EXTRACTION_SYSTEM_PROMPT,
     prompt: text,

@@ -10,6 +10,8 @@ export type EnvReport = {
   googleApiKey: string;
   runpodBaseUrl: string;
   runpodApiKey: string;
+  anthropicApiKey: string;
+  anthropicBaseUrl: string;
   missing: string[];
   errors: string[];
 };
@@ -24,6 +26,10 @@ export function getEnv(): EnvReport {
   const googleApiKey = process.env.GOOGLE_GENERATIVE_AI_API_KEY ?? "";
   const runpodBaseUrl = process.env.RUNPOD_BASE_URL ?? "";
   const runpodApiKey = process.env.RUNPOD_API_KEY ?? "";
+  // Replit AI Integrations: when both are set, getModel() uses Claude Haiku
+  // instead of the default Gemini provider. Optional, so neither is validated below.
+  const anthropicApiKey = process.env.AI_INTEGRATIONS_ANTHROPIC_API_KEY ?? "";
+  const anthropicBaseUrl = process.env.AI_INTEGRATIONS_ANTHROPIC_BASE_URL ?? "";
 
   const missing: string[] = [];
   const errors: string[] = [];
@@ -55,6 +61,8 @@ export function getEnv(): EnvReport {
     googleApiKey,
     runpodBaseUrl,
     runpodApiKey,
+    anthropicApiKey,
+    anthropicBaseUrl,
     missing,
     errors,
   };

@@ -3,7 +3,7 @@ import "server-only";
 import { generateText } from "ai";
 import { getEnv } from "./env";
 import { getSupabase } from "./supabase";
-import { getModel } from "./ai";
+import { getActiveProviderName, getModel } from "./ai";
 
 export type CheckResult = {
   name: string;
@@ -63,7 +63,7 @@ async function checkAiProvider(deep: boolean): Promise<CheckResult> {
   if (!deep) {
     // getModel() above already confirmed the provider and API key; an empty
     // AI_MODEL falls back to the default model in ai.ts.
-    const model = `${env.aiProvider}, ${env.aiModel || "default model"}`;
+    const model = `${getActiveProviderName()}, ${env.aiModel || "default model"}`;
     return {
       name: "AI provider",
       ok: true,
