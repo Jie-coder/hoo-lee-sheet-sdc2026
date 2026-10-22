@@ -55,7 +55,7 @@ export type RoleStatusTone = "robust" | "shift" | "interest";
 export type RoleBreakdown = {
   /** Essential skills the user has exactly (same ESCO skill). */
   matchedSkills: number;
-  /** Essential skills in the same ESCO skill group as one of the user's: quarter credit, capped at relatedSkillCap (4) per role. */
+  /** Essential skills in the same ESCO skill group as one of the user's: half credit, capped at relatedSkillCap (6) per role — only the 6 most important count. */
   relatedSkills: number;
   essentialSkills: number;
   demand: ScenarioScores;
@@ -130,7 +130,7 @@ function topIds(roles: readonly RoleResult[], scenario: ScenarioId): Set<string>
   return new Set(ordered.slice(0, SCORING_PARAMS.topN).map((role) => role.occupationId));
 }
 
-/** Credit for an essential skill in the same ESCO group as a user skill, times that skill's level. */
+/** Half credit for an essential skill in the same ESCO group as a user skill, times that skill's level. */
 export const RELATED_SKILL_CREDIT = SCORING_PARAMS.relatedSkillCredit;
 
 export function analyzeProfile(catalogue: Catalogue, input: AnalyzeInput): AnalyzeResult {
@@ -151,13 +151,15 @@ export function analyzeProfile(catalogue: Catalogue, input: AnalyzeInput): Analy
    * h_s for every essential skill of one role: the user's level for the
    * exact skill, else related credit for a same-group skill, else 0.
    *
-   * Related credit is only given to the relatedSkillCap (4) related skills
-   * with the highest adjusted importance imp_s (ties by skillId ascending).
-   * Any related skill beyond that falls back to missing. Without a cap, a
-   * role with many essential skills and a user with a few broadly-connected
-   * skills could rack up related credit on every one of them — the cap
-   * keeps it a small nudge, not a second way to match. See the header
-   * comment in scoring.ts for the full reasoning.
+   * Related credit (half credit) is only given to the relatedSkillCap (6)
+   * related skills with the highest adjusted importance imp_s (the 6 most
+   * important skills of the role; ties by skillId ascending). Any related
+   * skill beyond that falls back to missing. Without a cap, a role with
+   * many essential skills and a user with a few broadly-connected skills
+   * could rack up related credit on every one of them — the cap keeps it a
+   * small nudge, not a second way to match, so a broad CV can't pad its fit
+   * score with adjacent skills. See the header comment in scoring.ts for
+   * the full reasoning.
    */
   const levelsFor = (skillIds: readonly string[]): Map<string, number> => {
     const levels = new Map<string, number>();
@@ -262,7 +264,7 @@ export function analyzeProfile(catalogue: Catalogue, input: AnalyzeInput): Analy
     const levels = levelsByOccupation.get(role.occupationId)!;
     breakdown[role.occupationId] = {
       matchedSkills: occupation.essentialSkillIds.filter((id) => userLevel.has(id)).length,
-      // Capped the same way as fit: at most relatedSkillCap (4) per role.
+      // Capped the same way as fit: at most relatedSkillCap (6) per role.
       relatedSkills: occupation.essentialSkillIds.filter(
         (id) => !userLevel.has(id) && (levels.get(id) ?? 0) > 0,
       ).length,

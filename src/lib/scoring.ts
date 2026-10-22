@@ -19,17 +19,16 @@
 //
 // For a hackathon judge, in plain English:
 // - A related skill (same ESCO skill group as something the user holds, but
-//   not the exact skill) earns relatedSkillCredit = 0.25 of a full match, not
-//   0.5. Half credit for "close enough" was too generous once we started
-//   testing — it let a handful of adjacent skills push fit scores to look
-//   like a near-exact match. A quarter credit still rewards transferable
-//   skills without making them a substitute for the real thing.
-// - Each role only counts the top relatedSkillCap = 4 related skills (by
-//   adjusted importance imp_s; ties break by skillId). This stops "related
-//   skill padding": a role with a long essential-skill list and a user with
-//   a handful of broadly-connected skills could otherwise rack up related
-//   credit on every single one of them. Capping it keeps the credit a small
-//   nudge, not a second scoring channel.
+//   not the exact skill) earns relatedSkillCredit = 0.5 of a full match:
+//   half credit for "close enough". It rewards transferable skills without
+//   treating them as a substitute for the real thing.
+// - Each role only counts the top relatedSkillCap = 6 related skills (by
+//   adjusted importance imp_s, i.e. the 6 most important skills; ties break
+//   by skillId). This stops "related skill padding": a broad CV with a
+//   handful of adjacent skills can't pad its fit score by racking up related
+//   credit on every essential skill of a role — only the 6 most important
+//   ones count, and the rest fall back to missing. Capping it keeps the
+//   credit a small nudge, not a second scoring channel.
 // - Roles with more than essentialSkillCap = 25 essential skills have the
 //   fit denominator scaled down to a 25-skill-equivalent sum. Without this,
 //   a role that lists dozens of essential skills is nearly unreachable (you
@@ -90,10 +89,10 @@ export const SCORING_PARAMS = {
   sdgBonus: 0.05,
   topN: 3,
   gapSize: 5,
-  /** Credit for an essential skill in the same ESCO group as a user skill, not the exact match. See the file header. */
-  relatedSkillCredit: 0.25,
-  /** Most related skills a single role can get credit for, by adjusted importance. See the file header. */
-  relatedSkillCap: 4,
+  /** Half credit for an essential skill in the same ESCO group as a user skill, not the exact match. See the file header. */
+  relatedSkillCredit: 0.5,
+  /** At most the 6 most important related skills per role count, so a broad CV can't pad fit with adjacent skills. See the file header. */
+  relatedSkillCap: 6,
   /** Essential-skill count above which the fit denominator is scaled down. See the file header. */
   essentialSkillCap: 25,
   skillLevel: { full: 1, partial: 0.5, missing: 0 },

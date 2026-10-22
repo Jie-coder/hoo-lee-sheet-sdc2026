@@ -29,8 +29,8 @@ describe("SCORING_PARAMS", () => {
     expect(SCORING_PARAMS.sdgBonus).toBe(0.05);
     expect(SCORING_PARAMS.topN).toBe(3);
     expect(SCORING_PARAMS.gapSize).toBe(5);
-    expect(SCORING_PARAMS.relatedSkillCredit).toBe(0.25);
-    expect(SCORING_PARAMS.relatedSkillCap).toBe(4);
+    expect(SCORING_PARAMS.relatedSkillCredit).toBe(0.5);
+    expect(SCORING_PARAMS.relatedSkillCap).toBe(6);
     expect(SCORING_PARAMS.essentialSkillCap).toBe(25);
     expect(SCORING_PARAMS.theta).toEqual({ co: 1, dis: 1.4, sup: 1.2 });
     // demandByCluster is checked against data/*.csv in scripts/lib/scenario-demand.test.ts.
