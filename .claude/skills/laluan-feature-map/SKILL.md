@@ -13,16 +13,20 @@ component each time, read the map first, then drive the real app.
 | File | Who writes it | What it is |
 | --- | --- | --- |
 | `feature-map.md` | humans | Every page: route, steps to reach it, selectors, keys, expected result |
-| `routes.generated.json` | `generate.ts` | Routes, `data-testid`s and links found in `src/app` + `src/components` |
-| `feature-map.mmd` / `feature-map.png` | `generate.ts` | Mermaid navigation graph and its picture |
+| `routes.generated.json` | `generate.ts` | Every page's interactive elements (label, kind, `data-testid`, section, shown/disabled when, destination), redirect guards, API calls and data sources found in `src/` |
+| `feature-map.mmd` / `.png` / `.svg` | `generate.ts` | Overview diagram: pages, journey, decisions, APIs and data sources |
+| `pages/<page>.mmd` / `.png` / `.svg` | `generate.ts` | One detail diagram per page (and the site header) with every control |
+| `scripts/feature-map/annotations.ts` | humans | Facts the scanner cannot infer: journey, action labels, decisions inside handlers, data-source detectors, condition names |
 
 ## When to use
 
 - You need to know which page or component owns a feature: search `feature-map.md`.
 - You must reproduce a bug or prove a UI change works: run a flow (below) and
   look at the screenshots / trace.
-- You added or renamed a page or a `data-testid`: update `feature-map.md`,
-  then `npm run feature-map:render`. CI runs `npm run feature-map:check`.
+- You added or renamed a page or a `data-testid`: update `feature-map.md`
+  (and `annotations.ts` if `--check` asks), then `npm run feature-map:render`.
+  CI runs `npm run feature-map:check`.
+- You want the picture of one page: open `pages/<page>.png` (or the `.svg` to zoom).
 
 ## How to drive the app
 

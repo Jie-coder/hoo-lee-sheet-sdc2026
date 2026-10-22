@@ -10,6 +10,41 @@
       ],
       "linksTo": [
         "/profile"
+      ],
+      "guards": [],
+      "apiCalls": [],
+      "dataSources": [
+        "catalogue",
+        "personas",
+        "session"
+      ],
+      "elements": [
+        {
+          "label": "Start",
+          "kind": "button",
+          "testId": "landing-start",
+          "component": "LandingView",
+          "section": "Hero",
+          "repeated": false,
+          "navigatesTo": [
+            "/profile"
+          ],
+          "callsApi": [],
+          "file": "src/components/landing-view.tsx",
+          "line": 73
+        },
+        {
+          "label": "button",
+          "kind": "checkbox",
+          "testId": "landing-consent",
+          "component": "LandingView",
+          "section": "Hero",
+          "repeated": false,
+          "navigatesTo": [],
+          "callsApi": [],
+          "file": "src/components/landing-view.tsx",
+          "line": 82
+        }
       ]
     },
     {
@@ -21,7 +56,71 @@
         "demo-save",
         "demo-submit"
       ],
-      "linksTo": []
+      "linksTo": [],
+      "guards": [],
+      "apiCalls": [
+        "/api/analyze",
+        "/api/items"
+      ],
+      "dataSources": [],
+      "elements": [
+        {
+          "label": "Paste or type some text to analyze...",
+          "kind": "textarea",
+          "testId": "demo-input",
+          "component": "DemoPage",
+          "section": "Demo",
+          "repeated": false,
+          "navigatesTo": [],
+          "callsApi": [],
+          "file": "src/app/demo/page.tsx",
+          "line": 83
+        },
+        {
+          "label": "Analyzing... / Submit",
+          "kind": "button",
+          "testId": "demo-submit",
+          "component": "DemoPage",
+          "section": "Demo",
+          "disabledWhen": "loading || input.trim().length === 0",
+          "repeated": false,
+          "navigatesTo": [],
+          "callsApi": [
+            "/api/analyze"
+          ],
+          "file": "src/app/demo/page.tsx",
+          "line": 92
+        },
+        {
+          "label": "Load example",
+          "kind": "button",
+          "testId": "demo-load-example",
+          "component": "DemoPage",
+          "section": "Demo",
+          "disabledWhen": "loading",
+          "repeated": false,
+          "navigatesTo": [],
+          "callsApi": [],
+          "file": "src/app/demo/page.tsx",
+          "line": 95
+        },
+        {
+          "label": "Saving... / Save result",
+          "kind": "button",
+          "testId": "demo-save",
+          "component": "DemoPage",
+          "section": "when !loading && result",
+          "shownWhen": "!loading && result",
+          "disabledWhen": "saving",
+          "repeated": false,
+          "navigatesTo": [],
+          "callsApi": [
+            "/api/items"
+          ],
+          "file": "src/app/demo/page.tsx",
+          "line": 111
+        }
+      ]
     },
     {
       "route": "/interview",
@@ -33,6 +132,193 @@
       ],
       "linksTo": [
         "/results"
+      ],
+      "guards": [
+        {
+          "condition": "!consent",
+          "redirectTo": "/",
+          "file": "src/components/interview-view.tsx"
+        },
+        {
+          "condition": "!profile",
+          "redirectTo": "/profile",
+          "file": "src/components/interview-view.tsx"
+        }
+      ],
+      "apiCalls": [],
+      "dataSources": [
+        "personas",
+        "session"
+      ],
+      "elements": [
+        {
+          "label": "4 / 6 / 10 / 15 h",
+          "kind": "toggle",
+          "component": "InterviewView",
+          "section": "Hours a week",
+          "group": "Hours a week",
+          "shownWhen": "turn === 1",
+          "repeated": true,
+          "navigatesTo": [],
+          "callsApi": [],
+          "file": "src/components/interview-view.tsx",
+          "line": 233
+        },
+        {
+          "label": "Free only / Up to RM200 / Up to RM500 / No limit",
+          "kind": "toggle",
+          "component": "InterviewView",
+          "section": "Budget for courses",
+          "group": "Budget for courses",
+          "shownWhen": "turn === 1",
+          "repeated": true,
+          "navigatesTo": [],
+          "callsApi": [],
+          "file": "src/components/interview-view.tsx",
+          "line": 240
+        },
+        {
+          "label": "~10% / ~25% / ~40% / 50%+",
+          "kind": "toggle",
+          "component": "InterviewView",
+          "section": "when turn === 2",
+          "shownWhen": "turn === 2",
+          "repeated": true,
+          "navigatesTo": [],
+          "callsApi": [],
+          "file": "src/components/interview-view.tsx",
+          "line": 257
+        },
+        {
+          "label": "Split evenly",
+          "kind": "button",
+          "component": "InterviewView",
+          "section": "when turn === 2",
+          "shownWhen": "turn === 2",
+          "repeated": false,
+          "navigatesTo": [],
+          "callsApi": [],
+          "file": "src/components/interview-view.tsx",
+          "line": 286
+        },
+        {
+          "label": "Excel, WhatsApp Business, Canva",
+          "kind": "input",
+          "component": "InterviewView",
+          "section": "when turn === 3",
+          "shownWhen": "turn === 3",
+          "repeated": false,
+          "navigatesTo": [],
+          "callsApi": [],
+          "file": "src/components/interview-view.tsx",
+          "line": 300
+        },
+        {
+          "label": "Never used it / Tried it a few times / Use it sometimes / Us",
+          "kind": "toggle",
+          "component": "InterviewView",
+          "section": "How much have you used AI tools?",
+          "group": "How much have you used AI tools?",
+          "shownWhen": "turn === 3",
+          "repeated": true,
+          "navigatesTo": [],
+          "callsApi": [],
+          "file": "src/components/interview-view.tsx",
+          "line": 309
+        },
+        {
+          "label": "Employed / Underemployed (fewer hours/pay than I want) / Une",
+          "kind": "toggle",
+          "component": "InterviewView",
+          "section": "Work status",
+          "group": "Work status",
+          "shownWhen": "turn === 4",
+          "repeated": true,
+          "navigatesTo": [],
+          "callsApi": [],
+          "file": "src/components/interview-view.tsx",
+          "line": 321
+        },
+        {
+          "label": "Yes / No / Not sure",
+          "kind": "toggle",
+          "component": "InterviewView",
+          "section": "Registered with PERKESO?",
+          "group": "Registered with PERKESO?",
+          "shownWhen": "turn === 4",
+          "repeated": true,
+          "navigatesTo": [],
+          "callsApi": [],
+          "file": "src/components/interview-view.tsx",
+          "line": 328
+        },
+        {
+          "label": "Environment / Education / Health / Community / No particular",
+          "kind": "toggle",
+          "component": "InterviewView",
+          "section": "A cause you care about",
+          "group": "A cause you care about",
+          "shownWhen": "turn === 5",
+          "repeated": true,
+          "navigatesTo": [],
+          "callsApi": [],
+          "file": "src/components/interview-view.tsx",
+          "line": 340
+        },
+        {
+          "label": "EN / BM / 中文",
+          "kind": "toggle",
+          "component": "InterviewView",
+          "section": "Course language for your pathway",
+          "group": "Course language for your pathway",
+          "shownWhen": "turn === 5",
+          "repeated": true,
+          "navigatesTo": [],
+          "callsApi": [],
+          "file": "src/components/interview-view.tsx",
+          "line": 347
+        },
+        {
+          "label": "Back",
+          "kind": "button",
+          "testId": "interview-back",
+          "component": "InterviewView",
+          "section": "Question navigation",
+          "disabledWhen": "turn === 1",
+          "repeated": false,
+          "navigatesTo": [],
+          "callsApi": [],
+          "file": "src/components/interview-view.tsx",
+          "line": 366
+        },
+        {
+          "label": "Skip",
+          "kind": "button",
+          "testId": "interview-skip",
+          "component": "InterviewView",
+          "section": "Question navigation",
+          "repeated": false,
+          "navigatesTo": [
+            "/results"
+          ],
+          "callsApi": [],
+          "file": "src/components/interview-view.tsx",
+          "line": 370
+        },
+        {
+          "label": "See results / Next",
+          "kind": "button",
+          "testId": "interview-next",
+          "component": "InterviewView",
+          "section": "Question navigation",
+          "repeated": false,
+          "navigatesTo": [
+            "/results"
+          ],
+          "callsApi": [],
+          "file": "src/components/interview-view.tsx",
+          "line": 373
+        }
       ]
     },
     {
@@ -46,6 +332,134 @@
       "linksTo": [
         "/",
         "/results"
+      ],
+      "guards": [
+        {
+          "condition": "!consent",
+          "redirectTo": "/",
+          "file": "src/components/pathway-view.tsx"
+        },
+        {
+          "condition": "!profile",
+          "redirectTo": "/profile",
+          "file": "src/components/pathway-view.tsx"
+        },
+        {
+          "condition": "!roleId",
+          "redirectTo": "/results",
+          "file": "src/components/pathway-view.tsx"
+        }
+      ],
+      "apiCalls": [
+        "/api/roles"
+      ],
+      "dataSources": [
+        "catalogue",
+        "personas",
+        "session"
+      ],
+      "elements": [
+        {
+          "label": "Try again",
+          "kind": "button",
+          "component": "PathwayView",
+          "section": "when state.status === \"error\"",
+          "shownWhen": "state.status === \"error\"",
+          "repeated": false,
+          "navigatesTo": [],
+          "callsApi": [],
+          "file": "src/components/pathway-view.tsx",
+          "line": 135
+        },
+        {
+          "label": "Back to roles",
+          "kind": "button",
+          "component": "PathwayView",
+          "section": "when state.status === \"ready\"",
+          "shownWhen": "state.status === \"ready\"",
+          "repeated": false,
+          "navigatesTo": [
+            "/results"
+          ],
+          "callsApi": [],
+          "file": "src/components/pathway-view.tsx",
+          "line": 144
+        },
+        {
+          "label": "Back to roles",
+          "kind": "button",
+          "testId": "pathway-back-to-roles",
+          "component": "PathwayView",
+          "section": "PathwayView",
+          "repeated": false,
+          "navigatesTo": [
+            "/results"
+          ],
+          "callsApi": [],
+          "file": "src/components/pathway-view.tsx",
+          "line": 198
+        },
+        {
+          "label": "Download PDF",
+          "kind": "button",
+          "testId": "pathway-download",
+          "component": "PathwayView",
+          "section": "PathwayView",
+          "repeated": false,
+          "navigatesTo": [],
+          "callsApi": [],
+          "file": "src/components/pathway-view.tsx",
+          "line": 202
+        },
+        {
+          "label": "Open source",
+          "kind": "link",
+          "component": "PathwayView",
+          "section": "Week by week",
+          "repeated": true,
+          "navigatesTo": [],
+          "callsApi": [],
+          "file": "src/components/pathway-view.tsx",
+          "line": 386
+        },
+        {
+          "label": "Delete my data",
+          "kind": "button",
+          "testId": "pathway-delete-data",
+          "component": "PathwayView",
+          "section": "Side panel",
+          "repeated": false,
+          "navigatesTo": [
+            "/"
+          ],
+          "callsApi": [],
+          "file": "src/components/pathway-view.tsx",
+          "line": 454
+        },
+        {
+          "label": "Flagged / Flag this",
+          "kind": "button",
+          "component": "SdgBadge",
+          "section": "when link.tier === \"inferred\"",
+          "shownWhen": "link.tier === \"inferred\"",
+          "disabledWhen": "flagged || !onFlag",
+          "repeated": false,
+          "navigatesTo": [],
+          "callsApi": [],
+          "file": "src/components/sdg-badge.tsx",
+          "line": 71
+        },
+        {
+          "label": "‹source.dataset› ·",
+          "kind": "link",
+          "component": "SourceChip",
+          "section": "SourceChip",
+          "repeated": false,
+          "navigatesTo": [],
+          "callsApi": [],
+          "file": "src/components/source-chip.tsx",
+          "line": 11
+        }
       ]
     },
     {
@@ -58,6 +472,236 @@
       ],
       "linksTo": [
         "/interview"
+      ],
+      "guards": [
+        {
+          "condition": "hydrated && !consent",
+          "redirectTo": "/",
+          "file": "src/components/profile-view.tsx"
+        }
+      ],
+      "apiCalls": [],
+      "dataSources": [
+        "personas",
+        "session"
+      ],
+      "elements": [
+        {
+          "label": "browse",
+          "kind": "button",
+          "testId": "profile-upload-browse",
+          "component": "ProfileView",
+          "section": "Upload",
+          "repeated": false,
+          "navigatesTo": [],
+          "callsApi": [],
+          "file": "src/components/profile-view.tsx",
+          "line": 115
+        },
+        {
+          "label": "file input (application/pdf)",
+          "kind": "file picker",
+          "component": "ProfileView",
+          "section": "Upload",
+          "repeated": false,
+          "navigatesTo": [],
+          "callsApi": [],
+          "file": "src/components/profile-view.tsx",
+          "line": 122
+        },
+        {
+          "label": "Your name",
+          "kind": "input",
+          "component": "ProfileView",
+          "section": "when profile",
+          "shownWhen": "profile",
+          "repeated": false,
+          "navigatesTo": [],
+          "callsApi": [],
+          "file": "src/components/profile-view.tsx",
+          "line": 159
+        },
+        {
+          "label": "Remove ‹skill.label›",
+          "kind": "button",
+          "component": "ProfileView",
+          "section": "when profile",
+          "shownWhen": "profile",
+          "repeated": true,
+          "navigatesTo": [],
+          "callsApi": [],
+          "file": "src/components/profile-view.tsx",
+          "line": 184
+        },
+        {
+          "label": "Skill name",
+          "kind": "input",
+          "component": "ProfileView",
+          "section": "when addingSkill",
+          "shownWhen": "addingSkill",
+          "repeated": false,
+          "navigatesTo": [],
+          "callsApi": [],
+          "file": "src/components/profile-view.tsx",
+          "line": 197
+        },
+        {
+          "label": "Add a skill",
+          "kind": "button",
+          "component": "ProfileView",
+          "section": "when !(addingSkill)",
+          "shownWhen": "!(addingSkill)",
+          "repeated": false,
+          "navigatesTo": [],
+          "callsApi": [],
+          "file": "src/components/profile-view.tsx",
+          "line": 214
+        },
+        {
+          "label": "Role title",
+          "kind": "input",
+          "component": "ProfileView",
+          "section": "when profile",
+          "shownWhen": "profile",
+          "repeated": true,
+          "navigatesTo": [],
+          "callsApi": [],
+          "file": "src/components/profile-view.tsx",
+          "line": 226
+        },
+        {
+          "label": "input",
+          "kind": "input",
+          "component": "ProfileView",
+          "section": "when profile",
+          "shownWhen": "profile",
+          "repeated": true,
+          "navigatesTo": [],
+          "callsApi": [],
+          "file": "src/components/profile-view.tsx",
+          "line": 232
+        },
+        {
+          "label": "Remove ‹role.title || \"role\"›",
+          "kind": "button",
+          "component": "ProfileView",
+          "section": "when profile",
+          "shownWhen": "profile",
+          "repeated": true,
+          "navigatesTo": [],
+          "callsApi": [],
+          "file": "src/components/profile-view.tsx",
+          "line": 241
+        },
+        {
+          "label": "Add a role",
+          "kind": "button",
+          "component": "ProfileView",
+          "section": "when profile",
+          "shownWhen": "profile",
+          "repeated": false,
+          "navigatesTo": [],
+          "callsApi": [],
+          "file": "src/components/profile-view.tsx",
+          "line": 252
+        },
+        {
+          "label": "Qualification",
+          "kind": "textarea",
+          "component": "ProfileView",
+          "section": "when profile",
+          "shownWhen": "profile",
+          "repeated": true,
+          "navigatesTo": [],
+          "callsApi": [],
+          "file": "src/components/profile-view.tsx",
+          "line": 264
+        },
+        {
+          "label": "Institution",
+          "kind": "textarea",
+          "component": "ProfileView",
+          "section": "when profile",
+          "shownWhen": "profile",
+          "repeated": true,
+          "navigatesTo": [],
+          "callsApi": [],
+          "file": "src/components/profile-view.tsx",
+          "line": 271
+        },
+        {
+          "label": "Remove education entry",
+          "kind": "button",
+          "component": "ProfileView",
+          "section": "when profile",
+          "shownWhen": "profile",
+          "repeated": true,
+          "navigatesTo": [],
+          "callsApi": [],
+          "file": "src/components/profile-view.tsx",
+          "line": 278
+        },
+        {
+          "label": "Add education",
+          "kind": "button",
+          "component": "ProfileView",
+          "section": "when profile",
+          "shownWhen": "profile",
+          "repeated": false,
+          "navigatesTo": [],
+          "callsApi": [],
+          "file": "src/components/profile-view.tsx",
+          "line": 289
+        },
+        {
+          "label": "Continue",
+          "kind": "button",
+          "testId": "profile-continue",
+          "component": "ProfileView",
+          "section": "when profile",
+          "shownWhen": "profile",
+          "repeated": false,
+          "navigatesTo": [
+            "/interview"
+          ],
+          "callsApi": [],
+          "file": "src/components/profile-view.tsx",
+          "line": 303
+        },
+        {
+          "label": "‹persona.initials› ‹persona.name› ‹persona.nameLocal› ‹perso",
+          "kind": "radio card",
+          "testId": "persona-card-*",
+          "component": "PersonaCard",
+          "section": "PersonaCard",
+          "repeated": true,
+          "navigatesTo": [],
+          "callsApi": [],
+          "file": "src/components/profile-view.tsx",
+          "line": 319
+        },
+        {
+          "label": "View CV",
+          "kind": "link",
+          "component": "PersonaCard",
+          "section": "PersonaCard",
+          "repeated": false,
+          "navigatesTo": [],
+          "callsApi": [],
+          "file": "src/components/profile-view.tsx",
+          "line": 367
+        },
+        {
+          "label": "EN / BM / 中文",
+          "kind": "toggle",
+          "component": "CourseLanguageToggle",
+          "section": "CourseLanguageToggle",
+          "repeated": true,
+          "navigatesTo": [],
+          "callsApi": [],
+          "file": "src/components/course-language-toggle.tsx",
+          "line": 23
+        }
       ]
     },
     {
@@ -68,6 +712,52 @@
       ],
       "linksTo": [
         "/"
+      ],
+      "guards": [],
+      "apiCalls": [],
+      "dataSources": [
+        "catalogue"
+      ],
+      "elements": [
+        {
+          "label": "‹keyword.keyword› ‹keyword.recent› vs ‹keyword.previous› ·",
+          "kind": "link",
+          "component": "KeywordTag",
+          "section": "KeywordTag",
+          "repeated": false,
+          "navigatesTo": [],
+          "callsApi": [],
+          "file": "src/components/radar-view.tsx",
+          "line": 24
+        },
+        {
+          "label": "Match your own skills",
+          "kind": "link",
+          "testId": "radar-match-skills",
+          "component": "RadarView",
+          "section": "Roles it touches",
+          "shownWhen": "radar",
+          "repeated": false,
+          "navigatesTo": [
+            "/"
+          ],
+          "callsApi": [],
+          "file": "src/components/radar-view.tsx",
+          "line": 227
+        },
+        {
+          "label": "‹formatDayMonthYear(iso(date))›‹date === \"today\" ? \", latest\" : \", 30 days earlier\"›",
+          "kind": "toggle",
+          "component": "SignalDateToggle",
+          "section": "Trend signal date",
+          "group": "Trend signal date",
+          "disabledWhen": "disabled",
+          "repeated": true,
+          "navigatesTo": [],
+          "callsApi": [],
+          "file": "src/components/signal-date-toggle.tsx",
+          "line": 44
+        }
       ]
     },
     {
@@ -80,24 +770,248 @@
         "scenario-tab-*"
       ],
       "linksTo": [
-        "/pathway",
         "/radar"
+      ],
+      "guards": [
+        {
+          "condition": "!consent",
+          "redirectTo": "/",
+          "file": "src/components/results-view.tsx"
+        },
+        {
+          "condition": "!profile",
+          "redirectTo": "/profile",
+          "file": "src/components/results-view.tsx"
+        }
+      ],
+      "apiCalls": [
+        "/api/roles"
+      ],
+      "dataSources": [
+        "personas",
+        "session"
+      ],
+      "elements": [
+        {
+          "label": "Try again",
+          "kind": "button",
+          "testId": "results-retry",
+          "component": "ResultsView",
+          "section": "when state.status === \"error\"",
+          "shownWhen": "state.status === \"error\"",
+          "repeated": false,
+          "navigatesTo": [],
+          "callsApi": [],
+          "file": "src/components/results-view.tsx",
+          "line": 104
+        },
+        {
+          "label": "Skills radar",
+          "kind": "link",
+          "testId": "results-radar-link",
+          "component": "ResultsView",
+          "section": "when data.signalDates.prior",
+          "shownWhen": "data.signalDates.prior",
+          "repeated": false,
+          "navigatesTo": [
+            "/radar"
+          ],
+          "callsApi": [],
+          "file": "src/components/results-view.tsx",
+          "line": 156
+        },
+        {
+          "label": "Flagged / Flag this",
+          "kind": "button",
+          "component": "RoleCard",
+          "section": "when inferredLink",
+          "shownWhen": "inferredLink",
+          "disabledWhen": "inferredFlagged",
+          "repeated": false,
+          "navigatesTo": [],
+          "callsApi": [],
+          "file": "src/components/role-card.tsx",
+          "line": 177
+        },
+        {
+          "label": "Chosen / Choose this role",
+          "kind": "toggle",
+          "testId": "role-choose",
+          "component": "RoleCard",
+          "section": "RoleCard",
+          "repeated": false,
+          "navigatesTo": [],
+          "callsApi": [],
+          "file": "src/components/role-card.tsx",
+          "line": 192
+        },
+        {
+          "label": "Flagged / Flag this",
+          "kind": "button",
+          "component": "SdgBadge",
+          "section": "when link.tier === \"inferred\"",
+          "shownWhen": "link.tier === \"inferred\"",
+          "disabledWhen": "flagged || !onFlag",
+          "repeated": false,
+          "navigatesTo": [],
+          "callsApi": [],
+          "file": "src/components/sdg-badge.tsx",
+          "line": 71
+        },
+        {
+          "label": "‹sources.length› source s",
+          "kind": "button",
+          "component": "SourcesDisclosure",
+          "section": "SourcesDisclosure",
+          "repeated": false,
+          "navigatesTo": [],
+          "callsApi": [],
+          "file": "src/components/sources-disclosure.tsx",
+          "line": 19
+        },
+        {
+          "label": "‹source.dataset› ·",
+          "kind": "link",
+          "component": "SourceChip",
+          "section": "SourceChip",
+          "repeated": false,
+          "navigatesTo": [],
+          "callsApi": [],
+          "file": "src/components/source-chip.tsx",
+          "line": 11
+        },
+        {
+          "label": "Co-Pilot Economy / Age of Displacement / Supercharged Progre",
+          "kind": "tab",
+          "testId": "scenario-tab-*",
+          "component": "ScenarioTabs",
+          "section": "Future scenario",
+          "group": "Future scenario",
+          "repeated": true,
+          "navigatesTo": [],
+          "callsApi": [],
+          "file": "src/components/scenario-tabs.tsx",
+          "line": 84
+        },
+        {
+          "label": "‹formatDayMonthYear(iso(date))›‹date === \"today\" ? \", latest\" : \", 30 days earlier\"›",
+          "kind": "toggle",
+          "component": "SignalDateToggle",
+          "section": "Trend signal date",
+          "group": "Trend signal date",
+          "disabledWhen": "disabled",
+          "repeated": true,
+          "navigatesTo": [],
+          "callsApi": [],
+          "file": "src/components/signal-date-toggle.tsx",
+          "line": 44
+        }
       ]
     },
     {
       "route": "/status",
       "file": "src/app/status/page.tsx",
       "testIds": [],
-      "linksTo": []
+      "linksTo": [],
+      "guards": [],
+      "apiCalls": [],
+      "dataSources": [
+        "gemini",
+        "mock-ai",
+        "supabase-items"
+      ],
+      "elements": []
     }
   ],
   "global": {
+    "route": "header",
     "file": "src/app/layout.tsx",
     "testIds": [
       "header-home"
     ],
     "linksTo": [
       "/"
+    ],
+    "guards": [],
+    "apiCalls": [],
+    "dataSources": [
+      "personas",
+      "session"
+    ],
+    "elements": [
+      {
+        "label": "Laluan home",
+        "kind": "link",
+        "testId": "header-home",
+        "component": "SiteHeader",
+        "section": "SiteHeader",
+        "repeated": false,
+        "navigatesTo": [
+          "/"
+        ],
+        "callsApi": [],
+        "file": "src/components/site-header.tsx",
+        "line": 45
+      },
+      {
+        "label": "EN / BM / 中文",
+        "kind": "toggle",
+        "component": "SiteHeader",
+        "section": "Course language",
+        "group": "Course language",
+        "repeated": true,
+        "navigatesTo": [],
+        "callsApi": [],
+        "file": "src/components/site-header.tsx",
+        "line": 111
+      }
     ]
-  }
+  },
+  "apiRoutes": [
+    {
+      "route": "/api/analyze",
+      "file": "src/app/api/analyze/route.ts",
+      "methods": [
+        "POST"
+      ],
+      "dataSources": [
+        "gemini",
+        "mock-ai"
+      ]
+    },
+    {
+      "route": "/api/health",
+      "file": "src/app/api/health/route.ts",
+      "methods": [
+        "GET"
+      ],
+      "dataSources": [
+        "gemini",
+        "mock-ai",
+        "supabase-items"
+      ]
+    },
+    {
+      "route": "/api/items",
+      "file": "src/app/api/items/route.ts",
+      "methods": [
+        "GET",
+        "POST"
+      ],
+      "dataSources": [
+        "supabase-items"
+      ]
+    },
+    {
+      "route": "/api/roles",
+      "file": "src/app/api/roles/route.ts",
+      "methods": [
+        "POST"
+      ],
+      "dataSources": [
+        "catalogue",
+        "personas"
+      ]
+    }
+  ]
 }

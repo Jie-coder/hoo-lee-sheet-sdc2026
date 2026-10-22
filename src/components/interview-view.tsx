@@ -361,6 +361,7 @@ export function InterviewView() {
           </motion.div>
         </AnimatePresence>
 
+        {/* Question navigation */}
         <div className="flex items-center justify-between gap-3 border-t border-line px-6 py-4 sm:px-8">
           <button type="button" data-testid="interview-back" onClick={handleBack} disabled={turn === 1} className="btn-ghost -ml-3">
             Back
