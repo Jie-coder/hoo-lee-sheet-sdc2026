@@ -7905,8 +7905,7 @@
    "provider": "Coursera",
    "url": "https://www.coursera.org/learn/software-design-methods-tools",
    "languages": [
-    "en",
-    "zh"
+    "en"
    ],
    "hours": 14,
    "costType": "free",
@@ -7940,8 +7939,7 @@
    "provider": "Coursera",
    "url": "https://www.coursera.org/learn/aws-fundamentals-migrating-to-the-cloud",
    "languages": [
-    "en",
-    "zh"
+    "en"
    ],
    "hours": 7,
    "costType": "free",
