@@ -1,0 +1,21 @@
+{
+  "name": "Siti Example",
+  "roles": [
+    {
+      "title": "Office Administrator",
+      "years": 2,
+      "tasks": []
+    }
+  ],
+  "education": [
+    {
+      "level": "Diploma in Office Management",
+      "field": "Sample Polytechnic"
+    }
+  ],
+  "skills": [
+    { "label": "use spreadsheets software", "matched": true },
+    { "label": "use word processing software", "matched": true },
+    { "label": "Canva", "matched": false }
+  ]
+}

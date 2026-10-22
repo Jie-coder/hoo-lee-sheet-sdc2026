@@ -49,7 +49,7 @@ All weights are in `SCORING_PARAMS` and labelled as demo values.
 ### Design and pages
 | What | Where | PR |
 |---|---|---|
-| 3 synthetic CVs (Aisyah, Jia Hui, Pravin), clearly marked SYNTHETIC | `public/samples/`, `docs/personas.md` | #3 |
+| 3 synthetic CVs (Aisyah, Jia Hui, Pravin), clearly marked SYNTHETIC. Never under `public/`: precomputed by `scripts/precompute-demo-cvs.ts` | `demo/cv/`, `docs/personas.md` | #3 |
 | Laluan logo, favicon, design system, results reference | `public/brand/`, `docs/design/` | #4 |
 | Wireframes for landing, profile, interview, pathway + user flow | `docs/design/wireframes/` | #8 |
 | Results page (mock data: Aisyah), scenario tabs, signal-date toggle, SDG badges, source chips | `src/app/results/`, `src/components/` | #9, #11 |

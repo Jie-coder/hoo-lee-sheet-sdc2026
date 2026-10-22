@@ -19,7 +19,6 @@ export type PersonaCard = {
   jobTitle: string;
   location: string;
   summary: string;
-  cvUrl: string;
   courseLanguages: LanguageCode[];
   /** The persona's current job in data/occupations.csv: its exposure is shown, and it is never recommended back. */
   currentOccupationId: string;
@@ -38,7 +37,6 @@ export const PERSONAS: Record<PersonaId, PersonaCard> = {
     jobTitle: "Administrative Clerk",
     location: "Bayan Lepas, Penang",
     summary: "Data entry, scheduling, reports and customer emails at a trading office.",
-    cvUrl: "/samples/cv-aisyah-binti-rahman.pdf",
     courseLanguages: ["ms", "en"],
     currentOccupationId: "o038", // administrative assistant
     unmatchedSkills: ["WhatsApp Business"],
@@ -90,7 +88,6 @@ export const PERSONAS: Record<PersonaId, PersonaCard> = {
     jobTitle: "Senior Accounts Assistant",
     location: "Johor Bahru, Johor",
     summary: "Eight years of bookkeeping, reconciliations and e-invoicing for SMEs.",
-    cvUrl: "/samples/cv-lim-jia-hui.pdf",
     courseLanguages: ["zh"],
     currentOccupationId: "o034", // bookkeeper
     unmatchedSkills: [],
@@ -140,7 +137,6 @@ export const PERSONAS: Record<PersonaId, PersonaCard> = {
     jobTitle: "Customer Support Agent",
     location: "Cyberjaya, Selangor",
     summary: "Environmental science graduate (2025) in a contract call-centre job.",
-    cvUrl: "/samples/cv-pravin-a-l-murugan.pdf",
     courseLanguages: ["en"],
     currentOccupationId: "o036", // call centre agent
     unmatchedSkills: [],

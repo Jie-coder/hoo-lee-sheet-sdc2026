@@ -13,7 +13,7 @@ import { useFlow } from "@/context/flow-context";
 import type { LandingPreview } from "@/lib/landing-preview";
 
 const STOPS = [
-  { title: "Profile", body: "Pick a sample CV. Check the skills we read." },
+  { title: "Profile", body: "Upload your CV. Check the skills we read." },
   { title: "Interview", body: "Five quick questions, tap to answer." },
   { title: "Results", body: "AI exposure today, three roles under three futures." },
   { title: "Pathway", body: "Your week-by-week route, free courses first." },

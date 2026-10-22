@@ -12,7 +12,7 @@ import {
   useState,
   type ReactNode,
 } from "react";
-import { PERSONAS, type PersonaId } from "@/mocks/personas";
+import type { PersonaId } from "@/mocks/personas";
 import type { LanguageCode, ParsedCvEducation, ParsedCvRole, PartialSlots } from "@/types/contracts";
 
 export type FlowSkill = {
@@ -31,6 +31,14 @@ export type FlowProfile = {
   education: ParsedCvEducation[];
   skills: FlowSkill[];
   courseLanguages: LanguageCode[];
+};
+
+/** What POST /api/parse-cv returns: a parsed CV, with skills already ESCO-mapped where possible. */
+export type UploadedCv = {
+  name: string;
+  roles: ParsedCvRole[];
+  education: ParsedCvEducation[];
+  skills: { label: string; matched: boolean }[];
 };
 
 type FlowState = {
@@ -59,40 +67,11 @@ function slugify(label: string, index: number): string {
   return `${slug}-${index}`;
 }
 
-function profileFromPersona(personaId: PersonaId): FlowProfile {
-  const persona = PERSONAS[personaId];
-  return {
-    personaId,
-    name: persona.parsed.name ?? persona.name,
-    roles: persona.parsed.roles,
-    education: persona.parsed.education,
-    courseLanguages: persona.courseLanguages,
-    skills: persona.parsed.skills.map((label, index) => ({
-      id: slugify(label, index),
-      label,
-      matched: !persona.unmatchedSkills.includes(label),
-      selfReported: false,
-    })),
-  };
-}
-
-function emptyUploadProfile(): FlowProfile {
-  return {
-    personaId: "upload",
-    name: "",
-    roles: [],
-    education: [],
-    courseLanguages: ["en"],
-    skills: [],
-  };
-}
-
 type FlowContextValue = FlowState & {
   /** True once sessionStorage has been read; guards redirects on first paint. */
   hydrated: boolean;
   setConsent: (consent: boolean) => void;
-  selectPersona: (personaId: PersonaId) => void;
-  startUploadProfile: () => void;
+  setUploadedProfile: (parsed: UploadedCv) => void;
   updateProfile: (patch: Partial<Pick<FlowProfile, "name" | "roles" | "education">>) => void;
   addSkill: (label: string) => void;
   removeSkill: (id: string) => void;
@@ -135,12 +114,23 @@ export function FlowProvider({ children }: { children: ReactNode }) {
     setState((prev) => ({ ...prev, consent, consentAt: consent ? new Date().toISOString() : null }));
   }, []);
 
-  const selectPersona = useCallback((personaId: PersonaId) => {
-    setState((prev) => ({ ...prev, profile: profileFromPersona(personaId) }));
-  }, []);
-
-  const startUploadProfile = useCallback(() => {
-    setState((prev) => ({ ...prev, profile: emptyUploadProfile() }));
+  const setUploadedProfile = useCallback((parsed: UploadedCv) => {
+    setState((prev) => ({
+      ...prev,
+      profile: {
+        personaId: "upload",
+        name: parsed.name,
+        roles: parsed.roles,
+        education: parsed.education,
+        courseLanguages: prev.profile?.courseLanguages ?? ["en"],
+        skills: parsed.skills.map((skill, index) => ({
+          id: slugify(skill.label, index),
+          label: skill.label,
+          matched: skill.matched,
+          selfReported: false,
+        })),
+      },
+    }));
   }, []);
 
   const updateProfile = useCallback(
@@ -212,8 +202,7 @@ export function FlowProvider({ children }: { children: ReactNode }) {
       ...state,
       hydrated,
       setConsent,
-      selectPersona,
-      startUploadProfile,
+      setUploadedProfile,
       updateProfile,
       addSkill,
       removeSkill,
@@ -227,8 +216,7 @@ export function FlowProvider({ children }: { children: ReactNode }) {
       state,
       hydrated,
       setConsent,
-      selectPersona,
-      startUploadProfile,
+      setUploadedProfile,
       updateProfile,
       addSkill,
       removeSkill,

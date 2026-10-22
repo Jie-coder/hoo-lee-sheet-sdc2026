@@ -15,6 +15,13 @@ export default defineConfig({
   resolve: {
     alias: {
       "@": path.resolve(import.meta.dirname, "./src"),
+      // Outside Next's server-component bundler there is no "react-server"
+      // resolve condition, so the real "server-only" package always throws
+      // (see node_modules/server-only/index.js). Its own package.json picks
+      // the no-op "empty.js" only under that condition, so point tests at
+      // it directly instead of flipping conditions globally (which would
+      // also affect react/react-dom's own server/client exports).
+      "server-only": path.resolve(import.meta.dirname, "./node_modules/server-only/empty.js"),
     },
   },
 });
