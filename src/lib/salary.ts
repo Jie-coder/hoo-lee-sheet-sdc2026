@@ -8,7 +8,23 @@ export type RoleSalary = {
   mascoMajorName: string;
   year: number;
   sourceUrl: string;
+  /** "jobstreet" = real published range; "dosm_major_group" = only the DOSM major-group mean is known. */
+  sourceType: "jobstreet" | "dosm_major_group";
+  minMonthlyRm?: number;
+  maxMonthlyRm?: number;
+  rangeSourceName?: string;
+  rangeSourceRole?: string;
+  rangeSourceUrl?: string;
+  rangeYear?: number;
 };
+
+export function hasRealRange(s: RoleSalary): s is RoleSalary & { minMonthlyRm: number; maxMonthlyRm: number; rangeSourceName: string; rangeSourceUrl: string; rangeYear: number } {
+  return s.sourceType !== "dosm_major_group" && typeof s.minMonthlyRm === "number" && typeof s.maxMonthlyRm === "number";
+}
+
+export function formatMonthlyRange(min: number, max: number, perMonth = "/ month"): string {
+  return `RM ${min.toLocaleString("en-MY")} – ${max.toLocaleString("en-MY")} ${perMonth}`;
+}
 
 const TABLE = salaryByRole as Record<string, RoleSalary>;
 

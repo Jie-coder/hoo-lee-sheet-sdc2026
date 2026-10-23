@@ -4,279 +4,511 @@
     "mascoMajor": "2",
     "mascoMajorName": "Professionals",
     "year": 2025,
-    "sourceUrl": "https://storage.dosm.gov.my/labour/salaries_wages_2025.pdf"
+    "sourceUrl": "https://storage.dosm.gov.my/labour/salaries_wages_2025.pdf",
+    "sourceType": "jobstreet",
+    "minMonthlyRm": 4000,
+    "maxMonthlyRm": 6300,
+    "rangeSourceName": "JobStreet",
+    "rangeSourceRole": "Software Developer",
+    "rangeSourceUrl": "https://my.jobstreet.com/career-advice/role/software-developer/salary",
+    "rangeYear": 2026
   },
   "o002": {
     "avgMonthlyRm": 6747,
     "mascoMajor": "2",
     "mascoMajorName": "Professionals",
     "year": 2025,
-    "sourceUrl": "https://storage.dosm.gov.my/labour/salaries_wages_2025.pdf"
+    "sourceUrl": "https://storage.dosm.gov.my/labour/salaries_wages_2025.pdf",
+    "sourceType": "jobstreet",
+    "minMonthlyRm": 3200,
+    "maxMonthlyRm": 4200,
+    "rangeSourceName": "JobStreet",
+    "rangeSourceRole": "Web Developer",
+    "rangeSourceUrl": "https://my.jobstreet.com/career-advice/role/web-developer/salary",
+    "rangeYear": 2026
   },
   "o003": {
     "avgMonthlyRm": 6747,
     "mascoMajor": "2",
     "mascoMajorName": "Professionals",
     "year": 2025,
-    "sourceUrl": "https://storage.dosm.gov.my/labour/salaries_wages_2025.pdf"
+    "sourceUrl": "https://storage.dosm.gov.my/labour/salaries_wages_2025.pdf",
+    "sourceType": "jobstreet",
+    "minMonthlyRm": 4500,
+    "maxMonthlyRm": 5500,
+    "rangeSourceName": "JobStreet",
+    "rangeSourceRole": "Mobile Application Developer",
+    "rangeSourceUrl": "https://my.jobstreet.com/career-advice/role/mobile-application-developer/salary",
+    "rangeYear": 2026
   },
   "o004": {
     "avgMonthlyRm": 6747,
     "mascoMajor": "2",
     "mascoMajorName": "Professionals",
     "year": 2025,
-    "sourceUrl": "https://storage.dosm.gov.my/labour/salaries_wages_2025.pdf"
+    "sourceUrl": "https://storage.dosm.gov.my/labour/salaries_wages_2025.pdf",
+    "sourceType": "dosm_major_group"
   },
   "o005": {
     "avgMonthlyRm": 6747,
     "mascoMajor": "2",
     "mascoMajorName": "Professionals",
     "year": 2025,
-    "sourceUrl": "https://storage.dosm.gov.my/labour/salaries_wages_2025.pdf"
+    "sourceUrl": "https://storage.dosm.gov.my/labour/salaries_wages_2025.pdf",
+    "sourceType": "jobstreet",
+    "minMonthlyRm": 3050,
+    "maxMonthlyRm": 5550,
+    "rangeSourceName": "JobStreet",
+    "rangeSourceRole": "Cyber Security Analyst",
+    "rangeSourceUrl": "https://my.jobstreet.com/career-advice/role/cyber-security-analyst/salary",
+    "rangeYear": 2026
   },
   "o006": {
     "avgMonthlyRm": 6747,
     "mascoMajor": "2",
     "mascoMajorName": "Professionals",
     "year": 2025,
-    "sourceUrl": "https://storage.dosm.gov.my/labour/salaries_wages_2025.pdf"
+    "sourceUrl": "https://storage.dosm.gov.my/labour/salaries_wages_2025.pdf",
+    "sourceType": "jobstreet",
+    "minMonthlyRm": 5000,
+    "maxMonthlyRm": 5600,
+    "rangeSourceName": "JobStreet",
+    "rangeSourceRole": "Network Administrator",
+    "rangeSourceUrl": "https://my.jobstreet.com/career-advice/role/network-administrator/salary",
+    "rangeYear": 2026
   },
   "o007": {
     "avgMonthlyRm": 6747,
     "mascoMajor": "2",
     "mascoMajorName": "Professionals",
     "year": 2025,
-    "sourceUrl": "https://storage.dosm.gov.my/labour/salaries_wages_2025.pdf"
+    "sourceUrl": "https://storage.dosm.gov.my/labour/salaries_wages_2025.pdf",
+    "sourceType": "jobstreet",
+    "minMonthlyRm": 2300,
+    "maxMonthlyRm": 2500,
+    "rangeSourceName": "JobStreet",
+    "rangeSourceRole": "User Interface Designer",
+    "rangeSourceUrl": "https://my.jobstreet.com/career-advice/role/user-interface-designer/salary",
+    "rangeYear": 2026
   },
   "o008": {
     "avgMonthlyRm": 6747,
     "mascoMajor": "2",
     "mascoMajorName": "Professionals",
     "year": 2025,
-    "sourceUrl": "https://storage.dosm.gov.my/labour/salaries_wages_2025.pdf"
+    "sourceUrl": "https://storage.dosm.gov.my/labour/salaries_wages_2025.pdf",
+    "sourceType": "jobstreet",
+    "minMonthlyRm": 3100,
+    "maxMonthlyRm": 4300,
+    "rangeSourceName": "JobStreet",
+    "rangeSourceRole": "Digital Marketing Executive",
+    "rangeSourceUrl": "https://my.jobstreet.com/career-advice/role/digital-marketing-executive/salary",
+    "rangeYear": 2026
   },
   "o009": {
     "avgMonthlyRm": 6747,
     "mascoMajor": "2",
     "mascoMajorName": "Professionals",
     "year": 2025,
-    "sourceUrl": "https://storage.dosm.gov.my/labour/salaries_wages_2025.pdf"
+    "sourceUrl": "https://storage.dosm.gov.my/labour/salaries_wages_2025.pdf",
+    "sourceType": "jobstreet",
+    "minMonthlyRm": 3000,
+    "maxMonthlyRm": 5400,
+    "rangeSourceName": "JobStreet",
+    "rangeSourceRole": "Data Analyst",
+    "rangeSourceUrl": "https://my.jobstreet.com/career-advice/role/data-analyst/salary",
+    "rangeYear": 2026
   },
   "o010": {
     "avgMonthlyRm": 6747,
     "mascoMajor": "2",
     "mascoMajorName": "Professionals",
     "year": 2025,
-    "sourceUrl": "https://storage.dosm.gov.my/labour/salaries_wages_2025.pdf"
+    "sourceUrl": "https://storage.dosm.gov.my/labour/salaries_wages_2025.pdf",
+    "sourceType": "jobstreet",
+    "minMonthlyRm": 6800,
+    "maxMonthlyRm": 8000,
+    "rangeSourceName": "JobStreet",
+    "rangeSourceRole": "Data Scientist",
+    "rangeSourceUrl": "https://my.jobstreet.com/career-advice/role/data-scientist/salary",
+    "rangeYear": 2026
   },
   "o011": {
     "avgMonthlyRm": 6747,
     "mascoMajor": "2",
     "mascoMajorName": "Professionals",
     "year": 2025,
-    "sourceUrl": "https://storage.dosm.gov.my/labour/salaries_wages_2025.pdf"
+    "sourceUrl": "https://storage.dosm.gov.my/labour/salaries_wages_2025.pdf",
+    "sourceType": "dosm_major_group"
   },
   "o012": {
     "avgMonthlyRm": 6747,
     "mascoMajor": "2",
     "mascoMajorName": "Professionals",
     "year": 2025,
-    "sourceUrl": "https://storage.dosm.gov.my/labour/salaries_wages_2025.pdf"
+    "sourceUrl": "https://storage.dosm.gov.my/labour/salaries_wages_2025.pdf",
+    "sourceType": "jobstreet",
+    "minMonthlyRm": 2300,
+    "maxMonthlyRm": 3000,
+    "rangeSourceName": "JobStreet",
+    "rangeSourceRole": "Statistician",
+    "rangeSourceUrl": "https://my.jobstreet.com/career-advice/role/statistician/salary",
+    "rangeYear": 2026
   },
   "o013": {
     "avgMonthlyRm": 6747,
     "mascoMajor": "2",
     "mascoMajorName": "Professionals",
     "year": 2025,
-    "sourceUrl": "https://storage.dosm.gov.my/labour/salaries_wages_2025.pdf"
+    "sourceUrl": "https://storage.dosm.gov.my/labour/salaries_wages_2025.pdf",
+    "sourceType": "jobstreet",
+    "minMonthlyRm": 4250,
+    "maxMonthlyRm": 6750,
+    "rangeSourceName": "JobStreet",
+    "rangeSourceRole": "Financial Analyst",
+    "rangeSourceUrl": "https://my.jobstreet.com/career-advice/role/financial-analyst/salary",
+    "rangeYear": 2026
   },
   "o014": {
     "avgMonthlyRm": 6747,
     "mascoMajor": "2",
     "mascoMajorName": "Professionals",
     "year": 2025,
-    "sourceUrl": "https://storage.dosm.gov.my/labour/salaries_wages_2025.pdf"
+    "sourceUrl": "https://storage.dosm.gov.my/labour/salaries_wages_2025.pdf",
+    "sourceType": "dosm_major_group"
   },
   "o015": {
     "avgMonthlyRm": 6747,
     "mascoMajor": "2",
     "mascoMajorName": "Professionals",
     "year": 2025,
-    "sourceUrl": "https://storage.dosm.gov.my/labour/salaries_wages_2025.pdf"
+    "sourceUrl": "https://storage.dosm.gov.my/labour/salaries_wages_2025.pdf",
+    "sourceType": "jobstreet",
+    "minMonthlyRm": 7500,
+    "maxMonthlyRm": 9600,
+    "rangeSourceName": "JobStreet",
+    "rangeSourceRole": "Database Administrator",
+    "rangeSourceUrl": "https://my.jobstreet.com/career-advice/role/database-administrator/salary",
+    "rangeYear": 2026
   },
   "o016": {
     "avgMonthlyRm": 6747,
     "mascoMajor": "2",
     "mascoMajorName": "Professionals",
     "year": 2025,
-    "sourceUrl": "https://storage.dosm.gov.my/labour/salaries_wages_2025.pdf"
+    "sourceUrl": "https://storage.dosm.gov.my/labour/salaries_wages_2025.pdf",
+    "sourceType": "jobstreet",
+    "minMonthlyRm": 4300,
+    "maxMonthlyRm": 6500,
+    "rangeSourceName": "JobStreet",
+    "rangeSourceRole": "Business Analyst",
+    "rangeSourceUrl": "https://my.jobstreet.com/career-advice/role/business-analyst/salary",
+    "rangeYear": 2026
   },
   "o017": {
     "avgMonthlyRm": 6747,
     "mascoMajor": "2",
     "mascoMajorName": "Professionals",
     "year": 2025,
-    "sourceUrl": "https://storage.dosm.gov.my/labour/salaries_wages_2025.pdf"
+    "sourceUrl": "https://storage.dosm.gov.my/labour/salaries_wages_2025.pdf",
+    "sourceType": "dosm_major_group"
   },
   "o018": {
     "avgMonthlyRm": 2619,
     "mascoMajor": "7",
     "mascoMajorName": "Craft and related trades workers",
     "year": 2025,
-    "sourceUrl": "https://storage.dosm.gov.my/labour/salaries_wages_2025.pdf"
+    "sourceUrl": "https://storage.dosm.gov.my/labour/salaries_wages_2025.pdf",
+    "sourceType": "dosm_major_group"
   },
   "o019": {
     "avgMonthlyRm": 6747,
     "mascoMajor": "2",
     "mascoMajorName": "Professionals",
     "year": 2025,
-    "sourceUrl": "https://storage.dosm.gov.my/labour/salaries_wages_2025.pdf"
+    "sourceUrl": "https://storage.dosm.gov.my/labour/salaries_wages_2025.pdf",
+    "sourceType": "jobstreet",
+    "minMonthlyRm": 4100,
+    "maxMonthlyRm": 6500,
+    "rangeSourceName": "JobStreet",
+    "rangeSourceRole": "Environmental Engineer",
+    "rangeSourceUrl": "https://my.jobstreet.com/career-advice/role/environmental-engineer/salary",
+    "rangeYear": 2026
   },
   "o020": {
     "avgMonthlyRm": 6747,
     "mascoMajor": "2",
     "mascoMajorName": "Professionals",
     "year": 2025,
-    "sourceUrl": "https://storage.dosm.gov.my/labour/salaries_wages_2025.pdf"
+    "sourceUrl": "https://storage.dosm.gov.my/labour/salaries_wages_2025.pdf",
+    "sourceType": "jobstreet",
+    "minMonthlyRm": 3000,
+    "maxMonthlyRm": 5000,
+    "rangeSourceName": "JobStreet",
+    "rangeSourceRole": "Environmental Officer",
+    "rangeSourceUrl": "https://my.jobstreet.com/career-advice/role/environmental-officer/salary",
+    "rangeYear": 2026
   },
   "o021": {
     "avgMonthlyRm": 7344,
     "mascoMajor": "1",
     "mascoMajorName": "Managers",
     "year": 2025,
-    "sourceUrl": "https://storage.dosm.gov.my/labour/salaries_wages_2025.pdf"
+    "sourceUrl": "https://storage.dosm.gov.my/labour/salaries_wages_2025.pdf",
+    "sourceType": "dosm_major_group"
   },
   "o022": {
     "avgMonthlyRm": 4256,
     "mascoMajor": "3",
     "mascoMajorName": "Technicians and associate professionals",
     "year": 2025,
-    "sourceUrl": "https://storage.dosm.gov.my/labour/salaries_wages_2025.pdf"
+    "sourceUrl": "https://storage.dosm.gov.my/labour/salaries_wages_2025.pdf",
+    "sourceType": "dosm_major_group"
   },
   "o023": {
     "avgMonthlyRm": 6747,
     "mascoMajor": "2",
     "mascoMajorName": "Professionals",
     "year": 2025,
-    "sourceUrl": "https://storage.dosm.gov.my/labour/salaries_wages_2025.pdf"
+    "sourceUrl": "https://storage.dosm.gov.my/labour/salaries_wages_2025.pdf",
+    "sourceType": "dosm_major_group"
   },
   "o024": {
     "avgMonthlyRm": 7344,
     "mascoMajor": "1",
     "mascoMajorName": "Managers",
     "year": 2025,
-    "sourceUrl": "https://storage.dosm.gov.my/labour/salaries_wages_2025.pdf"
+    "sourceUrl": "https://storage.dosm.gov.my/labour/salaries_wages_2025.pdf",
+    "sourceType": "jobstreet",
+    "minMonthlyRm": 7100,
+    "maxMonthlyRm": 8500,
+    "rangeSourceName": "JobStreet",
+    "rangeSourceRole": "Sustainability Manager",
+    "rangeSourceUrl": "https://my.jobstreet.com/career-advice/role/sustainability-manager/salary",
+    "rangeYear": 2026
   },
   "o025": {
     "avgMonthlyRm": 6747,
     "mascoMajor": "2",
     "mascoMajorName": "Professionals",
     "year": 2025,
-    "sourceUrl": "https://storage.dosm.gov.my/labour/salaries_wages_2025.pdf"
+    "sourceUrl": "https://storage.dosm.gov.my/labour/salaries_wages_2025.pdf",
+    "sourceType": "jobstreet",
+    "minMonthlyRm": 2700,
+    "maxMonthlyRm": 3300,
+    "rangeSourceName": "JobStreet",
+    "rangeSourceRole": "Registered Nurse",
+    "rangeSourceUrl": "https://my.jobstreet.com/career-advice/role/registered-nurse/salary",
+    "rangeYear": 2026
   },
   "o026": {
     "avgMonthlyRm": 2687,
     "mascoMajor": "5",
     "mascoMajorName": "Service and sales workers",
     "year": 2025,
-    "sourceUrl": "https://storage.dosm.gov.my/labour/salaries_wages_2025.pdf"
+    "sourceUrl": "https://storage.dosm.gov.my/labour/salaries_wages_2025.pdf",
+    "sourceType": "jobstreet",
+    "minMonthlyRm": 1900,
+    "maxMonthlyRm": 2400,
+    "rangeSourceName": "JobStreet",
+    "rangeSourceRole": "Caregiver",
+    "rangeSourceUrl": "https://my.jobstreet.com/career-advice/role/caregiver/salary",
+    "rangeYear": 2026
   },
   "o027": {
     "avgMonthlyRm": 6747,
     "mascoMajor": "2",
     "mascoMajorName": "Professionals",
     "year": 2025,
-    "sourceUrl": "https://storage.dosm.gov.my/labour/salaries_wages_2025.pdf"
+    "sourceUrl": "https://storage.dosm.gov.my/labour/salaries_wages_2025.pdf",
+    "sourceType": "jobstreet",
+    "minMonthlyRm": 2400,
+    "maxMonthlyRm": 2800,
+    "rangeSourceName": "JobStreet",
+    "rangeSourceRole": "Social Worker",
+    "rangeSourceUrl": "https://my.jobstreet.com/career-advice/role/social-worker/salary",
+    "rangeYear": 2026
   },
   "o028": {
     "avgMonthlyRm": 6747,
     "mascoMajor": "2",
     "mascoMajorName": "Professionals",
     "year": 2025,
-    "sourceUrl": "https://storage.dosm.gov.my/labour/salaries_wages_2025.pdf"
+    "sourceUrl": "https://storage.dosm.gov.my/labour/salaries_wages_2025.pdf",
+    "sourceType": "jobstreet",
+    "minMonthlyRm": 2000,
+    "maxMonthlyRm": 3400,
+    "rangeSourceName": "JobStreet",
+    "rangeSourceRole": "Teacher",
+    "rangeSourceUrl": "https://my.jobstreet.com/career-advice/role/teacher/salary",
+    "rangeYear": 2026
   },
   "o029": {
     "avgMonthlyRm": 6747,
     "mascoMajor": "2",
     "mascoMajorName": "Professionals",
     "year": 2025,
-    "sourceUrl": "https://storage.dosm.gov.my/labour/salaries_wages_2025.pdf"
+    "sourceUrl": "https://storage.dosm.gov.my/labour/salaries_wages_2025.pdf",
+    "sourceType": "jobstreet",
+    "minMonthlyRm": 2200,
+    "maxMonthlyRm": 2700,
+    "rangeSourceName": "JobStreet",
+    "rangeSourceRole": "Preschool Teacher",
+    "rangeSourceUrl": "https://my.jobstreet.com/career-advice/role/preschool-teacher/salary",
+    "rangeYear": 2026
   },
   "o030": {
     "avgMonthlyRm": 6747,
     "mascoMajor": "2",
     "mascoMajorName": "Professionals",
     "year": 2025,
-    "sourceUrl": "https://storage.dosm.gov.my/labour/salaries_wages_2025.pdf"
+    "sourceUrl": "https://storage.dosm.gov.my/labour/salaries_wages_2025.pdf",
+    "sourceType": "jobstreet",
+    "minMonthlyRm": 2600,
+    "maxMonthlyRm": 3500,
+    "rangeSourceName": "JobStreet",
+    "rangeSourceRole": "Physiotherapist",
+    "rangeSourceUrl": "https://my.jobstreet.com/career-advice/role/physiotherapist/salary",
+    "rangeYear": 2026
   },
   "o031": {
     "avgMonthlyRm": 6747,
     "mascoMajor": "2",
     "mascoMajorName": "Professionals",
     "year": 2025,
-    "sourceUrl": "https://storage.dosm.gov.my/labour/salaries_wages_2025.pdf"
+    "sourceUrl": "https://storage.dosm.gov.my/labour/salaries_wages_2025.pdf",
+    "sourceType": "jobstreet",
+    "minMonthlyRm": 6200,
+    "maxMonthlyRm": 8000,
+    "rangeSourceName": "JobStreet",
+    "rangeSourceRole": "Pharmacist",
+    "rangeSourceUrl": "https://my.jobstreet.com/career-advice/role/pharmacist/salary",
+    "rangeYear": 2026
   },
   "o032": {
     "avgMonthlyRm": 6747,
     "mascoMajor": "2",
     "mascoMajorName": "Professionals",
     "year": 2025,
-    "sourceUrl": "https://storage.dosm.gov.my/labour/salaries_wages_2025.pdf"
+    "sourceUrl": "https://storage.dosm.gov.my/labour/salaries_wages_2025.pdf",
+    "sourceType": "jobstreet",
+    "minMonthlyRm": 2500,
+    "maxMonthlyRm": 4500,
+    "rangeSourceName": "JobStreet",
+    "rangeSourceRole": "Trainer",
+    "rangeSourceUrl": "https://my.jobstreet.com/career-advice/role/trainer/salary",
+    "rangeYear": 2026
   },
   "o033": {
     "avgMonthlyRm": 3029,
     "mascoMajor": "4",
     "mascoMajorName": "Clerical support workers",
     "year": 2025,
-    "sourceUrl": "https://storage.dosm.gov.my/labour/salaries_wages_2025.pdf"
+    "sourceUrl": "https://storage.dosm.gov.my/labour/salaries_wages_2025.pdf",
+    "sourceType": "jobstreet",
+    "minMonthlyRm": 1900,
+    "maxMonthlyRm": 2400,
+    "rangeSourceName": "JobStreet",
+    "rangeSourceRole": "Data Entry Clerk",
+    "rangeSourceUrl": "https://my.jobstreet.com/career-advice/role/data-entry-clerk/salary",
+    "rangeYear": 2026
   },
   "o034": {
     "avgMonthlyRm": 3029,
     "mascoMajor": "4",
     "mascoMajorName": "Clerical support workers",
     "year": 2025,
-    "sourceUrl": "https://storage.dosm.gov.my/labour/salaries_wages_2025.pdf"
+    "sourceUrl": "https://storage.dosm.gov.my/labour/salaries_wages_2025.pdf",
+    "sourceType": "jobstreet",
+    "minMonthlyRm": 2600,
+    "maxMonthlyRm": 3900,
+    "rangeSourceName": "JobStreet",
+    "rangeSourceRole": "Bookkeeper",
+    "rangeSourceUrl": "https://my.jobstreet.com/career-advice/role/bookkeeper/salary",
+    "rangeYear": 2026
   },
   "o035": {
     "avgMonthlyRm": 3029,
     "mascoMajor": "4",
     "mascoMajorName": "Clerical support workers",
     "year": 2025,
-    "sourceUrl": "https://storage.dosm.gov.my/labour/salaries_wages_2025.pdf"
+    "sourceUrl": "https://storage.dosm.gov.my/labour/salaries_wages_2025.pdf",
+    "sourceType": "jobstreet",
+    "minMonthlyRm": 2000,
+    "maxMonthlyRm": 2400,
+    "rangeSourceName": "JobStreet",
+    "rangeSourceRole": "Teller",
+    "rangeSourceUrl": "https://my.jobstreet.com/career-advice/role/teller/salary",
+    "rangeYear": 2026
   },
   "o036": {
     "avgMonthlyRm": 3029,
     "mascoMajor": "4",
     "mascoMajorName": "Clerical support workers",
     "year": 2025,
-    "sourceUrl": "https://storage.dosm.gov.my/labour/salaries_wages_2025.pdf"
+    "sourceUrl": "https://storage.dosm.gov.my/labour/salaries_wages_2025.pdf",
+    "sourceType": "jobstreet",
+    "minMonthlyRm": 2200,
+    "maxMonthlyRm": 3200,
+    "rangeSourceName": "JobStreet",
+    "rangeSourceRole": "Call Centre Operator",
+    "rangeSourceUrl": "https://my.jobstreet.com/career-advice/role/call-centre-operator/salary",
+    "rangeYear": 2026
   },
   "o037": {
     "avgMonthlyRm": 3029,
     "mascoMajor": "4",
     "mascoMajorName": "Clerical support workers",
     "year": 2025,
-    "sourceUrl": "https://storage.dosm.gov.my/labour/salaries_wages_2025.pdf"
+    "sourceUrl": "https://storage.dosm.gov.my/labour/salaries_wages_2025.pdf",
+    "sourceType": "jobstreet",
+    "minMonthlyRm": 2100,
+    "maxMonthlyRm": 2800,
+    "rangeSourceName": "JobStreet",
+    "rangeSourceRole": "Receptionist",
+    "rangeSourceUrl": "https://my.jobstreet.com/career-advice/role/receptionist/salary",
+    "rangeYear": 2026
   },
   "o038": {
     "avgMonthlyRm": 3029,
     "mascoMajor": "4",
     "mascoMajorName": "Clerical support workers",
     "year": 2025,
-    "sourceUrl": "https://storage.dosm.gov.my/labour/salaries_wages_2025.pdf"
+    "sourceUrl": "https://storage.dosm.gov.my/labour/salaries_wages_2025.pdf",
+    "sourceType": "jobstreet",
+    "minMonthlyRm": 2100,
+    "maxMonthlyRm": 2800,
+    "rangeSourceName": "JobStreet",
+    "rangeSourceRole": "Administrative Assistant",
+    "rangeSourceUrl": "https://my.jobstreet.com/career-advice/role/administrative-assistant/salary",
+    "rangeYear": 2026
   },
   "o039": {
     "avgMonthlyRm": 2687,
     "mascoMajor": "5",
     "mascoMajorName": "Service and sales workers",
     "year": 2025,
-    "sourceUrl": "https://storage.dosm.gov.my/labour/salaries_wages_2025.pdf"
+    "sourceUrl": "https://storage.dosm.gov.my/labour/salaries_wages_2025.pdf",
+    "sourceType": "jobstreet",
+    "minMonthlyRm": 1800,
+    "maxMonthlyRm": 2000,
+    "rangeSourceName": "JobStreet",
+    "rangeSourceRole": "Cashier",
+    "rangeSourceUrl": "https://my.jobstreet.com/career-advice/role/cashier/salary",
+    "rangeYear": 2026
   },
   "o040": {
     "avgMonthlyRm": 3029,
     "mascoMajor": "4",
     "mascoMajorName": "Clerical support workers",
     "year": 2025,
-    "sourceUrl": "https://storage.dosm.gov.my/labour/salaries_wages_2025.pdf"
+    "sourceUrl": "https://storage.dosm.gov.my/labour/salaries_wages_2025.pdf",
+    "sourceType": "jobstreet",
+    "minMonthlyRm": 2100,
+    "maxMonthlyRm": 2900,
+    "rangeSourceName": "JobStreet",
+    "rangeSourceRole": "Payroll Clerk",
+    "rangeSourceUrl": "https://my.jobstreet.com/career-advice/role/payroll-clerk/salary",
+    "rangeYear": 2026
   }
 }

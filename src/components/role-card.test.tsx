@@ -3,7 +3,7 @@ import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
 import { analyzeProfile } from "@/lib/analyze";
 import { CATALOGUE } from "@/lib/catalogue";
-import { formatMonthlyRm, salaryForRole } from "@/lib/salary";
+import { formatMonthlyRange, formatMonthlyRm, hasRealRange, salaryForRole } from "@/lib/salary";
 import { RoleCard } from "./role-card";
 
 // Real pipeline: a profile with five of a nurse's essential skills ranks
@@ -121,10 +121,17 @@ describe("RoleCard", () => {
 
       const { unmount } = renderCard({ occupationId: occupation.id, title: occupation.title });
 
-      expect(screen.getByText(formatMonthlyRm(salary.avgMonthlyRm))).toBeInTheDocument();
-      expect(
-        screen.getByText(`MASCO ${salary.mascoMajor} ${salary.mascoMajorName} · DOSM ${salary.year}`),
-      ).toBeInTheDocument();
+      if (hasRealRange(salary)) {
+        expect(salary.minMonthlyRm).toBeLessThanOrEqual(salary.maxMonthlyRm);
+        expect(screen.getByText(formatMonthlyRange(salary.minMonthlyRm, salary.maxMonthlyRm))).toBeInTheDocument();
+        const link = screen.getByRole("link", { name: `${salary.rangeSourceName} ${salary.rangeYear}` });
+        expect(link).toHaveAttribute("href", salary.rangeSourceUrl);
+      } else {
+        expect(salary.sourceType).toBe("dosm_major_group");
+        expect(salary.minMonthlyRm).toBeUndefined();
+        expect(screen.getByText(formatMonthlyRm(salary.avgMonthlyRm))).toBeInTheDocument();
+        expect(screen.getByText(`Industry average · DOSM major group · DOSM ${salary.year}`)).toBeInTheDocument();
+      }
 
       unmount();
     }
