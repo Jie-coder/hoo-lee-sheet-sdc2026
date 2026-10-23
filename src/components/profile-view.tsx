@@ -1,4 +1,4 @@
-// Profile: upload a synthetic CV (drag & drop or browse), watch it parse,
+// Profile: upload a CV (own or sample) (drag & drop or browse), watch it parse,
 // then check and edit what was read from it before continuing to the interview.
 "use client";
 
