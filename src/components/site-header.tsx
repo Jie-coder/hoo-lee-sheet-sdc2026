@@ -8,6 +8,7 @@ import { usePathname } from "next/navigation";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { SITE_LOCALES, useT } from "@/lib/i18n";
+import { LOGO_SRC } from "@/components/site-footer";
 
 const STEPS = [
   { id: "profile" },
@@ -41,7 +42,7 @@ export function SiteHeader() {
         <Link href="/" className="shrink-0" aria-label={t("header.homeAria")}>
           {/* Official wordmark. next/image refuses SVG without extra config. */}
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/brand/laluan-logo-ember.svg" alt={t("header.logoAlt")} width={125} height={28} className="h-7 w-[125px]" />
+          <img src={LOGO_SRC} alt={t("header.logoAlt")} width={125} height={28} className="h-7 w-[125px]" />
         </Link>
 
         {!onFlow && (
