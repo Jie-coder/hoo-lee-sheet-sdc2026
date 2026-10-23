@@ -361,7 +361,7 @@ export const EN = {
   "pathway.cost.hrdcorpClaimable": "HRD Corp claimable",
   "pathway.cost.paid": "Paid",
   "pathway.aiContent.ai": "AI",
-  "pathway.aiContent.digital": "数字工具",
+  "pathway.aiContent.digital": "Digital tools",
   "pathway.language.en": "EN",
   "pathway.language.ms": "BM",
   "pathway.language.zh": "中文",
