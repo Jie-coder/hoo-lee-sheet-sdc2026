@@ -226,6 +226,20 @@ export type ScoredRole = Pick<
  */
 export const STRETCH_FIT_THRESHOLD = 0.15;
 
+/**
+ * Displayed Fit blends skill fit with the user's interest choice:
+ * Fit = skill * skillFit + interest * (1 if the role matches the chosen SDG interest, else 0).
+ * With no interest chosen, Fit is skill fit unchanged (no penalty). Display only: ranking
+ * (scenarioRank) still uses raw skill fit plus sdgBonus, and the Transition route label
+ * still uses raw skill fit.
+ */
+export const FIT_WEIGHTS = { skill: 0.8, interest: 0.2 } as const;
+
+export function displayFit(skillFit: number, interestChosen: boolean, interestMatch: boolean): number {
+  if (!interestChosen) return skillFit;
+  return FIT_WEIGHTS.skill * skillFit + FIT_WEIGHTS.interest * (interestMatch ? 1 : 0);
+}
+
 /** True when a recommended role's fit is below STRETCH_FIT_THRESHOLD. */
 export function isStretchRoute(fit: number): boolean {
   return fit < STRETCH_FIT_THRESHOLD;

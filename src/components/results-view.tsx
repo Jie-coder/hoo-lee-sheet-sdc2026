@@ -199,6 +199,7 @@ export function ResultsView() {
                       isPrimary={index === 0}
                       relatedSkills={breakdown?.relatedSkillLabels}
                       sdgMatch={breakdown?.interestMatch ?? false}
+                      displayFit={breakdown?.displayFit}
                     />
                   );
                 })}

@@ -4,7 +4,7 @@ import { CATALOGUE, type Catalogue } from "./catalogue";
 import { rankRoles } from "./rank-roles";
 import { explainRole } from "./explain";
 import { resolveProfileSkills } from "./profile-skills";
-import { NON_RECOMMENDED_CLUSTERS, SCORING_PARAMS } from "./scoring";
+import { FIT_WEIGHTS, NON_RECOMMENDED_CLUSTERS, SCORING_PARAMS, STRETCH_FIT_THRESHOLD, isStretchRoute } from "./scoring";
 import { PERSONA_IDS, PERSONAS } from "@/mocks/personas";
 import { AnalyzeResponseSchema, SCENARIO_IDS } from "@/types/contracts";
 
@@ -243,5 +243,42 @@ describe("SDG choice boost", () => {
         expect(NON_RECOMMENDED_CLUSTERS.has(clusterOf.get(role.occupationId)!)).toBe(false);
       }
     }
+  });
+});
+
+describe("displayed Fit (FIT_WEIGHTS)", () => {
+  const run = (id: (typeof PERSONA_IDS)[number], impactInterest: "none" | "environment" | "health") => {
+    const persona = PERSONAS[id];
+    const chips = persona.parsed.skills.map((label) => ({ label, selfReported: false }));
+    const { skills } = resolveProfileSkills(CATALOGUE, id, chips);
+    return analyzeProfile(CATALOGUE, { skills, currentOccupationId: persona.currentOccupationId, impactInterest });
+  };
+
+  it("equals raw skill fit when no interest is chosen", () => {
+    const result = run("aisyah", "none");
+    for (const role of result.roles) {
+      expect(result.breakdown[role.occupationId].displayFit).toBe(role.fit);
+      expect(result.breakdown[role.occupationId].skillFit).toBe(role.fit);
+    }
+  });
+
+  it("is 0.8 * skill fit + 0.2 for a matching role, 0.8 * skill fit otherwise", () => {
+    const result = run("aisyah", "environment");
+    let matched = 0;
+    for (const role of result.roles) {
+      const b = result.breakdown[role.occupationId];
+      const expected = FIT_WEIGHTS.skill * role.fit + (b.interestMatch ? FIT_WEIGHTS.interest : 0);
+      expect(b.displayFit).toBeCloseTo(expected, 12);
+      if (b.interestMatch) matched += 1;
+    }
+    expect(matched).toBeGreaterThan(0);
+    expect(FIT_WEIGHTS).toEqual({ skill: 0.8, interest: 0.2 });
+  });
+
+  it("keeps the Transition route label on raw skill fit", () => {
+    const result = run("lim-jia-hui", "health");
+    const care = result.roles.find((role) => result.breakdown[role.occupationId].interestMatch && role.fit < STRETCH_FIT_THRESHOLD)!;
+    expect(result.breakdown[care.occupationId].displayFit).toBeGreaterThanOrEqual(STRETCH_FIT_THRESHOLD);
+    expect(isStretchRoute(care.fit)).toBe(true);
   });
 });

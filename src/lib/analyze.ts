@@ -20,7 +20,7 @@ import {
   type Source,
 } from "@/types/contracts";
 import { SOURCE_NAMES, type Catalogue, type CatalogueOccupation } from "@/lib/catalogue";
-import {
+import { displayFit,
   SCORING_PARAMS,
   compareId,
   NON_RECOMMENDED_CLUSTERS,
@@ -67,6 +67,10 @@ export type RoleBreakdown = {
   /** Essential skills with an arXiv signal, and the keywords behind them. */
   trendSkills: { label: string; momentum: number; keywords: string[] }[];
   interestMatch: boolean;
+  /** Raw skill fit (same as role.fit). Drives ranking and the Transition route label. */
+  skillFit: number;
+  /** Displayed Fit: FIT_WEIGHTS blend of skill fit and interest match; equals skillFit when no interest is chosen. */
+  displayFit: number;
   status: { label: string; tone: RoleStatusTone };
   /** ESCO group id of each gap skill, for "related course" suggestions on the pathway. */
   gapGroups: Record<string, string>;
@@ -295,6 +299,8 @@ export function analyzeProfile(catalogue: Catalogue, input: AnalyzeInput): Analy
           keywords: signals[id].keywords,
         })),
       interestMatch,
+      skillFit: role.fit,
+      displayFit: displayFit(role.fit, (input.impactInterest ?? "none") !== "none", interestMatch),
       status: statusFor(role, topByScenario, interestMatch, input.impactInterest),
       gapGroups: Object.fromEntries(
         role.gap.flatMap((skill) =>
