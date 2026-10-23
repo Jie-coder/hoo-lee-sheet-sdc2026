@@ -1,4 +1,4 @@
-// Profile step: upload a synthetic CV, then confirm the parsed details.
+// Profile step: upload a CV (own or sample), then confirm the parsed details.
 import type { Metadata } from "next";
 import { ProfileView } from "@/components/profile-view";
 
