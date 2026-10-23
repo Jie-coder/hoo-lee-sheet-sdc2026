@@ -233,7 +233,9 @@ export function RoleCard({
               </p>
               <p className="mt-2 text-[12px] text-grey">
                 <a href={salary.rangeSourceUrl} target="_blank" rel="noreferrer" className="underline underline-offset-4">
-                  {salary.rangeSourceName} {salary.rangeYear}
+                  {salary.rangeSourceRole && salary.rangeSourceRole.toLowerCase() !== role.title.toLowerCase()
+                    ? t("salary.sourceWithRole", { source: salary.rangeSourceName, role: salary.rangeSourceRole, year: String(salary.rangeYear) })
+                    : t("salary.source", { source: salary.rangeSourceName, year: String(salary.rangeYear) })}
                 </a>
                 {" · "}
                 {t("salary.estimate")}
@@ -243,7 +245,7 @@ export function RoleCard({
             <>
               <p className="font-serif text-[30px] leading-none font-normal tabular-nums">{formatMonthlyRm(salary.avgMonthlyRm, t("salary.perMonth"))}</p>
               <p className="mt-2 text-[12px] text-grey">
-                {t("salary.dosmMajorGroup")} · DOSM {salary.year}
+                {t("salary.dosmMajorGroup", { year: String(salary.year) })}
               </p>
             </>
           ) : (

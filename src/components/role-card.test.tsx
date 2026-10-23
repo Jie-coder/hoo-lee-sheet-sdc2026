@@ -124,13 +124,17 @@ describe("RoleCard", () => {
       if (hasRealRange(salary)) {
         expect(salary.minMonthlyRm).toBeLessThanOrEqual(salary.maxMonthlyRm);
         expect(screen.getByText(formatMonthlyRange(salary.minMonthlyRm, salary.maxMonthlyRm))).toBeInTheDocument();
-        const link = screen.getByRole("link", { name: `${salary.rangeSourceName} ${salary.rangeYear}` });
+        const exact = salary.rangeSourceRole?.toLowerCase() === occupation.title.toLowerCase();
+        const name = exact
+          ? `${salary.rangeSourceName} ${salary.rangeYear}`
+          : `${salary.rangeSourceName} · ${salary.rangeSourceRole} ${salary.rangeYear}`;
+        const link = screen.getByRole("link", { name });
         expect(link).toHaveAttribute("href", salary.rangeSourceUrl);
       } else {
         expect(salary.sourceType).toBe("dosm_major_group");
         expect(salary.minMonthlyRm).toBeUndefined();
         expect(screen.getByText(formatMonthlyRm(salary.avgMonthlyRm))).toBeInTheDocument();
-        expect(screen.getByText(`Industry average · DOSM major group · DOSM ${salary.year}`)).toBeInTheDocument();
+        expect(screen.getByText(`Industry average · DOSM major group ${salary.year}`)).toBeInTheDocument();
       }
 
       unmount();
