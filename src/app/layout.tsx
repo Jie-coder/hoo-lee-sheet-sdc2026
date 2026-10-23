@@ -67,7 +67,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           <LocaleProvider>
             <TooltipProvider>
               <SiteHeader />
-              <main className="flex flex-1 flex-col">{children}</main>
+              <main className="flex flex-1 flex-col [&>*]:w-full">{children}</main>
               <SiteFooter />
               <Toaster />
             </TooltipProvider>

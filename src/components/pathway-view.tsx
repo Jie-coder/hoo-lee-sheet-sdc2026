@@ -227,9 +227,9 @@ export function PathwayView({
                       className="relative z-10 mt-7 size-[30px] self-start justify-self-center rounded-full bg-card ring-4 ring-ink"
                     />
                     <article className="rounded-[28px] bg-card p-6 sm:p-7">
-                      <div className="flex items-start justify-between gap-4 font-mono text-[12px] tracking-[0.04em] text-grey uppercase">
-                        <span>{t("pathway.stopLabel", { n: String(index + 1).padStart(2, "0"), provider: providerName })}</span>
-                        <span className="shrink-0 text-right">
+                      <div className="flex flex-wrap items-start justify-between gap-x-4 gap-y-1 font-mono text-[12px] tracking-[0.04em] text-grey uppercase">
+                        <span className="min-w-0 break-words">{t("pathway.stopLabel", { n: String(index + 1).padStart(2, "0"), provider: providerName })}</span>
+                        <span className="min-w-0 sm:text-right">
                           {weeksLabel} ·{" "}
                           {displayHours != null ? (
                             t("pathway.hoursShort", { hours: String(displayHours) })
