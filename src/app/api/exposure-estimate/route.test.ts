@@ -1,4 +1,6 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
+
+vi.mock("@/lib/ai", () => ({ getModel: () => ({ ok: false, error: "no model in tests" }) }));
 import { CATALOGUE } from "@/lib/catalogue";
 import { POST } from "./route";
 
@@ -40,21 +42,26 @@ describe("POST /api/exposure-estimate", () => {
     expect(response.status).toBe(400);
   });
 
-  it("returns the catalogue role directly for an exact title match, with no embeddings file needed", async () => {
+  it("returns the catalogue role directly for an exact title match", async () => {
     const response = await post({ title: KNOWN_ROLE.title });
     expect(response.status).toBe(200);
-    const body = await response.json();
-    expect(body).toEqual({
-      status: "exact",
+    expect(await response.json()).toEqual({
+      status: "matched",
+      matchedVia: "exact",
       exposure: KNOWN_ROLE.exposure,
       borrowedFrom: { roleId: KNOWN_ROLE.id, title: KNOWN_ROLE.title },
-      similarity: 1,
     });
   });
 
-  it("returns 503 with status embeddings_unavailable for an unknown title, since role-embeddings.json has not been precomputed", async () => {
+  it("matches via the alias table", async () => {
+    const response = await post({ title: "Jururawat" });
+    expect(response.status).toBe(200);
+    expect(await response.json()).toMatchObject({ status: "matched", matchedVia: "alias", borrowedFrom: { roleId: "o025" } });
+  });
+
+  it("returns 503 model_unavailable for an unknown title when no model is configured", async () => {
     const response = await post({ title: "Underwater basket weaver" });
     expect(response.status).toBe(503);
-    expect(await response.json()).toEqual({ status: "embeddings_unavailable" });
+    expect(await response.json()).toEqual({ status: "model_unavailable" });
   });
 });
