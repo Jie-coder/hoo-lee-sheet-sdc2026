@@ -4,8 +4,10 @@
 import Link from "next/link";
 import { useT } from "@/lib/i18n";
 
-/** The header's logo asset, reused unchanged in the footer. */
+/** The header's logo asset. */
 export const LOGO_SRC = "/brand/laluan-logo-ember.svg";
+/** Same logo with the wordmark in Limestone for the dark footer; the Ember mark is unchanged. */
+export const FOOTER_LOGO_SRC = "/brand/laluan-logo-on-dark.svg";
 
 export const FOOTER_LINKS = [
   { href: "/about", key: "footer.about" },
@@ -21,9 +23,9 @@ export function SiteFooter() {
     <footer className="w-full bg-obsidian text-[#F4F1EA]">
       <div className="mx-auto grid max-w-[1440px] grid-cols-1 gap-8 px-4 py-16 sm:px-6 md:grid-cols-[1.2fr_1fr_1.4fr] md:gap-12 md:px-8">
         <div>
-          {/* Same Ember logo as the header, original colours. next/image refuses SVG without extra config. */}
+          {/* Ember logo, wordmark in Limestone for the dark background. next/image refuses SVG without extra config. */}
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={LOGO_SRC} alt={t("header.logoAlt")} width={125} height={28} className="h-7 w-[125px]" />
+          <img src={FOOTER_LOGO_SRC} alt={t("header.logoAlt")} width={125} height={28} className="h-7 w-[125px]" />
           <p className="mt-3.5 text-[14px] text-[#F4F1EA]/70">{t("footer.tagline")}</p>
         </div>
 
