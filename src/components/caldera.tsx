@@ -17,6 +17,7 @@ export function PageHero({
   lede,
   className,
   titleClassName,
+  titleLeading = "leading-[0.9]",
   as = "h1",
 }: {
   eyebrow?: ReactNode;
@@ -24,6 +25,8 @@ export function PageHero({
   lede?: ReactNode;
   className?: string;
   titleClassName?: string;
+  /** Display line-height class; defaults to the tight Caldera 0.9. */
+  titleLeading?: string;
   as?: "h1" | "h2";
 }) {
   const Title = as;
@@ -41,7 +44,7 @@ export function PageHero({
             // Last on purpose: tailwind-merge drops a leading-* that comes before a
             // text-[size] class (font-size can carry a line-height), so the display
             // line-height has to follow every size class to survive cn().
-            "leading-[0.9]",
+            titleLeading,
           )}
         >
           {title}
@@ -299,11 +302,14 @@ export function IllustrationPanel({
   panel,
   alt = "",
   className,
+  fit = "cover",
 }: {
   src: string;
   panel: "plasma" | "ember";
   alt?: string;
   className?: string;
+  /** "contain" shows the whole drawing, centred with ~24px padding. */
+  fit?: "cover" | "contain";
 }) {
   return (
     <div
@@ -315,7 +321,7 @@ export function IllustrationPanel({
       aria-hidden={alt === ""}
     >
       {/* eslint-disable-next-line @next/next/no-img-element -- static decorative illustration */}
-      <img src={src} alt={alt} className="size-full object-cover" />
+      <img src={src} alt={alt} className={cn("size-full", fit === "contain" ? "object-contain object-center p-6" : "object-cover")} />
     </div>
   );
 }

@@ -98,19 +98,22 @@ export function pickCoursesForSkill(
 }
 
 /**
- * True when Chinese is the learner's only study language but no course in the
- * catalogue closes any of `skillIds` in Chinese, so the step falls back to
- * courses in another language and should say so.
+ * True when Chinese is among the learner's study languages but no course in the
+ * catalogue closes any of `skillIds` in ANY of the selected languages, so the
+ * step falls back to courses in another language and should say so.
  */
 export function missingChineseCourse(
   skillIds: readonly string[],
   courses: readonly Course[],
   languages: readonly LanguageCode[],
 ): boolean {
-  // Only when Chinese is the sole study language; with English also picked the fallback is expected.
-  if (languages.length !== 1 || languages[0] !== "zh" || skillIds.length === 0) return false;
+  // With English picked a fallback never happens (catalogue is English-first);
+  // the note is about Chinese, so it needs Chinese selected.
+  if (!languages.includes("zh") || languages.includes("en") || skillIds.length === 0) return false;
   return !courses.some(
-    (course) => course.languages.includes("zh") && course.skillIds.some((skillId) => skillIds.includes(skillId)),
+    (course) =>
+      course.languages.some((language) => languages.includes(language)) &&
+      course.skillIds.some((skillId) => skillIds.includes(skillId)),
   );
 }
 
