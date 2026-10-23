@@ -3,7 +3,7 @@ import { analyzeProfile, RELATED_SKILL_CREDIT } from "./analyze";
 import { CATALOGUE, type Catalogue } from "./catalogue";
 import { explainRole } from "./explain";
 import { resolveProfileSkills } from "./profile-skills";
-import { SCORING_PARAMS } from "./scoring";
+import { NON_RECOMMENDED_CLUSTERS, SCORING_PARAMS } from "./scoring";
 import { PERSONA_IDS, PERSONAS } from "@/mocks/personas";
 import { AnalyzeResponseSchema, SCENARIO_IDS } from "@/types/contracts";
 
@@ -206,5 +206,21 @@ describe("resolveProfileSkills", () => {
         .map((match) => match.label);
       expect(unmatched).toEqual(persona.unmatchedSkills);
     }
+  });
+});
+
+describe("future routes only", () => {
+  const clusterOf = new Map(CATALOGUE.occupations.map((o) => [o.id, o.cluster]));
+  it.each(PERSONA_IDS)("never recommends a routine_clerical role to %s", (id) => {
+    const result = personaResult(id);
+    expect(result.roles.length).toBeGreaterThan(0);
+    for (const role of result.roles) {
+      expect(NON_RECOMMENDED_CLUSTERS.has(clusterOf.get(role.occupationId)!)).toBe(false);
+    }
+  });
+  it("still shows a routine_clerical job as the current, at-risk work", () => {
+    const result = personaResult("aisyah");
+    expect(clusterOf.get(PERSONAS.aisyah.currentOccupationId)).toBe("routine_clerical");
+    expect(result.currentWork).not.toBeNull();
   });
 });
