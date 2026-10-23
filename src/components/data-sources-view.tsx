@@ -1,6 +1,11 @@
-// Data sources page. Lists only sources actually referenced in repo data/code:
-// data/sources.csv + src/data/catalogue.json (ILO, ESCO, OpenDOSM, WEF, arXiv)
-// and data/salary_by_role.csv / src/data/salary-by-role.json (JobStreet, DOSM).
+// Data sources page. Lists only sources whose data is used by code or data files
+// (a source_name/source_url on a value row, or values derived from it):
+// ILO -> data/exposure.csv, catalogue occupations; ESCO -> data/occupation_skills.csv,
+// data/skill_groups.csv; DOSM -> data/salary_by_role.csv (avg pay), data/demand.csv;
+// JobStreet -> data/salary_by_role.csv ranges; WEF FoJ 2025 -> data/scenarios.csv;
+// arXiv -> data/keywords.csv (signals); UN SDGs -> data/occupation_sdg.csv.
+// Sources only listed in data/sources.csv (Anthropic Economic Index, Stanford AI Index,
+// OECD.AI, GitHub Innovation Graph, Lightcast, OpenDOSM LFS, WEF Four Futures) are excluded.
 "use client";
 
 import { useT } from "@/lib/i18n";
@@ -11,10 +16,10 @@ export const DATA_SOURCES: ReadonlyArray<{ name: string; url: string; desc: Mess
   { name: "ILO: Generative AI and Jobs (2025 refined global index, WP140)", url: "https://www.ilo.org/sites/default/files/2025-05/WP140_web.pdf", desc: "sourcesPage.ilo" },
   { name: "ESCO (European Skills, Competences, Qualifications and Occupations)", url: "https://esco.ec.europa.eu/en/use-esco/use-esco-services-api", desc: "sourcesPage.esco" },
   { name: "OpenDOSM: Salaries & Wages by Occupation", url: "https://open.dosm.gov.my/data-catalogue/wages_occupation", desc: "sourcesPage.dosmWages" },
-  { name: "OpenDOSM: Labour Force Survey (monthly)", url: "https://open.dosm.gov.my/data-catalogue/lfs_month_sa", desc: "sourcesPage.dosmLfs" },
+  { name: "DOSM Salaries & Wages Survey Report 2025", url: "https://storage.dosm.gov.my/labour/salaries_wages_2025.pdf", desc: "sourcesPage.dosmReport" },
   { name: "JobStreet Malaysia career advice: salary pages", url: "https://my.jobstreet.com/career-advice", desc: "sourcesPage.jobstreet" },
   { name: "WEF Future of Jobs Report 2025", url: "https://reports.weforum.org/docs/WEF_Future_of_Jobs_Report_2025.pdf", desc: "sourcesPage.wefJobs" },
-  { name: "WEF Four Futures for Jobs in the New Economy: AI and Talent in 2030", url: "https://reports.weforum.org/docs/WEF_Four_Futures_for_Jobs_in_the_New_Economy_AI_and_Talent_in_2030_2025.pdf", desc: "sourcesPage.wefFutures" },
+  { name: "UN Sustainable Development Goals", url: "https://sdgs.un.org/goals", desc: "sourcesPage.sdgs" },
   { name: "arXiv API", url: "https://arxiv.org/help/api/index", desc: "sourcesPage.arxiv" },
 ];
 
