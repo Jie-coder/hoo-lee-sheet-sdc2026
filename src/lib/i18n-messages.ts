@@ -110,7 +110,8 @@ export const EN = {
   "results.heroLede": "{matched} of {total} skills matched. Ranked by score (skill match, demand, AI exposure and your SDG choice) under the scenario you pick. Open a ticket to see why.",
   "results.currentRoleLabel": "01 · Your current role",
   "results.exposureSentence": "About {percent} of {role}’s tasks could be assisted by generative AI.",
-  "results.ticketsHeading": "Your three tickets",
+  "results.ticketsHeading": "Your {count} tickets",
+  "results.ticketsHeadingOne": "Your one ticket",
   "results.ticketsSub": "WEF Jobs of Tomorrow scenarios · switch to re-rank",
   "results.ticketLabel": "Ticket {rank} / {total}",
   "results.fit": "Fit",
@@ -735,7 +736,8 @@ export const MS: Record<MessageKey, string> = {
   "results.heroLede": "{matched} daripada {total} kemahiran dipadankan. Disusun mengikut skor (padanan kemahiran, permintaan, pendedahan AI dan pilihan SDG anda) di bawah senario yang anda pilih. Buka tiket untuk lihat sebabnya.",
   "results.currentRoleLabel": "01 · Peranan semasa anda",
   "results.exposureSentence": "Kira-kira {percent} tugas {role} boleh dibantu oleh AI generatif.",
-  "results.ticketsHeading": "Tiga tiket anda",
+  "results.ticketsHeading": "{count} tiket anda",
+  "results.ticketsHeadingOne": "Satu tiket anda",
   "results.ticketsSub": "Senario Pekerjaan Masa Depan WEF · tukar untuk susun semula",
   "results.ticketLabel": "Tiket {rank} / {total}",
   "results.fit": "Kesesuaian",
@@ -1256,6 +1258,23 @@ export const MS: Record<MessageKey, string> = {
   "exposureIntro.notJobLoss": "Kebanyakan pekerjaan yang terdedah berubah, bukannya hilang.",
   "exposureIntro.sourceLink": "Kertas Kerja ILO 140 (2025)",
 };
+
+const COUNT_WORDS: Record<SiteLocale, readonly string[]> = {
+  en: ["zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten"],
+  ms: ["sifar", "satu", "dua", "tiga", "empat", "lima", "enam", "tujuh", "lapan", "sembilan", "sepuluh"],
+};
+
+/** A small count as a word ("four" / "empat"); numerals above ten. */
+export function countWord(locale: SiteLocale, n: number): string {
+  return (COUNT_WORDS[locale] ?? COUNT_WORDS.en)[n] ?? String(n);
+}
+
+/** Results-page tickets heading for however many tickets are rendered. */
+export function ticketsHeading(locale: SiteLocale, count: number): string {
+  if (count === 1) return translate(locale, "results.ticketsHeadingOne");
+  const text = translate(locale, "results.ticketsHeading", { count: countWord(locale, count) });
+  return text.charAt(0).toUpperCase() + text.slice(1);
+}
 
 export function translate(locale: SiteLocale, key: MessageKey, vars?: Record<string, string>): string {
   let text: string = (locale === "ms" ? MS[key] : EN[key]) ?? EN[key];
