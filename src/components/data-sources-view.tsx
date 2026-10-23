@@ -11,6 +11,7 @@
 import { useT } from "@/lib/i18n";
 import type { MessageKey } from "@/lib/i18n-messages";
 import { InfoPage } from "@/components/info-page";
+import { CATALOGUE } from "@/lib/catalogue";
 
 export const DATA_SOURCES: ReadonlyArray<{ name: string; url: string; desc: MessageKey }> = [
   { name: "ILO: Generative AI and Jobs (2025 refined global index, WP140)", url: "https://www.ilo.org/sites/default/files/2025-05/WP140_web.pdf", desc: "sourcesPage.ilo" },
@@ -34,6 +35,20 @@ export function DataSourcesView() {
               {s.name}
             </a>
             <p className="mt-1">{t(s.desc)}</p>
+          </li>
+        ))}
+      </ul>
+      {/* Custom skills are Laluan's own, not ESCO concepts: no link, marked custom. */}
+      <h2 className="mt-12 font-medium">{t("sourcesPage.customTitle")}</h2>
+      <p className="mt-2">{t("sourcesPage.customLede")}</p>
+      <ul className="mt-4 space-y-4">
+        {Object.entries(CATALOGUE.customSkills).map(([id, skill]) => (
+          <li key={id}>
+            <span className="font-medium first-letter:uppercase">{skill.label}</span>{" "}
+            <span className="tag text-[11px]">{t("sourcesPage.customBadge")}</span>
+            <p className="mt-1 text-[13px] text-grey">
+              <code>{id}</code>: {skill.description}
+            </p>
           </li>
         ))}
       </ul>
