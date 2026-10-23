@@ -42,10 +42,11 @@ async function StatusChecks() {
 
 function StatusSkeleton() {
   return (
-    <div className="mt-16 grid grid-cols-1 gap-4 md:grid-cols-2">
+    <div aria-busy="true" aria-live="polite" className="mt-16 grid grid-cols-1 gap-4 md:grid-cols-2">
       <div className="h-40 rounded-[40px] bg-card animate-pulse" />
       <div className="h-40 rounded-[40px] bg-card animate-pulse" />
       <div className="h-40 rounded-[40px] bg-card animate-pulse" />
+      <span className="sr-only">Loading…</span>
     </div>
   );
 }
