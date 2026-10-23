@@ -197,6 +197,7 @@ export function ResultsView() {
                       chosen={chosenId === role.occupationId}
                       onChoose={handleChoose}
                       isPrimary={index === 0}
+                      relatedSkills={breakdown?.relatedSkillLabels}
                     />
                   );
                 })}

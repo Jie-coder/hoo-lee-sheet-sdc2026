@@ -59,6 +59,8 @@ export type RoleBreakdown = {
   matchedSkills: number;
   /** Essential skills in the same ESCO skill group as one of the user's: half credit, capped at relatedSkillCap (6) per role — only the 6 most important count. */
   relatedSkills: number;
+  /** The same related skills by label (ESCO), in essential-skill order: what earned half credit. */
+  relatedSkillLabels: string[];
   essentialSkills: number;
   demand: ScenarioScores;
   exposureGroupEstimate: boolean;
@@ -267,6 +269,9 @@ export function analyzeProfile(catalogue: Catalogue, input: AnalyzeInput): Analy
       relatedSkills: occupation.essentialSkillIds.filter(
         (id) => !userLevel.has(id) && (levels.get(id) ?? 0) > 0,
       ).length,
+      relatedSkillLabels: occupation.essentialSkillIds
+        .filter((id) => !userLevel.has(id) && (levels.get(id) ?? 0) > 0)
+        .map((id) => catalogue.skills[id] ?? id),
       essentialSkills: occupation.essentialSkillIds.length,
       demand: Object.fromEntries(
         SCENARIO_IDS.map((scenario) => [scenario, scenarioDemand(occupation.cluster, scenario)]),

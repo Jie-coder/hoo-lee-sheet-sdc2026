@@ -224,3 +224,14 @@ describe("future routes only", () => {
     expect(result.currentWork).not.toBeNull();
   });
 });
+
+describe("related skill labels", () => {
+  it.each(PERSONA_IDS)("lists exactly the related skills counted for %s", (id) => {
+    const result = personaResult(id);
+    for (const role of result.roles) {
+      const breakdown = result.breakdown[role.occupationId];
+      expect(breakdown.relatedSkillLabels).toHaveLength(breakdown.relatedSkills);
+      expect(breakdown.relatedSkillLabels.length).toBeLessThanOrEqual(SCORING_PARAMS.relatedSkillCap);
+    }
+  });
+});

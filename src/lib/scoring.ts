@@ -210,6 +210,18 @@ export type ScoredRole = Pick<
  * analyzeProfile's candidate filter, so /api/roles, results, compare and
  * print all see the same list.
  */
+/**
+ * Recommended roles with skill fit below this read as a "Transition route"
+ * (BM "Laluan peralihan"): a deliberate reskilling move rather than a close
+ * match. Display only; it does not change ranking.
+ */
+export const STRETCH_FIT_THRESHOLD = 0.2;
+
+/** True when a recommended role's fit is below STRETCH_FIT_THRESHOLD. */
+export function isStretchRoute(fit: number): boolean {
+  return fit < STRETCH_FIT_THRESHOLD;
+}
+
 export const NON_RECOMMENDED_CLUSTERS: ReadonlySet<RoleCluster> = new Set<RoleCluster>(["routine_clerical"]);
 
 export function exposureScore(

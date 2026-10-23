@@ -26,3 +26,20 @@ export function lookupRoleAlias(title: string): string | null | undefined {
   const entry = ROLE_ALIASES[normalizeAliasKey(title)];
   return entry === undefined ? undefined : entry.roleId;
 }
+
+/**
+ * Best-effort catalogue id for a CV's current job title: an exact
+ * (normalised) catalogue title first, then the alias table. null when the
+ * title is empty or not recognised — the CV then just has no current job.
+ */
+export function detectCurrentOccupationId(
+  title: string | null | undefined,
+  occupations: readonly { id: string; title: string }[],
+): string | null {
+  if (!title) return null;
+  const key = normalizeAliasKey(title);
+  if (!key) return null;
+  const exact = occupations.find((occupation) => normalizeAliasKey(occupation.title) === key);
+  if (exact) return exact.id;
+  return lookupRoleAlias(title) ?? null;
+}

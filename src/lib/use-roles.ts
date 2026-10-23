@@ -26,6 +26,7 @@ export function rolesRequest(
     skills: profile.skills.map((skill) => ({ label: skill.label, selfReported: skill.selfReported })),
     impactInterest: impactInterest ?? "none",
     signalDate,
+    ...(profile.personaId === "upload" && profile.roles[0]?.title ? { currentJobTitle: profile.roles[0].title } : {}),
   };
 }
 
