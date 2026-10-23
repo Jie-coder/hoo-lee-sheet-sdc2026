@@ -275,6 +275,7 @@ export function RadarView({
         className="pt-6 md:pt-8"
         eyebrow={t("radar.eyebrow")}
         title={t("radar.heroHeading")}
+        titleLeading="leading-[1.1]"
         lede={t("radar.lede")}
       />
 

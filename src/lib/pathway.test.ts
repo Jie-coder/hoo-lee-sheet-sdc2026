@@ -472,14 +472,28 @@ describe("no two steps in one pathway share a URL (demo CVs)", () => {
 describe("missingChineseCourse", () => {
   const en = course({ id: "en", languages: ["en"], skillIds: ["a"] });
   const zh = course({ id: "zh", languages: ["zh", "en"], skillIds: ["b"] });
-  it("flags a skill with no Chinese course only when Chinese is the sole language", () => {
+  const ms = course({ id: "ms", languages: ["ms"], skillIds: ["c"] });
+  it("flags a skill with no Chinese course when Chinese is selected without English", () => {
     expect(missingChineseCourse(["a"], [en, zh], ["zh"])).toBe(true);
+    expect(missingChineseCourse(["a"], [en, zh, ms], ["zh", "ms"])).toBe(true);
     expect(missingChineseCourse(["a"], [en, zh], ["en", "zh"])).toBe(false);
+  });
+  it("does not flag when another selected language covers the skill", () => {
+    expect(missingChineseCourse(["c"], [en, zh, ms], ["zh", "ms"])).toBe(false);
   });
   it("does not flag when a Chinese course exists or Chinese is not preferred", () => {
     expect(missingChineseCourse(["b"], [en, zh], ["zh"])).toBe(false);
     expect(missingChineseCourse(["a"], [en, zh], ["en"])).toBe(false);
     expect(missingChineseCourse([], [en, zh], ["zh"])).toBe(false);
+  });
+  it("ranks courses from any combination of selected languages", () => {
+    const enPaid = course({ id: "en-paid", languages: ["en"], skillIds: ["d"], costType: "paid" });
+    const msFree = course({ id: "ms-free", languages: ["ms"], skillIds: ["d"], costType: "free" });
+    const zhFree = course({ id: "zh-free", languages: ["zh"], skillIds: ["d"], costType: "free" });
+    expect(pickCourseForSkill("d", [enPaid, msFree, zhFree], ["en"])?.id).toBe("en-paid");
+    expect(pickCourseForSkill("d", [enPaid, msFree, zhFree], ["en", "ms"])?.id).toBe("ms-free");
+    expect(pickCourseForSkill("d", [enPaid, msFree, zhFree], ["en", "zh"])?.id).toBe("zh-free");
+    expect(pickCourseForSkill("d", [enPaid, zhFree], ["ms"])?.id).toBe("zh-free");
   });
   it("still falls back to the English course for that skill", () => {
     expect(pickCourseForSkill("a", [en, zh], ["zh"])?.id).toBe("en");

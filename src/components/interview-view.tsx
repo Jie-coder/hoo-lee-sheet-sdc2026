@@ -38,7 +38,7 @@ export function InterviewView() {
   const router = useRouter();
   const reduce = useReducedMotion();
   const { t } = useT();
-  const { hydrated, consent, profile, interviewAnswers, setInterviewAnswers, setCourseLanguages } = useFlow();
+  const { hydrated, consent, profile, interviewAnswers, setInterviewAnswers, toggleCourseLanguage } = useFlow();
 
   const [turn, setTurn] = useState(1);
   const [direction, setDirection] = useState(1);
@@ -102,7 +102,7 @@ export function InterviewView() {
   const activeProfile = profile;
 
   const known = personaKnownSlots(activeProfile.personaId);
-  const studyLanguage = activeProfile.courseLanguages[0] ?? "en";
+  const studyLanguages = activeProfile.courseLanguages;
   const currentTaskLevels = tasks.map((_, index) => taskLevels[index] ?? "some");
 
   function answerForCurrentTurn(): PartialSlots {
@@ -403,9 +403,10 @@ export function InterviewView() {
                     {STUDY_LANGUAGES.map((language) => (
                       <Chip
                         key={language.value}
-                        selected={studyLanguage === language.value}
-                        onClick={() => setCourseLanguages([language.value])}
+                        selected={studyLanguages.includes(language.value)}
+                        onClick={() => toggleCourseLanguage(language.value)}
                       >
+                        {studyLanguages.includes(language.value) && <Check className="size-3" strokeWidth={2.2} />}
                         {t(language.labelKey)}
                       </Chip>
                     ))}

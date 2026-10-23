@@ -91,7 +91,7 @@ export function ExposureIntro() {
                 <img
                   src={`/exposure/u${n}.svg`}
                   alt=""
-                  className="size-full object-cover"
+                  className="size-full object-contain object-center p-6"
                 />
               </div>
             </div>

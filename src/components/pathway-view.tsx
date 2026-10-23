@@ -125,8 +125,8 @@ export function PathwayView({
     return programmes.find((programme) => programme.id === step.itemId) ?? null;
   }
 
-  // One note under THE LINE when Chinese is the only study language and some
-  // step had to fall back to a non-Chinese course.
+  // One note under THE LINE when Chinese is selected and some step had to fall
+  // back to a course in none of the selected languages.
   const englishFallbackStepIds = new Set(
     plan.steps
       .filter((step) => {
@@ -135,7 +135,7 @@ export function PathwayView({
         return (
           !!item &&
           "languages" in item &&
-          !item.languages.includes("zh") &&
+          !item.languages.some((language) => studyLanguages.includes(language)) &&
           missingChineseCourse(step.closesSkillIds, courses, studyLanguages)
         );
       })
@@ -199,7 +199,7 @@ export function PathwayView({
                   ? t("pathway.boardingFrom", { from: fromRole, to: role.title })
                   : t("pathway.boardingTo", { to: role.title })}
               </p>
-              <h1 className="mt-5 font-serif text-[clamp(44px,10vw,88px)] leading-[0.9] text-balance uppercase">
+              <h1 className="mt-5 font-serif text-[32px] leading-[1.1] text-balance md:text-[38px] uppercase">
                 {t("pathway.heroHeading", { weeks: String(totalWeeks), title: role.title })}
               </h1>
             </div>

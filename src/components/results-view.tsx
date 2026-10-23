@@ -146,8 +146,9 @@ export function ResultsView() {
               </div>
               </div>
               <IllustrationPanel
-                src="/illustrations/u3.svg"
+                src="/illustrations/results-junction.svg"
                 panel="plasma"
+                fit="contain"
                 className="h-[200px] md:h-auto md:min-h-[320px]"
               />
             </section>
