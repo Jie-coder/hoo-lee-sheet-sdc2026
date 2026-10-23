@@ -75,7 +75,7 @@ export function LandingView({ preview }: { preview: LandingPreview }) {
             </motion.h1>
           </div>
 
-          <div className="relative mt-6 aspect-[1376/520] min-h-[220px] overflow-hidden rounded-[28px] xl:mt-0 xl:aspect-[1376/820] xl:min-h-0 xl:rounded-none">
+          <div className="relative mt-6 h-[220px] w-full sm:h-auto sm:aspect-[1376/520] overflow-hidden rounded-[28px] xl:mt-0 xl:aspect-[1376/820] xl:min-h-0 xl:rounded-none">
             <LandingHeroCanvas className="absolute inset-0 size-full xl:inset-auto xl:bottom-0 xl:left-0 xl:aspect-[1376/820] xl:h-auto" />
             <span className="absolute top-2 left-3 rounded-md bg-ink/55 px-2 py-1.5 font-mono text-[9px] leading-none tracking-[0.08em] text-card uppercase xl:top-[43%] xl:left-7 xl:px-2.5 xl:text-[12px]">
               {t("landing.heroTicket")}

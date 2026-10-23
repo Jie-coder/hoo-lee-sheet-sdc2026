@@ -20,7 +20,7 @@ export function SiteFooter() {
         <div>
           {/* Official wordmark. next/image refuses SVG without extra config. */}
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/brand/laluan-logo.svg" alt="Laluan" className="h-7 w-auto brightness-0 invert" />
+          <img src="/brand/laluan-logo.svg" alt="Laluan" width={125} height={28} className="h-7 w-[125px] brightness-0 invert" />
           <p className="mt-3.5 text-[14px] text-[#F4F1EA]/70">{t("footer.tagline")}</p>
         </div>
 
