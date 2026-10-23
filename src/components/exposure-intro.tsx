@@ -111,19 +111,6 @@ export function ExposureIntro() {
           </a>
         </p>
       </div>
-      <div className="mt-8 px-2 md:px-4">
-        <p className="text-grey">
-          {t("exposureIntro.notJobLoss")}{" "}
-          <a
-            href="https://www.ilo.org/sites/default/files/2025-05/WP140_web.pdf"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-sage-dark underline-offset-2 hover:underline"
-          >
-            {t("exposureIntro.sourceLink")} ↗
-          </a>
-        </p>
-      </div>
     </section>
   );
 }
