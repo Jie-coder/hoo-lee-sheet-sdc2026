@@ -11,7 +11,7 @@
 //     denominator is scaled down to what 25 skills would sum to (see
 //     essentialSkillCap below), and F is clamped to at most 1.
 //   R_{r,k} = α F_r + β D_{r,k} + γ (1 − θ_k E_r)
-//   then +0.05 when a direct or supporting SDG link matches impact_interest
+//   then +SCORING_PARAMS.sdgBonus (0.1) when a direct or supporting SDG link matches impact_interest
 //
 // h_s is 1 (clear), 0.5 (partial, self-reported, or a related ESCO skill the
 // user holds — see relatedSkillCredit below), or 0 (missing).
@@ -22,11 +22,11 @@
 //   not the exact skill) earns relatedSkillCredit = 0.5 of a full match:
 //   half credit for "close enough". It rewards transferable skills without
 //   treating them as a substitute for the real thing.
-// - Each role only counts the top relatedSkillCap = 6 related skills (by
-//   adjusted importance imp_s, i.e. the 6 most important skills; ties break
+// - Each role only counts the top relatedSkillCap = 10 related skills (by
+//   adjusted importance imp_s, i.e. the 10 most important skills; ties break
 //   by skillId). This stops "related skill padding": a broad CV with a
 //   handful of adjacent skills can't pad its fit score by racking up related
-//   credit on every essential skill of a role — only the 6 most important
+//   credit on every essential skill of a role — only the 10 most important
 //   ones count, and the rest fall back to missing. Capping it keeps the
 //   credit a small nudge, not a second scoring channel.
 // - Roles with more than essentialSkillCap = 25 essential skills have the
@@ -56,7 +56,10 @@
 //   impactGoals below is the small map used: environment 6, 7, 12–15,
 //   education 4, health 3, community 1, 10, 11.
 //   "none" matches nothing. Inferred links do not count. The +0.05 is added
-//   once per role, to every scenario's R, not once per link.
+//   once per role, to every scenario's R, not once per link
+//   (sdgBonus, 0.10). A matching role is also eligible for a top 3 at
+//   minFitFallback (0.10) instead of minFit, so a slightly lower-fit role
+//   on the chosen goal can still surface; roles below 0.10 never do.
 // - Top 3 is exactly min(3, n) after sorting by R descending, then
 //   occupationId ascending. Ties do not expand the cut. robust means the
 //   role is inside that cut in every scenario. The returned list is the
@@ -101,13 +104,19 @@ export const SCORING_PARAMS = {
   gamma: 0.2,
   lambda: 0.3,
   skillMatchCosine: 0.82,
-  sdgBonus: 0.05,
+  /**
+   * Added to every scenario's R when a role's SDG mapping matches the user's
+   * chosen impact interest. Matching roles also only need minFitFallback
+   * (not minFit) to be eligible for a top 3, so the best-fitting role for
+   * the chosen goal can surface. No choice ("none") changes nothing.
+   */
+  sdgBonus: 0.1,
   topN: 3,
   gapSize: 5,
   /** Half credit for an essential skill in the same ESCO group as a user skill, not the exact match. See the file header. */
   relatedSkillCredit: 0.5,
-  /** At most the 6 most important related skills per role count, so a broad CV can't pad fit with adjacent skills. See the file header. */
-  relatedSkillCap: 6,
+  /** At most the 10 most important related skills per role count, so a broad CV can't pad fit with adjacent skills. See the file header. */
+  relatedSkillCap: 10,
   /** Essential-skill count above which the fit denominator is scaled down. See the file header. */
   essentialSkillCap: 25,
   /** Minimum fit F a role needs to be eligible for a scenario's top 3. See "Minimum fit filter" in the file header. */
@@ -210,6 +219,31 @@ export type ScoredRole = Pick<
  * analyzeProfile's candidate filter, so /api/roles, results, compare and
  * print all see the same list.
  */
+/**
+ * Recommended roles with skill fit below this read as a "Transition route"
+ * (BM "Laluan peralihan"): a deliberate reskilling move rather than a close
+ * match. Display only; it does not change ranking.
+ */
+export const STRETCH_FIT_THRESHOLD = 0.15;
+
+/**
+ * Displayed Fit: a role that matches the user's chosen SDG interest gets
+ * +INTEREST_FIT_BONUS on top of its skill fit (capped at 1). Every other role,
+ * and every role when no interest is chosen, shows its skill fit unchanged —
+ * nothing is penalised. Display only: the ranking score uses raw skill fit plus
+ * SCORING_PARAMS.sdgBonus, and the Transition route label uses raw skill fit.
+ */
+export const INTEREST_FIT_BONUS = 0.15;
+
+export function displayFit(skillFit: number, interestMatch: boolean): number {
+  return interestMatch ? Math.min(1, skillFit + INTEREST_FIT_BONUS) : skillFit;
+}
+
+/** True when a recommended role's fit is below STRETCH_FIT_THRESHOLD. */
+export function isStretchRoute(fit: number): boolean {
+  return fit < STRETCH_FIT_THRESHOLD;
+}
+
 export const NON_RECOMMENDED_CLUSTERS: ReadonlySet<RoleCluster> = new Set<RoleCluster>(["routine_clerical"]);
 
 export function exposureScore(
@@ -369,6 +403,7 @@ type PreparedRole = {
   augmentation: number;
   byScenario: ScenarioScores;
   gap: GapSkill[];
+  sdgMatch: boolean;
 };
 
 /** The fields topRoleIdsForScenario needs: enough to rank by scenario score and filter by fit. */
@@ -376,6 +411,8 @@ export type ScenarioRankable = {
   occupationId: string;
   fit: number;
   byScenario: ScenarioScores;
+  /** Role's SDG mapping matches the chosen impact interest: eligible at minFitFallback. */
+  sdgMatch?: boolean;
 };
 
 /**
@@ -395,7 +432,9 @@ export function topRoleIdsForScenario(roles: readonly ScenarioRankable[], scenar
   );
   // Fit is always within [0, 1] (roleFitScore), so a threshold of 0 is the "no filter" step.
   for (const threshold of [minFit, minFitFallback, 0]) {
-    const eligible = ordered.filter((role) => role.fit >= threshold);
+    const eligible = ordered.filter(
+      (role) => role.fit >= threshold || (role.sdgMatch === true && role.fit >= minFitFallback),
+    );
     if (eligible.length >= topN || threshold === 0) {
       return new Set(eligible.slice(0, topN).map((role) => role.occupationId));
     }
@@ -442,6 +481,7 @@ export function scoreRoles(
       augmentation,
       byScenario,
       gap: skillGap(role.essentialSkills),
+      sdgMatch,
     };
   });
 
@@ -449,6 +489,7 @@ export function scoreRoles(
     occupationId: item.role.occupationId,
     fit: item.fit,
     byScenario: item.byScenario,
+    sdgMatch: item.sdgMatch,
   }));
   const topByScenario = Object.fromEntries(
     SCENARIO_IDS.map((scenario) => [scenario, topRoleIdsForScenario(rankable, scenario)]),

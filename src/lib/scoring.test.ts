@@ -16,6 +16,8 @@ import {
   skillMomentum,
   skillsMatch,
   topRoleIdsForScenario,
+  INTEREST_FIT_BONUS,
+  displayFit,
   type CandidateRole,
   type EssentialSkillInput,
   type ScenarioRankable,
@@ -28,11 +30,11 @@ describe("SCORING_PARAMS", () => {
     expect(SCORING_PARAMS.gamma).toBe(0.2);
     expect(SCORING_PARAMS.lambda).toBe(0.3);
     expect(SCORING_PARAMS.skillMatchCosine).toBe(0.82);
-    expect(SCORING_PARAMS.sdgBonus).toBe(0.05);
+    expect(SCORING_PARAMS.sdgBonus).toBe(0.1);
     expect(SCORING_PARAMS.topN).toBe(3);
     expect(SCORING_PARAMS.gapSize).toBe(5);
     expect(SCORING_PARAMS.relatedSkillCredit).toBe(0.5);
-    expect(SCORING_PARAMS.relatedSkillCap).toBe(6);
+    expect(SCORING_PARAMS.relatedSkillCap).toBe(10);
     expect(SCORING_PARAMS.essentialSkillCap).toBe(25);
     expect(SCORING_PARAMS.minFit).toBe(0.13);
     expect(SCORING_PARAMS.minFitFallback).toBe(0.1);
@@ -274,8 +276,8 @@ describe("scenarioRank", () => {
       theta: 1,
       sdgMatch: true,
     });
-    expect(withBonus - base).toBeCloseTo(0.05, 12);
-    expect(withBonus).toBeCloseTo(0.645, 10);
+    expect(withBonus - base).toBeCloseTo(0.1, 12);
+    expect(withBonus).toBeCloseTo(0.695, 10);
   });
 
   it("punishes exposure more under displacement", () => {
@@ -614,11 +616,11 @@ describe("Aisyah example", () => {
     ]);
     expect(analystScore?.gap[0]?.importance).toBeCloseTo(1.24, 8);
 
-    // R_co = 0.5 * fit + 0.3 * D + 0.2 * (1 - 1 * 0.38) + 0.05
+    // R_co = 0.5 * fit + 0.3 * D + 0.2 * (1 - 1 * 0.38) + 0.1
     const analystFit = 0.8 / 2.54;
     const dataCo = SCORING_PARAMS.demandByCluster.data_analytics.co;
     expect(analystScore?.byScenario.co).toBeCloseTo(
-      0.5 * analystFit + 0.3 * dataCo + 0.2 * (1 - 0.38) + 0.05,
+      0.5 * analystFit + 0.3 * dataCo + 0.2 * (1 - 0.38) + 0.1,
       8,
     );
     // Supervisor has no community goal, so no bonus.
@@ -634,5 +636,29 @@ describe("Aisyah example", () => {
       "data-operations-analyst",
       "admin-supervisor",
     ]);
+  });
+});
+
+describe("topRoleIdsForScenario SDG eligibility", () => {
+  const r = (occupationId: string, fit: number, co: number, sdgMatch = false) => ({
+    occupationId,
+    fit,
+    byScenario: { co, dis: co, sup: co },
+    sdgMatch,
+  });
+  it("lets an SDG-matching role in at minFitFallback, never below it", () => {
+    const roles = [r("a", 0.2, 0.4), r("b", 0.2, 0.39), r("c", 0.2, 0.38), r("m", 0.11, 0.5, true), r("z", 0.05, 0.6, true)];
+    expect([...topRoleIdsForScenario(roles, "co")].sort()).toEqual(["a", "b", "m"]);
+    // Without the match flag, m is below minFit and stays out.
+    expect([...topRoleIdsForScenario(roles.map((x) => ({ ...x, sdgMatch: false })), "co")].sort()).toEqual(["a", "b", "c"]);
+  });
+});
+
+describe("displayFit", () => {
+  it("adds INTEREST_FIT_BONUS only for a match, capped at 1", () => {
+    expect(INTEREST_FIT_BONUS).toBe(0.15);
+    expect(displayFit(0.1, true)).toBeCloseTo(0.25, 12);
+    expect(displayFit(0.1, false)).toBe(0.1);
+    expect(displayFit(0.95, true)).toBe(1);
   });
 });

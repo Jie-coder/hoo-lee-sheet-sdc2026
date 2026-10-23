@@ -1,9 +1,10 @@
 import { describe, expect, it } from "vitest";
 import { analyzeProfile, RELATED_SKILL_CREDIT } from "./analyze";
 import { CATALOGUE, type Catalogue } from "./catalogue";
+import { rankRoles } from "./rank-roles";
 import { explainRole } from "./explain";
 import { resolveProfileSkills } from "./profile-skills";
-import { NON_RECOMMENDED_CLUSTERS, SCORING_PARAMS } from "./scoring";
+import { INTEREST_FIT_BONUS, NON_RECOMMENDED_CLUSTERS, SCORING_PARAMS, STRETCH_FIT_THRESHOLD, isStretchRoute } from "./scoring";
 import { PERSONA_IDS, PERSONAS } from "@/mocks/personas";
 import { AnalyzeResponseSchema, SCENARIO_IDS } from "@/types/contracts";
 
@@ -94,48 +95,24 @@ describe("analyzeProfile scoring rules (tiny catalogue)", () => {
     expect(two.gap.map((gap) => gap.skillId)).toEqual(["d"]);
   });
 
-  it("credits only the top 6 related skills by importance when a role has more than 6", () => {
-    // A role with 8 essential skills, all in the user's skill group (related,
-    // not exact), with distinct momentum so each has a different imp_s.
-    // Only the 6 with the highest imp_s should get related credit; the
-    // other 2 fall back to missing, even though they are "related" too.
+  it("credits only the top relatedSkillCap (10) related skills by importance when a role has more", () => {
+    // A role with 12 essential skills, all in the user's skill group (related,
+    // not exact), with distinct, descending momentum so each has a different
+    // imp_s. Only the 10 with the highest imp_s get related credit; the other
+    // 2 fall back to missing, even though they are "related" too.
     const base = CATALOGUE.occupations.find((occupation) => occupation.id === "o009")!;
+    const cap = SCORING_PARAMS.relatedSkillCap;
+    expect(cap).toBe(10);
+    const ids = Array.from({ length: cap + 2 }, (_, index) => `r${String(index + 1).padStart(2, "0")}`);
+    const momentum = ids.map((_, index) => (ids.length - 1 - index) / 10);
     const catalogue: Catalogue = {
       ...CATALOGUE,
-      skills: {
-        u: "user skill",
-        r1: "r1",
-        r2: "r2",
-        r3: "r3",
-        r4: "r4",
-        r5: "r5",
-        r6: "r6",
-        r7: "r7",
-        r8: "r8",
-      },
-      skillGroups: {
-        u: "g1",
-        r1: "g1",
-        r2: "g1",
-        r3: "g1",
-        r4: "g1",
-        r5: "g1",
-        r6: "g1",
-        r7: "g1",
-        r8: "g1",
-      },
+      skills: { u: "user skill", ...Object.fromEntries(ids.map((id) => [id, id])) },
+      skillGroups: { u: "g1", ...Object.fromEntries(ids.map((id) => [id, "g1"])) },
       groupLabels: { g1: "group one" },
-      // Descending momentum so r1..r6 (highest imp_s) beat r7, r8.
-      signals: {
-        r1: { momentum: 0.7, keywords: [], checkedOn: base.exposure!.asOf },
-        r2: { momentum: 0.6, keywords: [], checkedOn: base.exposure!.asOf },
-        r3: { momentum: 0.5, keywords: [], checkedOn: base.exposure!.asOf },
-        r4: { momentum: 0.4, keywords: [], checkedOn: base.exposure!.asOf },
-        r5: { momentum: 0.3, keywords: [], checkedOn: base.exposure!.asOf },
-        r6: { momentum: 0.2, keywords: [], checkedOn: base.exposure!.asOf },
-        r7: { momentum: 0.1, keywords: [], checkedOn: base.exposure!.asOf },
-        r8: { momentum: 0, keywords: [], checkedOn: base.exposure!.asOf },
-      },
+      signals: Object.fromEntries(
+        ids.map((id, index) => [id, { momentum: momentum[index], keywords: [], checkedOn: base.exposure!.asOf }]),
+      ),
       courses: [],
       occupations: [
         {
@@ -143,7 +120,7 @@ describe("analyzeProfile scoring rules (tiny catalogue)", () => {
           id: "y1",
           title: "capped role",
           cluster: "data_analytics",
-          essentialSkillIds: ["r1", "r2", "r3", "r4", "r5", "r6", "r7", "r8"],
+          essentialSkillIds: ids,
           exposure: { ...base.exposure!, value: 0.5 },
         },
       ],
@@ -154,16 +131,13 @@ describe("analyzeProfile scoring rules (tiny catalogue)", () => {
       impactInterest: "none",
     });
     const role = result.roles.find((r) => r.occupationId === "y1")!;
-    expect(result.breakdown.y1.relatedSkills).toBe(SCORING_PARAMS.relatedSkillCap);
-    // r1..r6 earn credit, so only r7 and r8 are gaps.
-    expect(role.gap.map((gap) => gap.skillId).sort()).toEqual(["r7", "r8"]);
-    // Fit = 6 skills at half related credit + 2 missing, over the 8 essential skills.
-    const imp = (momentum: number) => 1 * (1 + SCORING_PARAMS.lambda * Math.tanh(momentum));
-    const weighted = [0.7, 0.6, 0.5, 0.4, 0.3, 0.2].reduce(
-      (sum, m) => sum + imp(m) * RELATED_SKILL_CREDIT,
-      0,
-    );
-    const total = [0.7, 0.6, 0.5, 0.4, 0.3, 0.2, 0.1, 0].reduce((sum, m) => sum + imp(m), 0);
+    expect(result.breakdown.y1.relatedSkills).toBe(cap);
+    // The two lowest-momentum skills are the only gaps.
+    expect(role.gap.map((gap) => gap.skillId).sort()).toEqual(ids.slice(cap));
+    // Fit = cap skills at half related credit + 2 missing, over all essential skills.
+    const imp = (m: number) => 1 * (1 + SCORING_PARAMS.lambda * Math.tanh(m));
+    const weighted = momentum.slice(0, cap).reduce((sum, m) => sum + imp(m) * RELATED_SKILL_CREDIT, 0);
+    const total = momentum.reduce((sum, m) => sum + imp(m), 0);
     expect(role.fit).toBeCloseTo(weighted / total, 10);
   });
 
@@ -222,5 +196,89 @@ describe("future routes only", () => {
     const result = personaResult("aisyah");
     expect(clusterOf.get(PERSONAS.aisyah.currentOccupationId)).toBe("routine_clerical");
     expect(result.currentWork).not.toBeNull();
+  });
+});
+
+describe("related skill labels", () => {
+  it.each(PERSONA_IDS)("lists exactly the related skills counted for %s", (id) => {
+    const result = personaResult(id);
+    for (const role of result.roles) {
+      const breakdown = result.breakdown[role.occupationId];
+      expect(breakdown.relatedSkillLabels).toHaveLength(breakdown.relatedSkills);
+      expect(breakdown.relatedSkillLabels.length).toBeLessThanOrEqual(SCORING_PARAMS.relatedSkillCap);
+    }
+  });
+});
+
+describe("SDG choice boost", () => {
+  const clusterOf = new Map(CATALOGUE.occupations.map((o) => [o.id, o.cluster]));
+  const run = (id: (typeof PERSONA_IDS)[number], impactInterest: "none" | "environment" | "health") => {
+    const persona = PERSONAS[id];
+    const chips = persona.parsed.skills.map((label) => ({ label, selfReported: false }));
+    const { skills } = resolveProfileSkills(CATALOGUE, id, chips);
+    return analyzeProfile(CATALOGUE, { skills, currentOccupationId: persona.currentOccupationId, impactInterest });
+  };
+
+  it("leaves ranking unchanged when no SDG is chosen", () => {
+    expect(run("aisyah", "none").roles).toEqual(personaResult("aisyah").roles);
+    for (const role of Object.values(run("aisyah", "none").breakdown)) expect(role.interestMatch).toBe(false);
+  });
+
+  it("puts a green_sustainability role first for Aisyah when she picks environment", () => {
+    const roles = rankRoles(run("aisyah", "environment").roles, "co");
+    expect(clusterOf.get(roles[0].occupationId)).toBe("green_sustainability");
+    expect(clusterOf.get(rankRoles(run("aisyah", "none").roles, "co")[0].occupationId)).not.toBe("green_sustainability");
+  });
+
+  it("lets a health-matching role surface for Lim when she picks health", () => {
+    const result = run("lim-jia-hui", "health");
+    const top = rankRoles(result.roles, "co")[0];
+    expect(result.breakdown[top.occupationId].interestMatch).toBe(true);
+    expect(top.fit).toBeGreaterThanOrEqual(SCORING_PARAMS.minFitFallback);
+  });
+
+  it.each(["none", "environment", "health"] as const)("still excludes routine_clerical with interest %s", (interest) => {
+    for (const id of PERSONA_IDS) {
+      for (const role of run(id, interest).roles) {
+        expect(NON_RECOMMENDED_CLUSTERS.has(clusterOf.get(role.occupationId)!)).toBe(false);
+      }
+    }
+  });
+});
+
+describe("displayed Fit (INTEREST_FIT_BONUS)", () => {
+  const run = (id: (typeof PERSONA_IDS)[number], impactInterest: "none" | "environment" | "health") => {
+    const persona = PERSONAS[id];
+    const chips = persona.parsed.skills.map((label) => ({ label, selfReported: false }));
+    const { skills } = resolveProfileSkills(CATALOGUE, id, chips);
+    return analyzeProfile(CATALOGUE, { skills, currentOccupationId: persona.currentOccupationId, impactInterest });
+  };
+
+  it("equals raw skill fit when no interest is chosen", () => {
+    const result = run("aisyah", "none");
+    for (const role of result.roles) {
+      expect(result.breakdown[role.occupationId].displayFit).toBe(role.fit);
+      expect(result.breakdown[role.occupationId].skillFit).toBe(role.fit);
+    }
+  });
+
+  it("is skill fit + 0.15 (max 1) for a matching role and unchanged otherwise", () => {
+    const result = run("aisyah", "environment");
+    let matched = 0;
+    for (const role of result.roles) {
+      const b = result.breakdown[role.occupationId];
+      const expected = b.interestMatch ? Math.min(1, role.fit + INTEREST_FIT_BONUS) : role.fit;
+      expect(b.displayFit).toBeCloseTo(expected, 12);
+      if (b.interestMatch) matched += 1;
+    }
+    expect(matched).toBeGreaterThan(0);
+    expect(INTEREST_FIT_BONUS).toBe(0.15);
+  });
+
+  it("keeps the Transition route label on raw skill fit", () => {
+    const result = run("lim-jia-hui", "health");
+    const care = result.roles.find((role) => result.breakdown[role.occupationId].interestMatch && role.fit < STRETCH_FIT_THRESHOLD)!;
+    expect(result.breakdown[care.occupationId].displayFit).toBeGreaterThanOrEqual(STRETCH_FIT_THRESHOLD);
+    expect(isStretchRoute(care.fit)).toBe(true);
   });
 });

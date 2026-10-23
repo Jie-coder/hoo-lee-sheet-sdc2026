@@ -5,6 +5,7 @@ import { z } from "zod";
 import { analyzeProfile, SIGNAL_DATES } from "@/lib/analyze";
 import { CATALOGUE } from "@/lib/catalogue";
 import { resolveProfileSkills } from "@/lib/profile-skills";
+import { detectCurrentOccupationId } from "@/lib/role-aliases";
 import { PERSONA_IDS, PERSONAS } from "@/mocks/personas";
 import { ImpactInterestSchema } from "@/types/contracts";
 
@@ -16,6 +17,8 @@ const RequestSchema = z.strictObject({
   impactInterest: ImpactInterestSchema.default("none"),
   /** Rank with today's arXiv snapshot, or the one ~30 days earlier. */
   signalDate: z.enum(SIGNAL_DATES).default("today"),
+  /** Upload only: the CV's most recent job title, so that job is not recommended back. */
+  currentJobTitle: z.string().trim().max(200).optional(),
 });
 
 export type RolesRequest = z.input<typeof RequestSchema>;
@@ -38,9 +41,12 @@ export async function POST(request: Request) {
     );
   }
 
-  const { personaId, skills: chips, impactInterest, signalDate } = parsed.data;
+  const { personaId, skills: chips, impactInterest, signalDate, currentJobTitle } = parsed.data;
   const { skills, matches } = resolveProfileSkills(CATALOGUE, personaId, chips);
-  const currentOccupationId = personaId === "upload" ? null : PERSONAS[personaId].currentOccupationId;
+  const currentOccupationId =
+    personaId === "upload"
+      ? detectCurrentOccupationId(currentJobTitle, CATALOGUE.occupations)
+      : PERSONAS[personaId].currentOccupationId;
   const result = analyzeProfile(CATALOGUE, { skills, currentOccupationId, impactInterest, signalDate });
 
   const response: RolesResponse = { ...result, skillMatches: matches };

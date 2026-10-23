@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { CATALOGUE } from "@/lib/catalogue";
-import { lookupRoleAlias, normalizeAliasKey, ROLE_ALIASES } from "@/lib/role-aliases";
+import { detectCurrentOccupationId, lookupRoleAlias, normalizeAliasKey, ROLE_ALIASES } from "@/lib/role-aliases";
 import raw from "@/data/role-aliases.json";
 
 const ids = new Set(CATALOGUE.occupations.map((o) => o.id));
@@ -29,5 +29,23 @@ describe("lookupRoleAlias", () => {
   it("distinguishes null (known, no match) from undefined (not in table)", () => {
     expect(lookupRoleAlias("Peguam")).toBeNull();
     expect(lookupRoleAlias("underwater basket weaver")).toBeUndefined();
+  });
+});
+
+describe("detectCurrentOccupationId", () => {
+  const occupations = [
+    { id: "o038", title: "Administrative assistant" },
+    { id: "o001", title: "Data analyst" },
+  ];
+  it("matches an exact catalogue title, case and punctuation aside", () => {
+    expect(detectCurrentOccupationId("  administrative Assistant. ", occupations)).toBe("o038");
+  });
+  it("falls back to the alias table", () => {
+    expect(detectCurrentOccupationId("Customer Support Agent", occupations)).toBe("o036");
+  });
+  it("returns null for empty or unknown titles", () => {
+    expect(detectCurrentOccupationId(undefined, occupations)).toBeNull();
+    expect(detectCurrentOccupationId("", occupations)).toBeNull();
+    expect(detectCurrentOccupationId("Senior Accounts Assistant", occupations)).toBeNull();
   });
 });

@@ -20,7 +20,7 @@ import {
   type Source,
 } from "@/types/contracts";
 import { SOURCE_NAMES, type Catalogue, type CatalogueOccupation } from "@/lib/catalogue";
-import {
+import { displayFit,
   SCORING_PARAMS,
   compareId,
   NON_RECOMMENDED_CLUSTERS,
@@ -57,14 +57,20 @@ export type RoleStatusTone = "robust" | "shift" | "interest";
 export type RoleBreakdown = {
   /** Essential skills the user has exactly (same ESCO skill). */
   matchedSkills: number;
-  /** Essential skills in the same ESCO skill group as one of the user's: half credit, capped at relatedSkillCap (6) per role — only the 6 most important count. */
+  /** Essential skills in the same ESCO skill group as one of the user's: half credit, capped at relatedSkillCap (10) per role — only the 10 most important count. */
   relatedSkills: number;
+  /** The same related skills by label (ESCO), in essential-skill order: what earned half credit. */
+  relatedSkillLabels: string[];
   essentialSkills: number;
   demand: ScenarioScores;
   exposureGroupEstimate: boolean;
   /** Essential skills with an arXiv signal, and the keywords behind them. */
   trendSkills: { label: string; momentum: number; keywords: string[] }[];
   interestMatch: boolean;
+  /** Raw skill fit (same as role.fit). Drives ranking and the Transition route label. */
+  skillFit: number;
+  /** Displayed Fit: skillFit + INTEREST_FIT_BONUS (max 1) when the role matches the chosen interest, else skillFit. */
+  displayFit: number;
   status: { label: string; tone: RoleStatusTone };
   /** ESCO group id of each gap skill, for "related course" suggestions on the pathway. */
   gapGroups: Record<string, string>;
@@ -146,8 +152,8 @@ export function analyzeProfile(catalogue: Catalogue, input: AnalyzeInput): Analy
    * h_s for every essential skill of one role: the user's level for the
    * exact skill, else related credit for a same-group skill, else 0.
    *
-   * Related credit (half credit) is only given to the relatedSkillCap (6)
-   * related skills with the highest adjusted importance imp_s (the 6 most
+   * Related credit (half credit) is only given to the relatedSkillCap (10)
+   * related skills with the highest adjusted importance imp_s (the 10 most
    * important skills of the role; ties by skillId ascending). Any related
    * skill beyond that falls back to missing. Without a cap, a role with
    * many essential skills and a user with a few broadly-connected skills
@@ -250,7 +256,17 @@ export function analyzeProfile(catalogue: Catalogue, input: AnalyzeInput): Analy
   });
 
   const topByScenario = Object.fromEntries(
-    SCENARIO_IDS.map((scenario) => [scenario, topRoleIdsForScenario(roles, scenario)]),
+    SCENARIO_IDS.map((scenario) => [scenario, topRoleIdsForScenario(
+        roles.map((role) => ({
+          ...role,
+          sdgMatch: sdgInterestMatches(
+            (byId.get(role.occupationId) as CatalogueOccupation).sdg.map((sdg) => ({ target: sdg.target, tier: sdg.tier })),
+            input.impactInterest,
+          ),
+        })),
+        scenario,
+      ),
+    ]),
   ) as Record<ScenarioId, Set<string>>;
 
   const breakdown: Record<string, RoleBreakdown> = {};
@@ -263,10 +279,13 @@ export function analyzeProfile(catalogue: Catalogue, input: AnalyzeInput): Analy
     const levels = levelsByOccupation.get(role.occupationId)!;
     breakdown[role.occupationId] = {
       matchedSkills: occupation.essentialSkillIds.filter((id) => userLevel.has(id)).length,
-      // Capped the same way as fit: at most relatedSkillCap (6) per role.
+      // Capped the same way as fit: at most relatedSkillCap (10) per role.
       relatedSkills: occupation.essentialSkillIds.filter(
         (id) => !userLevel.has(id) && (levels.get(id) ?? 0) > 0,
       ).length,
+      relatedSkillLabels: occupation.essentialSkillIds
+        .filter((id) => !userLevel.has(id) && (levels.get(id) ?? 0) > 0)
+        .map((id) => catalogue.skills[id] ?? id),
       essentialSkills: occupation.essentialSkillIds.length,
       demand: Object.fromEntries(
         SCENARIO_IDS.map((scenario) => [scenario, scenarioDemand(occupation.cluster, scenario)]),
@@ -280,6 +299,8 @@ export function analyzeProfile(catalogue: Catalogue, input: AnalyzeInput): Analy
           keywords: signals[id].keywords,
         })),
       interestMatch,
+      skillFit: role.fit,
+      displayFit: displayFit(role.fit, interestMatch),
       status: statusFor(role, topByScenario, interestMatch, input.impactInterest),
       gapGroups: Object.fromEntries(
         role.gap.flatMap((skill) =>

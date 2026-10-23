@@ -9,6 +9,7 @@ import { motion, useReducedMotion } from "framer-motion";
 import { Drawer, Perforation, SdgChip, SignalLight, Ticket } from "@/components/caldera";
 import { EASE_OUT } from "@/components/motion";
 import { SourcesDisclosure } from "@/components/sources-disclosure";
+import { isStretchRoute } from "@/lib/scoring";
 import { formatFitPercent, missingValue } from "@/lib/display";
 import { useT, type MessageKey } from "@/lib/i18n";
 import { formatMonthlyRange, formatMonthlyRm, hasRealRange, salaryForRole } from "@/lib/salary";
@@ -31,6 +32,9 @@ export function RoleCard({
   chosen,
   onChoose,
   isPrimary,
+  relatedSkills = [],
+  sdgMatch = false,
+  displayFit,
 }: {
   role: RoleResult;
   rank: number;
@@ -40,13 +44,27 @@ export function RoleCard({
   onChoose: (role: RoleResult) => void;
   /** Ticket 01 only: the single Ember CTA on the page. */
   isPrimary: boolean;
+  /** Essential skills that earned half credit from a related skill the user has. */
+  relatedSkills?: readonly string[];
+  /** The role's SDG mapping matches the user's chosen impact interest (ranking bonus applied). */
+  sdgMatch?: boolean;
+  /** Displayed Fit (skill fit + INTEREST_FIT_BONUS when the role matches the SDG choice). Defaults to raw skill fit. */
+  displayFit?: number;
 }) {
   const reduce = useReducedMotion();
   const { t } = useT();
   const [whyOpen, setWhyOpen] = useState(false);
   const [skillsExpanded, setSkillsExpanded] = useState(false);
 
-  const fitPercent = Math.round(role.fit * 100);
+  const shownFit = displayFit ?? role.fit;
+  const fitPercent = Math.round(shownFit * 100);
+  // Transition route stays on raw skill fit, not the interest-blended Fit.
+  const stretch = isStretchRoute(role.fit);
+  const interestPart = shownFit - role.fit;
+  const fitBreakdown =
+    interestPart > 0
+      ? t("results.fitBreakdownInterest", { skill: formatFitPercent(role.fit), interest: formatFitPercent(interestPart) })
+      : t("results.fitBreakdownSkill", { skill: formatFitPercent(role.fit) });
   const tone = scoreBand(role.exposure);
   const topSdg = role.sdg[0];
   const salary = salaryForRole(role.occupationId);
@@ -74,9 +92,17 @@ export function RoleCard({
         </h3>
 
         <div className="mt-5 flex items-baseline gap-2.5">
-          <span className="font-serif text-[56px] leading-none tabular-nums">{formatFitPercent(role.fit)}</span>
-          <span className="font-mono text-[12px] tracking-[0.06em] text-grey uppercase">{t("results.skillFit")}</span>
+          <span className="font-serif text-[56px] leading-none tabular-nums">{formatFitPercent(shownFit)}</span>
+          <span className="font-mono text-[12px] tracking-[0.06em] text-grey uppercase">{t("results.fit")}</span>
         </div>
+        {sdgMatch && (
+          <p className="mt-2 font-mono text-[11px] tracking-[0.04em] text-sage-dark uppercase">{t("results.sdgMatch")}</p>
+        )}
+        {stretch && (
+          <p className="mt-2 font-mono text-[11px] tracking-[0.04em] text-grey uppercase" title={t("results.stretchHint")}>
+            {t("results.stretchRoute")}
+          </p>
+        )}
         <div className="mt-2.5 h-1.5 overflow-hidden rounded-full bg-paper">
           <motion.div
             className="h-full rounded-full bg-ink"
@@ -150,6 +176,9 @@ export function RoleCard({
           <SdgChip className="mb-5 bg-sulfur normal-case">{t("results.robustBadge")}</SdgChip>
         )}
 
+        <p className="font-mono text-[12px] tracking-[0.06em] text-grey uppercase">{t("results.fit")}</p>
+        <p className="mt-2.5 mb-6 text-[15px] leading-relaxed">{fitBreakdown}</p>
+
         <p className="font-mono text-[12px] tracking-[0.06em] text-grey uppercase">{t("results.skillsToBuild")}</p>
         <ul className="mt-2.5 space-y-1.5 text-[15px]">
           {visibleSkills.map((skill) => (
@@ -165,6 +194,19 @@ export function RoleCard({
           >
             {skillsExpanded ? t("roleCard.showLess") : t("roleCard.more", { count: String(extraSkillCount) })}
           </button>
+        )}
+
+        {stretch && <p className="mt-4 text-[14px] leading-relaxed text-grey">{t("results.stretchHint")}</p>}
+
+        {relatedSkills.length > 0 && (
+          <>
+            <p className="mt-6 font-mono text-[12px] tracking-[0.06em] text-grey uppercase">{t("results.relatedSkills")}</p>
+            <ul className="mt-2.5 space-y-1.5 text-[15px]">
+              {relatedSkills.map((label) => (
+                <li key={label}>{label}</li>
+              ))}
+            </ul>
+          </>
         )}
 
         {role.explanation && (

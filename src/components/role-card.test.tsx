@@ -38,7 +38,7 @@ describe("RoleCard", () => {
 
     expect(screen.getByText("Ticket 1 / 3")).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: role.title })).toBeInTheDocument();
-    expect(screen.getByText("skill fit")).toBeInTheDocument();
+    expect(screen.getByText("Fit")).toBeInTheDocument();
     expect(screen.getByText(new RegExp(`^SDG ${role.sdg[0].target}`))).toBeInTheDocument();
     expect(screen.getByRole("button", { name: /Choose this route/ })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Why" })).toBeInTheDocument();
@@ -101,5 +101,27 @@ describe("RoleCard", () => {
 
     expect(screen.getByText("[placeholder]")).toBeInTheDocument();
     expect(screen.queryByText(/MASCO/)).not.toBeInTheDocument();
+  });
+
+  it("shows blended Fit on the face, raw skill match in the Why drawer, Transition route on raw fit", async () => {
+    const user = userEvent.setup();
+    render(
+      <RoleCard
+        role={{ ...role, fit: 0.1 }}
+        rank={1}
+        total={3}
+        targetLabels={result.targetLabels}
+        chosen={false}
+        onChoose={vi.fn()}
+        isPrimary
+        sdgMatch
+        displayFit={0.25}
+      />,
+    );
+    expect(screen.getByText("25%")).toBeInTheDocument();
+    expect(screen.getByText("Transition route")).toBeInTheDocument();
+    expect(screen.getByText("Matches your SDG choice")).toBeInTheDocument();
+    await user.click(screen.getByRole("button", { name: "Why" }));
+    expect(within(screen.getByRole("dialog")).getByText(/^Skill match 10% \+ interest bonus 15%/)).toBeInTheDocument();
   });
 });
