@@ -71,7 +71,7 @@ afterEach(() => {
 describe("PathwayView", () => {
   it("shows one fallback line when Chinese is the only course language", async () => {
     renderPathway(["zh"]);
-    const line = await screen.findAllByText("No Chinese course found for some skills, so English courses are shown.");
+    const line = await screen.findAllByText("No Chinese course found for some skills, so other-language courses are shown.");
     expect(line).toHaveLength(1);
     expect(line[0].closest("article")).toBeNull();
     const pills = screen.getAllByTestId("course-language-pill");

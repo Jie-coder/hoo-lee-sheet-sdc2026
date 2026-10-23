@@ -295,11 +295,9 @@ export function PathwayView({
 
                       {closedSkill && (
                         <p className="mt-2 flex flex-wrap items-center gap-x-2 gap-y-1 text-[14px] leading-snug text-grey">
-                          {closedSkill && (
-                            <span>
-                              {t("pathway.closes")}: <span className="font-bold text-ink">{closedSkill.label}</span>
-                            </span>
-                          )}
+                          <span>
+                            {t("pathway.closes")}: <span className="font-bold text-ink">{closedSkill.label}</span>
+                          </span>
                         </p>
                       )}
                       {expanded && (
