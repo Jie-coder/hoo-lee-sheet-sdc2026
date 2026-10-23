@@ -4,6 +4,9 @@
 import Link from "next/link";
 import { useT } from "@/lib/i18n";
 
+/** The header's logo asset, reused unchanged in the footer. */
+export const LOGO_SRC = "/brand/laluan-logo-ember.svg";
+
 export const FOOTER_LINKS = [
   { href: "/about", key: "footer.about" },
   { href: "/data-sources", key: "footer.sources" },
@@ -18,9 +21,9 @@ export function SiteFooter() {
     <footer className="w-full bg-obsidian text-[#F4F1EA]">
       <div className="mx-auto grid max-w-[1440px] grid-cols-1 gap-8 px-4 py-16 sm:px-6 md:grid-cols-[1.2fr_1fr_1.4fr] md:gap-12 md:px-8">
         <div>
-          {/* Official wordmark. next/image refuses SVG without extra config. */}
+          {/* Same Ember logo as the header, original colours. next/image refuses SVG without extra config. */}
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/brand/laluan-logo.svg" alt="Laluan" width={125} height={28} className="h-7 w-[125px] brightness-0 invert" />
+          <img src={LOGO_SRC} alt={t("header.logoAlt")} width={125} height={28} className="h-7 w-[125px]" />
           <p className="mt-3.5 text-[14px] text-[#F4F1EA]/70">{t("footer.tagline")}</p>
         </div>
 
