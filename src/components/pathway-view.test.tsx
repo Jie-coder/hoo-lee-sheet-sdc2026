@@ -69,17 +69,26 @@ afterEach(() => {
 });
 
 describe("PathwayView", () => {
-  it("notes a missing Chinese course beside the English fallback when Chinese is preferred", async () => {
+  it("shows one fallback line when Chinese is the only course language", async () => {
     renderPathway(["zh"]);
-    const notes = await screen.findAllByText("No Chinese course found");
-    expect(notes.length).toBeGreaterThan(0);
-    expect(notes[0].closest("article")).not.toBeNull();
+    const line = await screen.findAllByText("No Chinese course found for some skills, so English courses are shown.");
+    expect(line).toHaveLength(1);
+    expect(line[0].closest("article")).toBeNull();
+    const pills = screen.getAllByTestId("course-language-pill");
+    expect(pills.map((pill) => pill.textContent)).toContain("EN");
+  });
+
+  it("shows no fallback line when English is also selected, but still labels each course", async () => {
+    renderPathway(["en", "zh"]);
+    await screen.findAllByRole("heading", { level: 3 });
+    expect(screen.queryByTestId("no-chinese-course")).toBeNull();
+    expect(screen.getAllByTestId("course-language-pill").every((pill) => /^(ZH|BM|EN)$/.test(pill.textContent ?? ""))).toBe(true);
   });
 
   it("shows no Chinese-course note for an English-only preference", async () => {
     renderPathway(["en"]);
     await screen.findAllByRole("heading", { level: 3 });
-    expect(screen.queryByText("No Chinese course found")).toBeNull();
+    expect(screen.queryByTestId("no-chinese-course")).toBeNull();
   });
 
   it("opens on AI untuk Rakyat (no hours listed) and only cites catalogue items", async () => {
@@ -100,5 +109,26 @@ describe("PathwayView", () => {
 
     expect(await screen.findByText("That role isn’t in your results.")).toBeInTheDocument();
     expect(screen.getByRole("button", { name: /Back to roles/ })).toBeInTheDocument();
+  });
+});
+
+describe("PathwayView CJK titles", () => {
+  it("shows a Chinese course title as stored, with a ZH pill, in the card and the print sheet", async () => {
+    const zhCourse = CATALOGUE.courses.find((course) => course.languages.includes("zh") && /[\u4e00-\u9fff]/.test(course.title));
+    expect(zhCourse).toBeDefined();
+    const courses = CATALOGUE.courses.map((course) =>
+      course.id === zhCourse!.id ? { ...course, skillIds: [...new Set([...course.skillIds, ...role.gap.map((g) => g.skillId)])], costType: "free" as const, aiContent: "ai" as const, hours: 1 } : course,
+    );
+    vi.stubGlobal("fetch", vi.fn(async () => new Response(JSON.stringify({ ...result, skillMatches: resolved.matches }), { status: 200 })));
+    seedFlowState(["zh"]);
+    render(
+      <FlowProvider>
+        <PathwayView courses={courses} programmes={CATALOGUE.programmes} courseSkillGroups={CATALOGUE.skillGroups} />
+      </FlowProvider>,
+    );
+    const heading = await screen.findByRole("heading", { name: new RegExp(zhCourse!.title.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")) });
+    expect(heading).toHaveTextContent(zhCourse!.title);
+    expect(within(heading.parentElement!).getByTestId("course-language-pill")).toHaveTextContent("ZH");
+    expect(document.querySelector(".print-only")?.textContent).toContain(zhCourse!.title);
   });
 });

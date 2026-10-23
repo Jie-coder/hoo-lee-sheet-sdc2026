@@ -12,7 +12,7 @@ import { EASE_OUT } from "@/components/motion";
 import { useFlow } from "@/context/flow-context";
 import { formatDayMonthYear, missingValue } from "@/lib/display";
 import { useT, type MessageKey } from "@/lib/i18n";
-import { buildPathwayPlan, missingChineseCourse } from "@/lib/pathway";
+import { buildPathwayPlan, courseLanguagePill, missingChineseCourse } from "@/lib/pathway";
 import { useRoles } from "@/lib/use-roles";
 import { cn } from "@/lib/utils";
 import type { Course, CostType, PlanStep, Programme } from "@/types/contracts";
@@ -125,6 +125,22 @@ export function PathwayView({
     return programmes.find((programme) => programme.id === step.itemId) ?? null;
   }
 
+  // One note under THE LINE when Chinese is the only study language and some
+  // step had to fall back to a non-Chinese course.
+  const englishFallbackStepIds = new Set(
+    plan.steps
+      .filter((step) => {
+        if (step.kind !== "course") return false;
+        const item = resolveItem(step);
+        return (
+          !!item &&
+          "languages" in item &&
+          !item.languages.includes("zh") &&
+          missingChineseCourse(step.closesSkillIds, courses, studyLanguages)
+        );
+      })
+      .map((step) => step.itemId),
+  );
   const totalWeeks = plan.steps.reduce((max, step) => Math.max(max, step.weekEnd), 0);
   const closedSkillIds = new Set(plan.steps.flatMap((step) => step.closesSkillIds));
   const freeCount = plan.steps.filter((step) => resolveItem(step)?.costType === "free").length;
@@ -204,6 +220,11 @@ export function PathwayView({
           {/* The line */}
           <section className="order-2 md:order-1">
             <h2 className="font-serif text-[clamp(40px,8vw,64px)] leading-[0.95] uppercase">{t("pathway.theLine")}</h2>
+            {englishFallbackStepIds.size > 0 && (
+              <p data-testid="no-chinese-course" className="mt-3 font-mono text-[12px] tracking-[0.02em] text-grey">
+                {t("pathway.noChineseCourse")}
+              </p>
+            )}
             <ol className="relative mt-8 pl-6 sm:pl-12">
               <span aria-hidden className="absolute top-8 bottom-8 left-[14px] w-1 rounded bg-ink" />
               {visibleSteps.map((step) => {
@@ -219,8 +240,7 @@ export function PathwayView({
                     : t("pathway.weeksRange", { start: String(step.weekStart), end: String(step.weekEnd) });
                 const displayHours = step.merged?.hours ?? ("hours" in item ? item.hours : undefined);
                 const closedSkill = role.gap.find((skill) => step.closesSkillIds.includes(skill.skillId));
-                const noChinese =
-                  step.kind === "course" && missingChineseCourse(step.closesSkillIds, courses, studyLanguages);
+                const languagePill = "languages" in item ? courseLanguagePill(item.languages, studyLanguages) : null;
                 const sdgLink = step.sdgTarget ? role.sdg.find((link) => link.target === step.sdgTarget) : undefined;
                 return (
                   <li key={step.itemId} className="relative grid grid-cols-[20px_1fr] gap-x-3 pb-4 last:pb-0 sm:grid-cols-[32px_1fr] sm:gap-x-5">
@@ -241,6 +261,7 @@ export function PathwayView({
                         </span>
                       </div>
                       <div className="mt-3 flex flex-col items-start gap-2 sm:flex-row sm:items-end sm:justify-between sm:gap-4">
+                        <div className="flex min-w-0 flex-wrap items-center gap-x-2 gap-y-1">
                         <h3 className="min-w-0 font-sans text-[22px] leading-tight font-bold">
                           <button
                             type="button"
@@ -251,6 +272,16 @@ export function PathwayView({
                             {title}
                           </button>
                         </h3>
+                          {languagePill && (
+                            <span
+                              data-testid="course-language-pill"
+                              lang="en"
+                              className="inline-block shrink-0 rounded-full border border-ink/30 px-2 py-0.5 align-middle font-mono text-[10px] font-normal tracking-[0.04em] text-grey uppercase"
+                            >
+                              {languagePill}
+                            </span>
+                          )}
+                        </div>
                         <a
                           href={item.url}
                           target="_blank"
@@ -262,19 +293,11 @@ export function PathwayView({
                         </a>
                       </div>
 
-                      {(closedSkill || noChinese) && (
+                      {closedSkill && (
                         <p className="mt-2 flex flex-wrap items-center gap-x-2 gap-y-1 text-[14px] leading-snug text-grey">
                           {closedSkill && (
                             <span>
                               {t("pathway.closes")}: <span className="font-bold text-ink">{closedSkill.label}</span>
-                            </span>
-                          )}
-                          {noChinese && (
-                            <span
-                              data-testid="no-chinese-course"
-                              className="rounded-full border border-ink/30 px-2.5 py-0.5 font-mono text-[11px] tracking-[0.04em] text-grey uppercase"
-                            >
-                              {t("pathway.noChineseCourse")}
                             </span>
                           )}
                         </p>

@@ -98,7 +98,7 @@ export function pickCoursesForSkill(
 }
 
 /**
- * True when the learner asked for Chinese-language courses but no course in the
+ * True when Chinese is the learner's only study language but no course in the
  * catalogue closes any of `skillIds` in Chinese, so the step falls back to
  * courses in another language and should say so.
  */
@@ -107,10 +107,23 @@ export function missingChineseCourse(
   courses: readonly Course[],
   languages: readonly LanguageCode[],
 ): boolean {
-  if (!languages.includes("zh") || skillIds.length === 0) return false;
+  // Only when Chinese is the sole study language; with English also picked the fallback is expected.
+  if (languages.length !== 1 || languages[0] !== "zh" || skillIds.length === 0) return false;
   return !courses.some(
     (course) => course.languages.includes("zh") && course.skillIds.some((skillId) => skillIds.includes(skillId)),
   );
+}
+
+/**
+ * Which language pill a course card shows: the first of the learner's study
+ * languages the course is offered in, else the course's first listed language.
+ */
+export function courseLanguagePill(
+  courseLanguages: readonly LanguageCode[],
+  studyLanguages: readonly LanguageCode[],
+): "ZH" | "BM" | "EN" {
+  const code = studyLanguages.find((language) => courseLanguages.includes(language)) ?? courseLanguages[0] ?? "en";
+  return code === "zh" ? "ZH" : code === "ms" ? "BM" : "EN";
 }
 
 export type EligibilityStatus = "pass" | "check" | "fail";
