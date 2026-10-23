@@ -317,7 +317,7 @@ export const EN = {
   "interview.q2.fallbackTitle": "Which of these takes most of your week?",
   "interview.q2.fallbackSubtitle": "Pick your main one, then say how much time the others take.",
   "interview.q2.why":
-    "The time you spend on each task weights your AI exposure and augmentation scores.",
+    "Describing your tasks helps Laluan match you to the right role; your exposure score comes from that role's published ILO figure.",
   "interview.q3.title": "Which tools do you use, and how much have you used AI tools like ChatGPT?",
   "interview.q3.why":
     "Shows your starting point so the plan doesn't repeat what you already know.",
@@ -517,14 +517,14 @@ export const EN = {
   "exposureIntro.seeResults": "See my results →",
   "exposureIntro.lede": "Three steps, no black box. Laluan shows which parts of your work AI is likely to change, and which stay human.",
   "exposureIntro.step1.label": "01 · Your role",
-  "exposureIntro.step1.title": "Your Role, Broken Into Tasks",
-  "exposureIntro.step1.body": "Your CV and interview answers are split into the everyday tasks your role actually involves.",
+  "exposureIntro.step1.title": "Your Job, Matched to an Occupation",
+  "exposureIntro.step1.body": "Laluan matches you to one of its 40 roles and that role's ISCO-08 occupation code.",
   "exposureIntro.step2.label": "02 · The check",
-  "exposureIntro.step2.title": "Each Task, Checked Against AI",
-  "exposureIntro.step2.body": "Each task is compared with public labour data on what AI can already do, and marked as likely to shift or likely to stay human.",
+  "exposureIntro.step2.title": "How the ILO Scored It",
+  "exposureIntro.step2.body": "The ILO scored how much AI could do or help with each task in an occupation, then averaged it.",
   "exposureIntro.step3.label": "03 · The reading",
   "exposureIntro.step3.title": "Your Exposure Level",
-  "exposureIntro.step3.body": "Laluan scores how much of your current role AI is likely to change, task by task, using public labour data. All scores are estimates.",
+  "exposureIntro.step3.body": "The score describes your whole occupation, not you.",
   "exposureIntro.measuredCta": "How Exposure Is Measured",
   "exposure.linkLabel": "What is AI exposure?",
   "exposure.sourceIlo": "ILO GenAI Exposure 2025",
@@ -619,6 +619,8 @@ export const EN = {
   "profile.moreSkills": "+{count} more",
   "exposureIntro.measuredExpandTitle": "How exposure is measured",
   "exposureIntro.dataSourcesLink": "See all data sources",
+  "exposureIntro.notJobLoss": "Most exposed jobs change rather than disappear.",
+  "exposureIntro.sourceLink": "ILO Working Paper 140 (2025)",
 } as const;
 
 export type MessageKey = keyof typeof EN;
@@ -941,7 +943,7 @@ export const MS: Record<MessageKey, string> = {
   "interview.q2.fallbackTitle": "Yang mana antara ini mengambil sebahagian besar minggu anda?",
   "interview.q2.fallbackSubtitle": "Pilih yang utama, kemudian nyatakan berapa banyak masa diambil oleh yang lain.",
   "interview.q2.why":
-    "Masa yang anda luangkan untuk setiap tugasan memberi pemberat kepada skor pendedahan dan pengukuhan AI anda.",
+    "Menerangkan tugas anda membantu Laluan memadankan anda dengan peranan yang betul; skor pendedahan anda datang daripada angka ILO yang diterbitkan bagi peranan itu.",
   "interview.q3.title":
     "Alat manakah yang anda gunakan, dan sejauh mana anda telah menggunakan alat AI seperti ChatGPT?",
   "interview.q3.why":
@@ -1147,14 +1149,14 @@ export const MS: Record<MessageKey, string> = {
   "exposureIntro.seeResults": "Lihat keputusan saya →",
   "exposureIntro.lede": "Tiga langkah, tiada kotak hitam. Laluan menunjukkan bahagian kerja anda yang mungkin diubah oleh AI, dan bahagian yang kekal manusia.",
   "exposureIntro.step1.label": "01 · Peranan anda",
-  "exposureIntro.step1.title": "Peranan Anda, Dipecahkan Kepada Tugas",
-  "exposureIntro.step1.body": "CV dan jawapan temu bual anda dipecahkan kepada tugas harian yang benar-benar terlibat dalam peranan anda.",
+  "exposureIntro.step1.title": "Kerja Anda, Dipadankan dengan Satu Pekerjaan",
+  "exposureIntro.step1.body": "Laluan memadankan anda dengan salah satu daripada 40 peranan serta kod pekerjaan ISCO-08 bagi peranan itu.",
   "exposureIntro.step2.label": "02 · Semakan",
-  "exposureIntro.step2.title": "Setiap Tugas, Disemak Dengan AI",
-  "exposureIntro.step2.body": "Setiap tugas dibandingkan dengan data buruh awam tentang perkara yang sudah boleh dilakukan oleh AI, dan ditanda sama ada mungkin berubah atau mungkin kekal manusia.",
+  "exposureIntro.step2.title": "Cara ILO Menilainya",
+  "exposureIntro.step2.body": "ILO menilai sejauh mana AI boleh melakukan atau membantu setiap tugas dalam sesuatu pekerjaan, kemudian mengambil puratanya.",
   "exposureIntro.step3.label": "03 · Bacaan",
   "exposureIntro.step3.title": "Tahap Pendedahan Anda",
-  "exposureIntro.step3.body": "Laluan menilai sejauh mana peranan semasa anda mungkin diubah oleh AI, tugas demi tugas, menggunakan data buruh awam. Semua skor adalah anggaran.",
+  "exposureIntro.step3.body": "Skor itu menerangkan keseluruhan pekerjaan anda, bukan diri anda.",
   "exposureIntro.measuredCta": "Cara Pendedahan Diukur",
   "exposure.linkLabel": "Apakah pendedahan AI?",
   "exposure.sourceIlo": "ILO GenAI Exposure 2025",
@@ -1249,6 +1251,8 @@ export const MS: Record<MessageKey, string> = {
   "profile.moreSkills": "+{count} lagi",
   "exposureIntro.measuredExpandTitle": "Cara pendedahan diukur",
   "exposureIntro.dataSourcesLink": "Lihat semua sumber data",
+  "exposureIntro.notJobLoss": "Kebanyakan pekerjaan yang terdedah berubah, bukannya hilang.",
+  "exposureIntro.sourceLink": "Kertas Kerja ILO 140 (2025)",
 };
 
 export function translate(locale: SiteLocale, key: MessageKey, vars?: Record<string, string>): string {
