@@ -188,8 +188,20 @@
  "database administrator": {
   "roleId": "o015"
  },
+ "dev ops engineer": {
+  "roleId": "o001"
+ },
+ "devops": {
+  "roleId": "o001"
+ },
  "devops engineer": {
-  "roleId": null
+  "roleId": "o001"
+ },
+ "devops specialist": {
+  "roleId": "o001"
+ },
+ "devsecops engineer": {
+  "roleId": "o001"
  },
  "digital marketing executive": {
   "roleId": "o008"
@@ -391,6 +403,9 @@
  },
  "jurutera alam sekitar kanan": {
   "roleId": "o019"
+ },
+ "jurutera devops": {
+  "roleId": "o001"
  },
  "jurutera pangkalan data": {
   "roleId": "o015"
@@ -775,6 +790,9 @@
  },
  "senior accountant": {
   "roleId": null
+ },
+ "senior devops engineer": {
+  "roleId": "o001"
  },
  "senior financial analyst": {
   "roleId": "o013"
