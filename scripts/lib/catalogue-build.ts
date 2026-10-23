@@ -17,7 +17,7 @@ import { SOURCE_NAMES } from "../../src/lib/catalogue";
 import { skillMomentum } from "../../src/lib/scoring";
 import { deriveSkills, runFile } from "../import-data";
 import { arxivCountUrl, arxivWindows, hasEnoughPapers } from "./arxiv";
-import { escoUriToId, isEscoUri } from "./cells";
+import { escoUriToId, isCustomSkillId, isEscoUri } from "./cells";
 import { parseCsv } from "./csv";
 import { mapKeywordRow } from "./mappers";
 import type { FileKey } from "./files";
@@ -46,6 +46,12 @@ const PersonaSkillRowSchema = z.strictObject({
   esco_uri: z.string().refine((uri) => isEscoUri(uri) && uri.includes("/esco/skill/"), "not an ESCO skill URI"),
   esco_label: z.string().min(1),
   note: z.string(),
+});
+
+const CustomSkillRowSchema = z.strictObject({
+  id: z.string().refine(isCustomSkillId, 'not a Laluan custom skill id ("laluan:<slug>")'),
+  label_en: z.string().min(1),
+  description: z.string().refine((d) => /not an ESCO concept/i.test(d), 'description must say "not an ESCO concept"'),
 });
 
 /** Exposure notes that say the ILO figure is for a wider occupation group. */
@@ -167,6 +173,21 @@ export function buildCatalogue(dir: string): Catalogue {
     ])
   );
 
+  // Laluan custom skills (data/custom_skills.csv): AI-era skills ESCO lacks.
+  // Their label comes from the file, never from ESCO, and every "laluan:" id a
+  // course uses must be defined there.
+  const customSkills: Catalogue["customSkills"] = {};
+  for (const row of parseRows(dir, "custom_skills.csv", CustomSkillRowSchema)) {
+    if (customSkills[row.id]) throw new Error(`custom_skills.csv lists ${row.id} twice`);
+    customSkills[row.id] = { label: row.label_en, description: row.description };
+    skills[row.id] = row.label_en;
+  }
+  for (const id of Object.keys(skills)) {
+    if (isCustomSkillId(id) && !customSkills[id]) {
+      throw new Error(`${id} is used in the data but not defined in custom_skills.csv`);
+    }
+  }
+
   const today = signalSnapshot(dir, "keywords.csv");
   if (!today) throw new Error("keywords.csv has no valid rows, so there is no trend signal");
   const { signals, asOf: signalsAsOf } = today;
@@ -243,6 +264,7 @@ export function buildCatalogue(dir: string): Catalogue {
     signalsAsOf,
     occupations: occupationList,
     skills,
+    customSkills,
     skillGroups,
     groupLabels,
     signals,

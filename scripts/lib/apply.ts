@@ -23,7 +23,8 @@ import { demandByScenario } from "./scenario-demand";
 import type { Embedder } from "./clients";
 import { defaultLogger, EmbeddingQuotaExceededError, type Logger } from "./embedding-quota";
 
-export type SkillRecord = { id: string; escoUri: string; labelEn: string };
+/** escoUri is null for a Laluan custom skill ("laluan:" id), which is not an ESCO concept. */
+export type SkillRecord = { id: string; escoUri: string | null; labelEn: string };
 
 export type ApplyInput = {
   courses: Course[];

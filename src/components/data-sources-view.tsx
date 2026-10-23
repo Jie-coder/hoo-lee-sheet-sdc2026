@@ -15,6 +15,7 @@ import { formatDayMonthYear, missingValue } from "@/lib/display";
 import { useT } from "@/lib/i18n";
 import type { MessageKey } from "@/lib/i18n-messages";
 import type { IsoDate } from "@/types/contracts";
+import { CATALOGUE } from "@/lib/catalogue";
 
 export type SourceKey =
   | "ilo"
@@ -121,6 +122,25 @@ export function DataSourcesView({ dates }: { dates: SourceDates }) {
         <Link href="/exposure" className="mt-6 inline-block font-mono text-[12px] tracking-[0.06em] uppercase hover:underline">
           {t("aboutPage.exposureLink")} →
         </Link>
+      </section>
+
+      {/* Custom skills are Laluan's own, not ESCO concepts: no link, marked custom. */}
+      <section className="mt-4 rounded-[40px] bg-card p-8 md:p-12">
+        <h2 className="font-serif text-[clamp(28px,4vw,44px)] leading-[0.9] uppercase">{t("sourcesPage.customTitle")}</h2>
+        <p className="mt-4 max-w-[680px] text-[16px] leading-relaxed text-grey">{t("sourcesPage.customLede")}</p>
+        <ul className="mt-6 grid grid-cols-1 gap-x-8 gap-y-5 md:grid-cols-2">
+          {Object.entries(CATALOGUE.customSkills).map(([id, skill]) => (
+            <li key={id} className="min-w-0">
+              <span className="font-bold first-letter:uppercase">{skill.label}</span>{" "}
+              <span className="ml-1 rounded-full bg-paper px-2.5 py-0.5 font-mono text-[11px] tracking-[0.04em] uppercase">
+                {t("sourcesPage.customBadge")}
+              </span>
+              <p className="mt-1 text-[13px] leading-relaxed break-words text-grey">
+                <code className="font-mono">{id}</code>: {skill.description}
+              </p>
+            </li>
+          ))}
+        </ul>
       </section>
 
       <SourceRow className="mt-10" />

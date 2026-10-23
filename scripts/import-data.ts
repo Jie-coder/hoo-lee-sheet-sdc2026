@@ -7,6 +7,7 @@ import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { pathToFileURL } from "node:url";
 import { parseCsv } from "./lib/csv";
+import { isCustomSkillId } from "./lib/cells";
 import { diffHeaders, FILE_SPECS, resolveOnly, type FileKey } from "./lib/files";
 import {
   mapCourseRow,
@@ -515,8 +516,10 @@ export function deriveSkills(skillPairs: { skills: string[]; skillUris: string[]
     const count = Math.min(skills.length, skillUris.length);
     for (let i = 0; i < count; i += 1) {
       const uri = skillUris[i];
-      const id = uri.split("/").pop()?.toLowerCase() ?? uri;
-      if (!byId.has(id)) byId.set(id, { id, escoUri: uri, labelEn: skills[i] });
+      // A Laluan custom skill keeps its "laluan:" id and has no ESCO URI.
+      const custom = isCustomSkillId(uri);
+      const id = custom ? uri.trim() : (uri.split("/").pop()?.toLowerCase() ?? uri);
+      if (!byId.has(id)) byId.set(id, { id, escoUri: custom ? null : uri, labelEn: skills[i] });
     }
   }
   return Array.from(byId.values());

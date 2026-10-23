@@ -83,8 +83,10 @@ export type Catalogue = {
   /** Latest checked_on date in keywords.csv: the date the trend signal describes. */
   signalsAsOf: IsoDate;
   occupations: CatalogueOccupation[];
-  /** ESCO skill id -> English label. */
+  /** Skill id -> English label. Mostly ESCO ids; "laluan:" ids are custom skills (see customSkills). */
   skills: Record<string, string>;
+  /** Laluan custom skills (data/custom_skills.csv), keyed by their "laluan:" id. Not ESCO concepts. */
+  customSkills: Record<string, { label: string; description: string }>;
   /** ESCO skill id -> its group id in ESCO's skills hierarchy (data/skill_groups.csv). */
   skillGroups: Record<string, string>;
   /** ESCO group id -> label, e.g. "managing, gathering and storing digital data". */

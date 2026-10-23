@@ -448,7 +448,7 @@ export const ProgrammeEligibilitySchema = z
 export type ProgrammeEligibility = z.infer<typeof ProgrammeEligibilitySchema>;
 
 /**
- * A curated course. skillIds are ESCO ids. costType uses the shared cost union.
+ * A curated course. skillIds are ESCO ids, or Laluan custom "laluan:" ids (not ESCO). costType uses the shared cost union.
  * `languages` lists every language the course is offered in (at least one).
  * `mode` is how it is delivered: online, physical, or hybrid.
  */
