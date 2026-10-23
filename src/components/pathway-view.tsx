@@ -2,7 +2,7 @@
 // built from the curated courses and programmes in data/*.csv.
 "use client";
 
-import { useEffect, useMemo, useRef, type ReactNode } from "react";
+import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { motion, useReducedMotion, useScroll, useSpring } from "framer-motion";
 import {
@@ -36,15 +36,7 @@ import { useT, type MessageKey } from "@/lib/i18n";
 import { buildPathwayPlan, programmeEligibilityStatus } from "@/lib/pathway";
 import { useRoles } from "@/lib/use-roles";
 import { cn } from "@/lib/utils";
-import type { Course, CostType, CourseAiContent, PlanStep, Programme } from "@/types/contracts";
-
-/** Course-card badge for ai_content. "none" shows nothing, and this never
- * applies to the AI untuk Rakyat programme step (programmes have no
- * aiContent field; only step.kind === "course" items are checked below). */
-const AI_CONTENT_BADGE_KEY: Partial<Record<CourseAiContent, MessageKey>> = {
-  ai: "pathway.aiContent.ai",
-  digital: "pathway.aiContent.digital",
-};
+import type { Course, CostType, PlanStep, Programme } from "@/types/contracts";
 
 const COST_LABEL_KEY: Record<CostType, MessageKey> = {
   free: "pathway.cost.free",
@@ -214,12 +206,12 @@ export function PathwayView({
               {t("pathway.routeTitle", { weeks: String(totalWeeks), title: role.title })}
             </h1>
           </div>
-          <div className="flex shrink-0 items-center gap-2">
-            <button type="button" onClick={() => router.push("/results")} className="btn-secondary">
+          <div className="flex shrink-0 flex-col gap-2 sm:flex-row sm:items-center">
+            <button type="button" onClick={() => router.push("/results")} className="btn-secondary justify-center">
               <ArrowLeft className="size-4" strokeWidth={1.6} />
               {t("pathway.backToRoles")}
             </button>
-            <button type="button" onClick={handleDownload} className="btn-primary">
+            <button type="button" onClick={handleDownload} className="btn-primary justify-center">
               <Download className="size-4" strokeWidth={1.6} />
               {t("pathway.downloadPdf")}
             </button>
@@ -263,7 +255,7 @@ export function PathwayView({
                 <span className="mt-2 block">{t("pathway.costTypesHelp")}</span>
               </InfoPopover>
             </dt>
-            <dd className={cn("mt-1 font-serif text-[32px] leading-none font-medium tracking-tight", mostlyFree && "text-sage")}>
+            <dd className={cn("mt-1 font-serif text-[32px] leading-none font-medium tracking-tight", mostlyFree && "text-sage-dark")}>
               {mostlyFree ? t("pathway.mostlyFree") : t("pathway.mixedCost")}
             </dd>
           </div>
@@ -311,8 +303,6 @@ export function PathwayView({
                       : t("pathway.weeksRange", { start: String(step.weekStart), end: String(step.weekEnd) });
                   const eligibility = step.kind === "program" ? programmeEligibilityStatus(item as Programme, interviewAnswers) : null;
                   const CostIcon = COST_ICON[item.costType];
-                  const aiContentBadgeKey =
-                    step.kind === "course" ? AI_CONTENT_BADGE_KEY[(item as Course).aiContent] : undefined;
                   const displayHours = step.merged?.hours ?? ("hours" in item ? item.hours : undefined);
                   const displayLanguages = step.merged?.languages ?? ("languages" in item ? item.languages : undefined);
                   const displayCertificate = step.merged?.certificate ?? ("certificate" in item ? item.certificate : undefined);
@@ -346,9 +336,6 @@ export function PathwayView({
                               <CostIcon className="size-3" strokeWidth={1.6} />
                               {t(COST_LABEL_KEY[item.costType])}
                             </span>
-                            {aiContentBadgeKey && (
-                              <span className="tag font-sans text-[11px] font-medium text-ink">{t(aiContentBadgeKey)}</span>
-                            )}
                             <span className="flex items-center gap-1 text-grey">
                               <Clock3 className="size-3.5" strokeWidth={1.6} />
                               {displayHours != null ? (
@@ -359,11 +346,20 @@ export function PathwayView({
                             </span>
                             {closedSkill && (
                               <span className="flex min-w-0 items-center gap-1.5">
-                                <Target className="size-3.5 shrink-0 text-sage" strokeWidth={1.6} />
+                                <Target className="size-3.5 shrink-0 text-sage-dark" strokeWidth={1.6} />
                                 <span className="text-grey">{t("pathway.closes")}</span>{" "}
                                 <span className="font-medium">{closedSkill.label}</span>
                               </span>
                             )}
+                            <a
+                              href={item.url}
+                              target="_blank"
+                              rel="noreferrer"
+                              className="ml-auto flex items-center gap-1 text-[12px] text-grey underline underline-offset-4 hover:text-ink"
+                            >
+                              {step.kind === "course" ? t("pathway.viewCourse") : t("pathway.openSource")}
+                              <ArrowUpRight className="size-3" strokeWidth={1.6} />
+                            </a>
                             {eligibility === "check" && (
                               <span className="inline-flex items-center gap-1 rounded-full border border-ink/60 px-2 py-0.5 text-[11px] font-medium text-ink">
                                 <CircleHelp className="size-3" strokeWidth={1.6} />
@@ -424,17 +420,6 @@ export function PathwayView({
                               />
                             </div>
                           </Disclosure>
-                          <div className="mt-3 flex justify-end">
-                            <a
-                              href={item.url}
-                              target="_blank"
-                              rel="noreferrer"
-                              className="flex items-center gap-1 text-[12px] text-grey underline underline-offset-4 hover:text-ink"
-                            >
-                              {step.kind === "course" ? t("pathway.viewCourse") : t("pathway.openSource")}
-                              <ArrowUpRight className="size-3" strokeWidth={1.6} />
-                            </a>
-                          </div>
                         </article>
                       </Reveal>
                     </li>
@@ -463,7 +448,7 @@ export function PathwayView({
                       <li key={skill.skillId} className="flex items-center justify-between gap-2">
                         <span className="flex items-center gap-2">
                           {stepIndex >= 0 ? (
-                            <CircleCheck className="size-4 shrink-0 text-sage" strokeWidth={1.6} />
+                            <CircleCheck className="size-4 shrink-0 text-sage-dark" strokeWidth={1.6} />
                           ) : (
                             <CircleSlash className="size-4 shrink-0 text-grey/60" strokeWidth={1.6} />
                           )}
@@ -523,16 +508,30 @@ function RouteTimeline({ children }: { children: ReactNode }) {
   const listRef = useRef<HTMLOListElement>(null);
   const { scrollYProgress } = useScroll({ target: listRef, offset: ["start 0.75", "end 0.75"] });
   const lineProgress = useSpring(scrollYProgress, { stiffness: 120, damping: 30, restDelta: 0.001 });
+  // End the line at the last station (its centre sits 36px below the top of its row).
+  const [lineBottom, setLineBottom] = useState(16);
+  useEffect(() => {
+    const list = listRef.current;
+    if (!list) return;
+    const measure = () => {
+      const last = list.lastElementChild as HTMLElement | null;
+      setLineBottom(last ? Math.max(0, last.offsetHeight - 36) : 16);
+    };
+    measure();
+    const observer = new ResizeObserver(measure);
+    observer.observe(list);
+    return () => observer.disconnect();
+  }, []);
 
   return (
     <div className="relative">
-      <span aria-hidden className="absolute top-4 bottom-4 left-[15px] w-px bg-line" />
+      <span aria-hidden className="absolute top-9 left-[15px] w-px bg-line" style={{ bottom: lineBottom }} />
       <motion.span
         aria-hidden
-        className="absolute top-4 bottom-4 left-[15px] w-px origin-top bg-sage"
-        style={{ scaleY: reduce ? 1 : lineProgress }}
+        className="absolute top-9 left-[15px] w-px origin-top bg-sage"
+        style={{ bottom: lineBottom, scaleY: reduce ? 1 : lineProgress }}
       />
-      <ol ref={listRef} className="space-y-3">
+      <ol ref={listRef} className="space-y-6">
         {children}
       </ol>
     </div>

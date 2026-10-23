@@ -86,7 +86,6 @@ export function RoleCard({
       transition={reduceMotion ? { duration: 0 } : { layout: { type: "spring", stiffness: 420, damping: 36 }, duration: 0.55, delay: (rank - 1) * 0.08, ease: EASE_OUT }}
       className={cn(
         "panel flex h-full flex-col p-6 transition-[border-color,box-shadow] duration-300",
-        role.robust ? "border-sage/60 shadow-[0_0_0_1px_var(--color-sage-tint)]" : "",
         chosen && "border-ink shadow-[0_0_0_1px_var(--color-ink)]",
       )}
     >
@@ -94,7 +93,7 @@ export function RoleCard({
         <span
           className={cn(
             "inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[12px]",
-            status.tone === "robust" ? "bg-sage-soft font-medium text-sage-dark" : "bg-alt text-grey",
+            status.tone === "robust" ? "bg-sulfur font-medium text-ink" : "bg-alt text-grey",
           )}
         >
           <StatusIcon className="size-3.5" strokeWidth={1.6} />
@@ -146,6 +145,7 @@ export function RoleCard({
             ))}
       </div>
 
+      <div className="hidden sm:block">
       <p className="mt-5 text-[12px] text-grey">{t("roleCard.skillsToBuild")}</p>
       <ul className="mt-1 text-[14px]">
         {visibleSkills.map((skill) => {
@@ -184,9 +184,24 @@ export function RoleCard({
         </div>
       )}
 
+      </div>
+
       <div className="mt-5">
         <Disclosure summary={<span className="text-[13px] font-medium">{t("roleCard.details")}</span>}>
           <div className="mt-3 space-y-4 text-[13px]">
+            <div className="sm:hidden">
+              <p className="mb-1 text-[12px] text-grey">{t("roleCard.skillsToBuild")}</p>
+              <ul>
+                {[...visibleSkills, ...extraSkills].map((skill) => (
+                  <li key={skill.skillId} className="flex items-center justify-between gap-3 py-1">
+                    <span>{skill.label}</span>
+                    {skillTarget(skill.skillId) && (
+                      <span className="text-[11px] text-grey tabular-nums">{skillTarget(skill.skillId)?.target}</span>
+                    )}
+                  </li>
+                ))}
+              </ul>
+            </div>
             <div>
               <p className="mb-1 text-[12px] text-grey">{t("roleCard.whyThisRole")}</p>
               <p className="leading-relaxed">
@@ -257,7 +272,7 @@ export function RoleCard({
             <p className="text-[13px] text-grey">{t("roleCard.salaryUnavailable")}</p>
           )}
         </div>
-        <button type="button" aria-pressed={chosen} onClick={() => onChoose(role)} className="btn-primary w-full">
+        <button type="button" aria-pressed={chosen} onClick={() => onChoose(role)} className={cn(rank === 1 ? "btn-primary" : "btn-secondary", "w-full")}>
           {chosen && <Check className="size-4" strokeWidth={2} />}
           {chosen ? t("roleCard.chosen") : t("roleCard.chooseThisRole")}
         </button>

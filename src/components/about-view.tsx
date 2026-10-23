@@ -21,7 +21,7 @@ export function AboutView() {
       <InfoSection heading={t("aboutPage.limitsHeading")}>
         <p className="mt-2">{t("aboutPage.limitsBody")}</p>
         <p className="mt-3">
-          <Link href="/exposure" className="text-sage underline underline-offset-2">{t("aboutPage.exposureLink")}</Link>
+          <Link href="/exposure" className="text-sage-dark underline underline-offset-2">{t("aboutPage.exposureLink")}</Link>
         </p>
       </InfoSection>
     </InfoPage>

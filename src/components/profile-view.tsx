@@ -216,7 +216,7 @@ export function ProfileView() {
           <SlideIn key={profile.personaId} className="panel mt-8 p-6 sm:p-8">
             <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
               <div className="flex items-center gap-4">
-                <div className="flex size-[60px] shrink-0 items-center justify-center rounded-full bg-sage-soft font-serif text-[22px] text-sage-dark md:size-[76px] md:text-[26px]">
+                <div className="flex size-[60px] shrink-0 items-center justify-center rounded-full bg-[#d6d3cd] font-serif text-[22px] text-ink md:size-[76px] md:text-[26px]">
                   {initials}
                 </div>
                 <div>
@@ -291,7 +291,7 @@ export function ProfileView() {
                     <button
                       type="button"
                       onClick={() => setSkillsExpanded((expanded) => !expanded)}
-                      className="chip border-sage/40 bg-sage-wash font-medium text-sage-dark"
+                      className="chip border-line bg-alt font-medium text-ink"
                     >
                       {skillsExpanded ? t("profile.showLess") : `+${profile.skills.length - 6}`}
                     </button>
@@ -325,13 +325,19 @@ export function ProfileView() {
                 <p className="mt-7 mb-1 text-[12px] text-grey">{t("profile.rolesLabel")}</p>
                 <ul className="divide-y divide-line text-[14px]">
                   {profile.roles.map((role, index) => (
-                    <li key={index} className="flex flex-wrap items-end gap-x-2 gap-y-2 py-2">
+                    <li key={index} className="flex items-end gap-2 py-3">
+                      <div className="flex min-w-0 flex-1 flex-col gap-2 sm:flex-row sm:items-end">
+                      <label className="flex min-w-0 flex-1 flex-col gap-1">
+                        <span className="text-[10px] leading-none font-medium tracking-[0.12em] text-grey uppercase">
+                          {t("profile.roleFieldLabel")}
+                        </span>
                       <input
                         value={role.title}
                         onChange={(event) => updateRole(index, { title: event.target.value })}
                         placeholder={t("profile.roleTitlePlaceholder")}
-                        className="h-10 min-w-[12rem] flex-1 rounded-lg border border-transparent px-2 py-1 transition-colors hover:border-line focus:border-line focus:outline-none"
+                        className="h-10 w-full min-w-0 rounded-lg border border-line bg-white px-3 py-1 transition-colors hover:border-grey/50 focus:border-ink focus:outline-none"
                       />
+                      </label>
                       {(() => {
                         // Design option B: one pill, units inside the border.
                         // yearsMonthsToDecimal clamps/truncates out-of-range input.
@@ -343,7 +349,7 @@ export function ProfileView() {
                             <span className="text-[10px] leading-none font-medium tracking-[0.12em] text-grey uppercase">
                               {t("profile.durationLabel")}
                             </span>
-                            <span className="flex h-10 shrink-0 items-center rounded-full border border-line bg-white px-1.5 text-[14px]">
+                            <span className="flex h-10 shrink-0 items-center justify-between rounded-full border border-line bg-white px-1.5 text-[14px] sm:justify-start">
                               <input
                                 type="number"
                                 inputMode="numeric"
@@ -377,11 +383,12 @@ export function ProfileView() {
                           </div>
                         );
                       })()}
+                      </div>
                       <button
                         type="button"
                         aria-label={t("profile.removeRole", { role: role.title || t("profile.roleFallback") })}
                         onClick={() => removeRole(index)}
-                        className="rounded-full p-1 text-grey transition-colors hover:bg-alt hover:text-ink"
+                        className="mb-[9px] shrink-0 rounded-full p-1 text-grey transition-colors hover:bg-alt hover:text-ink"
                       >
                         <X className="size-3.5" strokeWidth={1.8} />
                       </button>
@@ -399,21 +406,23 @@ export function ProfileView() {
                   <p className="mb-2 text-[12px] text-grey">{t("profile.educationLabel")}</p>
                   <ul className="space-y-2">
                     {profile.education.map((item, index) => (
-                      <li key={index} className="flex flex-wrap items-center gap-1.5">
+                      <li key={index} className="flex items-start gap-1.5">
+                        <div className="flex min-w-0 flex-1 flex-col gap-1.5">
                         <textarea
                           value={item.level}
                           onChange={(event) => updateEducation(index, { level: event.target.value })}
                           placeholder={t("profile.qualificationPlaceholder")}
                           rows={1}
-                          className="field field-sizing-content min-w-[8rem] flex-1 resize-none px-2 py-1 text-[13px]"
+                          className="field field-sizing-content w-full resize-none px-2 py-1 text-[13px]"
                         />
                         <textarea
                           value={item.field}
                           onChange={(event) => updateEducation(index, { field: event.target.value })}
                           placeholder={t("profile.fieldPlaceholder")}
                           rows={1}
-                          className="field field-sizing-content min-w-[8rem] flex-1 resize-none px-2 py-1 text-[13px]"
+                          className="field field-sizing-content w-full resize-none px-2 py-1 text-[13px]"
                         />
+                        </div>
                         <button
                           type="button"
                           aria-label={t("profile.removeEducation")}

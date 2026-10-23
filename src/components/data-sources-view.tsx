@@ -27,10 +27,10 @@ export function DataSourcesView() {
   const { t } = useT();
   return (
     <InfoPage title={t("sourcesPage.title")} lede={t("sourcesPage.lede")}>
-      <ul className="mt-10 space-y-6">
+      <ul className="mt-16 space-y-2">
         {DATA_SOURCES.map((s) => (
-          <li key={s.url}>
-            <a href={s.url} target="_blank" rel="noopener noreferrer" className="font-medium text-sage underline underline-offset-2">
+          <li key={s.url} className="rounded-2xl bg-[#f7f6f2] px-5 py-4">
+            <a href={s.url} target="_blank" rel="noopener noreferrer" className="font-medium text-sage-dark underline underline-offset-2">
               {s.name}
             </a>
             <p className="mt-1">{t(s.desc)}</p>

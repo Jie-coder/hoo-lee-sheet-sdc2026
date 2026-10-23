@@ -73,7 +73,7 @@ export function ScenarioTabs({ value, onChange }: { value: ScenarioId; onChange:
 
   return (
     <div className="relative w-full sm:w-auto" onPointerLeave={(event) => event.pointerType === "mouse" && setTip(null)}>
-    <div className="w-full overflow-x-auto [scrollbar-width:none] sm:w-auto [&::-webkit-scrollbar]:hidden">
+    <div className="w-full overflow-x-auto pr-8 [mask-image:linear-gradient(to_right,black_calc(100%-40px),transparent)] [scrollbar-width:none] sm:w-auto sm:pr-0 sm:[mask-image:none] [&::-webkit-scrollbar]:hidden">
       <div
         role="tablist"
         aria-label={t("scenarioTabs.ariaLabel")}
@@ -112,7 +112,7 @@ export function ScenarioTabs({ value, onChange }: { value: ScenarioId; onChange:
                   transition={{ type: "spring", stiffness: 500, damping: 40 }}
                 />
               )}
-              <Icon className={cn("relative size-3.5", selected && "text-sage")} strokeWidth={1.6} />
+              <Icon className={cn("relative size-3.5", selected && "text-sage-dark")} strokeWidth={1.6} />
               <span className="relative">{t(SCENARIO_LABEL[id])}</span>
             </button>
           );

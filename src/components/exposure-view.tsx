@@ -21,7 +21,7 @@ export function ExposureView() {
   return (
     <>
       <ExposureIntro />
-      <article className="mx-auto w-full max-w-2xl px-5 py-12 text-[15px] leading-relaxed">
+      <article className="mx-auto w-full max-w-[680px] px-5 pt-24 pb-12 text-[15px] leading-relaxed">
         <h1 className="font-serif text-[34px] leading-tight font-medium tracking-tight">
           {t("exposurePage.title")}
         </h1>

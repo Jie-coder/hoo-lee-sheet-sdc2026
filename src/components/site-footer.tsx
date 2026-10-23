@@ -2,9 +2,7 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 import { useT } from "@/lib/i18n";
-import { cn } from "@/lib/utils";
 
 export const FOOTER_LINKS = [
   { href: "/about", key: "footer.about" },
@@ -13,13 +11,10 @@ export const FOOTER_LINKS = [
 ] as const;
 
 export function SiteFooter() {
-  const pathname = usePathname();
   const { t } = useT();
-  // These routes keep a fixed EstimateFooter at the bottom of the viewport.
-  const needsSpace = ["/results", "/pathway", "/radar"].some((route) => pathname.startsWith(route));
 
   return (
-    <footer className={cn("border-t border-[rgba(244,241,234,0.15)] bg-black text-[#F4F1EA]", needsSpace && "pb-14")}>
+    <footer className="border-t border-[rgba(244,241,234,0.15)] bg-black text-[#F4F1EA]">
       <div className="mx-auto grid max-w-[1248px] grid-cols-1 gap-7 px-4 py-12 sm:px-6 md:grid-cols-[1.2fr_1fr_1.2fr] md:gap-12">
         <div>
           {/* Official wordmark. next/image refuses SVG without extra config. */}

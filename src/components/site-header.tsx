@@ -24,6 +24,8 @@ const SITE_LINKS = [
 ] as const;
 
 function currentStepIndex(pathname: string): number {
+  // The exposure interstitial sits between the interview and results.
+  if (pathname.startsWith("/exposure-intro")) return STEPS.findIndex((step) => step.id === "interview");
   return STEPS.findIndex((step) => pathname.startsWith(`/${step.id}`));
 }
 

@@ -155,7 +155,7 @@ export function InterviewView() {
     setSlots(merged);
     if (isInterviewDone(turn)) {
       setInterviewAnswers(finalizeSlots(merged));
-      router.push("/results");
+      router.push("/exposure-intro");
       return;
     }
     setDirection(1);

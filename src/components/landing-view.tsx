@@ -3,6 +3,7 @@
 // Consent must be ticked before "Start" continues to /profile.
 "use client";
 
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useRef } from "react";
 import { motion, useReducedMotion } from "framer-motion";
@@ -79,15 +80,15 @@ export function LandingView({ preview }: { preview: LandingPreview }) {
             </motion.h1>
           </div>
 
-          <div className="relative mt-6 aspect-[1376/520] overflow-hidden xl:mt-0 xl:aspect-[1376/820]">
-            <LandingHeroCanvas className="absolute bottom-0 left-0 aspect-[1376/820] w-full" />
+          <div className="relative mt-6 aspect-[1376/520] min-h-[220px] overflow-hidden rounded-[28px] xl:mt-0 xl:aspect-[1376/820] xl:min-h-0 xl:rounded-none">
+            <LandingHeroCanvas className="absolute inset-0 size-full xl:inset-auto xl:bottom-0 xl:left-0 xl:aspect-[1376/820] xl:h-auto" />
             <span className="absolute top-2 left-3 rounded-md bg-ink/55 px-2 py-1.5 font-mono text-[9px] leading-none tracking-[0.08em] text-card uppercase xl:top-[43%] xl:left-7 xl:px-2.5 xl:text-[12px]">
               {t("landing.heroTicket")}
             </span>
-            <span className="absolute top-2 right-3 rounded-md bg-ink/55 px-2 py-1.5 font-mono text-[9px] leading-none tracking-[0.08em] text-card uppercase xl:top-7 xl:right-7 xl:px-2.5 xl:text-[12px]">
+            <span className="absolute top-2 right-3 hidden rounded-md sm:block bg-ink/55 px-2 py-1.5 font-mono text-[9px] leading-none tracking-[0.08em] text-card uppercase xl:top-7 xl:right-7 xl:px-2.5 xl:text-[12px]">
               {t("landing.heroSdg")}
             </span>
-            <span className="absolute bottom-2 left-3 rounded-md bg-ink/55 px-2 py-1.5 font-mono text-[9px] leading-none tracking-[0.08em] text-card uppercase xl:bottom-7 xl:left-7 xl:px-2.5 xl:text-[12px]">
+            <span className="absolute bottom-2 left-3 hidden rounded-md sm:block bg-ink/55 px-2 py-1.5 font-mono text-[9px] leading-none tracking-[0.08em] text-card uppercase xl:bottom-7 xl:left-7 xl:px-2.5 xl:text-[12px]">
               {t("landing.heroRoute")}
             </span>
           </div>
@@ -109,7 +110,7 @@ export function LandingView({ preview }: { preview: LandingPreview }) {
             <label
               ref={consentRef}
               tabIndex={-1}
-              className="mt-4 flex max-w-[460px] cursor-pointer items-start gap-2.5 text-[11px] leading-relaxed text-grey outline-none"
+              className="mt-4 flex max-w-[460px] cursor-pointer items-center gap-2.5 text-[12px] leading-snug text-grey outline-none"
             >
               <button
                 type="button"
@@ -124,7 +125,12 @@ export function LandingView({ preview }: { preview: LandingPreview }) {
               >
                 {consent && <Check className="size-3" strokeWidth={2.4} />}
               </button>
-              {t("landing.consent")}
+              <span>
+                {t("landing.consentShort")}{" "}
+                <Link href="/privacy" className="font-medium text-sage-dark underline underline-offset-2">
+                  {t("landing.consentDetails")}
+                </Link>
+              </span>
             </label>
           </motion.div>
         </div>
@@ -161,22 +167,20 @@ export function LandingView({ preview }: { preview: LandingPreview }) {
         </Stagger>
 
         <div id="privacy">
-          <Reveal delay={0.1} className="mt-16 flex flex-col gap-5 border-t border-line pt-6 md:flex-row md:items-center md:justify-between">
-            <ul className="flex flex-wrap gap-x-6 gap-y-2 text-[13px]">
+          <Reveal delay={0.1} className="mt-16 border-t border-line pt-6">
+            <ul className="-mx-4 flex gap-1.5 overflow-x-auto px-4 pb-1 whitespace-nowrap [scrollbar-width:none] sm:mx-0 sm:px-0">
               {PROMISES.map((item) => (
-                <li key={item.key} className="flex items-center gap-2">
-                  <item.icon className="size-4 text-sage" strokeWidth={1.6} />
+                <li key={item.key} className="tag shrink-0 gap-1.5">
+                  <item.icon className="size-3.5" strokeWidth={1.6} />
                   {t(item.key)}
                 </li>
               ))}
-            </ul>
-            <div className="flex flex-wrap gap-1.5">
               {BUILT_ON.map((labelKey) => (
-                <span key={labelKey} className="tag">
+                <li key={labelKey} className="tag shrink-0">
                   {t(labelKey)}
-                </span>
+                </li>
               ))}
-            </div>
+            </ul>
           </Reveal>
         </div>
         <p className="mt-4 text-[12px] text-grey/80">

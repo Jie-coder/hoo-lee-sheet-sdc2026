@@ -54,7 +54,7 @@ function SkillCard({ skill, tone }: { skill: RadarSkill; tone: "up" | "down" }) 
         <span
           className={cn(
             "inline-flex shrink-0 items-center gap-1 font-serif text-[24px] leading-none font-medium tabular-nums",
-            tone === "up" ? "text-sage" : "text-grey",
+            tone === "up" ? "text-sage-dark" : "text-grey",
           )}
         >
           <Icon className="size-5" strokeWidth={1.6} />
@@ -86,7 +86,7 @@ function SkillColumn({
   return (
     <div>
       <h2 className="flex items-center gap-2 font-serif text-[28px] font-medium tracking-tight">
-        <Icon className={cn("size-6", tone === "up" ? "text-sage" : "text-grey")} strokeWidth={1.6} />
+        <Icon className={cn("size-6", tone === "up" ? "text-sage-dark" : "text-grey")} strokeWidth={1.6} />
         {title}
       </h2>
       {skills.length ? (

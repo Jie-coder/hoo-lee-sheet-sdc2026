@@ -4,9 +4,9 @@ import type { ReactNode } from "react";
 
 export function InfoPage({ title, lede, children }: { title: string; lede: string; children: ReactNode }) {
   return (
-    <article className="mx-auto w-full max-w-2xl px-5 py-12 text-[15px] leading-relaxed">
-      <h1 className="font-serif text-[34px] leading-tight font-medium tracking-tight">{title}</h1>
-      <p className="mt-3 text-grey">{lede}</p>
+    <article className="mx-auto w-full max-w-[720px] px-5 pt-16 pb-16 text-[15px] md:pt-24 leading-relaxed">
+      <h1 className="font-heading text-[52px] leading-[0.95] uppercase md:text-[80px]">{title}</h1>
+      <p className="mt-5 text-[17px] text-grey">{lede}</p>
       {children}
     </article>
   );
@@ -14,7 +14,7 @@ export function InfoPage({ title, lede, children }: { title: string; lede: strin
 
 export function InfoSection({ heading, children }: { heading: string; children: ReactNode }) {
   return (
-    <section className="mt-10">
+    <section className="mt-16">
       <h2 className="font-serif text-[22px] font-medium">{heading}</h2>
       {children}
     </section>
