@@ -3,12 +3,12 @@ import { Suspense } from "react";
 import { PageHero, SignalLight } from "@/components/caldera";
 import { connection } from "next/server";
 import { runHealthChecks } from "@/lib/health";
-import { translate } from "@/lib/i18n-messages";
+import { StatusText } from "@/components/status-text";
 
 export default function StatusPage() {
   return (
     <div className="mx-auto w-full max-w-[1248px] px-5 pt-14 pb-24 md:px-14 md:pt-20">
-      <PageHero title={translate("en", "status.title")} lede={translate("en", "status.lede")} />
+      <PageHero title={<StatusText k="status.title" />} lede={<StatusText k="status.lede" />} />
 
       {/* Each check makes a network call, so this streams in at request
           time behind the Suspense boundary instead of being prerendered. */}
@@ -31,7 +31,7 @@ async function StatusChecks() {
           <SignalLight
             className="mt-4"
             level={check.ok ? "low" : "pending"}
-            label={check.ok ? translate("en", "status.ok") : translate("en", "status.unavailable")}
+            label={<StatusText k={check.ok ? "status.ok" : "status.unavailable"} />}
           />
           {/* Raw error text stays in the server logs, not on the public page. */}
           {check.ok && <p className="mt-3 text-[15px] text-grey">{check.message}</p>}

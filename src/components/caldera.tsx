@@ -35,9 +35,13 @@ export function PageHero({
         )}
         <Title
           className={cn(
-            "font-serif leading-[0.9] tracking-[-0.01em] text-balance uppercase",
+            "font-serif tracking-[-0.01em] text-balance uppercase",
             "text-[clamp(44px,12vw,56px)] md:text-[clamp(64px,8vw,128px)]",
             titleClassName,
+            // Last on purpose: tailwind-merge drops a leading-* that comes before a
+            // text-[size] class (font-size can carry a line-height), so the display
+            // line-height has to follow every size class to survive cn().
+            "leading-[0.9]",
           )}
         >
           {title}

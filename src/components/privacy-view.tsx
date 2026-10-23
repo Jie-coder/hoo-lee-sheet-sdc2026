@@ -34,7 +34,7 @@ export function PrivacyView() {
   const [cleared, setCleared] = useState(false);
 
   return (
-    <main className="mx-auto w-full max-w-[1440px] px-5 pb-24 sm:px-6 md:px-8">
+    <main className="privacy-page mx-auto w-full max-w-[1440px] px-5 pb-24 sm:px-6 md:px-8">
       <PageHero
         className="pt-6 md:pt-10"
         eyebrow={t("privacyPage.title")}

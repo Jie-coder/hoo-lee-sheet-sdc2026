@@ -73,11 +73,7 @@ export function ScenarioTabs({ value, onChange }: { value: ScenarioId; onChange:
 
   return (
     <div className="relative w-full sm:w-auto" onPointerLeave={(event) => event.pointerType === "mouse" && setTip(null)}>
-    <div
-      tabIndex={0}
-      role="region"
-      aria-label={t("scenarioTabs.ariaLabel")}
-      className="w-full focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink sm:w-auto">
+    <div className="w-full sm:w-auto">
       <div
         role="tablist"
         aria-label={t("scenarioTabs.ariaLabel")}

@@ -94,7 +94,7 @@ export const EN = {
   "results.aboutScenario": "About the {scenario} scenario",
   "results.since": "Since {date}:",
   "results.sameOrder": "Same order as on {date}. New arXiv counts only nudged the scores.",
-  "results.skillsRadar": "Skills radar",
+  "results.skillsRadar": "Skills Radar",
   "results.howNumbers": "How these numbers are made",
   "results.howNumbersBody":
     "Skills come from ESCO v1.2.1, AI exposure from the ILO GenAI exposure study (2025), and the trend signal from arXiv paper counts. Demand combines Malaysian employment growth (DOSM, 2024 to 2025) with employers’ 2025-2030 outlook by job (WEF Future of Jobs Report 2025); the three futures follow WEF’s Four Futures for Jobs (2026). They are scenarios, not forecasts. SDG targets are drafted by the Laluan team and still under review. These are estimates to support your decision, not predictions.",
@@ -583,9 +583,9 @@ export const EN = {
   "sourceRow.decisionLine": "Laluan supports your decision; it does not make hiring decisions.",
   "sourceRow.estimatesLine": "All scores and forecasts are estimates.",
   "sourceRow.placeholderNote": "Sources appear with each score once this section is rebuilt.",
-  "footer.radar": "Skills radar",
+  "footer.radar": "Skills Radar",
   "radarEntry.title": "See which skills are rising in the market",
-  "radarEntry.cta": "Skill Radar",
+  "radarEntry.cta": "Skills Radar",
   "header.stepOf": "Step {n} of {total} · {label}",
   "landing.threeStopsHeading": "Three stops to your next role",
   "landing.threeStopsLede":
@@ -706,7 +706,7 @@ export const MS: Record<MessageKey, string> = {
   "results.aboutScenario": "Tentang senario {scenario}",
   "results.since": "Sejak {date}:",
   "results.sameOrder": "Susunan sama seperti pada {date}. Kiraan arXiv baharu hanya mengubah sedikit skor.",
-  "results.skillsRadar": "Radar kemahiran",
+  "results.skillsRadar": "Radar Kemahiran",
   "results.howNumbers": "Cara nombor ini dihasilkan",
   "results.howNumbersBody":
     "Kemahiran diambil daripada ESCO v1.2.1, pendedahan AI daripada kajian pendedahan GenAI ILO (2025), dan isyarat trend daripada kiraan kertas arXiv. Permintaan menggabungkan pertumbuhan pekerjaan Malaysia (DOSM, 2024 hingga 2025) dengan tinjauan majikan 2025-2030 mengikut pekerjaan (Laporan Masa Depan Pekerjaan WEF 2025); tiga senario masa depan mengikut Four Futures for Jobs WEF (2026). Ia adalah senario, bukan ramalan. Sasaran SDG digubal oleh pasukan Laluan dan masih dalam semakan. Ini adalah anggaran untuk menyokong keputusan anda, bukan prediksi.",
@@ -1203,7 +1203,7 @@ export const MS: Record<MessageKey, string> = {
   "sourceRow.decisionLine": "Laluan menyokong keputusan anda; ia tidak membuat keputusan pengambilan pekerja.",
   "sourceRow.estimatesLine": "Semua skor dan ramalan adalah anggaran.",
   "sourceRow.placeholderNote": "Sumber akan muncul bersama setiap skor apabila bahagian ini dibina semula.",
-  "footer.radar": "Radar kemahiran",
+  "footer.radar": "Radar Kemahiran",
   "radarEntry.title": "Lihat kemahiran yang sedang meningkat dalam pasaran",
   "radarEntry.cta": "Radar Kemahiran",
   "header.stepOf": "Langkah {n} daripada {total} · {label}",

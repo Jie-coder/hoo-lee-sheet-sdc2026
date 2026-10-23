@@ -1,4 +1,4 @@
-// /exposure-intro: the three-row exposure explainer, the Skill Radar card, then one Obsidian CTA to
+// /exposure-intro: the three-row exposure explainer, the Skills Radar card, then one Obsidian CTA to
 // /results (Obsidian because the Ember panel is in view) and the source row.
 "use client";
 

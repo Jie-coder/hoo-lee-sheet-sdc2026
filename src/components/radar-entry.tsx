@@ -1,6 +1,6 @@
-// Skill Radar entry point: a Sulfur card with radar line-art, a title and a pill
-// link to /radar. "compact" sits under the Results exposure band; "large" closes
-// sits above "See my results" on /exposure-intro.
+// Skills Radar entry point: a Sulfur card with radar line-art, a title and a pill
+// link to /radar. "compact" sits under the Results exposure band; "large" sits
+// above "See my results" on /exposure-intro.
 "use client";
 
 import Link from "next/link";
@@ -26,7 +26,7 @@ export function RadarEntry({ size = "compact", className }: { size?: "compact" |
   const { t } = useT();
   const large = size === "large";
   return (
-    <section
+    <div
       className={cn(
         "flex flex-col gap-5 rounded-[40px] bg-sulfur text-ink sm:flex-row sm:items-center",
         large ? "p-8 md:p-12" : "px-7 py-6 md:px-10",
@@ -48,6 +48,6 @@ export function RadarEntry({ size = "compact", className }: { size?: "compact" |
           <ArrowRight className="size-4" strokeWidth={1.6} />
         </Link>
       </div>
-    </section>
+    </div>
   );
 }

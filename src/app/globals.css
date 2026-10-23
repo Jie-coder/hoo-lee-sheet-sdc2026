@@ -211,6 +211,9 @@
   }
 }
 
+/* Privacy page: plain Limestone, no dot grid. */
+body:has(.privacy-page) { background-color: var(--color-limestone); background-image: none; }
+
 /* Pathway print / "Download PDF" (window.print). Screen: hidden. */
 .print-only { display: none; }
 @media print {
