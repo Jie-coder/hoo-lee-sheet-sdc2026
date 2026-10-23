@@ -1,33 +1,32 @@
-// Results screen: roles ranked from the curated data by POST /api/roles,
-// re-ranked by scenario on the client. No example data on this page.
+// Results (spec §5): the current role's AI exposure, three role tickets, and a
+// scenario pill that re-ranks them with a 300ms FLIP. Every number comes from
+// POST /api/roles; there is no example data on this page.
 "use client";
 
 import { useEffect, useState } from "react";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { LayoutGroup, motion, useReducedMotion } from "framer-motion";
 import { RefreshCw } from "lucide-react";
-import { toast } from "sonner";
 import { useFlow } from "@/context/flow-context";
-import { EstimateFooter } from "@/components/estimate-footer";
+import { Drawer, PageHero, SignalLight, SourceRow } from "@/components/caldera";
 import { EASE_OUT } from "@/components/motion";
 import { RoleCard } from "@/components/role-card";
-import { ScenarioTabs, SCENARIO_ILLUSTRATIVE, SCENARIO_LABEL, SCENARIO_SUMMARY } from "@/components/scenario-tabs";
-import { ExposurePendingCard, ScoreCard } from "@/components/score-card";
-import { sdgFlagId } from "@/components/sdg-badge";
-import { SdgLegend } from "@/components/sdg-legend";
-import { Skeleton } from "@/components/ui/skeleton";
-import { InfoPopover } from "@/components/ui/info-popover";
+import { ScenarioTabs, SCENARIO_LABEL } from "@/components/scenario-tabs";
 import { SignalDateToggle } from "@/components/signal-date-toggle";
+import { Skeleton } from "@/components/ui/skeleton";
 import type { SignalDate } from "@/lib/analyze";
-import { describeChangeShort, rankChanges } from "@/lib/compare-snapshots";
-import { formatDayMonthYear, formatShortDate } from "@/lib/display";
 import { explainRole } from "@/lib/explain";
-import { useT } from "@/lib/i18n";
+import { useT, type MessageKey } from "@/lib/i18n";
 import { rankRoles } from "@/lib/rank-roles";
 import { useRoles } from "@/lib/use-roles";
 import { PERSONAS } from "@/mocks/personas";
-import type { RoleResult, ScenarioId, SdgLink } from "@/types/contracts";
+import { scoreBand, type RoleResult, type ScenarioId } from "@/types/contracts";
+
+const BAND_LEVEL: Record<"low" | "medium" | "high", MessageKey> = {
+  low: "results.exposureLevelLow",
+  medium: "results.exposureLevelMedium",
+  high: "results.exposureLevelHigh",
+};
 
 export function ResultsView() {
   const router = useRouter();
@@ -36,12 +35,9 @@ export function ResultsView() {
   const { hydrated, consent, profile, interviewAnswers, setChosenRoleId } = useFlow();
   const [signalDate, setSignalDate] = useState<SignalDate>("today");
   const { state, retry } = useRoles(profile, interviewAnswers.impact_interest, signalDate);
-  // Both snapshots, so the page can say what moved between them (cached per request).
-  const todayRoles = useRoles(profile, interviewAnswers.impact_interest, "today").state;
-  const priorRoles = useRoles(profile, interviewAnswers.impact_interest, "prior").state;
   const [scenario, setScenario] = useState<ScenarioId>("co");
   const [chosenId, setChosenId] = useState<string | null>(null);
-  const [flaggedIds, setFlaggedIds] = useState<Set<string>>(() => new Set());
+  const [howOpen, setHowOpen] = useState(false);
 
   useEffect(() => {
     if (!hydrated) return;
@@ -53,13 +49,16 @@ export function ResultsView() {
 
   const data = state.status === "ready" ? state.data : null;
   const ranked = data ? rankRoles(data.roles, scenario) : [];
-  const changes =
-    todayRoles.status === "ready" && priorRoles.status === "ready" && todayRoles.data.signalDates.prior
-      ? rankChanges(priorRoles.data.roles, todayRoles.data.roles, scenario)
-      : null;
   const persona = profile.personaId === "upload" ? null : PERSONAS[profile.personaId];
-  const firstName = profile.name?.trim().split(/\s+/)[0];
+  const currentRole = profile.roles[0]?.title || persona?.jobTitle;
   const matchedCount = data?.skillMatches.filter((match) => match.escoLabels.length > 0).length ?? 0;
+  // The scenario didn't change the order: say so (spec §5), measured against Co-Pilot.
+  const sameAsCo =
+    data != null &&
+    scenario !== "co" &&
+    rankRoles(data.roles, "co")
+      .map((role) => role.occupationId)
+      .join() === ranked.map((role) => role.occupationId).join();
 
   function handleChoose(role: RoleResult) {
     setChosenId(role.occupationId);
@@ -67,150 +66,150 @@ export function ResultsView() {
     router.push(`/pathway?role=${role.occupationId}`);
   }
 
-  function handleFlag(link: SdgLink) {
-    const id = sdgFlagId(link);
-    setFlaggedIds((current) => {
-      if (current.has(id)) return current;
-      const next = new Set(current);
-      next.add(id);
-      return next;
-    });
-    toast(t("results.flagToast", { target: link.target }));
-  }
-
   return (
-    <div className="pb-16 sm:pb-20">
-      <div className="mx-auto max-w-[1248px] px-4 sm:px-6">
-        <motion.section
-          initial={reduce ? false : { opacity: 0, y: 14 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, ease: EASE_OUT }}
-          className="pt-10 pb-8"
-        >
-          <h1 className="font-serif text-[34px] leading-[1.05] font-medium tracking-tight md:text-[44px]">
-            {firstName ? t("results.headingNamed", { name: firstName }) : t("results.heading")}
-          </h1>
-          {(profile.roles[0]?.title || persona?.jobTitle) && (
-            <p className="mt-2 text-[14px] text-grey">{profile.roles[0]?.title || persona?.jobTitle}</p>
-          )}
-          <p className="mt-2 text-[15px] text-grey">
-            {data
-              ? t("results.skillsMatchedLine", {
-                  matched: String(matchedCount),
-                  total: String(profile.skills.length),
-                  date: formatDayMonthYear(data.signalsAsOf, t),
-                })
-              : t("results.matching")}
-          </p>
-        </motion.section>
+    <main className="mx-auto max-w-[1440px] px-4 pb-24 sm:px-6 md:px-8">
+      <motion.div
+        initial={reduce ? false : { opacity: 0, y: 14 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, ease: EASE_OUT }}
+      >
+        <PageHero
+          className="pt-6 md:pt-10"
+          eyebrow={
+            profile.name
+              ? currentRole
+                ? t("results.eyebrow", { name: profile.name, role: currentRole })
+                : profile.name
+              : currentRole
+          }
+          title={t("results.heroHeading")}
+          lede={
+            data
+              ? t("results.heroLede", { matched: String(matchedCount), total: String(profile.skills.length) })
+              : t("results.matching")
+          }
+        />
+      </motion.div>
 
-        {state.status === "error" && (
-          <div className="panel p-6 text-[14px]" role="alert">
-            <p className="font-medium">{t("results.rankError")}</p>
-            <p className="mt-1 text-grey">{state.message}</p>
-            <button type="button" onClick={retry} className="btn-secondary mt-4">
-              <RefreshCw className="size-4" strokeWidth={1.6} />
-              {t("results.tryAgain")}
-            </button>
+      {state.status === "error" && (
+        <div className="mt-10 rounded-[40px] bg-card p-7 text-[14px]" role="alert">
+          <p className="font-bold">{t("results.rankError")}</p>
+          <p className="mt-1 text-grey">{state.message}</p>
+          <button type="button" onClick={retry} className="btn-secondary mt-4">
+            <RefreshCw className="size-4" strokeWidth={1.6} />
+            {t("results.tryAgain")}
+          </button>
+        </div>
+      )}
+
+      {state.status === "loading" && (
+        <div className="mt-10 space-y-4 md:mt-16" aria-busy="true" aria-live="polite">
+          <Skeleton className="h-[360px] rounded-[40px] bg-alt" />
+          <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
+            <Skeleton className="h-[420px] rounded-[40px] bg-alt" />
+            <Skeleton className="h-[420px] rounded-[40px] bg-alt" />
+            <Skeleton className="h-[420px] rounded-[40px] bg-alt" />
           </div>
-        )}
+        </div>
+      )}
 
-        {state.status === "loading" && (
-          <div className="space-y-6" aria-busy="true" aria-live="polite">
-            <Skeleton className="h-40 rounded-3xl bg-alt" />
-            <div className="grid grid-cols-1 gap-5 lg:grid-cols-3">
-              <Skeleton className="h-96 rounded-3xl bg-alt" />
-              <Skeleton className="h-96 rounded-3xl bg-alt" />
-              <Skeleton className="h-96 rounded-3xl bg-alt" />
-            </div>
-          </div>
-        )}
-
-        {data && (
-          <>
-            {data.currentWork ? (
-              <>
-                <ScoreCard currentWork={data.currentWork} />
-                <p className="mt-3 text-[13px] text-grey">{t("scoreCard.notJobLoss")}</p>
-              </>
-            ) : (
-              <ExposurePendingCard />
-            )}
-
-            <section className="mt-12">
-              <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-                <h2 className="font-serif text-[28px] font-medium tracking-tight">
-                  {t("results.roleCount", { count: String(ranked.length) })}
-                </h2>
-                <div className="flex items-center gap-2">
-                  <ScenarioTabs value={scenario} onChange={setScenario} />
-                  <InfoPopover
-                    label={t("results.aboutScenario", { scenario: t(SCENARIO_LABEL[scenario]) })}
-                    align="end"
-                    side="top"
-                  >
-                    <span className="font-medium text-ink">{t(SCENARIO_LABEL[scenario])}:</span>{" "}
-                    {t(SCENARIO_SUMMARY[scenario])} <span className="text-grey/80">{t(SCENARIO_ILLUSTRATIVE)}</span>
-                  </InfoPopover>
+      {data && (
+        <>
+          {/* Exposure band */}
+          {data.currentWork ? (
+            <section className="mt-10 overflow-hidden rounded-[40px] md:mt-16">
+              <div className="flex flex-col gap-4 border-l-4 border-sage bg-teal-light px-8 py-7 text-obsidian md:flex-row md:items-center md:justify-between md:px-10">
+                <p className="font-mono text-[12px] tracking-[0.06em] text-ink uppercase">
+                  {t("results.currentRoleLabel")}
+                </p>
+                <div className="flex items-center gap-3.5">
+                  <SignalLight level={scoreBand(data.currentWork.exposure)} size={22} />
+                  <span className="font-serif text-[clamp(40px,9vw,64px)] leading-[0.9] uppercase">
+                    {t(BAND_LEVEL[scoreBand(data.currentWork.exposure)])}
+                  </span>
                 </div>
               </div>
-
-              {data.signalDates.prior && (
-                <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                  <p className="text-[13px] text-grey" aria-live="polite">
-                    {changes && changes.length > 0 ? (
-                      <>
-                        <span className="text-ink">{t("results.since", { date: formatShortDate(data.signalDates.prior, t) })}</span>{" "}
-                        {changes.slice(0, 3).map((change) => describeChangeShort(change, t)).join(" · ")}
-                      </>
-                    ) : (
-                      <>{t("results.sameOrder", { date: formatShortDate(data.signalDates.prior, t) })}</>
-                    )}{" "}
-                    <Link href="/radar" className="whitespace-nowrap text-ink underline decoration-line underline-offset-4 hover:decoration-ink">
-                      {t("results.skillsRadar")}
-                    </Link>
-                  </p>
-                  <SignalDateToggle value={data.signalDate} dates={data.signalDates} onChange={setSignalDate} />
-                </div>
-              )}
-
-              <LayoutGroup>
-                <div className="mt-6 grid grid-cols-1 items-start gap-5 lg:grid-cols-3">
-                  {ranked.map((role, index) => {
-                    const breakdown = data.breakdown[role.occupationId];
-                    return (
-                      <RoleCard
-                        key={role.occupationId}
-                        role={{ ...role, explanation: explainRole(role, breakdown, scenario, t) }}
-                        rank={index + 1}
-                        total={ranked.length}
-                        status={breakdown.status}
-                        skillLinks={[]}
-                        targetLabels={data.targetLabels}
-                        chosen={chosenId === role.occupationId}
-                        onChoose={handleChoose}
-                        flaggedIds={flaggedIds}
-                        onFlag={handleFlag}
-                      />
-                    );
-                  })}
-                </div>
-              </LayoutGroup>
-
-              <div className="mt-6 flex flex-col gap-3 text-[12px] text-grey sm:flex-row sm:items-center sm:justify-between">
-                <SdgLegend />
-                <div className="flex items-center gap-1">
-                  {t("results.howNumbers")}
-                  <InfoPopover label={t("results.howNumbers")} align="end" side="top">
-                    {t("results.howNumbersBody")}
-                  </InfoPopover>
-                </div>
+              <div className="bg-white px-8 py-7 text-obsidian md:px-10">
+                <p className="max-w-[720px] text-[16px] leading-relaxed">
+                  {t("results.exposureSentence", {
+                    percent: `${Math.round(data.currentWork.exposure * 100)}%`,
+                    role: data.currentWork.title,
+                  })}{" "}
+                  {t("scoreCard.notJobLoss")}
+                </p>
+              </div>
+              <div className="bg-teal-light px-8 py-6 text-obsidian md:px-10">
+                <SourceRow sources={data.currentWork.sources.map((source) => ({ label: source.dataset }))} />
               </div>
             </section>
-          </>
-        )}
-      </div>
-      <EstimateFooter />
-    </div>
+          ) : (
+            <section className="mt-10 rounded-[40px] bg-card p-8 md:mt-16 md:p-10">
+              <p className="font-mono text-[12px] tracking-[0.06em] text-grey uppercase">
+                {t("results.currentRoleLabel")}
+              </p>
+              <div className="mt-4 flex items-center gap-3.5">
+                <SignalLight level="pending" size={22} />
+                <span className="font-serif text-[clamp(32px,7vw,48px)] leading-[0.9] uppercase">
+                  {t("results.exposureLevelPending")}
+                </span>
+              </div>
+              <p className="mt-3.5 max-w-[560px] text-[16px] leading-relaxed text-grey">
+                {t("results.exposurePendingBand")}
+              </p>
+            </section>
+          )}
+
+          {/* Tickets header + scenario pill */}
+          <section className="mt-24">
+            <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
+              <h2 className="font-serif text-[clamp(40px,8vw,64px)] leading-[0.9] uppercase">
+                {t("results.ticketsHeading")}
+              </h2>
+              <ScenarioTabs value={scenario} onChange={setScenario} />
+            </div>
+            <p className="mt-3 font-mono text-[12px] tracking-[0.06em] text-grey/70 uppercase" aria-live="polite">
+              {sameAsCo
+                ? t("results.sameScenarioOrder", { scenario: t(SCENARIO_LABEL.co) })
+                : t("results.ticketsSub")}
+            </p>
+
+            <LayoutGroup>
+              <div className="mt-8 grid grid-cols-1 items-stretch gap-4 lg:grid-cols-3">
+                {ranked.map((role, index) => {
+                  const breakdown = data.breakdown[role.occupationId];
+                  return (
+                    <RoleCard
+                      key={role.occupationId}
+                      role={{ ...role, explanation: explainRole(role, breakdown, scenario, t) }}
+                      rank={index + 1}
+                      total={ranked.length}
+                      targetLabels={data.targetLabels}
+                      chosen={chosenId === role.occupationId}
+                      onChoose={handleChoose}
+                      isPrimary={index === 0}
+                    />
+                  );
+                })}
+              </div>
+            </LayoutGroup>
+
+            <SourceRow
+              className="mt-10"
+              sources={[{ label: "WEF 2025" }, { label: "JobStreet" }, { label: "arXiv signal" }]}
+              howOnClick={() => setHowOpen(true)}
+            />
+          </section>
+
+          <Drawer open={howOpen} onClose={() => setHowOpen(false)} title={t("results.howNumbers")}>
+            {data.signalDates.prior && (
+              <div className="mb-6">
+                <SignalDateToggle value={data.signalDate} dates={data.signalDates} onChange={setSignalDate} />
+              </div>
+            )}
+            <p className="text-[15px] leading-relaxed text-grey">{t("results.howNumbersBody")}</p>
+          </Drawer>
+        </>
+      )}
+    </main>
   );
 }

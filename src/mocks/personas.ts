@@ -34,7 +34,7 @@ export const PERSONAS: Record<PersonaId, PersonaCard> = {
     name: "Aisyah binti Rahman",
     initials: "AR",
     age: 23,
-    jobTitle: "Administrative Clerk",
+    jobTitle: "Administrative assistant",
     location: "Bayan Lepas, Penang",
     summary: "Data entry, scheduling, reports and customer emails at a trading office.",
     courseLanguages: ["ms", "en"],
@@ -45,7 +45,7 @@ export const PERSONAS: Record<PersonaId, PersonaCard> = {
       name: "Aisyah binti Rahman",
       roles: [
         {
-          title: "Administrative Clerk",
+          title: "Administrative assistant",
           years: 2,
           tasks: ["Data entry and record keeping", "Scheduling and coordination", "Report filing", "Customer correspondence"],
         },

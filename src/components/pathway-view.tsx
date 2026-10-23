@@ -1,50 +1,21 @@
-// Pathway: the chosen role's skill gap turned into a week-by-week route,
-// built from the curated courses and programmes in data/*.csv.
+// Pathway (spec §6): the chosen role's skill gap as a week-by-week route — a
+// Plasma boarding-pass hero, a vertical "line" of stop cards, and a sticky
+// skill-gap card. Built only from the curated courses and programmes in data/*.csv.
 "use client";
 
-import { useEffect, useMemo, useRef, type ReactNode } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { motion, useReducedMotion, useScroll, useSpring } from "framer-motion";
-import {
-  ArrowLeft,
-  ArrowUpRight,
-  Award,
-  Building2,
-  CircleCheck,
-  CircleHelp,
-  CircleSlash,
-  Clock3,
-  Download,
-  Gift,
-  GraduationCap,
-  HandCoins,
-  Landmark,
-  Target,
-  Trash2,
-  Wallet,
-} from "lucide-react";
-import { toast } from "sonner";
-import { EstimateFooter } from "@/components/estimate-footer";
-import { CountUp, EASE_OUT, Reveal } from "@/components/motion";
-import { SdgBadge } from "@/components/sdg-badge";
-import { SdgLegend } from "@/components/sdg-legend";
-import { SourceChip } from "@/components/source-chip";
-import { Disclosure } from "@/components/ui/disclosure";
-import { InfoPopover } from "@/components/ui/info-popover";
+import { motion, useReducedMotion } from "framer-motion";
+import { ArrowLeft, ArrowUpRight, Download, Trash2 } from "lucide-react";
+import { IllustrationPanel, Perforation, SdgChip, SourceRow } from "@/components/caldera";
+import { EASE_OUT } from "@/components/motion";
 import { useFlow } from "@/context/flow-context";
+import { formatDayMonthYear, missingValue } from "@/lib/display";
 import { useT, type MessageKey } from "@/lib/i18n";
-import { buildPathwayPlan, programmeEligibilityStatus } from "@/lib/pathway";
+import { buildPathwayPlan } from "@/lib/pathway";
 import { useRoles } from "@/lib/use-roles";
 import { cn } from "@/lib/utils";
-import type { Course, CostType, CourseAiContent, PlanStep, Programme } from "@/types/contracts";
-
-/** Course-card badge for ai_content. "none" shows nothing, and this never
- * applies to the AI untuk Rakyat programme step (programmes have no
- * aiContent field; only step.kind === "course" items are checked below). */
-const AI_CONTENT_BADGE_KEY: Partial<Record<CourseAiContent, MessageKey>> = {
-  ai: "pathway.aiContent.ai",
-  digital: "pathway.aiContent.digital",
-};
+import type { Course, CostType, PlanStep, Programme } from "@/types/contracts";
 
 const COST_LABEL_KEY: Record<CostType, MessageKey> = {
   free: "pathway.cost.free",
@@ -53,25 +24,7 @@ const COST_LABEL_KEY: Record<CostType, MessageKey> = {
   paid: "pathway.cost.paid",
 };
 
-const COST_CLASS: Record<CostType, string> = {
-  free: "bg-sage-soft text-sage-dark",
-  subsidised: "bg-sage-wash text-sage-dark",
-  hrdcorp_claimable: "bg-alt text-ink",
-  paid: "bg-alt text-grey",
-};
-
-const COST_ICON: Record<CostType, typeof Gift> = {
-  free: Gift,
-  subsidised: HandCoins,
-  hrdcorp_claimable: Building2,
-  paid: Wallet,
-};
-
-const LANGUAGE_LABEL_KEY: Partial<Record<string, MessageKey>> = {
-  en: "pathway.language.en",
-  ms: "pathway.language.ms",
-  zh: "pathway.language.zh",
-};
+const VISIBLE_STOPS = 4;
 
 export function PathwayView({
   courses,
@@ -86,7 +39,7 @@ export function PathwayView({
   const router = useRouter();
   const searchParams = useSearchParams();
   const reduce = useReducedMotion();
-  const { t } = useT();
+  const { t, locale } = useT();
   const { hydrated, consent, profile, interviewAnswers, chosenRoleId, setChosenRoleId, resetFlow } = useFlow();
   const { state, retry } = useRoles(profile, interviewAnswers.impact_interest);
   const data = state.status === "ready" ? state.data : null;
@@ -97,6 +50,9 @@ export function PathwayView({
   const targetLabels = data?.targetLabels ?? {};
   const studyLanguages = profile?.courseLanguages ?? ["en" as const];
   const hoursPerWeek = interviewAnswers.hours_per_week ?? 6;
+
+  const [expandedId, setExpandedId] = useState<string | null>(null);
+  const [showAll, setShowAll] = useState(false);
 
   const studyLanguagesKey = studyLanguages.join(",");
   const plan = useMemo(() => {
@@ -135,34 +91,32 @@ export function PathwayView({
 
   if (state.status !== "ready" || !role || !plan) {
     return (
-      <div className="pb-16 sm:pb-20">
-        <main className="mx-auto max-w-[1248px] px-4 pt-10 sm:px-6">
-          {state.status === "loading" && (
-            <p className="text-[14px] text-grey" aria-live="polite">
-              {t("pathway.buildingPlan")}
-            </p>
-          )}
-          {state.status === "error" && (
-            <div className="panel p-6 text-[14px]" role="alert">
-              <p className="font-medium">{t("pathway.loadError")}</p>
-              <p className="mt-1 text-grey">{state.message}</p>
-              <button type="button" onClick={retry} className="btn-secondary mt-4">
-                {t("pathway.tryAgain")}
-              </button>
-            </div>
-          )}
-          {state.status === "ready" && (
-            <div className="panel p-6 text-[14px]">
-              <p className="font-medium">{t("pathway.roleNotInResults")}</p>
-              <p className="mt-1 text-grey">{t("pathway.pickRankedRole")}</p>
-              <button type="button" onClick={() => router.push("/results")} className="btn-secondary mt-4">
-                <ArrowLeft className="size-4" strokeWidth={1.6} />
-                {t("pathway.backToRoles")}
-              </button>
-            </div>
-          )}
-        </main>
-      </div>
+      <main className="mx-auto max-w-[1440px] px-4 pt-10 pb-20 sm:px-6 md:px-8">
+        {state.status === "loading" && (
+          <p className="text-[14px] text-grey" aria-live="polite">
+            {t("pathway.buildingPlan")}
+          </p>
+        )}
+        {state.status === "error" && (
+          <div className="rounded-[40px] bg-card p-7 text-[14px]" role="alert">
+            <p className="font-bold">{t("pathway.loadError")}</p>
+            <p className="mt-1 text-grey">{state.message}</p>
+            <button type="button" onClick={retry} className="btn-secondary mt-4">
+              {t("pathway.tryAgain")}
+            </button>
+          </div>
+        )}
+        {state.status === "ready" && (
+          <div className="rounded-[40px] bg-card p-7 text-[14px]">
+            <p className="font-bold">{t("pathway.roleNotInResults")}</p>
+            <p className="mt-1 text-grey">{t("pathway.pickRankedRole")}</p>
+            <button type="button" onClick={() => router.push("/results")} className="btn-secondary mt-4">
+              <ArrowLeft className="size-4" strokeWidth={1.6} />
+              {t("pathway.backToRoles")}
+            </button>
+          </div>
+        )}
+      </main>
     );
   }
 
@@ -173,26 +127,17 @@ export function PathwayView({
 
   const totalWeeks = plan.steps.reduce((max, step) => Math.max(max, step.weekEnd), 0);
   const closedSkillIds = new Set(plan.steps.flatMap((step) => step.closesSkillIds));
-  const costCounts = plan.steps.reduce(
-    (counts, step) => {
-      const item = resolveItem(step);
-      if (item) counts[item.costType] = (counts[item.costType] ?? 0) + 1;
-      return counts;
-    },
-    {} as Partial<Record<CostType, number>>,
-  );
-  const mostlyFree = (costCounts.free ?? 0) >= plan.steps.length / 2;
+  const freeCount = plan.steps.filter((step) => resolveItem(step)?.costType === "free").length;
+  const mostlyFree = freeCount >= plan.steps.length / 2;
+  const fromRole = data?.currentWork?.title ?? profile.roles[0]?.title ?? null;
+  const firstUrl = plan.steps.map((step) => resolveItem(step)?.url).find((url) => url) ?? null;
+  const catalogueDate = plan.steps
+    .map((step) => resolveItem(step)?.lastChecked)
+    .filter((date): date is string => Boolean(date))
+    .sort()
+    .at(-1);
 
-  function languageLabel(language: string): string {
-    const key = LANGUAGE_LABEL_KEY[language];
-    return key ? t(key) : language;
-  }
-
-  const languagesLabel = studyLanguages.map(languageLabel).join(", ");
-
-  function handleDownload() {
-    toast(t("pathway.downloadUnavailable"));
-  }
+  const visibleSteps = showAll ? plan.steps : plan.steps.slice(0, VISIBLE_STOPS);
 
   function handleDelete() {
     resetFlow();
@@ -200,341 +145,262 @@ export function PathwayView({
   }
 
   return (
-    <div className="pb-16 sm:pb-20">
-      <main className="mx-auto max-w-[1248px] px-4 sm:px-6">
+    <div>
+      <main className="print-hide mx-auto max-w-[1440px] px-4 pb-20 sm:px-6 md:px-8">
+        {/* Top controls */}
+        <div className="flex items-center justify-between gap-3 pt-6 md:pt-8">
+          <button
+            type="button"
+            onClick={() => router.push("/results")}
+            className="inline-flex items-center gap-1.5 text-[14px] font-medium text-grey hover:text-ink"
+          >
+            <ArrowLeft className="size-4" strokeWidth={1.6} />
+            {t("pathway.backToRoutes")}
+          </button>
+          <button
+            type="button"
+            onClick={() => window.print()}
+            className="inline-flex items-center gap-2 rounded-full border-[1.5px] border-ink px-5 py-2.5 text-[14px] font-bold text-ink transition-colors hover:bg-ink hover:text-paper"
+          >
+            <Download className="size-4" strokeWidth={1.6} />
+            {t("pathway.downloadPdf")}
+          </button>
+        </div>
+
+        {/* Boarding-pass hero */}
         <motion.section
           initial={reduce ? false : { opacity: 0, y: 14 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, ease: EASE_OUT }}
-          className="flex flex-col gap-5 pt-10 pb-8 md:flex-row md:items-end md:justify-between"
+          className="relative mt-5 overflow-hidden rounded-[40px] bg-plasma px-7 py-9 text-limestone md:mt-6 md:px-14 md:py-12"
         >
-          <div>
-            <p className="text-[13px] text-grey">{profile.name || t("pathway.yourProfile")}</p>
-            <h1 className="mt-1 font-serif text-[34px] leading-[1.05] font-medium tracking-tight text-balance md:text-[44px]">
-              {t("pathway.routeTitle", { weeks: String(totalWeeks), title: role.title })}
-            </h1>
-          </div>
-          <div className="flex shrink-0 items-center gap-2">
-            <button type="button" onClick={() => router.push("/results")} className="btn-secondary">
-              <ArrowLeft className="size-4" strokeWidth={1.6} />
-              {t("pathway.backToRoles")}
-            </button>
-            <button type="button" onClick={handleDownload} className="btn-primary">
-              <Download className="size-4" strokeWidth={1.6} />
-              {t("pathway.downloadPdf")}
-            </button>
+          <span aria-hidden className="absolute top-[64%] -left-[18px] size-9 rounded-full bg-paper max-md:size-6 max-md:-left-3" />
+          <span aria-hidden className="absolute top-[64%] -right-[18px] size-9 rounded-full bg-paper max-md:size-6 max-md:-right-3" />
+          <div className="grid gap-10 md:grid-cols-[1fr_1fr] md:items-end">
+            <div>
+              <p className="font-mono text-[12px] tracking-[0.06em] text-limestone/70 uppercase">
+                {fromRole
+                  ? t("pathway.boardingFrom", { from: fromRole, to: role.title })
+                  : t("pathway.boardingTo", { to: role.title })}
+              </p>
+              <h1 className="mt-5 font-serif text-[clamp(44px,10vw,88px)] leading-[0.9] text-balance uppercase">
+                {t("pathway.heroHeading", { weeks: String(totalWeeks), title: role.title })}
+              </h1>
+            </div>
+            <dl className="grid grid-cols-2 gap-x-6 gap-y-7 [&>div]:min-w-0">
+              <HeroStat label={t("pathway.pace")} value={t("pathway.hoursPerWeek", { hours: String(hoursPerWeek) })} />
+              <HeroStat label={t("pathway.cost")} value={mostlyFree ? t("pathway.mostlyFree") : t("pathway.mixedCost")} />
+              <HeroStat
+                label={t("pathway.skillsClosed")}
+                value={`${closedSkillIds.size} ${t("pathway.ofTotal", { count: String(role.gap.length) })}`}
+              />
+              <HeroStat label={t("pathway.stops")} value={String(plan.steps.length)} />
+            </dl>
           </div>
         </motion.section>
 
-        {/* Summary row */}
-        <motion.dl
-          initial={reduce ? false : { opacity: 0, y: 14 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.1, ease: EASE_OUT }}
-          className="grid grid-cols-2 gap-x-6 gap-y-6 border-y border-line py-6 md:grid-cols-4"
-        >
-          <div>
-            <dt className="text-[12px] text-grey">{t("pathway.duration")}</dt>
-            <dd className="mt-1 font-serif text-[32px] leading-none font-medium tracking-tight">
-              <CountUp value={totalWeeks} /> <span className="text-[18px] text-grey">{t("pathway.weeks")}</span>
-            </dd>
-          </div>
-          <div>
-            <dt className="text-[12px] text-grey">{t("pathway.pace")}</dt>
-            <dd className="mt-1 font-serif text-[32px] leading-none font-medium tracking-tight">
-              {hoursPerWeek} <span className="text-[18px] text-grey">{t("pathway.hoursAWeekShort")}</span>
-            </dd>
-          </div>
-          <div>
-            <dt className="flex items-center gap-1 text-[12px] text-grey">
-              {t("pathway.cost")}
-              <InfoPopover label={t("pathway.costTypes")}>
-                <span className="flex flex-wrap gap-1.5">
-                  {(Object.keys(COST_LABEL_KEY) as CostType[]).map((type) => {
-                    const Icon = COST_ICON[type];
-                    return (
-                      <span key={type} className={cn("tag", COST_CLASS[type])}>
-                        <Icon className="size-3" strokeWidth={1.6} />
-                        {t(COST_LABEL_KEY[type])}
-                      </span>
-                    );
-                  })}
-                </span>
-                <span className="mt-2 block">{t("pathway.costTypesHelp")}</span>
-              </InfoPopover>
-            </dt>
-            <dd className={cn("mt-1 font-serif text-[32px] leading-none font-medium tracking-tight", mostlyFree && "text-sage")}>
-              {mostlyFree ? t("pathway.mostlyFree") : t("pathway.mixedCost")}
-            </dd>
-          </div>
-          <div>
-            <dt className="text-[12px] text-grey">{t("pathway.skillsClosed")}</dt>
-            <dd className="mt-1 font-serif text-[32px] leading-none font-medium tracking-tight tabular-nums">
-              <CountUp value={closedSkillIds.size} />{" "}
-              <span className="text-[18px] text-grey">{t("pathway.ofTotal", { count: String(role.gap.length) })}</span>
-            </dd>
-          </div>
-        </motion.dl>
-
-        <section className="mt-10 grid grid-cols-1 items-start gap-10 md:grid-cols-12">
-          {/* Timeline */}
-          <div className="md:col-span-8">
-            <div className="mb-6 flex flex-wrap items-center justify-between gap-2">
-              <div className="flex items-center gap-1.5">
-                <h2 className="font-serif text-[28px] font-medium tracking-tight">{t("pathway.weekByWeek")}</h2>
-                <InfoPopover label={t("pathway.howBuilt")}>
-                  {t("pathway.howBuiltBody", { languages: languagesLabel, hours: String(hoursPerWeek) })}
-                </InfoPopover>
-              </div>
-              <div className="flex items-center gap-4 text-[12px] text-grey">
-                <span className="flex items-center gap-1.5">
-                  <GraduationCap className="size-3.5" strokeWidth={1.6} />
-                  {t("pathway.course")}
-                </span>
-                <span className="flex items-center gap-1.5">
-                  <Landmark className="size-3.5" strokeWidth={1.6} />
-                  {t("pathway.governmentProgramme")}
-                </span>
-              </div>
-            </div>
-
-            <RouteTimeline>
-                {plan.steps.map((step, index) => {
-                  const item = resolveItem(step);
-                  if (!item) return null;
-                  const sdgLink = step.sdgTarget ? role.sdg.find((link) => link.target === step.sdgTarget) : undefined;
-                  const closedSkill = role.gap.find((skill) => step.closesSkillIds.includes(skill.skillId));
-                  const providerName = "provider" in item ? item.provider : item.agency;
-                  const weeksLabel =
-                    step.weekStart === step.weekEnd
-                      ? t("pathway.week", { week: String(step.weekStart) })
-                      : t("pathway.weeksRange", { start: String(step.weekStart), end: String(step.weekEnd) });
-                  const eligibility = step.kind === "program" ? programmeEligibilityStatus(item as Programme, interviewAnswers) : null;
-                  const CostIcon = COST_ICON[item.costType];
-                  const aiContentBadgeKey =
-                    step.kind === "course" ? AI_CONTENT_BADGE_KEY[(item as Course).aiContent] : undefined;
-                  const displayHours = step.merged?.hours ?? ("hours" in item ? item.hours : undefined);
-                  const displayLanguages = step.merged?.languages ?? ("languages" in item ? item.languages : undefined);
-                  const displayCertificate = step.merged?.certificate ?? ("certificate" in item ? item.certificate : undefined);
-                  return (
-                    <li key={step.itemId} className="grid grid-cols-[32px_1fr] gap-x-4">
-                      {/* z-10 keeps the station above the route line drawn behind the list */}
-                      <Reveal className="relative z-10 flex justify-center pt-5">
-                        <span className="flex size-8 items-center justify-center rounded-full border-2 border-sage bg-paper font-serif text-[14px] font-medium tabular-nums">
-                          {index + 1}
+        {/* The line + sticky side */}
+        <div className="mt-16 grid gap-10 md:grid-cols-[1fr_380px] md:items-start md:gap-12">
+          {/* The line */}
+          <section className="order-2 md:order-1">
+            <h2 className="font-serif text-[clamp(40px,8vw,64px)] leading-[0.95] uppercase">{t("pathway.theLine")}</h2>
+            <ol className="relative mt-8 pl-12">
+              <span aria-hidden className="absolute top-8 bottom-8 left-[14px] w-1 rounded bg-ink" />
+              {visibleSteps.map((step) => {
+                const item = resolveItem(step);
+                if (!item) return null;
+                const index = plan.steps.indexOf(step);
+                const expanded = expandedId === step.itemId;
+                const title = "title" in item ? item.title : item.name;
+                const providerName = "provider" in item ? item.provider : item.agency;
+                const weeksLabel =
+                  step.weekStart === step.weekEnd
+                    ? t("pathway.week", { week: String(step.weekStart) })
+                    : t("pathway.weeksRange", { start: String(step.weekStart), end: String(step.weekEnd) });
+                const displayHours = step.merged?.hours ?? ("hours" in item ? item.hours : undefined);
+                const closedSkill = role.gap.find((skill) => step.closesSkillIds.includes(skill.skillId));
+                const sdgLink = step.sdgTarget ? role.sdg.find((link) => link.target === step.sdgTarget) : undefined;
+                return (
+                  <li key={step.itemId} className="relative grid grid-cols-[32px_1fr] gap-x-5 pb-4 last:pb-0">
+                    <span
+                      aria-hidden
+                      className="relative z-10 mt-7 size-[30px] self-start justify-self-center rounded-full bg-card ring-4 ring-ink"
+                    />
+                    <article className="rounded-[28px] bg-card p-6 sm:p-7">
+                      <div className="flex flex-wrap items-start justify-between gap-x-4 gap-y-1 font-mono text-[12px] tracking-[0.04em] text-grey uppercase">
+                        <span className="min-w-0 break-words">{t("pathway.stopLabel", { n: String(index + 1).padStart(2, "0"), provider: providerName })}</span>
+                        <span className="min-w-0 sm:text-right">
+                          {weeksLabel} ·{" "}
+                          {displayHours != null ? (
+                            t("pathway.hoursShort", { hours: String(displayHours) })
+                          ) : (
+                            <span>{t("pathway.hoursNotListed")}</span>
+                          )}
                         </span>
-                      </Reveal>
-                      <Reveal delay={0.05}>
-                        <article className="panel p-5 transition-[border-color] hover:border-grey/40">
-                          <div className="flex flex-wrap items-center justify-between gap-2 text-[12px] text-grey">
-                            <span className="flex items-center gap-1.5">
-                              {step.kind === "course" ? (
-                                <GraduationCap className="size-3.5" strokeWidth={1.6} />
-                              ) : (
-                                <Landmark className="size-3.5" strokeWidth={1.6} />
-                              )}
-                              {providerName}
-                            </span>
-                            <span className="tabular-nums">{weeksLabel}</span>
-                          </div>
-                          <h3 className="mt-2 font-serif text-[22px] leading-tight font-medium">
-                            {"title" in item ? item.title : item.name}
-                          </h3>
+                      </div>
+                      <div className="mt-3 flex items-end justify-between gap-4">
+                        <h3 className="min-w-0 font-sans text-[22px] leading-tight font-bold">
+                          <button
+                            type="button"
+                            aria-expanded={expanded}
+                            onClick={() => setExpandedId((current) => (current === step.itemId ? null : step.itemId))}
+                            className="text-left hover:underline"
+                          >
+                            {title}
+                          </button>
+                        </h3>
+                        <a
+                          href={item.url}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="flex shrink-0 items-center gap-1 font-mono text-[12px] tracking-[0.04em] text-grey uppercase hover:text-ink"
+                        >
+                          {t("pathway.open")}
+                          <ArrowUpRight className="size-3.5" strokeWidth={1.6} />
+                        </a>
+                      </div>
 
-                          <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-2 text-[13px]">
-                            <span className={cn("tag", COST_CLASS[item.costType])}>
-                              <CostIcon className="size-3" strokeWidth={1.6} />
+                      {closedSkill && (
+                        <p className="mt-2 text-[14px] leading-snug text-grey">
+                          {t("pathway.closes")}: <span className="font-bold text-ink">{closedSkill.label}</span>
+                        </p>
+                      )}
+                      {expanded && (
+                        <>
+                          <Perforation className="my-5" />
+                          <p className="text-[14px] leading-relaxed text-grey">
+                            {step.why}
+                          </p>
+                          <div className="mt-4 flex flex-wrap gap-2">
+                            <span className="rounded-full bg-paper px-3 py-1 font-mono text-[11px] tracking-[0.04em] text-ink uppercase">
                               {t(COST_LABEL_KEY[item.costType])}
                             </span>
-                            {aiContentBadgeKey && (
-                              <span className="tag font-sans text-[11px] font-medium text-ink">{t(aiContentBadgeKey)}</span>
-                            )}
-                            <span className="flex items-center gap-1 text-grey">
-                              <Clock3 className="size-3.5" strokeWidth={1.6} />
-                              {displayHours != null ? (
-                                t("pathway.hoursShort", { hours: String(displayHours) })
-                              ) : (
-                                <span className="text-xs text-grey">{t("pathway.hoursNotListed")}</span>
-                              )}
-                            </span>
-                            {closedSkill && (
-                              <span className="flex min-w-0 items-center gap-1.5">
-                                <Target className="size-3.5 shrink-0 text-sage" strokeWidth={1.6} />
-                                <span className="text-grey">{t("pathway.closes")}</span>{" "}
-                                <span className="font-medium">{closedSkill.label}</span>
-                              </span>
-                            )}
-                            {eligibility === "check" && (
-                              <span className="inline-flex items-center gap-1 rounded-full border border-ink/60 px-2 py-0.5 text-[11px] font-medium text-ink">
-                                <CircleHelp className="size-3" strokeWidth={1.6} />
-                                {t("pathway.checkEligibility")}
-                              </span>
+                            {sdgLink && (
+                              <SdgChip>{`SDG ${sdgLink.target} ${targetLabels[sdgLink.target] ?? sdgLink.target}`.trim()}</SdgChip>
                             )}
                           </div>
+                        </>
+                      )}
+                    </article>
+                  </li>
+                );
+              })}
+            </ol>
+            {plan.steps.length > VISIBLE_STOPS && !showAll && (
+              <button
+                type="button"
+                onClick={() => setShowAll(true)}
+                className="mt-2 pl-12 font-mono text-[12px] tracking-[0.04em] text-grey uppercase hover:text-ink"
+              >
+                {t("pathway.moreStops", { count: String(plan.steps.length - VISIBLE_STOPS) })}
+              </button>
+            )}
+          </section>
 
-                          <Disclosure
-                            className="mt-4"
-                            summary={<span className="text-[13px] text-grey hover:text-ink">{t("pathway.details")}</span>}
-                            summaryClassName="justify-start gap-1"
-                            contentClassName="mt-3 space-y-3 text-[13px]"
-                          >
-                            <p className="leading-relaxed text-grey">{step.why}</p>
-
-                            {eligibility === "pass" && (
-                              <p className="flex items-center gap-1.5 text-[12px] text-sage-dark">
-                                <CircleCheck className="size-3.5" strokeWidth={1.6} />
-                                {t("pathway.eligible")}
-                              </p>
-                            )}
-                            {eligibility === "fail" && <p className="text-[12px] text-grey">{t("pathway.notEligible")}</p>}
-                            {eligibility === "check" && (
-                              <p className="text-[12px] text-grey">{t("pathway.eligibilityUnknown")}</p>
-                            )}
-
-                            <div className="flex flex-wrap gap-x-5 gap-y-1 text-[12px] text-grey">
-                              {displayLanguages && (
-                                <span>
-                                  {t("pathway.languages", {
-                                    languages: displayLanguages.map(languageLabel).join(", "),
-                                  })}
-                                </span>
-                              )}
-                              {displayCertificate != null && (
-                                <span className="flex items-center gap-1">
-                                  {displayCertificate ? <Award className="size-3.5" strokeWidth={1.6} /> : <CircleSlash className="size-3.5" strokeWidth={1.6} />}
-                                  {displayCertificate ? t("pathway.certificate") : t("pathway.noCertificate")}
-                                </span>
-                              )}
-                              {sdgLink && (
-                                <span className="flex items-center gap-1.5">
-                                  {t("pathway.sdg")}{" "}
-                                  <SdgBadge link={sdgLink} label={targetLabels[sdgLink.target] ?? sdgLink.target} />
-                                </span>
-                              )}
-                            </div>
-
-                            <div className="flex flex-wrap items-center justify-between gap-2">
-                              <SourceChip
-                                source={{
-                                  dataset: providerName,
-                                  releaseDate: item.lastChecked,
-                                  url: item.url,
-                                  asOf: item.lastChecked,
-                                }}
-                              />
-                            </div>
-                          </Disclosure>
-                          <div className="mt-3 flex justify-end">
-                            <a
-                              href={item.url}
-                              target="_blank"
-                              rel="noreferrer"
-                              className="flex items-center gap-1 text-[12px] text-grey underline underline-offset-4 hover:text-ink"
-                            >
-                              {step.kind === "course" ? t("pathway.viewCourse") : t("pathway.openSource")}
-                              <ArrowUpRight className="size-3" strokeWidth={1.6} />
-                            </a>
-                          </div>
-                        </article>
-                      </Reveal>
+          {/* Sticky skill-gap side */}
+          <aside className="order-1 flex flex-col gap-4 md:order-2 md:sticky md:top-6 md:self-start">
+            <div className="rounded-[40px] bg-card p-8">
+              <p className="font-mono text-[12px] tracking-[0.06em] text-grey uppercase">{t("pathway.yourSkillGap")}</p>
+              <p className="mt-3 font-serif text-[72px] leading-none tabular-nums">
+                {closedSkillIds.size}/{role.gap.length}
+              </p>
+              <ul className="mt-5 space-y-2.5 text-[15px]">
+                {role.gap.map((skill) => {
+                  const covered = closedSkillIds.has(skill.skillId);
+                  return (
+                    <li key={skill.skillId} className={cn("flex items-start gap-2.5", !covered && "text-grey/60")}>
+                      <span aria-hidden className="mt-1.5 text-[10px]">
+                        {covered ? "●" : "○"}
+                      </span>
+                      <span>{skill.label}</span>
                     </li>
                   );
                 })}
-            </RouteTimeline>
-          </div>
-
-          {/* Side panel */}
-          <Reveal delay={0.2} className="md:sticky md:top-24 md:col-span-4">
-            <div className="panel space-y-6 p-6">
-              <div>
-                <p className="flex items-baseline justify-between text-[12px] text-grey">
-                  {t("pathway.yourSkillGap")}
-                  <span className="font-serif text-[18px] font-medium text-ink">
-                    {closedSkillIds.size}{" "}
-                    <span className="font-sans text-[12px] font-normal text-grey">
-                      {t("pathway.ofCovered", { count: String(role.gap.length) })}
-                    </span>
-                  </span>
-                </p>
-                <ul className="mt-3 space-y-2 text-[13px]">
-                  {role.gap.map((skill) => {
-                    const stepIndex = plan.steps.findIndex((step) => step.closesSkillIds.includes(skill.skillId));
-                    return (
-                      <li key={skill.skillId} className="flex items-center justify-between gap-2">
-                        <span className="flex items-center gap-2">
-                          {stepIndex >= 0 ? (
-                            <CircleCheck className="size-4 shrink-0 text-sage" strokeWidth={1.6} />
-                          ) : (
-                            <CircleSlash className="size-4 shrink-0 text-grey/60" strokeWidth={1.6} />
-                          )}
-                          {skill.label}
-                        </span>
-                        <span className="shrink-0 text-[11px] whitespace-nowrap text-grey">
-                          {stepIndex >= 0
-                            ? t("pathway.step", { step: String(stepIndex + 1) })
-                            : t("pathway.notInPlan")}
-                        </span>
-                      </li>
-                    );
-                  })}
-                </ul>
-              </div>
-
-              <div className="border-t border-line pt-5">
-                <p className="text-[12px] text-grey">{t("pathway.sdgTargetsMove")}</p>
-                <div className="mt-3 flex flex-wrap gap-1.5 text-[12px]">
-                  {role.sdg.map((link) => (
-                    <SdgBadge key={link.target} link={link} label={targetLabels[link.target] ?? link.target} />
-                  ))}
-                </div>
-                <div className="mt-3">
-                  <SdgLegend />
-                </div>
-              </div>
-
-              <div className="border-t border-line pt-5 text-[12px] text-grey">
-                <p>
-                  {t("pathway.builtFor", { languages: languagesLabel, hours: String(hoursPerWeek) })}
-                  {role.robust ? ` ${t("pathway.robustNote")}` : ""}
-                </p>
-                <button
-                  type="button"
-                  onClick={handleDelete}
-                  className="mt-4 flex items-center gap-1.5 underline underline-offset-4 hover:text-ink"
+              </ul>
+              <Perforation className="my-6" />
+              <SdgChip>{`SDG ${role.sdg.map((link) => link.target).join(" · ")}`}</SdgChip>
+              {firstUrl && (
+                <a
+                  href={firstUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="mt-7 flex w-full items-center justify-center rounded-full bg-sage px-6 py-3.5 text-[15px] font-bold text-ink transition-colors hover:bg-sage/90"
                 >
-                  <Trash2 className="size-3.5" strokeWidth={1.6} />
-                  {t("pathway.deleteMyData")}
-                </button>
-              </div>
+                  {t("pathway.startStop", { n: "01" })}
+                </a>
+              )}
+              <button
+                type="button"
+                onClick={handleDelete}
+                className="mt-4 flex items-center gap-1.5 text-[13px] text-grey underline underline-offset-4 hover:text-ink"
+              >
+                <Trash2 className="size-3.5" strokeWidth={1.6} />
+                {t("pathway.deleteMyData")}
+              </button>
             </div>
-          </Reveal>
-        </section>
+            <IllustrationPanel src="/illustrations/u1.svg" panel="plasma" className="h-[240px]" />
+          </aside>
+        </div>
 
-        <p className="mt-10 text-[12px] leading-relaxed text-grey/80">{t("pathway.catalogueNote")}</p>
+        <SourceRow
+          className="mt-14"
+          sources={[
+            {
+              label: t("pathway.catalogueChecked", {
+                date: catalogueDate ? formatDayMonthYear(catalogueDate, t) : missingValue(t("common.notAvailable")),
+              }),
+            },
+          ]}
+        />
       </main>
-      <EstimateFooter />
+
+      {/* window.print() surface: all stops expanded, no chrome (globals.css @media print). */}
+      <section className="print-only">
+        <h1 className="print-h1">{t("pathway.printTitle", { title: role.title })}</h1>
+        <p>
+          {t("pathway.printDate", {
+            date: new Date().toLocaleDateString(locale === "ms" ? "ms-MY" : "en-GB", {
+              day: "numeric",
+              month: "long",
+              year: "numeric",
+            }),
+          })}
+        </p>
+        <ol>
+          {plan.steps.map((step, index) => {
+            const item = resolveItem(step);
+            if (!item) return null;
+            const providerName = "provider" in item ? item.provider : item.agency;
+            const weeksLabel =
+              step.weekStart === step.weekEnd
+                ? t("pathway.week", { week: String(step.weekStart) })
+                : t("pathway.weeksRange", { start: String(step.weekStart), end: String(step.weekEnd) });
+            return (
+              <li key={step.itemId} className="print-ticket">
+                <span className="print-num">{index + 1}</span>
+                <span className="print-name">{"title" in item ? item.title : item.name}</span>
+                <span>{providerName}</span>
+                <span>{weeksLabel}</span>
+                <span>{t(COST_LABEL_KEY[item.costType])}</span>
+                <span className="print-url">{item.url}</span>
+              </li>
+            );
+          })}
+        </ol>
+        <footer className="print-foot">
+          <p>{t("footer.disclaimer")}</p>
+          <p>{t("pathway.printSources")}</p>
+        </footer>
+      </section>
     </div>
   );
 }
 
-/** The route down the timeline: a sage line that follows the scroll position. */
-function RouteTimeline({ children }: { children: ReactNode }) {
-  const reduce = useReducedMotion();
-  const listRef = useRef<HTMLOListElement>(null);
-  const { scrollYProgress } = useScroll({ target: listRef, offset: ["start 0.75", "end 0.75"] });
-  const lineProgress = useSpring(scrollYProgress, { stiffness: 120, damping: 30, restDelta: 0.001 });
-
+function HeroStat({ label, value }: { label: string; value: string }) {
   return (
-    <div className="relative">
-      <span aria-hidden className="absolute top-4 bottom-4 left-[15px] w-px bg-line" />
-      <motion.span
-        aria-hidden
-        className="absolute top-4 bottom-4 left-[15px] w-px origin-top bg-sage"
-        style={{ scaleY: reduce ? 1 : lineProgress }}
-      />
-      <ol ref={listRef} className="space-y-3">
-        {children}
-      </ol>
+    <div>
+      <dt className="font-mono text-[12px] tracking-[0.06em] text-limestone/70 uppercase">{label}</dt>
+      <dd className="mt-1.5 font-serif text-[clamp(26px,3vw,44px)] leading-[0.95] [overflow-wrap:anywhere] lg:[overflow-wrap:normal]">{value}</dd>
     </div>
   );
 }

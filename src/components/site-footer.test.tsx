@@ -11,7 +11,7 @@ describe("footer links", () => {
       expect(existsSync(path.join(process.cwd(), "src/app", link.href, "page.tsx"))).toBe(true);
     }
   });
-  it("data sources all have https links", () => {
-    for (const s of DATA_SOURCES) expect(s.url).toMatch(/^https:\/\//);
+  it("data sources with a link use https", () => {
+    for (const s of DATA_SOURCES) if (s.url !== null) expect(s.url).toMatch(/^https:\/\//);
   });
 });

@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { ArrowRight, Check } from "lucide-react";
 import { EASE_OUT, RouteLine, SPRING } from "@/components/motion";
+import { PageHero } from "@/components/caldera";
 import { useFlow } from "@/context/flow-context";
 import {
   AI_USAGE_CHIPS,
@@ -155,7 +156,7 @@ export function InterviewView() {
     setSlots(merged);
     if (isInterviewDone(turn)) {
       setInterviewAnswers(finalizeSlots(merged));
-      router.push("/results");
+      router.push("/exposure-intro");
       return;
     }
     setDirection(1);
@@ -206,15 +207,15 @@ export function InterviewView() {
   };
 
   return (
-    <main className="mx-auto max-w-[760px] px-4 pb-20 sm:px-6">
-      <motion.section
+    <main className="mx-auto max-w-[1080px] px-4 pb-20 sm:px-6 md:px-8">
+      <motion.div
         initial={reduce ? false : { opacity: 0, y: 14 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, ease: EASE_OUT }}
-        className="pt-10 pb-8"
+        className="pt-6 pb-10 md:pt-10"
       >
-        <h1 className="font-serif text-[34px] leading-[1.05] font-medium tracking-tight md:text-[44px]">{t("interview.title")}</h1>
-      </motion.section>
+        <PageHero title={t("interview.title")} lede={t("interview.lede")} titleClassName="md:text-[clamp(48px,7vw,96px)]" />
+      </motion.div>
 
       {/* Progress: five stations on one line */}
       <div className="relative mb-6 h-6">
@@ -254,7 +255,8 @@ export function InterviewView() {
         </ol>
       </div>
 
-      <div className="panel overflow-hidden">
+      <div className="grid gap-4 md:grid-cols-[1fr_300px]">
+        <div className="panel order-2 overflow-hidden md:order-1">
         <AnimatePresence mode="wait" custom={direction} initial={false}>
           <motion.div
             key={turn}
@@ -269,7 +271,7 @@ export function InterviewView() {
             <p className="text-[12px] text-grey">
               {t("interview.questionCount", { current: String(turn), total: String(MAX_INTERVIEW_TURNS) })}
             </p>
-            <h2 className="mt-2 font-serif text-[24px] leading-snug font-medium text-balance sm:text-[28px]">
+            <h2 className="mt-2 font-serif text-[24px] leading-[0.9] font-medium text-balance sm:text-[28px]">
               {t(questionTitleKey)}
             </h2>
             {questionSubtitleKey && (
@@ -434,24 +436,27 @@ export function InterviewView() {
         </div>
       </div>
 
-      {/* So far */}
-      <div className="mt-5 flex flex-wrap items-center gap-1.5 text-[12px] text-grey">
-        <span className="mr-1">{t("interview.soFar")}</span>
-        <AnimatePresence initial={false}>
-          {soFar.map((item) => (
-            <motion.span
-              key={item}
-              layout
-              initial={reduce ? false : { opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={reduce ? undefined : { opacity: 0, scale: 0.8 }}
-              transition={SPRING}
-              className="tag bg-white ring-1 ring-line"
-            >
-              {item}
-            </motion.span>
-          ))}
-        </AnimatePresence>
+        {/* So far: boarding stub of answers collected (right column at desktop) */}
+        <aside className="order-1 self-start rounded-[28px] bg-card p-6 md:order-2">
+          <p className="font-mono text-[12px] tracking-[0.06em] text-grey uppercase">{t("interview.soFar")}</p>
+          <ul className="mt-3 flex flex-col">
+            <AnimatePresence initial={false}>
+              {soFar.map((item) => (
+                <motion.li
+                  key={item}
+                  layout
+                  initial={reduce ? false : { opacity: 0, y: -6 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={reduce ? undefined : { opacity: 0, y: -6 }}
+                  transition={SPRING}
+                  className="border-b border-dashed border-ink/15 py-2 font-mono text-[12px] text-ink last:border-b-0"
+                >
+                  {item}
+                </motion.li>
+              ))}
+            </AnimatePresence>
+          </ul>
+        </aside>
       </div>
     </main>
   );

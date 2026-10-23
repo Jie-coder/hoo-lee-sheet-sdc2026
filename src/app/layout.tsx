@@ -1,6 +1,6 @@
 // Root layout: Laluan fonts, paper theme, app header, and toasts.
 import type { Metadata } from "next";
-import { Geist_Mono, Inter, Newsreader, Noto_Sans_SC } from "next/font/google";
+import { Anton, DM_Sans, Geist_Mono, Noto_Sans_SC } from "next/font/google";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 import { Toaster } from "@/components/ui/sonner";
@@ -9,16 +9,17 @@ import { FlowProvider } from "@/context/flow-context";
 import { LocaleProvider } from "@/lib/i18n";
 import "./globals.css";
 
-const inter = Inter({
+const anton = Anton({
   subsets: ["latin"],
-  variable: "--font-inter",
+  weight: "400",
+  variable: "--font-anton",
   display: "swap",
 });
 
-const newsreader = Newsreader({
+const dmSans = DM_Sans({
   subsets: ["latin"],
-  weight: ["400", "500", "600"],
-  variable: "--font-newsreader",
+  weight: ["500", "700"],
+  variable: "--font-dm-sans",
   display: "swap",
 });
 
@@ -59,14 +60,14 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
-      className={`${inter.variable} ${newsreader.variable} ${notoSansSc.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${anton.variable} ${dmSans.variable} ${notoSansSc.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="flex min-h-full flex-col">
         <FlowProvider>
           <LocaleProvider>
             <TooltipProvider>
               <SiteHeader />
-              <main className="flex flex-1 flex-col">{children}</main>
+              <main className="flex flex-1 flex-col [&>*]:w-full">{children}</main>
               <SiteFooter />
               <Toaster />
             </TooltipProvider>

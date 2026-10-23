@@ -7,21 +7,30 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-inter), var(--font-noto-sans-sc), "Noto Sans CJK SC", system-ui, sans-serif;
-  --font-serif: var(--font-newsreader), "Source Serif 4", Georgia, serif;
+  --font-sans: var(--font-dm-sans), var(--font-noto-sans-sc), "Noto Sans CJK SC", system-ui, sans-serif;
+  --font-serif: var(--font-anton), "Anton", system-ui, sans-serif;
   --font-mono: var(--font-geist-mono);
   --font-heading: var(--font-serif);
-  --color-paper: #faf9f5;
-  --color-ink: #141413;
-  --color-grey: #5e5d59;
-  --color-line: #e5e3dc;
-  --color-alt: #f3f2ee;
-  --color-btn2: #efede7;
-  --color-sage: #2f7d5b;
-  --color-sage-dark: #24634a;
-  --color-sage-tint: #b9cfc6;
-  --color-sage-soft: #e6efea;
-  --color-sage-wash: #f1f6f3;
+  --color-paper: #e2e2df;
+  --color-ink: #070607;
+  --color-grey: #3a3a3a;
+  --color-line: #cfcfcb;
+  --color-alt: #d8d7d2;
+  --color-btn2: #d4d3ce;
+  --color-sage: #fc5000;
+  --color-sage-dark: #c43e00;
+  --color-plasma: #524ae9;
+  --color-obsidian: #070607;
+  --color-limestone: #f7f6f2;
+  --color-teal-light: #cdeef3;
+  --color-sage-tint: #ffb38f;
+  --color-sage-soft: #ffe4d6;
+  --color-sage-wash: #fff2ec;
+  --color-sulfur: #f5f28e;
+  --color-signal-low: #1f8a4c;
+  --color-signal-medium: #e0a800;
+  --color-signal-high: #b3123a;
+  --color-signal-pending: #b5b5b5;
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -56,43 +65,43 @@
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) * 1.4);
   --radius-2xl: 1rem;
-  --radius-3xl: calc(var(--radius) * 2.2);
-  --radius-4xl: calc(var(--radius) * 2.6);
+  --radius-3xl: 2.5rem;
+  --radius-4xl: 3rem;
 }
 
 :root {
-  --background: #faf9f5;
-  --foreground: #141413;
-  --card: #ffffff;
-  --card-foreground: #141413;
-  --popover: #ffffff;
-  --popover-foreground: #141413;
-  --primary: #141413;
-  --primary-foreground: #faf9f5;
-  --secondary: #efede7;
-  --secondary-foreground: #141413;
-  --muted: #f3f2ee;
-  --muted-foreground: #5e5d59;
-  --accent: #2f7d5b;
-  --accent-foreground: #faf9f5;
-  --destructive: oklch(0.577 0.245 27.325);
-  --border: #e5e3dc;
-  --input: #e5e3dc;
-  --ring: #2f7d5b;
-  --chart-1: #2f7d5b;
-  --chart-2: #5e5d59;
-  --chart-3: #b9cfc6;
-  --chart-4: #24634a;
-  --chart-5: #141413;
+  --background: #e2e2df;
+  --foreground: #070607;
+  --card: #f7f6f2;
+  --card-foreground: #070607;
+  --popover: #f7f6f2;
+  --popover-foreground: #070607;
+  --primary: #fc5000;
+  --primary-foreground: #070607;
+  --secondary: #f7f6f2;
+  --secondary-foreground: #070607;
+  --muted: #d8d7d2;
+  --muted-foreground: #3a3a3a;
+  --accent: #fc5000;
+  --accent-foreground: #070607;
+  --destructive: #b3123a;
+  --border: #cfcfcb;
+  --input: #cfcfcb;
+  --ring: #fc5000;
+  --chart-1: #fc5000;
+  --chart-2: #524ae9;
+  --chart-3: #f5f28e;
+  --chart-4: #c43e00;
+  --chart-5: #070607;
   --radius: 0.625rem;
-  --sidebar: #faf9f5;
-  --sidebar-foreground: #141413;
-  --sidebar-primary: #141413;
-  --sidebar-primary-foreground: #faf9f5;
-  --sidebar-accent: #e6efea;
-  --sidebar-accent-foreground: #24634a;
-  --sidebar-border: #e5e3dc;
-  --sidebar-ring: #2f7d5b;
+  --sidebar: #e2e2df;
+  --sidebar-foreground: #070607;
+  --sidebar-primary: #fc5000;
+  --sidebar-primary-foreground: #070607;
+  --sidebar-accent: #ffe4d6;
+  --sidebar-accent-foreground: #c43e00;
+  --sidebar-border: #cfcfcb;
+  --sidebar-ring: #fc5000;
 }
 
 .dark {
@@ -135,8 +144,21 @@
   }
   body {
     @apply bg-background text-foreground;
+    /* Caldera: Pumice page with a faint dot grid. Illustration panels sit on top. */
+    background-image: radial-gradient(#07060718 1px, transparent 1.2px);
+    background-size: 14px 14px;
     font-feature-settings: "cv11", "ss01";
+    font-weight: 500;
     -webkit-font-smoothing: antialiased;
+  }
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply font-heading;
+    font-weight: 400;
   }
   html {
     @apply font-sans;
@@ -153,32 +175,32 @@
 @utility btn-base {
   @apply inline-flex items-center justify-center gap-2 rounded-full px-5 py-2.5 text-[14px] font-medium whitespace-nowrap transition-[transform,background-color,border-color,opacity] duration-200 outline-none select-none focus-visible:ring-2 focus-visible:ring-sage/60 focus-visible:ring-offset-2 focus-visible:ring-offset-paper active:scale-[0.98] disabled:pointer-events-none disabled:opacity-40;
 }
-/* Primary action: ink pill. Secondary: white pill with a hairline. */
+/* Primary action: Ember pill with black text. Secondary: limestone pill with a hairline. */
 @utility btn-primary {
-  @apply btn-base bg-ink text-paper hover:bg-ink/85;
+  @apply btn-base bg-sage text-ink hover:bg-sage/90;
 }
 @utility btn-secondary {
-  @apply btn-base border border-line bg-white text-ink hover:border-ink/40;
+  @apply btn-base border border-line bg-card text-ink hover:border-ink/40;
 }
 @utility btn-ghost {
   @apply btn-base px-3 text-grey hover:bg-alt hover:text-ink;
 }
 /* Tap-to-answer chip; aria-pressed="true" fills it. */
 @utility chip {
-  @apply inline-flex items-center gap-1.5 rounded-full border border-line bg-white px-3.5 py-1.5 text-[13px] text-ink transition-[background-color,border-color,color,transform] duration-200 outline-none focus-visible:ring-2 focus-visible:ring-sage/60 hover:border-ink/40 active:scale-[0.97] aria-pressed:border-ink aria-pressed:bg-ink aria-pressed:text-paper;
+  @apply inline-flex items-center gap-1.5 rounded-full border border-line bg-card px-3.5 py-1.5 text-[13px] text-ink transition-[background-color,border-color,color,transform] duration-200 outline-none focus-visible:ring-2 focus-visible:ring-sage/60 hover:border-ink/40 active:scale-[0.97] aria-pressed:border-ink aria-pressed:bg-ink aria-pressed:text-paper;
 }
 @utility chip-sm {
   @apply px-2.5 py-1 text-[12px];
 }
 /* A plain data tag (source, cost, language). Never clickable-looking. */
 @utility tag {
-  @apply inline-flex items-center gap-1 rounded-full bg-alt px-2.5 py-0.5 text-[11px] leading-5 text-grey;
+  @apply inline-flex items-center gap-1 rounded-full bg-sulfur px-2.5 py-0.5 text-[11px] leading-5 text-ink;
 }
 @utility panel {
-  @apply rounded-3xl border border-line bg-white;
+  @apply rounded-[40px] border border-line bg-card;
 }
 @utility field {
-  @apply w-full rounded-xl border border-line bg-white px-3 py-2 text-[14px] text-ink transition-colors outline-none placeholder:text-grey/60 focus:border-ink/50;
+  @apply w-full rounded-xl border border-line bg-card px-3 py-2 text-[14px] text-ink transition-colors outline-none placeholder:text-grey/60 focus:border-ink/50;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -188,4 +210,26 @@
   .chip {
     transition: none;
   }
+}
+
+/* Pathway print / "Download PDF" (window.print). Screen: hidden. */
+.print-only { display: none; }
+@media print {
+  @page { size: A4 portrait; margin: 16mm; }
+  html, body { background: #fff !important; color: #000 !important; }
+  header, nav, footer:not(.print-foot), canvas, video, button,
+  .print-hide, [data-sonner-toaster] { display: none !important; }
+  *, *::before, *::after { animation: none !important; transition: none !important; box-shadow: none !important; }
+  body:has(.print-only) * { visibility: hidden !important; }
+  body:has(.print-only) .print-only, body:has(.print-only) .print-only * { visibility: visible !important; }
+  body:has(.print-only) .print-only { position: absolute; top: 0; left: 0; right: 0; }
+  .print-only { display: block !important; color: #000; font-family: var(--font-dm-sans), "DM Sans", sans-serif; font-size: 11pt; }
+  .print-only .print-h1 { font-family: var(--font-anton), "Anton", sans-serif; font-size: 26pt; line-height: 1.1; margin: 0 0 4pt; text-transform: uppercase; }
+  .print-only ol { list-style: none; padding: 0; margin: 14pt 0; }
+  .print-only .print-ticket { display: grid; grid-template-columns: 22pt 1fr; column-gap: 8pt; row-gap: 2pt; border: 0.75pt solid #000; border-radius: 10pt; padding: 8pt 10pt; margin-bottom: 8pt; break-inside: avoid; page-break-inside: avoid; background: #fff; }
+  .print-only .print-ticket > span { grid-column: 2; }
+  .print-only .print-num { grid-column: 1 !important; grid-row: 1 / span 6; font-family: var(--font-anton), "Anton", sans-serif; font-size: 16pt; }
+  .print-only .print-name { font-weight: 600; font-size: 12pt; }
+  .print-only .print-url { font-size: 9pt; word-break: break-all; }
+  .print-only .print-foot { border-top: 0.75pt solid #000; padding-top: 6pt; font-size: 9pt; break-inside: avoid; }
 }
