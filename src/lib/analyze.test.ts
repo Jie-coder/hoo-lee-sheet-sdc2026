@@ -94,48 +94,24 @@ describe("analyzeProfile scoring rules (tiny catalogue)", () => {
     expect(two.gap.map((gap) => gap.skillId)).toEqual(["d"]);
   });
 
-  it("credits only the top 6 related skills by importance when a role has more than 6", () => {
-    // A role with 8 essential skills, all in the user's skill group (related,
-    // not exact), with distinct momentum so each has a different imp_s.
-    // Only the 6 with the highest imp_s should get related credit; the
-    // other 2 fall back to missing, even though they are "related" too.
+  it("credits only the top relatedSkillCap (10) related skills by importance when a role has more", () => {
+    // A role with 12 essential skills, all in the user's skill group (related,
+    // not exact), with distinct, descending momentum so each has a different
+    // imp_s. Only the 10 with the highest imp_s get related credit; the other
+    // 2 fall back to missing, even though they are "related" too.
     const base = CATALOGUE.occupations.find((occupation) => occupation.id === "o009")!;
+    const cap = SCORING_PARAMS.relatedSkillCap;
+    expect(cap).toBe(10);
+    const ids = Array.from({ length: cap + 2 }, (_, index) => `r${String(index + 1).padStart(2, "0")}`);
+    const momentum = ids.map((_, index) => (ids.length - 1 - index) / 10);
     const catalogue: Catalogue = {
       ...CATALOGUE,
-      skills: {
-        u: "user skill",
-        r1: "r1",
-        r2: "r2",
-        r3: "r3",
-        r4: "r4",
-        r5: "r5",
-        r6: "r6",
-        r7: "r7",
-        r8: "r8",
-      },
-      skillGroups: {
-        u: "g1",
-        r1: "g1",
-        r2: "g1",
-        r3: "g1",
-        r4: "g1",
-        r5: "g1",
-        r6: "g1",
-        r7: "g1",
-        r8: "g1",
-      },
+      skills: { u: "user skill", ...Object.fromEntries(ids.map((id) => [id, id])) },
+      skillGroups: { u: "g1", ...Object.fromEntries(ids.map((id) => [id, "g1"])) },
       groupLabels: { g1: "group one" },
-      // Descending momentum so r1..r6 (highest imp_s) beat r7, r8.
-      signals: {
-        r1: { momentum: 0.7, keywords: [], checkedOn: base.exposure!.asOf },
-        r2: { momentum: 0.6, keywords: [], checkedOn: base.exposure!.asOf },
-        r3: { momentum: 0.5, keywords: [], checkedOn: base.exposure!.asOf },
-        r4: { momentum: 0.4, keywords: [], checkedOn: base.exposure!.asOf },
-        r5: { momentum: 0.3, keywords: [], checkedOn: base.exposure!.asOf },
-        r6: { momentum: 0.2, keywords: [], checkedOn: base.exposure!.asOf },
-        r7: { momentum: 0.1, keywords: [], checkedOn: base.exposure!.asOf },
-        r8: { momentum: 0, keywords: [], checkedOn: base.exposure!.asOf },
-      },
+      signals: Object.fromEntries(
+        ids.map((id, index) => [id, { momentum: momentum[index], keywords: [], checkedOn: base.exposure!.asOf }]),
+      ),
       courses: [],
       occupations: [
         {
@@ -143,7 +119,7 @@ describe("analyzeProfile scoring rules (tiny catalogue)", () => {
           id: "y1",
           title: "capped role",
           cluster: "data_analytics",
-          essentialSkillIds: ["r1", "r2", "r3", "r4", "r5", "r6", "r7", "r8"],
+          essentialSkillIds: ids,
           exposure: { ...base.exposure!, value: 0.5 },
         },
       ],
@@ -154,16 +130,13 @@ describe("analyzeProfile scoring rules (tiny catalogue)", () => {
       impactInterest: "none",
     });
     const role = result.roles.find((r) => r.occupationId === "y1")!;
-    expect(result.breakdown.y1.relatedSkills).toBe(SCORING_PARAMS.relatedSkillCap);
-    // r1..r6 earn credit, so only r7 and r8 are gaps.
-    expect(role.gap.map((gap) => gap.skillId).sort()).toEqual(["r7", "r8"]);
-    // Fit = 6 skills at half related credit + 2 missing, over the 8 essential skills.
-    const imp = (momentum: number) => 1 * (1 + SCORING_PARAMS.lambda * Math.tanh(momentum));
-    const weighted = [0.7, 0.6, 0.5, 0.4, 0.3, 0.2].reduce(
-      (sum, m) => sum + imp(m) * RELATED_SKILL_CREDIT,
-      0,
-    );
-    const total = [0.7, 0.6, 0.5, 0.4, 0.3, 0.2, 0.1, 0].reduce((sum, m) => sum + imp(m), 0);
+    expect(result.breakdown.y1.relatedSkills).toBe(cap);
+    // The two lowest-momentum skills are the only gaps.
+    expect(role.gap.map((gap) => gap.skillId).sort()).toEqual(ids.slice(cap));
+    // Fit = cap skills at half related credit + 2 missing, over all essential skills.
+    const imp = (m: number) => 1 * (1 + SCORING_PARAMS.lambda * Math.tanh(m));
+    const weighted = momentum.slice(0, cap).reduce((sum, m) => sum + imp(m) * RELATED_SKILL_CREDIT, 0);
+    const total = momentum.reduce((sum, m) => sum + imp(m), 0);
     expect(role.fit).toBeCloseTo(weighted / total, 10);
   });
 

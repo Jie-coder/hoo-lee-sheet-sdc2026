@@ -57,7 +57,7 @@ export type RoleStatusTone = "robust" | "shift" | "interest";
 export type RoleBreakdown = {
   /** Essential skills the user has exactly (same ESCO skill). */
   matchedSkills: number;
-  /** Essential skills in the same ESCO skill group as one of the user's: half credit, capped at relatedSkillCap (6) per role — only the 6 most important count. */
+  /** Essential skills in the same ESCO skill group as one of the user's: half credit, capped at relatedSkillCap (10) per role — only the 10 most important count. */
   relatedSkills: number;
   /** The same related skills by label (ESCO), in essential-skill order: what earned half credit. */
   relatedSkillLabels: string[];
@@ -148,8 +148,8 @@ export function analyzeProfile(catalogue: Catalogue, input: AnalyzeInput): Analy
    * h_s for every essential skill of one role: the user's level for the
    * exact skill, else related credit for a same-group skill, else 0.
    *
-   * Related credit (half credit) is only given to the relatedSkillCap (6)
-   * related skills with the highest adjusted importance imp_s (the 6 most
+   * Related credit (half credit) is only given to the relatedSkillCap (10)
+   * related skills with the highest adjusted importance imp_s (the 10 most
    * important skills of the role; ties by skillId ascending). Any related
    * skill beyond that falls back to missing. Without a cap, a role with
    * many essential skills and a user with a few broadly-connected skills
@@ -265,7 +265,7 @@ export function analyzeProfile(catalogue: Catalogue, input: AnalyzeInput): Analy
     const levels = levelsByOccupation.get(role.occupationId)!;
     breakdown[role.occupationId] = {
       matchedSkills: occupation.essentialSkillIds.filter((id) => userLevel.has(id)).length,
-      // Capped the same way as fit: at most relatedSkillCap (6) per role.
+      // Capped the same way as fit: at most relatedSkillCap (10) per role.
       relatedSkills: occupation.essentialSkillIds.filter(
         (id) => !userLevel.has(id) && (levels.get(id) ?? 0) > 0,
       ).length,

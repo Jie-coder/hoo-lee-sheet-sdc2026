@@ -22,11 +22,11 @@
 //   not the exact skill) earns relatedSkillCredit = 0.5 of a full match:
 //   half credit for "close enough". It rewards transferable skills without
 //   treating them as a substitute for the real thing.
-// - Each role only counts the top relatedSkillCap = 6 related skills (by
-//   adjusted importance imp_s, i.e. the 6 most important skills; ties break
+// - Each role only counts the top relatedSkillCap = 10 related skills (by
+//   adjusted importance imp_s, i.e. the 10 most important skills; ties break
 //   by skillId). This stops "related skill padding": a broad CV with a
 //   handful of adjacent skills can't pad its fit score by racking up related
-//   credit on every essential skill of a role — only the 6 most important
+//   credit on every essential skill of a role — only the 10 most important
 //   ones count, and the rest fall back to missing. Capping it keeps the
 //   credit a small nudge, not a second scoring channel.
 // - Roles with more than essentialSkillCap = 25 essential skills have the
@@ -106,8 +106,8 @@ export const SCORING_PARAMS = {
   gapSize: 5,
   /** Half credit for an essential skill in the same ESCO group as a user skill, not the exact match. See the file header. */
   relatedSkillCredit: 0.5,
-  /** At most the 6 most important related skills per role count, so a broad CV can't pad fit with adjacent skills. See the file header. */
-  relatedSkillCap: 6,
+  /** At most the 10 most important related skills per role count, so a broad CV can't pad fit with adjacent skills. See the file header. */
+  relatedSkillCap: 10,
   /** Essential-skill count above which the fit denominator is scaled down. See the file header. */
   essentialSkillCap: 25,
   /** Minimum fit F a role needs to be eligible for a scenario's top 3. See "Minimum fit filter" in the file header. */
@@ -215,7 +215,7 @@ export type ScoredRole = Pick<
  * (BM "Laluan peralihan"): a deliberate reskilling move rather than a close
  * match. Display only; it does not change ranking.
  */
-export const STRETCH_FIT_THRESHOLD = 0.2;
+export const STRETCH_FIT_THRESHOLD = 0.15;
 
 /** True when a recommended role's fit is below STRETCH_FIT_THRESHOLD. */
 export function isStretchRoute(fit: number): boolean {

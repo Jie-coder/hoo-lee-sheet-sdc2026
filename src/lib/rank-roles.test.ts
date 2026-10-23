@@ -15,8 +15,8 @@ describe("rankRoles", () => {
 
 describe("isStretchRoute", () => {
   it("flags fit below the threshold only", () => {
-    expect(STRETCH_FIT_THRESHOLD).toBe(0.2);
-    expect(isStretchRoute(0.19)).toBe(true);
-    expect(isStretchRoute(0.2)).toBe(false);
+    expect(STRETCH_FIT_THRESHOLD).toBe(0.15);
+    expect(isStretchRoute(0.149)).toBe(true);
+    expect(isStretchRoute(0.15)).toBe(false);
   });
 });
