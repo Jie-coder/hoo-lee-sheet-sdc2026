@@ -23,7 +23,7 @@ export function ExposureIntroStep() {
             {t("exposureIntro.seeResults")}
           </Link>
         </div>
-        <SourceRow className="items-center text-center" sources={[{ label: t("exposure.sourceIlo") }]} />
+        <SourceRow showDecisionLine={false} className="items-center text-center" sources={[{ label: t("exposure.sourceIlo") }]} />
       </div>
     </main>
   );

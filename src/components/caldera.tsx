@@ -62,6 +62,7 @@ export function SourceRow({
   howOnClick,
   howLabel,
   className,
+  showDecisionLine = true,
 }: {
   sources?: readonly SourceRowItem[];
   howHref?: string;
@@ -69,6 +70,8 @@ export function SourceRow({
   howOnClick?: () => void;
   howLabel?: string;
   className?: string;
+  /** Hide the "supports your decision" line where the footer already shows it. */
+  showDecisionLine?: boolean;
 }) {
   const { t } = useT();
   const howText = `${howLabel ?? t("results.howNumbers")} →`;
@@ -111,9 +114,11 @@ export function SourceRow({
           ) : null}
         </div>
       )}
-      <p className="leading-relaxed">
-        {t("sourceRow.decisionLine")} {t("sourceRow.estimatesLine")}
-      </p>
+      {showDecisionLine && (
+        <p className="leading-relaxed">
+          {t("sourceRow.decisionLine")} {t("sourceRow.estimatesLine")}
+        </p>
+      )}
     </div>
   );
 }
