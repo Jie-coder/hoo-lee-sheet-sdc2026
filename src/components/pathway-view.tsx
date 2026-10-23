@@ -204,13 +204,17 @@ export function PathwayView({
               </h1>
             </div>
             <dl className="grid grid-cols-2 gap-x-6 gap-y-7 [&>div]:min-w-0">
-              <HeroStat label={t("pathway.pace")} value={t("pathway.hoursPerWeek", { hours: String(hoursPerWeek) })} />
-              <HeroStat label={t("pathway.cost")} value={mostlyFree ? t("pathway.mostlyFree") : t("pathway.mixedCost")} nowrap />
+              {/* Mobile: Pace | Stops, then Cost and Skills closed on full rows. sm+: 2x2. */}
+              <HeroStat className="max-sm:order-1" label={t("pathway.pace")} value={t("pathway.hoursPerWeek", { hours: String(hoursPerWeek) })} />
               <HeroStat
+                className="max-sm:order-3 max-sm:col-span-2"
+                label={t("pathway.cost")} value={mostlyFree ? t("pathway.mostlyFree") : t("pathway.mixedCost")} nowrap />
+              <HeroStat
+                className="max-sm:order-4 max-sm:col-span-2"
                 label={t("pathway.skillsClosed")}
                 value={`${closedSkillIds.size} ${t("pathway.ofTotal", { count: String(role.gap.length) })}`}
               />
-              <HeroStat label={t("pathway.stops")} value={String(plan.steps.length)} />
+              <HeroStat className="max-sm:order-2" label={t("pathway.stops")} value={String(plan.steps.length)} />
             </dl>
           </div>
         </motion.section>
@@ -447,13 +451,23 @@ export function PathwayView({
   );
 }
 
-function HeroStat({ label, value, nowrap = false }: { label: string; value: string; nowrap?: boolean }) {
+function HeroStat({
+  label,
+  value,
+  nowrap = false,
+  className,
+}: {
+  label: string;
+  value: string;
+  nowrap?: boolean;
+  className?: string;
+}) {
   return (
-    <div className={nowrap ? "max-sm:col-span-2" : undefined}>
+    <div className={className}>
       <dt className="font-mono text-[12px] tracking-[0.06em] text-limestone/70 uppercase">{label}</dt>
       <dd className="mt-1.5 font-serif text-[clamp(26px,3vw,44px)] leading-[0.95] [overflow-wrap:anywhere] lg:[overflow-wrap:normal]">
-        {/* nowrap: the phrase never breaks mid-way; it moves down as one unit instead. */}
-        {nowrap ? <span className="whitespace-nowrap">{value}</span> : value}
+        {/* nowrap on mobile only (its row is full-width there); desktop may wrap. */}
+        {nowrap ? <span className="max-sm:whitespace-nowrap">{value}</span> : value}
       </dd>
     </div>
   );
