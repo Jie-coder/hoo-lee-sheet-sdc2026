@@ -1,7 +1,7 @@
 // Three WEF futures. Selecting one asks the page to re-rank role cards.
 "use client";
 
-import { useRef, type KeyboardEvent } from "react";
+import { useRef, useState, type KeyboardEvent } from "react";
 import { motion } from "framer-motion";
 import { TrendingDown, Users, Zap, type LucideIcon } from "lucide-react";
 import { useT, type MessageKey } from "@/lib/i18n";
@@ -26,11 +26,20 @@ export const SCENARIO_SUMMARY: Record<ScenarioId, MessageKey> = {
   sup: "scenarioTabs.supSummary",
 };
 
+/** One-sentence explanation shown in the small tooltip on hover, keyboard focus or tap. */
+export const SCENARIO_TIP: Record<ScenarioId, MessageKey> = {
+  co: "scenarioTabs.coTip",
+  dis: "scenarioTabs.disTip",
+  sup: "scenarioTabs.supTip",
+};
+
 export const SCENARIO_ILLUSTRATIVE: MessageKey = "scenarioTabs.illustrative";
 
 export function ScenarioTabs({ value, onChange }: { value: ScenarioId; onChange: (scenario: ScenarioId) => void }) {
   const { t } = useT();
   const tabRefs = useRef<Record<string, HTMLButtonElement | null>>({});
+  // Which scenario's tooltip is showing: set by mouse hover, keyboard focus or a tap.
+  const [tip, setTip] = useState<ScenarioId | null>(null);
 
   function select(id: ScenarioId) {
     onChange(id);
@@ -63,6 +72,7 @@ export function ScenarioTabs({ value, onChange }: { value: ScenarioId; onChange:
   }
 
   return (
+    <div className="relative w-full sm:w-auto" onPointerLeave={(event) => event.pointerType === "mouse" && setTip(null)}>
     <div className="w-full overflow-x-auto [scrollbar-width:none] sm:w-auto [&::-webkit-scrollbar]:hidden">
       <div
         role="tablist"
@@ -83,7 +93,12 @@ export function ScenarioTabs({ value, onChange }: { value: ScenarioId; onChange:
               role="tab"
               aria-selected={selected}
               tabIndex={selected ? 0 : -1}
+              aria-describedby={tip === id ? "scenario-tip" : undefined}
               onClick={() => select(id)}
+              onPointerEnter={(event) => event.pointerType === "mouse" && setTip(id)}
+              onPointerDown={(event) => event.pointerType !== "mouse" && setTip(id)}
+              onFocus={() => setTip(id)}
+              onBlur={() => setTip(null)}
               onKeyDown={(event) => handleKeyDown(event, index)}
               className={cn(
                 "relative inline-flex shrink-0 items-center justify-center gap-1.5 rounded-full px-3.5 py-1.5 whitespace-nowrap transition-colors",
@@ -103,6 +118,16 @@ export function ScenarioTabs({ value, onChange }: { value: ScenarioId; onChange:
           );
         })}
       </div>
+    </div>
+      {tip && (
+        <div
+          id="scenario-tip"
+          role="tooltip"
+          className="absolute top-full left-0 z-20 mt-2 line-clamp-2 w-max max-w-[min(320px,calc(100vw-2rem))] rounded-lg border border-line bg-white px-3 py-1.5 text-[12px] leading-snug text-grey shadow-sm sm:right-0 sm:left-auto"
+        >
+          {t(SCENARIO_TIP[tip])}
+        </div>
+      )}
     </div>
   );
 }
