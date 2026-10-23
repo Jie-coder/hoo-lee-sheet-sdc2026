@@ -199,13 +199,13 @@ export function PathwayView({
                   ? t("pathway.boardingFrom", { from: fromRole, to: role.title })
                   : t("pathway.boardingTo", { to: role.title })}
               </p>
-              <h1 className="mt-5 font-serif text-[32px] leading-[1.1] text-balance md:text-[38px] uppercase">
+              <h1 className="mt-5 font-serif text-[clamp(32px,5.9vw,76px)] leading-[1.1] text-balance uppercase">
                 {t("pathway.heroHeading", { weeks: String(totalWeeks), title: role.title })}
               </h1>
             </div>
             <dl className="grid grid-cols-2 gap-x-6 gap-y-7 [&>div]:min-w-0">
               <HeroStat label={t("pathway.pace")} value={t("pathway.hoursPerWeek", { hours: String(hoursPerWeek) })} />
-              <HeroStat label={t("pathway.cost")} value={mostlyFree ? t("pathway.mostlyFree") : t("pathway.mixedCost")} />
+              <HeroStat label={t("pathway.cost")} value={mostlyFree ? t("pathway.mostlyFree") : t("pathway.mixedCost")} nowrap />
               <HeroStat
                 label={t("pathway.skillsClosed")}
                 value={`${closedSkillIds.size} ${t("pathway.ofTotal", { count: String(role.gap.length) })}`}
@@ -447,11 +447,14 @@ export function PathwayView({
   );
 }
 
-function HeroStat({ label, value }: { label: string; value: string }) {
+function HeroStat({ label, value, nowrap = false }: { label: string; value: string; nowrap?: boolean }) {
   return (
-    <div>
+    <div className={nowrap ? "max-sm:col-span-2" : undefined}>
       <dt className="font-mono text-[12px] tracking-[0.06em] text-limestone/70 uppercase">{label}</dt>
-      <dd className="mt-1.5 font-serif text-[clamp(26px,3vw,44px)] leading-[0.95] [overflow-wrap:anywhere] lg:[overflow-wrap:normal]">{value}</dd>
+      <dd className="mt-1.5 font-serif text-[clamp(26px,3vw,44px)] leading-[0.95] [overflow-wrap:anywhere] lg:[overflow-wrap:normal]">
+        {/* nowrap: the phrase never breaks mid-way; it moves down as one unit instead. */}
+        {nowrap ? <span className="whitespace-nowrap">{value}</span> : value}
+      </dd>
     </div>
   );
 }
