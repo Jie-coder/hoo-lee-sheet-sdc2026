@@ -44,7 +44,7 @@ export function PrivacyView() {
 
       <section className="mt-16 grid grid-cols-1 gap-4 md:mt-24 md:grid-cols-3">
         {CARDS.map((card) => (
-          <div key={card.title} className="relative rounded-[40px] bg-card p-8">
+          <div key={card.title} className="relative rounded-[40px] bg-paper p-8">
             <h2 className="font-serif text-[30px] leading-[0.95] uppercase md:text-[34px]">{t(card.title)}</h2>
             <p className="mt-4 text-[16px] leading-relaxed">{t(card.body)}</p>
           </div>
