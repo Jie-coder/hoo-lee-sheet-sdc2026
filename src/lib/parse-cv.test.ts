@@ -242,3 +242,50 @@ describe("parseCv", () => {
     }
   });
 });
+
+describe("parsed skill dedupe", () => {
+  it("dedupes skills that map to the same ESCO skill, and free text by normalized label", async () => {
+    const { dedupeParsedSkills } = await import("@/lib/parse-cv");
+    expect(
+      dedupeParsedSkills([
+        { label: "use spreadsheets software", matched: true },
+        { label: "Excel", matched: false },
+        { label: "use spreadsheets software", matched: true },
+        { label: "  excel ", matched: false },
+        { label: "Use  Spreadsheets Software", matched: false },
+      ]),
+    ).toEqual([
+      { label: "use spreadsheets software", matched: true },
+      { label: "Excel", matched: false },
+      { label: "Use  Spreadsheets Software", matched: false },
+    ]);
+  });
+
+  it("returns no duplicate skills from the real pipeline when raw labels resolve to one ESCO id", async () => {
+    const bytes = new TextEncoder().encode("a CV with repeated skills");
+    const extractPdfText = vi.fn(async () => "Skills: spreadsheets");
+    const extractCv = vi.fn(async () => ({
+      skills: ["use spreadsheets software", "Use Spreadsheets Software (advanced)", "Basket weaving", "basket weaving"],
+      roles: [],
+      education: [],
+    }));
+    const embedTexts = vi.fn(async () => {
+      throw new Error("no embeddings in tests");
+    });
+
+    const outcome = await parseCv(bytes, { demoResults: {}, sleep: noopSleep, extractPdfText, extractCv, embedTexts });
+
+    expect(outcome.ok && outcome.result.skills).toEqual([
+      { label: "use spreadsheets software", matched: true },
+      { label: "Basket weaving", matched: false },
+    ]);
+  });
+
+  it("dedupes skills on a demo sha256 hit too", async () => {
+    const bytes = new TextEncoder().encode("demo bytes with dup skills");
+    const hashHex = (await import("node:crypto")).createHash("sha256").update(bytes).digest("hex");
+    const dup = { ...SAMPLE_RESULT, skills: [...SAMPLE_RESULT.skills, ...SAMPLE_RESULT.skills] };
+    const outcome = await parseCv(bytes, { demoResults: { [hashHex]: dup }, sleep: noopSleep });
+    expect(outcome).toEqual({ ok: true, result: SAMPLE_RESULT });
+  });
+});

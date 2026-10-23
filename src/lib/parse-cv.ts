@@ -140,6 +140,28 @@ function verifiedTaskTexts(tasks: CvExtraction["roles"][number]["tasks"], normal
     .map((task) => task.text);
 }
 
+/**
+ * Drops repeated skills after ESCO mapping. Different raw CV labels ("Excel",
+ * "Microsoft Excel") can resolve to the same ESCO skill; matched skills carry
+ * the canonical catalogue label, which is 1:1 with the ESCO skill id, so they
+ * are keyed by that label. Unmatched (free-text) skills are keyed by a
+ * normalized label (trimmed, lowercased, whitespace collapsed). The first
+ * occurrence wins, preserving CV order. Matched and unmatched keys are kept
+ * apart so free text never collapses into an ESCO match.
+ */
+export function dedupeParsedSkills(skills: readonly ParsedSkill[]): ParsedSkill[] {
+  const seen = new Set<string>();
+  const out: ParsedSkill[] = [];
+  for (const skill of skills) {
+    const norm = skill.label.trim().toLowerCase().replace(/\s+/g, " ");
+    const key = `${skill.matched ? "esco" : "free"}:${norm}`;
+    if (seen.has(key)) continue;
+    seen.add(key);
+    out.push(skill);
+  }
+  return out;
+}
+
 function toParsedCvResult(extraction: CvExtraction, skills: ParsedSkill[], cvText: string): ParsedCvResult {
   const normalizedCvText = normalizeForEvidenceMatch(cvText);
   return {
@@ -200,7 +222,7 @@ export async function parseCv(bytes: Uint8Array, deps: ParseCvDeps = {}): Promis
   const demoHit = demoResults[sha256Hex(bytes)];
   if (demoHit) {
     await wait(DEMO_DELAY_MS);
-    return { ok: true, result: demoHit };
+    return { ok: true, result: { ...demoHit, skills: dedupeParsedSkills(demoHit.skills) } };
   }
 
   const env = getEnv();
@@ -244,6 +266,6 @@ export async function extractAndMapCv(bytes: Uint8Array, deps: ParseCvDeps = {})
   }
   deps.onExtracted?.(extraction);
 
-  const skills = await mapSkillsToEsco(extraction.skills, deps);
+  const skills = dedupeParsedSkills(await mapSkillsToEsco(extraction.skills, deps));
   return { ok: true, result: toParsedCvResult(extraction, skills, text) };
 }
