@@ -153,9 +153,6 @@ export const EN = {
   "radar.tooSmallBody": "Fewer than 20 papers in both windows, so they are left out: {list}.",
   "radar.tooSmallItem": "{keyword} ({recent} vs {previous})",
   "radar.matchYourSkills": "Match your own skills",
-  "estimateFooter.disclaimer":
-    "All scores are estimates. Laluan supports your decision; it does not make hiring decisions.",
-  "estimateFooter.publicData": "Public data, estimates only",
   "refreshButton.label": "Refresh",
   "roleCard.tier.direct": "Direct",
   "roleCard.tier.supporting": "Supporting",
@@ -761,9 +758,6 @@ export const MS: Record<MessageKey, string> = {
   "radar.tooSmallBody": "Kurang daripada 20 kertas dalam kedua-dua tetingkap, jadi ia dikecualikan: {list}.",
   "radar.tooSmallItem": "{keyword} ({recent} berbanding {previous})",
   "radar.matchYourSkills": "Padankan kemahiran anda sendiri",
-  "estimateFooter.disclaimer":
-    "Semua skor ialah anggaran. Laluan menyokong keputusan anda, bukan membuat keputusan pengambilan.",
-  "estimateFooter.publicData": "Data awam, anggaran sahaja",
   "refreshButton.label": "Muat semula",
   "roleCard.tier.direct": "Terus",
   "roleCard.tier.supporting": "Menyokong",
