@@ -52,6 +52,10 @@ export const EN = {
     "All scores and forecasts are estimates. Laluan supports your decision; it does not make hiring decisions.",
   "landing.eyebrow": "Free, 3 minutes, no login",
   "landing.title": "Your route through AI at work.",
+  "landing.heroSdg": "SDG 4 · SDG 8 · SDG 10",
+  "landing.heroTicket": "Ticket Nº 0001 · Admit one career",
+  "landing.heroRoute": "From: Today → To: Future role · Platform 2030",
+  "landing.howItWorks": "How it works",
   "landing.lede":
     "Laluan reads a CV, scores how much AI touches your tasks, and draws a free week-by-week path to a role that fits.",
   "landing.start": "Start",
@@ -511,6 +515,10 @@ export const MS: Record<MessageKey, string> = {
     "Semua skor dan ramalan adalah anggaran. Laluan menyokong keputusan anda; ia tidak membuat keputusan pengambilan pekerja.",
   "landing.eyebrow": "Percuma, 3 minit, tanpa log masuk",
   "landing.title": "Laluan anda melalui AI di tempat kerja.",
+  "landing.heroSdg": "SDG 4 · SDG 8 · SDG 10",
+  "landing.heroTicket": "Tiket No. 0001 · Masuk untuk satu kerjaya",
+  "landing.heroRoute": "Dari: Hari ini → Ke: Peranan masa depan · Platform 2030",
+  "landing.howItWorks": "Cara ia berfungsi",
   "landing.lede":
     "Laluan membaca CV, menilai sejauh mana AI menyentuh tugas anda, dan melakar laluan mingguan percuma ke peranan yang sesuai.",
   "landing.start": "Mula",

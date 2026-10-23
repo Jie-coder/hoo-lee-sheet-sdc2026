@@ -6,13 +6,13 @@
 import { useRouter } from "next/navigation";
 import { useRef } from "react";
 import { motion, useReducedMotion } from "framer-motion";
-import { ArrowRight, Check, Database, HardDrive, ShieldCheck, UserX } from "lucide-react";
-import { CountUp, EASE_OUT, Reveal, RouteDot, RouteLine, Stagger, StaggerItem } from "@/components/motion";
-import { bandLabel, formatDayMonthYear } from "@/lib/display";
+import { ArrowRight, Check, Database, HardDrive, UserX } from "lucide-react";
+import { LandingHeroCanvas } from "@/components/landing-hero-canvas";
+import { EASE_OUT, Reveal, RouteLine, Stagger, StaggerItem } from "@/components/motion";
+import { formatDayMonthYear } from "@/lib/display";
 import { useFlow } from "@/context/flow-context";
 import { useT, type MessageKey } from "@/lib/i18n";
 import type { LandingPreview } from "@/lib/landing-preview";
-import { localizeStatusLabel } from "@/lib/status-label";
 
 const STOPS = [
   { titleKey: "nav.profile", bodyKey: "landing.stop1.body" },
@@ -60,31 +60,56 @@ export function LandingView({ preview }: { preview: LandingPreview }) {
   });
 
   return (
-    <div className="mx-auto max-w-[1248px] px-4 sm:px-6">
-      {/* Hero: copy left, the laluan right */}
-      <section id="start" className="grid scroll-mt-20 grid-cols-1 items-center gap-10 pt-12 pb-16 md:grid-cols-12 md:gap-8 md:pt-20 md:pb-24">
-        <div className="md:col-span-6">
-          <motion.p {...rise(0)} className="text-[12px] font-medium tracking-[0.14em] text-sage uppercase">
-            {t("landing.eyebrow")}
-          </motion.p>
-          <motion.h1
-            {...rise(0.08)}
-            className="mt-4 font-serif text-[42px] leading-[1.02] font-medium tracking-tight text-balance sm:text-[56px] md:text-[64px]"
+    <div className="mx-auto max-w-[1440px] px-4 sm:px-6 md:px-8">
+      {/* Hero: the ticket canvas with the route copy in its cut-outs */}
+      <section id="start" className="scroll-mt-20 pt-8 pb-14 md:pt-10 md:pb-16">
+        <div className="relative">
+          <div className="relative z-10 xl:absolute xl:top-2 xl:left-0 xl:z-20">
+            <motion.p
+              {...rise(0)}
+              className="font-mono text-[10px] tracking-[0.16em] text-sage-dark uppercase md:text-[12px]"
+            >
+              {t("landing.eyebrow")}
+            </motion.p>
+            <motion.h1
+              {...rise(0.08)}
+              className="mt-3 max-w-[900px] font-serif text-[clamp(52px,12vw,84px)] leading-[0.92] tracking-[-0.01em] text-balance uppercase xl:mt-4 xl:text-[clamp(64px,8vw,120px)]"
+            >
+              {t("landing.title")}
+            </motion.h1>
+          </div>
+
+          <div className="relative mt-6 aspect-[1376/520] overflow-hidden xl:mt-0 xl:aspect-[1376/820]">
+            <LandingHeroCanvas className="absolute bottom-0 left-0 aspect-[1376/820] w-full" />
+            <span className="absolute top-2 left-3 rounded-md bg-ink/55 px-2 py-1.5 font-mono text-[9px] leading-none tracking-[0.08em] text-card uppercase xl:top-[43%] xl:left-7 xl:px-2.5 xl:text-[12px]">
+              {t("landing.heroTicket")}
+            </span>
+            <span className="absolute top-2 right-3 rounded-md bg-ink/55 px-2 py-1.5 font-mono text-[9px] leading-none tracking-[0.08em] text-card uppercase xl:top-7 xl:right-7 xl:px-2.5 xl:text-[12px]">
+              {t("landing.heroSdg")}
+            </span>
+            <span className="absolute bottom-2 left-3 rounded-md bg-ink/55 px-2 py-1.5 font-mono text-[9px] leading-none tracking-[0.08em] text-card uppercase xl:bottom-7 xl:left-7 xl:px-2.5 xl:text-[12px]">
+              {t("landing.heroRoute")}
+            </span>
+          </div>
+
+          <motion.div
+            {...rise(0.24)}
+            className="mt-6 xl:absolute xl:right-8 xl:bottom-8 xl:z-20 xl:mt-0 xl:w-[460px]"
           >
-            {t("landing.title")}
-          </motion.h1>
-          <motion.p {...rise(0.16)} className="mt-5 max-w-[46ch] text-[17px] leading-relaxed text-grey">
-            {t("landing.lede")}
-          </motion.p>
-          <motion.div {...rise(0.24)} className="mt-8 flex flex-col gap-4">
-            <button type="button" onClick={handleStart} className="btn-primary self-start px-6 py-3 text-[15px]">
-              {t("landing.start")}
-              <ArrowRight className="size-4" strokeWidth={1.8} />
-            </button>
+            <p className="text-[17px] leading-[1.45] text-balance xl:text-[19px]">{t("landing.lede")}</p>
+            <div className="mt-5 flex flex-wrap gap-3">
+              <button type="button" onClick={handleStart} className="btn-primary px-5 py-3 text-[15px]">
+                {t("landing.start")}
+                <ArrowRight className="size-4" strokeWidth={1.8} />
+              </button>
+              <a href="#about" className="btn-secondary px-5 py-3 text-[15px]">
+                {t("landing.howItWorks")}
+              </a>
+            </div>
             <label
               ref={consentRef}
               tabIndex={-1}
-              className="flex max-w-[520px] cursor-pointer items-start gap-2.5 text-[13px] leading-relaxed text-grey outline-none"
+              className="mt-4 flex max-w-[460px] cursor-pointer items-start gap-2.5 text-[11px] leading-relaxed text-grey outline-none"
             >
               <button
                 type="button"
@@ -103,15 +128,6 @@ export function LandingView({ preview }: { preview: LandingPreview }) {
             </label>
           </motion.div>
         </div>
-
-        <motion.div
-          initial={reduce ? false : { opacity: 0, y: 24 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.2, ease: EASE_OUT }}
-          className="md:col-span-6 md:pl-6"
-        >
-          <PreviewRoute preview={preview} />
-        </motion.div>
       </section>
 
       {/* The four stops, drawn as one line */}
@@ -173,72 +189,3 @@ export function LandingView({ preview }: { preview: LandingPreview }) {
   );
 }
 
-/**
- * The laluan itself: one line from today's job (bottom left) to the chosen
- * role (top right), built from the sample persona's real result.
- */
-function PreviewRoute({ preview }: { preview: LandingPreview }) {
-  const { t } = useT();
-  const role = preview.role;
-  return (
-    <div className="panel relative flex min-h-[240px] w-full flex-col gap-4 overflow-hidden p-5 sm:block sm:aspect-[5/4] sm:min-h-0 sm:p-6">
-      <RouteLine
-        d="M 40 280 C 200 280, 340 250, 362 150 S 372 70, 372 44"
-        viewBox="0 0 400 320"
-        preserveAspectRatio="none"
-        strokeWidth={3}
-        delay={0.6}
-        duration={1.8}
-        className="absolute inset-0 hidden h-full w-full sm:block"
-      >
-        <RouteDot cx={40} cy={280} r={6} delay={0.5} />
-        <RouteDot cx={253} cy={252} r={4} delay={1.5} filled={false} />
-        <RouteDot cx={372} cy={44} r={7} delay={2.2} />
-      </RouteLine>
-
-      {/* today: sits above the first station */}
-      <div className="max-w-[70%] sm:absolute sm:bottom-[19%] sm:left-[6%] sm:max-w-[48%]">
-        <p className="text-[12px] text-grey capitalize">{preview.currentTitle}</p>
-        <p className="mt-0.5 font-serif text-[30px] leading-none font-medium tracking-tight sm:text-[36px]">
-          {bandLabel(preview.currentExposure, t)}{" "}
-          <span className="text-[20px] text-grey/70 sm:text-[22px]">
-            <CountUp value={preview.currentExposure} decimals={2} />
-          </span>
-        </p>
-        <p className="mt-1 text-[12px] text-grey">{t("landing.exposureToday")}</p>
-      </div>
-
-      {/* the plan */}
-      <div className="sm:absolute sm:top-6 sm:left-6">
-        <span className="tag bg-sage-wash text-sage-dark">
-          {t("landing.planChip", {
-            weeks: String(preview.planWeeks),
-            cost: preview.mostlyFree ? t("pathway.mostlyFree") : t("pathway.mixedCost"),
-          })}
-        </span>
-      </div>
-
-      {/* the move: left of the last station */}
-      <div className="max-w-[80%] sm:absolute sm:top-[12%] sm:right-[13%] sm:max-w-[56%] sm:text-right">
-        <p className="font-serif text-[20px] leading-tight font-medium capitalize sm:text-[24px]">{role.title}</p>
-        <p className="mt-1 font-serif text-[30px] leading-none font-medium tracking-tight text-sage sm:text-[36px]">
-          {bandLabel(role.exposure, t)}{" "}
-          <span className="text-[20px] text-sage/70 sm:text-[22px]">
-            <CountUp value={role.exposure} decimals={2} />
-          </span>
-        </p>
-        <p className="mt-1 text-[12px] text-grey">{t("landing.exposureAfterMove")}</p>
-        {preview.robust && (
-          <span className="mt-2 inline-flex items-center gap-1 rounded-full bg-sage-soft px-2.5 py-1 text-[11px] font-medium text-sage-dark">
-            <ShieldCheck className="size-3" strokeWidth={1.8} />
-            {localizeStatusLabel(preview.statusLabel, t)}
-          </span>
-        )}
-      </div>
-
-      <p className="text-[11px] text-grey/70 sm:absolute sm:right-6 sm:bottom-4">
-        {t("landing.exposureNotJobLoss")}
-      </p>
-    </div>
-  );
-}
