@@ -73,12 +73,12 @@ export function ScenarioTabs({ value, onChange }: { value: ScenarioId; onChange:
 
   return (
     <div className="relative w-full sm:w-auto" onPointerLeave={(event) => event.pointerType === "mouse" && setTip(null)}>
-    <div className="w-full overflow-x-auto pr-8 [mask-image:linear-gradient(to_right,black_calc(100%-40px),transparent)] [scrollbar-width:none] sm:w-auto sm:pr-0 sm:[mask-image:none] [&::-webkit-scrollbar]:hidden">
+    <div className="w-full snap-x snap-mandatory overflow-x-auto pr-8 [mask-image:linear-gradient(to_right,black_calc(100%-40px),transparent)] [scrollbar-width:none] sm:w-auto sm:pr-0 sm:[mask-image:none] [&::-webkit-scrollbar]:hidden">
       <div
         role="tablist"
         aria-label={t("scenarioTabs.ariaLabel")}
         aria-orientation="horizontal"
-        className="inline-flex w-max flex-row items-center gap-0.5 rounded-full bg-alt p-1 text-[13px]"
+        className="inline-flex w-max flex-row items-center gap-0.5 rounded-full bg-card p-1.5 text-[13px]"
       >
         {SCENARIO_IDS.map((id, index) => {
           const selected = value === id;
@@ -101,18 +101,18 @@ export function ScenarioTabs({ value, onChange }: { value: ScenarioId; onChange:
               onBlur={() => setTip(null)}
               onKeyDown={(event) => handleKeyDown(event, index)}
               className={cn(
-                "relative inline-flex shrink-0 items-center justify-center gap-1.5 rounded-full px-3.5 py-1.5 whitespace-nowrap transition-colors",
-                selected ? "font-medium text-ink" : "text-grey hover:text-ink",
+                "relative inline-flex shrink-0 snap-start items-center justify-center gap-1.5 rounded-full px-5 py-2.5 whitespace-nowrap transition-colors",
+                selected ? "font-medium text-paper" : "text-grey hover:text-ink",
               )}
             >
               {selected && (
                 <motion.span
                   layoutId="scenario-pill"
-                  className="absolute inset-0 rounded-full border border-line bg-white shadow-sm"
+                  className="absolute inset-0 rounded-full bg-ink"
                   transition={{ type: "spring", stiffness: 500, damping: 40 }}
                 />
               )}
-              <Icon className={cn("relative size-3.5", selected && "text-sage-dark")} strokeWidth={1.6} />
+              <Icon className={cn("relative size-3.5", selected && "text-paper")} strokeWidth={1.6} />
               <span className="relative">{t(SCENARIO_LABEL[id])}</span>
             </button>
           );

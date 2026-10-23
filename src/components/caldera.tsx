@@ -3,7 +3,9 @@
 // (notches + perforation) and illustration panels. See redesign-spec.md §0.
 "use client";
 
-import type { ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import { X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useT } from "@/lib/i18n";
 
@@ -53,15 +55,19 @@ export type SourceRowItem = { label: string; href?: string };
 export function SourceRow({
   sources = [],
   howHref,
+  howOnClick,
   howLabel,
   className,
 }: {
   sources?: readonly SourceRowItem[];
   howHref?: string;
+  /** When set, the "how" affordance is a button (opens a drawer) rather than a link. */
+  howOnClick?: () => void;
   howLabel?: string;
   className?: string;
 }) {
   const { t } = useT();
+  const howText = `${howLabel ?? t("results.howNumbers")} →`;
   return (
     <div className={cn("mt-6 flex flex-col gap-2.5 text-[12px] text-grey", className)}>
       {sources.length > 0 && (
@@ -86,11 +92,19 @@ export function SourceRow({
               </span>
             ),
           )}
-          {howHref && (
+          {howOnClick ? (
+            <button
+              type="button"
+              onClick={howOnClick}
+              className="ml-1 font-mono text-[11px] tracking-[0.04em] text-sage-dark uppercase hover:underline"
+            >
+              {howText}
+            </button>
+          ) : howHref ? (
             <a href={howHref} className="ml-1 font-mono text-[11px] tracking-[0.04em] text-sage-dark uppercase hover:underline">
-              {howLabel ?? t("results.howNumbers")} →
+              {howText}
             </a>
-          )}
+          ) : null}
         </div>
       )}
       <p className="leading-relaxed">
@@ -185,6 +199,89 @@ export function Ticket({
 /** A dashed perforation divider. */
 export function Perforation({ className }: { className?: string }) {
   return <div aria-hidden className={cn("border-t-[1.5px] border-dashed border-ink/25", className)} />;
+}
+
+/**
+ * Progressive-disclosure surface (spec §0): a right-side drawer on desktop and
+ * a bottom sheet at 390. Closes on backdrop click or Escape. The trigger owns
+ * `open`; this only renders the panel.
+ */
+export function Drawer({
+  open,
+  onClose,
+  title,
+  children,
+}: {
+  open: boolean;
+  onClose: () => void;
+  title: ReactNode;
+  children: ReactNode;
+}) {
+  const { t } = useT();
+  const reduce = useReducedMotion();
+  const [isDesktop, setIsDesktop] = useState(true);
+
+  useEffect(() => {
+    if (typeof window.matchMedia !== "function") return;
+    const query = window.matchMedia("(min-width: 768px)");
+    const update = () => setIsDesktop(query.matches);
+    update();
+    query.addEventListener("change", update);
+    return () => query.removeEventListener("change", update);
+  }, []);
+
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (event: KeyboardEvent) => event.key === "Escape" && onClose();
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [open, onClose]);
+
+  const hidden = isDesktop ? { x: "100%" } : { y: "100%" };
+
+  return (
+    <AnimatePresence>
+      {open && (
+        <div className="fixed inset-0 z-50" role="dialog" aria-modal="true">
+          <motion.button
+            type="button"
+            aria-label={t("drawer.close")}
+            onClick={onClose}
+            className="absolute inset-0 bg-ink/40"
+            initial={reduce ? false : { opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={reduce ? undefined : { opacity: 0 }}
+            transition={{ duration: 0.2 }}
+          />
+          <motion.div
+            className={cn(
+              "absolute flex max-h-full flex-col overflow-y-auto bg-card",
+              isDesktop
+                ? "top-0 right-0 h-full w-[min(440px,90vw)] rounded-l-[32px] p-8"
+                : "right-0 bottom-0 left-0 max-h-[86vh] rounded-t-[32px] p-6",
+            )}
+            initial={reduce ? false : hidden}
+            animate={reduce ? undefined : { x: 0, y: 0 }}
+            exit={reduce ? undefined : hidden}
+            transition={{ type: "spring", stiffness: 420, damping: 40 }}
+          >
+            <div className="mb-5 flex items-start justify-between gap-4">
+              <h2 className="font-serif text-[24px] leading-tight uppercase">{title}</h2>
+              <button
+                type="button"
+                onClick={onClose}
+                aria-label={t("drawer.close")}
+                className="shrink-0 rounded-full p-1.5 text-grey transition-colors hover:bg-alt hover:text-ink"
+              >
+                <X className="size-5" strokeWidth={1.8} />
+              </button>
+            </div>
+            {children}
+          </motion.div>
+        </div>
+      )}
+    </AnimatePresence>
+  );
 }
 
 /** An isometric illustration panel on a Plasma or Ember block. */

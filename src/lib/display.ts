@@ -45,6 +45,15 @@ export function formatFitPercent(fit: UnitScore): string {
   return `${Math.round(fit * 100)}%`;
 }
 
+/**
+ * A missing number renders as a bracketed `[placeholder]` in development so it
+ * is obvious in review, and as the given "Not available yet" copy in production.
+ * Never invent a value (spec §0 "Data honesty").
+ */
+export function missingValue(notAvailableLabel: string): string {
+  return process.env.NODE_ENV === "production" ? notAvailableLabel : "[placeholder]";
+}
+
 /** One line reading the augmentation band, for the always-visible spot the long definition left. */
 export function augmentationSummary(value: UnitScore, t: Translate = defaultT): string {
   const band = scoreBand(value);
