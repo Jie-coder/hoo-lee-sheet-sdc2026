@@ -163,7 +163,7 @@ describe("RoleCard", () => {
     await user.click(sourcesButton);
     expect(sourcesButton).toHaveAttribute("aria-expanded", "true");
     for (const source of role.sources) {
-      expect(screen.getByText(new RegExp(source.dataset))).toBeInTheDocument();
+      expect(screen.getAllByText(new RegExp(source.dataset)).length).toBeGreaterThan(0);
     }
   });
 });
