@@ -13,7 +13,7 @@ import { SdgBadge, sdgFlagId } from "@/components/sdg-badge";
 import { SourcesDisclosure } from "@/components/sources-disclosure";
 import { bandLabel, formatFitPercent } from "@/lib/display";
 import { useT, type MessageKey } from "@/lib/i18n";
-import { formatMonthlyRm, salaryForRole } from "@/lib/salary";
+import { formatMonthlyRange, formatMonthlyRm, hasRealRange, salaryForRole } from "@/lib/salary";
 import { localizeStatusLabel } from "@/lib/status-label";
 import { cn } from "@/lib/utils";
 import type { RoleResult, SdgLink } from "@/types/contracts";
@@ -226,13 +226,29 @@ export function RoleCard({
 
       <div className="mt-auto pt-6">
         <div className="mb-4 border-t border-line pt-4">
-          {salary ? (
+          {salary && hasRealRange(salary) ? (
             <>
-              <p className="font-serif text-[26px] font-medium tabular-nums">{formatMonthlyRm(salary.avgMonthlyRm, t("salary.perMonth"))}</p>
-              <p className="text-[12px] text-grey">
-                MASCO {salary.mascoMajor} {salary.mascoMajorName} · DOSM {salary.year}
+              <p className="font-serif text-[30px] leading-none font-normal tabular-nums">
+                {formatMonthlyRange(salary.minMonthlyRm, salary.maxMonthlyRm)}
               </p>
-              <p className="text-[11px] text-grey/80">{t("roleCard.averageOccupationGroup")}</p>
+              <p className="mt-1 text-[12px] text-grey">{t("salary.perMonth")}</p>
+              <p className="mt-2 text-[12px] text-grey">
+                <a href={salary.rangeSourceUrl} target="_blank" rel="noreferrer" className="underline underline-offset-4">
+                  {salary.rangeSourceRole && salary.rangeSourceRole.toLowerCase() !== role.title.toLowerCase()
+                    ? t("salary.sourceWithRole", { source: salary.rangeSourceName, role: salary.rangeSourceRole, year: String(salary.rangeYear) })
+                    : t("salary.source", { source: salary.rangeSourceName, year: String(salary.rangeYear) })}
+                </a>
+                {" · "}
+                {t("salary.estimate")}
+              </p>
+            </>
+          ) : salary ? (
+            <>
+              <p className="font-serif text-[30px] leading-none font-normal tabular-nums">{formatMonthlyRm(salary.avgMonthlyRm)}</p>
+              <p className="mt-1 text-[12px] text-grey">{t("salary.perMonth")}</p>
+              <p className="mt-2 text-[12px] text-grey">
+                {t("salary.dosmMajorGroup", { year: String(salary.year) })}
+              </p>
             </>
           ) : (
             <p className="text-[13px] text-grey">{t("roleCard.salaryUnavailable")}</p>

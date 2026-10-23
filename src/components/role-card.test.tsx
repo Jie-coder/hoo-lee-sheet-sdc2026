@@ -1,9 +1,9 @@
-import { render, screen } from "@testing-library/react";
+import { getDefaultNormalizer, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
 import { analyzeProfile } from "@/lib/analyze";
 import { CATALOGUE } from "@/lib/catalogue";
-import { formatMonthlyRm, salaryForRole } from "@/lib/salary";
+import { formatMonthlyRange, formatMonthlyRm, hasRealRange, salaryForRole } from "@/lib/salary";
 import { RoleCard } from "./role-card";
 
 // Real pipeline: a profile with five of a nurse's essential skills ranks
@@ -16,6 +16,8 @@ const result = analyzeProfile(CATALOGUE, {
 });
 const role = { ...result.roles.find((item) => item.occupationId === "o025")!, explanation: "Why this role, in one line." };
 const breakdown = result.breakdown[role.occupationId];
+// Keep non-breaking spaces intact when matching salary text.
+const keepNbsp = { normalizer: getDefaultNormalizer({ collapseWhitespace: false }) };
 
 function renderCard(roleOverrides: Partial<typeof role> = {}) {
   return render(
@@ -121,11 +123,25 @@ describe("RoleCard", () => {
 
       const { unmount } = renderCard({ occupationId: occupation.id, title: occupation.title });
 
-      expect(screen.getByText(formatMonthlyRm(salary.avgMonthlyRm))).toBeInTheDocument();
-      expect(
-        screen.getByText(`MASCO ${salary.mascoMajor} ${salary.mascoMajorName} · DOSM ${salary.year}`),
-      ).toBeInTheDocument();
+      if (hasRealRange(salary)) {
+        expect(salary.minMonthlyRm).toBeLessThanOrEqual(salary.maxMonthlyRm);
+        expect(screen.getByText(formatMonthlyRange(salary.minMonthlyRm, salary.maxMonthlyRm), keepNbsp)).toBeInTheDocument();
+        expect(formatMonthlyRange(salary.minMonthlyRm, salary.maxMonthlyRm)).not.toMatch(/ /);
+        const exact = salary.rangeSourceRole?.toLowerCase() === occupation.title.toLowerCase();
+        const name = exact
+          ? `${salary.rangeSourceName} ${salary.rangeYear}`
+          : `${salary.rangeSourceName} · ${salary.rangeSourceRole} ${salary.rangeYear}`;
+        const link = screen.getByRole("link", { name });
+        expect(link).toHaveAttribute("href", salary.rangeSourceUrl);
+      } else {
+        expect(salary.sourceType).toBe("dosm_major_group");
+        expect(salary.minMonthlyRm).toBeUndefined();
+        expect(screen.getByText(formatMonthlyRm(salary.avgMonthlyRm), keepNbsp)).toBeInTheDocument();
+        expect(formatMonthlyRm(salary.avgMonthlyRm)).not.toMatch(/ /);
+        expect(screen.getByText(`Industry average · DOSM major group ${salary.year}`)).toBeInTheDocument();
+      }
 
+      expect(screen.getByText("/month")).toBeInTheDocument();
       unmount();
     }
   });
