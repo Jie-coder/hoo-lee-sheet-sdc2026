@@ -69,13 +69,13 @@ export function LandingView({ preview }: { preview: LandingPreview }) {
             </motion.p>
             <motion.h1
               {...rise(0.08)}
-              className="mt-3 max-w-[900px] font-serif text-[clamp(52px,12vw,84px)] leading-[0.92] tracking-[-0.01em] text-balance uppercase xl:mt-4 xl:max-w-[calc(64%-24px)] xl:text-[clamp(64px,6.4vw,104px)]"
+              className="mt-3 max-w-[900px] font-serif text-[clamp(52px,12vw,84px)] leading-[0.9] tracking-[-0.01em] text-balance uppercase xl:mt-4 xl:max-w-[calc(64%-24px)] xl:text-[clamp(64px,6.4vw,104px)]"
             >
               {t("landing.heroHeading")}
             </motion.h1>
           </div>
 
-          <div className="relative mt-6 h-[220px] w-full sm:h-auto sm:aspect-[1376/520] overflow-hidden rounded-[28px] xl:mt-0 xl:aspect-[1376/820] xl:min-h-0 xl:rounded-none">
+          <div className="relative mt-12 sm:mt-6 h-[220px] w-full sm:h-auto sm:aspect-[1376/520] overflow-hidden rounded-[28px] xl:mt-0 xl:aspect-[1376/820] xl:min-h-0 xl:rounded-none">
             <LandingHeroCanvas className="absolute inset-0 size-full xl:inset-auto xl:bottom-0 xl:left-0 xl:aspect-[1376/820] xl:h-auto" />
             <span className="absolute top-2 left-3 rounded-md bg-ink/55 px-2 py-1.5 font-mono text-[9px] leading-none tracking-[0.08em] text-card uppercase xl:top-[43%] xl:left-7 xl:px-2.5 xl:text-[12px]">
               {t("landing.heroTicket")}

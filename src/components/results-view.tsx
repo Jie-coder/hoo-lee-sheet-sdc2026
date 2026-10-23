@@ -8,7 +8,7 @@ import { useRouter } from "next/navigation";
 import { LayoutGroup, motion, useReducedMotion } from "framer-motion";
 import { RefreshCw } from "lucide-react";
 import { useFlow } from "@/context/flow-context";
-import { Drawer, PageHero, SignalLight, SourceRow } from "@/components/caldera";
+import { Drawer, IllustrationPanel, PageHero, SignalLight, SourceRow } from "@/components/caldera";
 import { EASE_OUT } from "@/components/motion";
 import { RoleCard } from "@/components/role-card";
 import { ScenarioTabs, SCENARIO_LABEL } from "@/components/scenario-tabs";
@@ -117,8 +117,9 @@ export function ResultsView() {
         <>
           {/* Exposure band */}
           {data.currentWork ? (
-            <section className="mt-10 overflow-hidden rounded-[40px] md:mt-16">
-              <div className="flex flex-col gap-4 border-l-4 border-sage bg-teal-light px-8 py-7 text-obsidian md:flex-row md:items-center md:justify-between md:px-10">
+            <section className="mt-10 grid grid-cols-1 gap-4 md:mt-16 md:grid-cols-[1.25fr_1fr]">
+              <div className="overflow-hidden rounded-[40px]">
+              <div className="flex flex-col gap-4 bg-card px-8 py-7 md:flex-row md:items-center md:justify-between md:px-10">
                 <p className="font-mono text-[12px] tracking-[0.06em] text-ink uppercase">
                   {t("results.currentRoleLabel")}
                 </p>
@@ -129,7 +130,7 @@ export function ResultsView() {
                   </span>
                 </div>
               </div>
-              <div className="bg-white px-8 py-7 text-obsidian md:px-10">
+              <div className="bg-paper px-8 py-7 md:px-10">
                 <p className="max-w-[720px] text-[16px] leading-relaxed">
                   {t("results.exposureSentence", {
                     percent: `${Math.round(data.currentWork.exposure * 100)}%`,
@@ -138,9 +139,15 @@ export function ResultsView() {
                   {t("scoreCard.notJobLoss")}
                 </p>
               </div>
-              <div className="bg-teal-light px-8 py-6 text-obsidian md:px-10">
+              <div className="bg-card px-8 py-6 md:px-10">
                 <SourceRow sources={data.currentWork.sources.map((source) => ({ label: source.dataset }))} />
               </div>
+              </div>
+              <IllustrationPanel
+                src="/illustrations/u3.svg"
+                panel="plasma"
+                className="h-[200px] md:h-auto md:min-h-[320px]"
+              />
             </section>
           ) : (
             <section className="mt-10 rounded-[40px] bg-card p-8 md:mt-16 md:p-10">
