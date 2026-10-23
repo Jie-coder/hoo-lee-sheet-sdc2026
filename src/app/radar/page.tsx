@@ -2,6 +2,7 @@
 // keyword counts in data/keywords.csv and data/keywords_prior.csv, plus the
 // roles that list each skill as essential and those roles' SDG target.
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import { RadarView, type SkillLinks } from "@/components/radar-view";
 import { CATALOGUE } from "@/lib/catalogue";
 import { buildRadar } from "@/lib/radar";
@@ -28,11 +29,13 @@ function skillLinks(): SkillLinks {
 
 export default function RadarPage() {
   return (
-    <RadarView
+    <Suspense>
+      <RadarView
       today={buildRadar(CATALOGUE, "today")}
       prior={CATALOGUE.priorSignalsAsOf ? buildRadar(CATALOGUE, "prior") : null}
       dates={{ today: CATALOGUE.signalsAsOf, prior: CATALOGUE.priorSignalsAsOf }}
       links={skillLinks()}
-    />
+      />
+    </Suspense>
   );
 }

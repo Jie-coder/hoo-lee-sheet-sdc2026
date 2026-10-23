@@ -2569,6 +2569,10 @@
   "laluan:manage-ai-chatbots": "manage AI chatbots",
   "laluan:prompting-ai-review": "prompt AI tools and review their output",
   "laluan:office-automation": "automate office workflows",
+  "98a1dec3-8138-4f46-a596-5e2a83b884b9": "business analytics",
+  "47a49cd6-097d-457a-9f7b-c290c14930d5": "analyse big data",
+  "edebd83d-35f6-4ed5-a940-6c203d178c01": "data science",
+  "f37d9f67-2e79-4958-8307-1ce9d6dcc8bd": "apply customer engagement strategy",
   "50b100ea-74fd-4706-99db-3e4ca55e51b8": "perform data cleansing",
   "fecf8a0d-62c4-4e71-9b03-0f4fc2ad7bf5": "data models",
   "cc7370dd-69fa-4c67-a96f-d4d135d38700": "data quality assessment",
@@ -2612,7 +2616,6 @@
   "020918ef-4b55-47c1-8430-ab7b8f6a7377": "migrate existing data",
   "976455eb-5bbe-4493-ae64-ed16c3b009ea": "mobile operating systems",
   "54924a2c-daca-40d3-9716-4b38ceb04f38": "algorithms",
-  "47a49cd6-097d-457a-9f7b-c290c14930d5": "analyse big data",
   "b04f377b-ee80-4b38-aca1-19d266a23b17": "analyse business requirements",
   "cbe2c304-1e7d-489a-97d9-a7d3e37a9db6": "apply ICT systems theory",
   "5608d5a0-6d5e-43b7-be37-616501729bb4": "artificial neural networks",
@@ -2620,7 +2623,6 @@
   "906323f4-00c4-4c3b-ab5a-8af77be3456e": "create data sets",
   "1a4cc54f-1e53-442b-a6d2-1682dc8ef8f9": "creatively use digital technologies",
   "25f0ea33-b4a2-4f31-b7b4-7d20e827b180": "data mining",
-  "edebd83d-35f6-4ed5-a940-6c203d178c01": "data science",
   "c3e36d05-8ae8-447f-bb2b-6f9409f85389": "deliver visual presentation of data",
   "8c4c49d4-9708-433f-8ca7-bf2c5211ee49": "develop creative ideas",
   "bb165899-d95f-4433-95f2-173fefd716d2": "develop statistical software",
@@ -2687,7 +2689,6 @@
   "de0be6e8-644c-4cc9-9c8d-925dd98dda56": "software interaction design",
   "1019423b-3368-4f83-b24f-19e5fa23e816": "software UI design patterns",
   "be64bb4c-84ac-4c83-8cc7-fc8593e15136": "test system accessibility for users with special needs",
-  "f37d9f67-2e79-4958-8307-1ce9d6dcc8bd": "apply customer engagement strategy",
   "64e09849-a7db-4d6b-a932-66264420eb97": "apply social media marketing",
   "6c870993-9341-438b-91c0-c7fe4f96d8f5": "apply strategic thinking",
   "ed392b45-1087-44a7-89a9-d514224639ff": "conduct mobile marketing",
@@ -2707,7 +2708,6 @@
   "736ef286-fbd3-4e5c-a4b4-d1e2008c9898": "plan digital marketing",
   "56a10e3e-c9e7-4d39-b6f1-6013398fcb3a": "use content management system software",
   "a4881e54-6055-4e61-855a-0a56ced7cfa3": "web strategy assessment",
-  "98a1dec3-8138-4f46-a596-5e2a83b884b9": "business analytics",
   "79e29b8b-47d1-470d-b7b1-32506bfe7d9a": "collect ICT data",
   "48db96bf-3314-45c6-bad8-fdb6e20e5639": "data engineering",
   "e9575f7f-053a-439e-8074-f93df3334e92": "data ethics",
@@ -6663,7 +6663,7 @@
   },
   {
    "id": "c038",
-   "title": "用Python 做商管程式設計（一）(Programming for Business Computing in Python (1))",
+   "title": "用 Python 做商管程式設計（一）(Programming for Business Computing in Python (1))",
    "provider": "Coursera",
    "url": "https://www.coursera.org/learn/pbc1",
    "languages": [
@@ -6682,7 +6682,7 @@
   },
   {
    "id": "c039",
-   "title": "用Python 做商管程式設計（二）(Programming for Business Computing in Python (2))",
+   "title": "用 Python 做商管程式設計（二）(Programming for Business Computing in Python (2))",
    "provider": "Coursera",
    "url": "https://www.coursera.org/learn/pbc2",
    "languages": [
@@ -6701,7 +6701,7 @@
   },
   {
    "id": "c040",
-   "title": "用Python 做商管程式設計（三）(Programming for Business Computing in Python (3))",
+   "title": "用 Python 做商管程式設計（三）(Programming for Business Computing in Python (3))",
    "provider": "Coursera",
    "url": "https://www.coursera.org/learn/pbc3",
    "languages": [
@@ -6988,7 +6988,7 @@
   },
   {
    "id": "c055",
-   "title": "Business Chinese 1 中级汉语（上）",
+   "title": "Business Chinese 1 中级汉语 （上）",
    "provider": "Coursera",
    "url": "https://www.coursera.org/learn/intermediate-business-chinese-1",
    "languages": [
@@ -9569,6 +9569,138 @@
    "lastChecked": "2026-10-23",
    "mode": "online",
    "aiContent": "digital"
+  },
+  {
+   "id": "c787",
+   "title": "商管統計資料分析一 (Analytics for Business and Management (I))",
+   "provider": "Coursera",
+   "url": "https://www.coursera.org/learn/analytics-for-business-and-management-1",
+   "languages": [
+    "zh"
+   ],
+   "hours": 10,
+   "costType": "paid",
+   "certificate": true,
+   "skillIds": [
+    "7ee4c2ea-b349-4bd2-81a3-ec31475d4833",
+    "382c11ed-20d5-4ae7-b60e-15fec527fa6c"
+   ],
+   "lastChecked": "2026-10-23",
+   "mode": "online",
+   "aiContent": "digital"
+  },
+  {
+   "id": "c788",
+   "title": "大數據分析：商業應用與策略管理 (Big Data Analytics: Business Applications and Strategic Decisions)",
+   "provider": "Coursera",
+   "url": "https://www.coursera.org/learn/bigdataanalysis",
+   "languages": [
+    "zh"
+   ],
+   "hours": 20,
+   "costType": "paid",
+   "certificate": true,
+   "skillIds": [
+    "98a1dec3-8138-4f46-a596-5e2a83b884b9",
+    "47a49cd6-097d-457a-9f7b-c290c14930d5",
+    "edebd83d-35f6-4ed5-a940-6c203d178c01"
+   ],
+   "lastChecked": "2026-10-23",
+   "mode": "online",
+   "aiContent": "none"
+  },
+  {
+   "id": "c789",
+   "title": "SQL Server数据库技术",
+   "provider": "Coursera",
+   "url": "https://www.coursera.org/learn/sql-server-shujuku-jishu",
+   "languages": [
+    "zh"
+   ],
+   "hours": 10,
+   "costType": "free",
+   "certificate": false,
+   "skillIds": [
+    "4463a721-69f3-413d-8321-43e3af13a4f1",
+    "9cf681c7-89ec-470c-b651-7fe03786f586"
+   ],
+   "lastChecked": "2026-10-23",
+   "mode": "online",
+   "aiContent": "digital"
+  },
+  {
+   "id": "c790",
+   "title": "Google Cloud 数据分析功能简介",
+   "provider": "Coursera",
+   "url": "https://www.coursera.org/learn/introduction-to-data-analytics-on-google-cloud-zh",
+   "languages": [
+    "zh"
+   ],
+   "hours": 3,
+   "costType": "paid",
+   "certificate": true,
+   "skillIds": [
+    "65e58886-bd1e-4c5b-8ca5-8d9b353c8aa1"
+   ],
+   "lastChecked": "2026-10-23",
+   "mode": "online",
+   "aiContent": "digital"
+  },
+  {
+   "id": "c791",
+   "title": "市场营销概论 (中文版）",
+   "provider": "Coursera",
+   "url": "https://www.coursera.org/learn/wharton-shichang-ying-xiao",
+   "languages": [
+    "zh"
+   ],
+   "hours": 9,
+   "costType": "free",
+   "certificate": false,
+   "skillIds": [
+    "13e2378e-0d10-450d-843a-b3592575826e"
+   ],
+   "lastChecked": "2026-10-23",
+   "mode": "online",
+   "aiContent": "none"
+  },
+  {
+   "id": "c792",
+   "title": "行銷典範轉移: 變動中的消費世界 (Marketing in a changing world)",
+   "provider": "Coursera",
+   "url": "https://www.coursera.org/learn/taiwan-marketing-stp-crm",
+   "languages": [
+    "zh"
+   ],
+   "hours": 20,
+   "costType": "paid",
+   "certificate": true,
+   "skillIds": [
+    "13e2378e-0d10-450d-843a-b3592575826e",
+    "f37d9f67-2e79-4958-8307-1ce9d6dcc8bd"
+   ],
+   "lastChecked": "2026-10-23",
+   "mode": "online",
+   "aiContent": "none"
+  },
+  {
+   "id": "c793",
+   "title": "Climate Change: Carbon Capture and Storage (Chinese)",
+   "provider": "Coursera",
+   "url": "https://www.coursera.org/learn/climate-change-carbon-capture-and-storage-chinese",
+   "languages": [
+    "zh"
+   ],
+   "hours": 40,
+   "costType": "paid",
+   "certificate": true,
+   "skillIds": [
+    "75f312e1-622b-4751-8d93-815b32feaf8d",
+    "081d7679-5070-4777-bece-a28c49f15636"
+   ],
+   "lastChecked": "2026-10-23",
+   "mode": "online",
+   "aiContent": "none"
   },
   {
    "id": "c794",

@@ -64,20 +64,48 @@ export function SiteHeader() {
               {STEPS.map((step, index) => {
                 const complete = index < currentIndex;
                 const current = index === currentIndex;
+                const label = t(`nav.${step.id}`);
+                const dot = (
+                  <span
+                    aria-hidden
+                    className={cn(
+                      "size-3 rounded-full ring-[1.5px] ring-ink transition-colors",
+                      current && "bg-ink",
+                      complete && "bg-ink/35 group-hover:bg-sage group-focus-visible:bg-sage",
+                      !current && !complete && "bg-transparent ring-grey/50",
+                    )}
+                  />
+                );
                 return (
-                  <li key={step.id} className="flex items-center" aria-current={current ? "step" : undefined}>
-                    <span className="flex items-center gap-2 px-3.5">
+                  <li key={step.id} className="flex items-center">
+                    {complete ? (
+                      <Link
+                        href={`/${step.id}`}
+                        data-step-state="complete"
+                        className="group flex items-center gap-2 rounded-full px-3.5 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink"
+                      >
+                        {dot}
+                        <span className="text-grey underline-offset-4 group-hover:text-ink group-hover:underline group-focus-visible:underline">
+                          {label}
+                        </span>
+                      </Link>
+                    ) : current ? (
+                      <span aria-current="step" data-step-state="current" className="flex items-center gap-2 px-3.5">
+                        {dot}
+                        <span className="text-ink">{label}</span>
+                      </span>
+                    ) : (
                       <span
-                        aria-hidden
-                        className={cn(
-                          "size-3 rounded-full ring-[1.5px] ring-ink",
-                          current && "bg-ink",
-                          complete && "bg-ink/35",
-                          !current && !complete && "bg-transparent",
-                        )}
-                      />
-                      <span className={current ? "text-ink" : "text-grey"}>{t(`nav.${step.id}`)}</span>
-                    </span>
+                        role="link"
+                        aria-disabled="true"
+                        title={t("nav.stepDisabled")}
+                        data-step-state="upcoming"
+                        className="flex cursor-not-allowed items-center gap-2 px-3.5"
+                      >
+                        {dot}
+                        <span className="text-grey/60">{label}</span>
+                      </span>
+                    )}
                     {index < STEPS.length - 1 && (
                       <span aria-hidden className="w-10 border-t-[1.5px] border-dashed border-ink/40" />
                     )}

@@ -43,7 +43,7 @@ export function RadarEntry({ size = "compact", className }: { size?: "compact" |
         >
           {t("radarEntry.title")}
         </p>
-        <Link href="/radar" className="btn-primary shrink-0 self-start px-5 py-2.5 text-[14px] md:self-auto">
+        <Link href={large ? "/radar?from=exposure-intro" : "/radar"} className="btn-primary shrink-0 self-start px-5 py-2.5 text-[14px] md:self-auto">
           {t("radarEntry.cta")}
           <ArrowRight className="size-4" strokeWidth={1.6} />
         </Link>
