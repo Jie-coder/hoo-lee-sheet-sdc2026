@@ -2,6 +2,7 @@
 // then check and edit what was read from it before continuing to the interview.
 "use client";
 
+import { decimalToYearsMonths, MAX_MONTHS, MAX_YEARS, yearsMonthsToDecimal } from "@/lib/years-months";
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
@@ -331,15 +332,41 @@ export function ProfileView() {
                         placeholder={t("profile.roleTitlePlaceholder")}
                         className="min-w-0 flex-1 rounded-lg border border-transparent px-2 py-1 transition-colors hover:border-line focus:border-line focus:outline-none"
                       />
-                      <input
-                        type="number"
-                        min={0}
-                        step={0.1}
-                        value={role.years}
-                        onChange={(event) => updateRole(index, { years: Number(event.target.value) })}
-                        className="w-16 rounded-lg border border-transparent px-2 py-1 text-right tabular-nums transition-colors hover:border-line focus:border-line focus:outline-none"
-                      />
-                      <span className="text-[13px] text-grey">{t("profile.yearsShort")}</span>
+                      {(() => {
+                        const split = decimalToYearsMonths(role.years);
+                        const selectClass =
+                          "rounded-lg border border-transparent bg-transparent px-1 py-1 text-right tabular-nums transition-colors hover:border-line focus:border-line focus:outline-none";
+                        return (
+                          <span className="flex items-center gap-1 text-[13px] text-grey">
+                            <select
+                              aria-label={t("profile.yearsLabel")}
+                              value={split.years}
+                              onChange={(event) =>
+                                updateRole(index, { years: yearsMonthsToDecimal(Number(event.target.value), split.months) })
+                              }
+                              className={selectClass}
+                            >
+                              {Array.from({ length: MAX_YEARS + 1 }, (_, n) => (
+                                <option key={n} value={n}>{n}</option>
+                              ))}
+                            </select>
+                            <span>{t("profile.yearsShort")}</span>
+                            <select
+                              aria-label={t("profile.monthsLabel")}
+                              value={split.months}
+                              onChange={(event) =>
+                                updateRole(index, { years: yearsMonthsToDecimal(split.years, Number(event.target.value)) })
+                              }
+                              className={selectClass}
+                            >
+                              {Array.from({ length: MAX_MONTHS + 1 }, (_, n) => (
+                                <option key={n} value={n}>{n}</option>
+                              ))}
+                            </select>
+                            <span>{t("profile.monthsShort")}</span>
+                          </span>
+                        );
+                      })()}
                       <button
                         type="button"
                         aria-label={t("profile.removeRole", { role: role.title || t("profile.roleFallback") })}

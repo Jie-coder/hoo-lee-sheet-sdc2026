@@ -422,17 +422,19 @@ export function PathwayView({
                                   asOf: item.lastChecked,
                                 }}
                               />
-                              <a
-                                href={item.url}
-                                target="_blank"
-                                rel="noreferrer"
-                                className="flex items-center gap-1 text-[12px] text-grey underline underline-offset-4 hover:text-ink"
-                              >
-                                {t("pathway.openSource")}
-                                <ArrowUpRight className="size-3" strokeWidth={1.6} />
-                              </a>
                             </div>
                           </Disclosure>
+                          <div className="mt-3 flex justify-end">
+                            <a
+                              href={item.url}
+                              target="_blank"
+                              rel="noreferrer"
+                              className="flex items-center gap-1 text-[12px] text-grey underline underline-offset-4 hover:text-ink"
+                            >
+                              {step.kind === "course" ? t("pathway.viewCourse") : t("pathway.openSource")}
+                              <ArrowUpRight className="size-3" strokeWidth={1.6} />
+                            </a>
+                          </div>
                         </article>
                       </Reveal>
                     </li>
