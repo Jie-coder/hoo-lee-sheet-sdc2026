@@ -10,6 +10,7 @@ import { RefreshCw } from "lucide-react";
 import { useFlow } from "@/context/flow-context";
 import { Drawer, IllustrationPanel, PageHero, SignalLight, SourceRow } from "@/components/caldera";
 import { EASE_OUT } from "@/components/motion";
+import { RadarEntry } from "@/components/radar-entry";
 import { RoleCard } from "@/components/role-card";
 import { ScenarioTabs, SCENARIO_LABEL } from "@/components/scenario-tabs";
 import { SignalDateToggle } from "@/components/signal-date-toggle";
@@ -165,6 +166,8 @@ export function ResultsView() {
               </p>
             </section>
           )}
+
+          <RadarEntry className="mt-4" />
 
           {/* Tickets header + scenario pill */}
           <section className="mt-24">

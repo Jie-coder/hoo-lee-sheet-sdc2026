@@ -5,6 +5,7 @@
 // matching logic in howMatch mirrors the role alias table + AI pick.
 "use client";
 
+import { RadarEntry } from "@/components/radar-entry";
 import Link from "next/link";
 import { IllustrationPanel, PageHero, Perforation, SignalLight, SourceRow } from "@/components/caldera";
 import { CATALOGUE, SOURCE_NAMES } from "@/lib/catalogue";
@@ -116,6 +117,8 @@ export function ExposureView() {
         className="mt-12"
         sources={[{ label: t("exposure.sourceIlo") }, { label: SOURCE_NAMES.skills }]}
       />
+
+      <RadarEntry size="large" className="mt-16" />
     </main>
   );
 }

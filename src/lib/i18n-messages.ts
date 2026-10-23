@@ -584,6 +584,8 @@ export const EN = {
   "sourceRow.estimatesLine": "All scores and forecasts are estimates.",
   "sourceRow.placeholderNote": "Sources appear with each score once this section is rebuilt.",
   "footer.radar": "Skills radar",
+  "radarEntry.title": "See which skills are rising in the market",
+  "radarEntry.cta": "Skill Radar",
   "header.stepOf": "Step {n} of {total} · {label}",
   "landing.threeStopsHeading": "Three stops to your next role",
   "landing.threeStopsLede":
@@ -1202,6 +1204,8 @@ export const MS: Record<MessageKey, string> = {
   "sourceRow.estimatesLine": "Semua skor dan ramalan adalah anggaran.",
   "sourceRow.placeholderNote": "Sumber akan muncul bersama setiap skor apabila bahagian ini dibina semula.",
   "footer.radar": "Radar kemahiran",
+  "radarEntry.title": "Lihat kemahiran yang sedang meningkat dalam pasaran",
+  "radarEntry.cta": "Radar Kemahiran",
   "header.stepOf": "Langkah {n} daripada {total} · {label}",
   "landing.threeStopsHeading": "Tiga hentian ke peranan seterusnya",
   "landing.threeStopsLede":
