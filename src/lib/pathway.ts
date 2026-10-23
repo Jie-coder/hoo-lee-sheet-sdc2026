@@ -97,6 +97,22 @@ export function pickCoursesForSkill(
   return rankCourses(matches, languages).slice(0, limit);
 }
 
+/**
+ * True when the learner asked for Chinese-language courses but no course in the
+ * catalogue closes any of `skillIds` in Chinese, so the step falls back to
+ * courses in another language and should say so.
+ */
+export function missingChineseCourse(
+  skillIds: readonly string[],
+  courses: readonly Course[],
+  languages: readonly LanguageCode[],
+): boolean {
+  if (!languages.includes("zh") || skillIds.length === 0) return false;
+  return !courses.some(
+    (course) => course.languages.includes("zh") && course.skillIds.some((skillId) => skillIds.includes(skillId)),
+  );
+}
+
 export type EligibilityStatus = "pass" | "check" | "fail";
 
 /**

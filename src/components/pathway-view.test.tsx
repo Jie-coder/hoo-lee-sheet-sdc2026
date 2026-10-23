@@ -25,7 +25,7 @@ vi.mock("next/navigation", () => ({
   useSearchParams: () => new URLSearchParams(`role=${roleParam}`),
 }));
 
-function seedFlowState() {
+function seedFlowState(courseLanguages: string[] = ["en"]) {
   sessionStorage.setItem(
     "laluan:flow:v1",
     JSON.stringify({
@@ -37,7 +37,7 @@ function seedFlowState() {
         roles: [],
         education: [],
         skills: chips.map((chip, index) => ({ id: `s${index}`, label: chip.label, matched: true, selfReported: false })),
-        courseLanguages: ["en"],
+        courseLanguages,
       },
       interviewAnswers: { hours_per_week: 6 },
       chosenRoleId: role.occupationId,
@@ -45,12 +45,12 @@ function seedFlowState() {
   );
 }
 
-function renderPathway() {
+function renderPathway(courseLanguages?: string[]) {
   vi.stubGlobal(
     "fetch",
     vi.fn(async () => new Response(JSON.stringify({ ...result, skillMatches: resolved.matches }), { status: 200 })),
   );
-  seedFlowState();
+  seedFlowState(courseLanguages);
   return render(
     <FlowProvider>
       <PathwayView
@@ -69,6 +69,19 @@ afterEach(() => {
 });
 
 describe("PathwayView", () => {
+  it("notes a missing Chinese course beside the English fallback when Chinese is preferred", async () => {
+    renderPathway(["zh"]);
+    const notes = await screen.findAllByText("No Chinese course found");
+    expect(notes.length).toBeGreaterThan(0);
+    expect(notes[0].closest("article")).not.toBeNull();
+  });
+
+  it("shows no Chinese-course note for an English-only preference", async () => {
+    renderPathway(["en"]);
+    await screen.findAllByRole("heading", { level: 3 });
+    expect(screen.queryByText("No Chinese course found")).toBeNull();
+  });
+
   it("opens on AI untuk Rakyat (no hours listed) and only cites catalogue items", async () => {
     renderPathway();
 

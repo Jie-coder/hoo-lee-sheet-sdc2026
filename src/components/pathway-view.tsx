@@ -12,7 +12,7 @@ import { EASE_OUT } from "@/components/motion";
 import { useFlow } from "@/context/flow-context";
 import { formatDayMonthYear, missingValue } from "@/lib/display";
 import { useT, type MessageKey } from "@/lib/i18n";
-import { buildPathwayPlan } from "@/lib/pathway";
+import { buildPathwayPlan, missingChineseCourse } from "@/lib/pathway";
 import { useRoles } from "@/lib/use-roles";
 import { cn } from "@/lib/utils";
 import type { Course, CostType, PlanStep, Programme } from "@/types/contracts";
@@ -219,6 +219,8 @@ export function PathwayView({
                     : t("pathway.weeksRange", { start: String(step.weekStart), end: String(step.weekEnd) });
                 const displayHours = step.merged?.hours ?? ("hours" in item ? item.hours : undefined);
                 const closedSkill = role.gap.find((skill) => step.closesSkillIds.includes(skill.skillId));
+                const noChinese =
+                  step.kind === "course" && missingChineseCourse(step.closesSkillIds, courses, studyLanguages);
                 const sdgLink = step.sdgTarget ? role.sdg.find((link) => link.target === step.sdgTarget) : undefined;
                 return (
                   <li key={step.itemId} className="relative grid grid-cols-[20px_1fr] gap-x-3 pb-4 last:pb-0 sm:grid-cols-[32px_1fr] sm:gap-x-5">
@@ -260,9 +262,21 @@ export function PathwayView({
                         </a>
                       </div>
 
-                      {closedSkill && (
-                        <p className="mt-2 text-[14px] leading-snug text-grey">
-                          {t("pathway.closes")}: <span className="font-bold text-ink">{closedSkill.label}</span>
+                      {(closedSkill || noChinese) && (
+                        <p className="mt-2 flex flex-wrap items-center gap-x-2 gap-y-1 text-[14px] leading-snug text-grey">
+                          {closedSkill && (
+                            <span>
+                              {t("pathway.closes")}: <span className="font-bold text-ink">{closedSkill.label}</span>
+                            </span>
+                          )}
+                          {noChinese && (
+                            <span
+                              data-testid="no-chinese-course"
+                              className="rounded-full border border-ink/30 px-2.5 py-0.5 font-mono text-[11px] tracking-[0.04em] text-grey uppercase"
+                            >
+                              {t("pathway.noChineseCourse")}
+                            </span>
+                          )}
                         </p>
                       )}
                       {expanded && (
