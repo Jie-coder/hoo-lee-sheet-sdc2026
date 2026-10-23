@@ -118,7 +118,7 @@ export function ResultsView() {
           {/* Exposure band */}
           {data.currentWork ? (
             <section className="mt-10 overflow-hidden rounded-[40px] md:mt-16">
-              <div className="flex flex-col gap-4 border-l-4 border-sage bg-card px-8 py-7 md:flex-row md:items-center md:justify-between md:px-10">
+              <div className="flex flex-col gap-4 border-l-4 border-sage bg-teal-light px-8 py-7 text-obsidian md:flex-row md:items-center md:justify-between md:px-10">
                 <p className="font-mono text-[12px] tracking-[0.06em] text-ink uppercase">
                   {t("results.currentRoleLabel")}
                 </p>
@@ -129,7 +129,7 @@ export function ResultsView() {
                   </span>
                 </div>
               </div>
-              <div className="bg-paper px-8 py-7 md:px-10">
+              <div className="bg-white px-8 py-7 text-obsidian md:px-10">
                 <p className="max-w-[720px] text-[16px] leading-relaxed">
                   {t("results.exposureSentence", {
                     percent: `${Math.round(data.currentWork.exposure * 100)}%`,
@@ -138,7 +138,7 @@ export function ResultsView() {
                   {t("scoreCard.notJobLoss")}
                 </p>
               </div>
-              <div className="bg-card px-8 py-6 md:px-10">
+              <div className="bg-teal-light px-8 py-6 text-obsidian md:px-10">
                 <SourceRow sources={data.currentWork.sources.map((source) => ({ label: source.dataset }))} />
               </div>
             </section>
