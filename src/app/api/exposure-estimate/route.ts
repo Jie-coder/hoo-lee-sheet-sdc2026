@@ -1,7 +1,6 @@
-// POST /api/exposure-estimate: given a job title that may not be one of the
-// 40 curated Laluan roles, returns an exposure estimate borrowed from the
-// closest curated role by title-embedding similarity. See
-// src/lib/exposure-estimate.ts for the matching logic and thresholds.
+// POST /api/exposure-estimate: maps a job title to one of the 40 curated
+// Laluan roles (exact -> alias table -> LLM) and returns that role's real
+// exposure. See src/lib/exposure-estimate.ts.
 import { z } from "zod";
 import { estimateExposure } from "@/lib/exposure-estimate";
 
@@ -26,7 +25,7 @@ export async function POST(request: Request) {
   }
 
   const result = await estimateExposure(parsed.data.title);
-  if (result.status === "embeddings_unavailable") {
+  if (result.status === "model_unavailable") {
     return Response.json(result, { status: 503 });
   }
   return Response.json(result);

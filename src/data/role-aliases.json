@@ -1,0 +1,956 @@
+{
+ "account assistant": {
+  "roleId": "o034"
+ },
+ "accountant": {
+  "roleId": null
+ },
+ "accounts assistant": {
+  "roleId": "o034"
+ },
+ "accounts clerk": {
+  "roleId": "o034"
+ },
+ "accounts executive": {
+  "roleId": "o034"
+ },
+ "accounts payable clerk": {
+  "roleId": "o034"
+ },
+ "accounts receivable clerk": {
+  "roleId": "o034"
+ },
+ "admin assistant": {
+  "roleId": "o038"
+ },
+ "admin clerk": {
+  "roleId": "o038"
+ },
+ "admin executive": {
+  "roleId": "o038"
+ },
+ "administrative assistant": {
+  "roleId": "o038"
+ },
+ "ahli farmasi": {
+  "roleId": "o031"
+ },
+ "ahli fisioterapi": {
+  "roleId": "o030"
+ },
+ "ai engineer": {
+  "roleId": "o004"
+ },
+ "akauntan": {
+  "roleId": null
+ },
+ "analytics manager": {
+  "roleId": "o011"
+ },
+ "android developer": {
+  "roleId": "o003"
+ },
+ "audit associate": {
+  "roleId": null
+ },
+ "auditor": {
+  "roleId": null
+ },
+ "backend developer": {
+  "roleId": "o001"
+ },
+ "bank teller": {
+  "roleId": "o035"
+ },
+ "barista": {
+  "roleId": null
+ },
+ "bi developer": {
+  "roleId": "o011"
+ },
+ "billing clerk": {
+  "roleId": "o034"
+ },
+ "bookkeeper": {
+  "roleId": "o034"
+ },
+ "buruh binaan": {
+  "roleId": null
+ },
+ "business analyst": {
+  "roleId": "o016"
+ },
+ "business intelligence analyst": {
+  "roleId": "o011"
+ },
+ "business intelligence manager": {
+  "roleId": "o011"
+ },
+ "call center agent": {
+  "roleId": "o036"
+ },
+ "call centre agent": {
+  "roleId": "o036"
+ },
+ "care assistant": {
+  "roleId": "o026"
+ },
+ "caregiver": {
+  "roleId": "o026"
+ },
+ "cashier": {
+  "roleId": "o039"
+ },
+ "checkout operator": {
+  "roleId": "o039"
+ },
+ "chef": {
+  "roleId": null
+ },
+ "cikgu": {
+  "roleId": "o028"
+ },
+ "civil engineer": {
+  "roleId": null
+ },
+ "clinic nurse": {
+  "roleId": "o025"
+ },
+ "cloud engineer": {
+  "roleId": null
+ },
+ "contact centre agent": {
+  "roleId": "o036"
+ },
+ "content writer": {
+  "roleId": null
+ },
+ "copywriter": {
+  "roleId": null
+ },
+ "credit analyst": {
+  "roleId": "o013"
+ },
+ "csr executive": {
+  "roleId": "o024"
+ },
+ "csr manager": {
+  "roleId": "o024"
+ },
+ "customer service agent": {
+  "roleId": "o036"
+ },
+ "customer service assistant": {
+  "roleId": "o036"
+ },
+ "customer service cashier": {
+  "roleId": "o039"
+ },
+ "customer service executive": {
+  "roleId": "o036"
+ },
+ "customer service officer": {
+  "roleId": "o036"
+ },
+ "customer service representative": {
+  "roleId": "o036"
+ },
+ "customer support agent": {
+  "roleId": "o036"
+ },
+ "cybersecurity analyst": {
+  "roleId": "o005"
+ },
+ "cybersecurity engineer": {
+  "roleId": "o005"
+ },
+ "data analyst": {
+  "roleId": "o009"
+ },
+ "data architect": {
+  "roleId": null
+ },
+ "data engineer": {
+  "roleId": null
+ },
+ "data entry assistant": {
+  "roleId": "o033"
+ },
+ "data entry clerk": {
+  "roleId": "o033"
+ },
+ "data entry operator": {
+  "roleId": "o033"
+ },
+ "data scientist": {
+  "roleId": "o010"
+ },
+ "database administrator": {
+  "roleId": "o015"
+ },
+ "devops engineer": {
+  "roleId": null
+ },
+ "digital marketing executive": {
+  "roleId": "o008"
+ },
+ "digital marketing manager": {
+  "roleId": "o008"
+ },
+ "digital marketing specialist": {
+  "roleId": "o008"
+ },
+ "doctor": {
+  "roleId": null
+ },
+ "doktor": {
+  "roleId": null
+ },
+ "driver": {
+  "roleId": null
+ },
+ "e commerce executive": {
+  "roleId": "o008"
+ },
+ "early years teacher": {
+  "roleId": "o029"
+ },
+ "ejen pusat panggilan": {
+  "roleId": "o036"
+ },
+ "eksekutif analitik data": {
+  "roleId": "o009"
+ },
+ "eksekutif kewangan": {
+  "roleId": null
+ },
+ "electrical engineer": {
+  "roleId": null
+ },
+ "email marketing specialist": {
+  "roleId": "o008"
+ },
+ "energy assessor": {
+  "roleId": "o022"
+ },
+ "energy auditor": {
+  "roleId": "o022"
+ },
+ "energy manager": {
+  "roleId": "o021"
+ },
+ "environmental consultant": {
+  "roleId": "o020"
+ },
+ "environmental engineer": {
+  "roleId": "o019"
+ },
+ "environmental officer": {
+  "roleId": "o020"
+ },
+ "environmental scientist": {
+  "roleId": "o020"
+ },
+ "esg analyst": {
+  "roleId": "o024"
+ },
+ "farmasis": {
+  "roleId": "o031"
+ },
+ "finance manager": {
+  "roleId": null
+ },
+ "financial analyst": {
+  "roleId": "o013"
+ },
+ "financial planning analyst": {
+  "roleId": "o013"
+ },
+ "flutter developer": {
+  "roleId": "o003"
+ },
+ "front desk executive": {
+  "roleId": "o037"
+ },
+ "front office assistant": {
+  "roleId": "o037"
+ },
+ "frontend developer": {
+  "roleId": "o002"
+ },
+ "full stack developer": {
+  "roleId": "o001"
+ },
+ "general clerk": {
+  "roleId": "o038"
+ },
+ "geriatric social worker": {
+  "roleId": "o027"
+ },
+ "gerontological social worker": {
+  "roleId": "o027"
+ },
+ "grab driver": {
+  "roleId": null
+ },
+ "guru darjah": {
+  "roleId": "o028"
+ },
+ "guru prasekolah": {
+  "roleId": "o029"
+ },
+ "guru sekolah rendah": {
+  "roleId": "o028"
+ },
+ "guru tabika": {
+  "roleId": "o029"
+ },
+ "guru tadika": {
+  "roleId": "o029"
+ },
+ "guru taska": {
+  "roleId": "o029"
+ },
+ "guru vokasional": {
+  "roleId": "o032"
+ },
+ "home care worker": {
+  "roleId": "o026"
+ },
+ "hr exec": {
+  "roleId": null
+ },
+ "hr executive": {
+  "roleId": null
+ },
+ "hse officer": {
+  "roleId": null
+ },
+ "human resource executive": {
+  "roleId": null
+ },
+ "information security analyst": {
+  "roleId": "o005"
+ },
+ "investment analyst": {
+  "roleId": "o013"
+ },
+ "ios developer": {
+  "roleId": "o003"
+ },
+ "it programmer": {
+  "roleId": "o001"
+ },
+ "it project manager": {
+  "roleId": null
+ },
+ "it support engineer": {
+  "roleId": null
+ },
+ "it support executive": {
+  "roleId": null
+ },
+ "it support technician": {
+  "roleId": null
+ },
+ "junior software developer": {
+  "roleId": "o001"
+ },
+ "juruaudit": {
+  "roleId": null
+ },
+ "juruaudit tenaga": {
+  "roleId": "o022"
+ },
+ "jurujual": {
+  "roleId": null
+ },
+ "jurulatih kemahiran vokasional": {
+  "roleId": "o032"
+ },
+ "jurupulih anggota": {
+  "roleId": "o030"
+ },
+ "jururawat": {
+  "roleId": "o025"
+ },
+ "jururawat kesihatan awam": {
+  "roleId": "o025"
+ },
+ "jururawat terlatih": {
+  "roleId": "o025"
+ },
+ "juruteknik makmal perubatan": {
+  "roleId": null
+ },
+ "juruteknik tenaga suria": {
+  "roleId": "o018"
+ },
+ "jurutera alam sekitar": {
+  "roleId": "o019"
+ },
+ "jurutera alam sekitar kanan": {
+  "roleId": "o019"
+ },
+ "jurutera pangkalan data": {
+  "roleId": "o015"
+ },
+ "jurutera perisian": {
+  "roleId": "o001"
+ },
+ "jurutera rawatan air": {
+  "roleId": "o019"
+ },
+ "jurutera sivil": {
+  "roleId": null
+ },
+ "jurutera tenaga boleh diperbaharui": {
+  "roleId": "o017"
+ },
+ "jurutera tenaga suria": {
+  "roleId": "o017"
+ },
+ "juruwang": {
+  "roleId": "o039"
+ },
+ "juruwang kaunter": {
+  "roleId": "o039"
+ },
+ "kerani": {
+  "roleId": "o038"
+ },
+ "kerani akaun": {
+  "roleId": "o034"
+ },
+ "kerani am": {
+  "roleId": "o038"
+ },
+ "kerani bank": {
+  "roleId": "o035"
+ },
+ "kerani data": {
+  "roleId": "o033"
+ },
+ "kerani gaji": {
+  "roleId": "o040"
+ },
+ "khidmat pelanggan": {
+  "roleId": "o036"
+ },
+ "kindergarten teacher": {
+  "roleId": "o029"
+ },
+ "lawyer": {
+  "roleId": null
+ },
+ "lecturer": {
+  "roleId": null
+ },
+ "machine learning engineer": {
+  "roleId": "o004"
+ },
+ "market research analyst": {
+  "roleId": "o014"
+ },
+ "marketing analyst": {
+  "roleId": "o014"
+ },
+ "marketing executive": {
+  "roleId": "o008"
+ },
+ "mechanical engineer": {
+  "roleId": null
+ },
+ "medical officer": {
+  "roleId": null
+ },
+ "mekanik kereta": {
+  "roleId": null
+ },
+ "mobile app developer": {
+  "roleId": "o003"
+ },
+ "mobile application developer": {
+  "roleId": "o003"
+ },
+ "nelayan": {
+  "roleId": null
+ },
+ "network administrator": {
+  "roleId": "o006"
+ },
+ "network engineer": {
+  "roleId": "o006"
+ },
+ "nurse": {
+  "roleId": "o025"
+ },
+ "office administrator": {
+  "roleId": "o038"
+ },
+ "online marketer": {
+  "roleId": "o008"
+ },
+ "operator kemasukan data": {
+  "roleId": "o033"
+ },
+ "operator pengeluaran": {
+  "roleId": null
+ },
+ "operator pusat panggilan": {
+  "roleId": "o036"
+ },
+ "pakar kitar semula": {
+  "roleId": "o023"
+ },
+ "pakar sains data": {
+  "roleId": "o010"
+ },
+ "payroll assistant": {
+  "roleId": "o040"
+ },
+ "payroll clerk": {
+  "roleId": "o040"
+ },
+ "pegawai alam sekitar": {
+  "roleId": "o020"
+ },
+ "pegawai keselamatan siber": {
+  "roleId": "o005"
+ },
+ "pegawai khidmat pelanggan": {
+  "roleId": "o036"
+ },
+ "pegawai kitar semula": {
+  "roleId": "o023"
+ },
+ "pegawai statistik": {
+  "roleId": "o012"
+ },
+ "peguam": {
+  "roleId": null
+ },
+ "pekerja sosial gerontologi": {
+  "roleId": "o027"
+ },
+ "pekerja sosial warga emas": {
+  "roleId": "o027"
+ },
+ "pelayan restoran": {
+  "roleId": null
+ },
+ "pemandu": {
+  "roleId": null
+ },
+ "pemandu lori": {
+  "roleId": null
+ },
+ "pemasang panel solar": {
+  "roleId": "o018"
+ },
+ "pemasar dalam talian": {
+  "roleId": "o008"
+ },
+ "pemasar digital": {
+  "roleId": "o008"
+ },
+ "pembangun aplikasi android": {
+  "roleId": "o003"
+ },
+ "pembangun aplikasi mudah alih": {
+  "roleId": "o003"
+ },
+ "pembangun laman web": {
+  "roleId": "o002"
+ },
+ "pembangun perisian": {
+  "roleId": "o001"
+ },
+ "pembangun web": {
+  "roleId": "o002"
+ },
+ "pembantu penggajian": {
+  "roleId": "o040"
+ },
+ "pembantu penjagaan di rumah": {
+  "roleId": "o026"
+ },
+ "pembantu perakaunan": {
+  "roleId": "o034"
+ },
+ "pembantu tadbir": {
+  "roleId": "o038"
+ },
+ "pembantu tadbir rendah": {
+  "roleId": "o038"
+ },
+ "pencuci": {
+  "roleId": null
+ },
+ "penganalisis data": {
+  "roleId": "o009"
+ },
+ "penganalisis kewangan": {
+  "roleId": "o013"
+ },
+ "penganalisis penyelidikan pasaran": {
+  "roleId": "o014"
+ },
+ "penganalisis perniagaan": {
+  "roleId": "o016"
+ },
+ "penganalisis proses perniagaan": {
+  "roleId": "o016"
+ },
+ "penganalisis risikan perniagaan": {
+  "roleId": "o011"
+ },
+ "penganalisis statistik": {
+  "roleId": "o012"
+ },
+ "pengaturcara": {
+  "roleId": "o001"
+ },
+ "pengaturcara komputer": {
+  "roleId": "o001"
+ },
+ "pengawal keselamatan": {
+  "roleId": null
+ },
+ "penghantar makanan": {
+  "roleId": null
+ },
+ "pengurus kecekapan tenaga": {
+  "roleId": "o021"
+ },
+ "pengurus kelestarian": {
+  "roleId": "o024"
+ },
+ "pengurus risikan perniagaan": {
+  "roleId": "o011"
+ },
+ "pengurus tanggungjawab sosial korporat": {
+  "roleId": "o024"
+ },
+ "pengurus tenaga": {
+  "roleId": "o021"
+ },
+ "penilai tenaga": {
+  "roleId": "o022"
+ },
+ "penjaga akaun": {
+  "roleId": "o034"
+ },
+ "penjaga warga emas": {
+  "roleId": "o026"
+ },
+ "pentadbir keselamatan ict": {
+  "roleId": "o005"
+ },
+ "pentadbir pangkalan data": {
+  "roleId": "o015"
+ },
+ "pentadbir rangkaian ict": {
+  "roleId": "o006"
+ },
+ "pentadbir sistem ict": {
+  "roleId": "o006"
+ },
+ "penyambut tetamu": {
+  "roleId": "o037"
+ },
+ "penyelidik pasaran": {
+  "roleId": "o014"
+ },
+ "pereka antara muka pengguna": {
+  "roleId": "o007"
+ },
+ "pereka grafik": {
+  "roleId": null
+ },
+ "pereka pengalaman pengguna": {
+  "roleId": "o007"
+ },
+ "pereka sistem ai": {
+  "roleId": "o004"
+ },
+ "pereka sistem pintar ict": {
+  "roleId": "o004"
+ },
+ "personal assistant": {
+  "roleId": "o038"
+ },
+ "petani": {
+  "roleId": null
+ },
+ "pharmacist": {
+  "roleId": "o031"
+ },
+ "pharmacy assistant": {
+  "roleId": null
+ },
+ "physiotherapist": {
+  "roleId": "o030"
+ },
+ "physiotherapy assistant": {
+  "roleId": null
+ },
+ "preschool teacher": {
+  "roleId": "o029"
+ },
+ "primary school teacher": {
+  "roleId": "o028"
+ },
+ "product designer": {
+  "roleId": "o007"
+ },
+ "programmer": {
+  "roleId": "o001"
+ },
+ "qa engineer": {
+  "roleId": null
+ },
+ "react native developer": {
+  "roleId": "o003"
+ },
+ "receptionist": {
+  "roleId": "o037"
+ },
+ "recycling coordinator": {
+  "roleId": "o023"
+ },
+ "recycling officer": {
+  "roleId": "o023"
+ },
+ "recycling specialist": {
+  "roleId": "o023"
+ },
+ "registered nurse": {
+  "roleId": "o025"
+ },
+ "relationship manager": {
+  "roleId": null
+ },
+ "renewable energy engineer": {
+  "roleId": "o017"
+ },
+ "resepsionis": {
+  "roleId": "o037"
+ },
+ "retail assistant": {
+  "roleId": null
+ },
+ "retail manager": {
+  "roleId": null
+ },
+ "rider": {
+  "roleId": null
+ },
+ "safety officer": {
+  "roleId": null
+ },
+ "saintis alam sekitar": {
+  "roleId": "o020"
+ },
+ "saintis data": {
+  "roleId": "o010"
+ },
+ "sales assistant": {
+  "roleId": null
+ },
+ "sales executive": {
+  "roleId": null
+ },
+ "scrum master": {
+  "roleId": null
+ },
+ "secondary school teacher": {
+  "roleId": null
+ },
+ "security administrator": {
+  "roleId": "o005"
+ },
+ "security engineer": {
+  "roleId": "o005"
+ },
+ "senior accountant": {
+  "roleId": null
+ },
+ "senior financial analyst": {
+  "roleId": "o013"
+ },
+ "senior software engineer": {
+  "roleId": "o001"
+ },
+ "seo specialist": {
+  "roleId": "o008"
+ },
+ "setiausaha": {
+  "roleId": "o038"
+ },
+ "site reliability engineer": {
+  "roleId": null
+ },
+ "social media executive": {
+  "roleId": "o008"
+ },
+ "social media manager": {
+  "roleId": "o008"
+ },
+ "social worker": {
+  "roleId": null
+ },
+ "software developer": {
+  "roleId": "o001"
+ },
+ "software engineer": {
+  "roleId": "o001"
+ },
+ "software tester": {
+  "roleId": null
+ },
+ "solar energy engineer": {
+  "roleId": "o017"
+ },
+ "solar energy technician": {
+  "roleId": "o018"
+ },
+ "solar engineer": {
+  "roleId": "o017"
+ },
+ "solar pv engineer": {
+  "roleId": "o017"
+ },
+ "solar pv installer": {
+  "roleId": "o018"
+ },
+ "solar technician": {
+  "roleId": "o018"
+ },
+ "solutions architect": {
+  "roleId": null
+ },
+ "special education teacher": {
+  "roleId": null
+ },
+ "staff nurse": {
+  "roleId": "o025"
+ },
+ "statistician": {
+  "roleId": "o012"
+ },
+ "store cashier": {
+  "roleId": "o039"
+ },
+ "sustainability executive": {
+  "roleId": "o024"
+ },
+ "sustainability manager": {
+  "roleId": "o024"
+ },
+ "sustainability officer": {
+  "roleId": "o024"
+ },
+ "swe": {
+  "roleId": "o001"
+ },
+ "system administrator": {
+  "roleId": "o006"
+ },
+ "tax consultant": {
+  "roleId": null
+ },
+ "technical lead": {
+  "roleId": "o001"
+ },
+ "telemarketer": {
+  "roleId": "o036"
+ },
+ "teller": {
+  "roleId": "o035"
+ },
+ "teller bank": {
+  "roleId": "o035"
+ },
+ "treasury analyst": {
+  "roleId": "o013"
+ },
+ "tukang elektrik": {
+  "roleId": null
+ },
+ "tukang kayu": {
+  "roleId": null
+ },
+ "tukang kebun": {
+  "roleId": null
+ },
+ "tukang masak": {
+  "roleId": null
+ },
+ "tvet instructor": {
+  "roleId": "o032"
+ },
+ "ui designer": {
+  "roleId": "o007"
+ },
+ "ui ux designer": {
+  "roleId": "o007"
+ },
+ "ux designer": {
+  "roleId": "o007"
+ },
+ "vocational teacher": {
+  "roleId": "o032"
+ },
+ "waste management officer": {
+  "roleId": "o023"
+ },
+ "web designer": {
+  "roleId": "o007"
+ },
+ "web developer": {
+  "roleId": "o002"
+ },
+ "会计": {
+  "roleId": null
+ },
+ "会计助理": {
+  "roleId": "o034"
+ },
+ "司机": {
+  "roleId": null
+ },
+ "客服": {
+  "roleId": "o036"
+ },
+ "小学教师": {
+  "roleId": "o028"
+ },
+ "护士": {
+  "roleId": "o025"
+ },
+ "收银员": {
+  "roleId": "o039"
+ },
+ "数据分析师": {
+  "roleId": "o009"
+ },
+ "物理治疗师": {
+  "roleId": "o030"
+ },
+ "网络管理员": {
+  "roleId": "o006"
+ },
+ "药剂师": {
+  "roleId": "o031"
+ },
+ "行政助理": {
+  "roleId": "o038"
+ },
+ "软件工程师": {
+  "roleId": "o001"
+ },
+ "项目经理": {
+  "roleId": null
+ }
+}

@@ -1,43 +1,19 @@
-// Estimates GenAI exposure for a job title that is NOT one of the 40
-// curated Laluan roles (data/occupations.csv / src/lib/catalogue.ts), by
-// embedding the title with Gemini and borrowing the closest curated role's
-// exposure figure when the two are close enough. Precomputed role
-// embeddings live in src/data/role-embeddings.json (written once by
-// scripts/precompute-role-embeddings.ts); this module statically imports
-// that file so it's bundled at build time rather than read from disk per
-// request. The placeholder checked into the repo before that script has
-// ever run is `[]`, which fails the object-shaped schema below and so
-// resolves to null — POST /api/exposure-estimate just returns
-// { status: "embeddings_unavailable" }.
+// Estimates GenAI exposure for a job title that may not be one of the 40
+// curated Laluan roles. Order: (1) exact title match on the 40, (2) the
+// precomputed alias table (src/data/role-aliases.json), (3) the configured
+// chat model (getModel(): Claude Haiku on Replit, Gemini on Vercel) picks one
+// of the 40 ids or "none". A model answer outside the 40 is treated as no
+// close match. Exposure is always the matched catalogue role's real figure.
+//
+// The earlier embedding path (role-embeddings.json) is no longer on this
+// request path; RoleEmbeddingsFile / cosineSimilarity stay exported for
+// scripts/precompute-role-embeddings.ts.
 import "server-only";
-import { embed } from "ai";
-import { createGoogle } from "@ai-sdk/google";
+import { generateObject, type LanguageModel } from "ai";
 import { z } from "zod";
-import { getEnv } from "@/lib/env";
+import { getModel } from "@/lib/ai";
 import { CATALOGUE, type CatalogueExposure } from "@/lib/catalogue";
-import { EMBEDDING_DIMENSIONS, EMBEDDING_MODEL } from "@/types/contracts";
-import roleEmbeddingsJson from "@/data/role-embeddings.json";
-
-/**
- * Cosine threshold for borrowing a curated role's exposure figure for an
- * unknown job title. Set higher than CV_SKILL_MATCH_COSINE (0.72, see
- * src/lib/skill-match.ts) and SCORING_PARAMS.skillMatchCosine (0.82, see
- * src/lib/scoring.ts): both of those match a short skill phrase against an
- * ESCO label drawn from the same controlled vocabulary, where some phrasing
- * gap is expected and a miss just falls back to free text. Here a match
- * substitutes one occupation's whole published exposure figure for
- * another's and presents it to the user as that role's number, so a false
- * positive (two different roles treated as the same one) is more
- * consequential than a false negative (which only falls back to
- * "no_close_match", not an error). 0.80 is set high enough to require
- * near-synonyms ("web developer" vs "website developer") while rejecting
- * same-cluster-but-different roles ("web developer" vs "mobile application
- * developer"). Placeholder until a real similarity distribution — only
- * obtainable once scripts/precompute-role-embeddings.ts can actually be run
- * (see its header: Gemini embedding quota is currently exhausted) —
- * justifies a different value.
- */
-export const EXPOSURE_MATCH_THRESHOLD = 0.8;
+import { lookupRoleAlias } from "@/lib/role-aliases";
 
 export type RoleEmbedding = { roleId: string; title: string; embedding: number[] };
 
@@ -48,36 +24,7 @@ export type RoleEmbeddingsFile = {
   roles: RoleEmbedding[];
 };
 
-const RoleEmbeddingSchema = z.strictObject({
-  roleId: z.string().min(1),
-  title: z.string().min(1),
-  embedding: z.array(z.number()).min(1),
-});
-
-const RoleEmbeddingsFileSchema = z.strictObject({
-  model: z.string().min(1),
-  dimensions: z.number().int().positive(),
-  generatedAt: z.string().min(1),
-  roles: z.array(RoleEmbeddingSchema),
-});
-
-export type BorrowedFrom = { roleId: string; title: string };
-
-export type ExposureEstimateResult =
-  | { status: "exact"; exposure: CatalogueExposure | null; borrowedFrom: BorrowedFrom; similarity: 1 }
-  | { status: "matched"; exposure: CatalogueExposure | null; borrowedFrom: BorrowedFrom; similarity: number }
-  | { status: "no_close_match" }
-  | { status: "embeddings_unavailable" };
-
-/** Collapses whitespace and case so title comparisons ignore formatting, not meaning. */
-function normalizeTitle(title: string): string {
-  return title.trim().toLowerCase().replace(/\s+/g, " ");
-}
-
-/**
- * Cosine similarity of two equal-length vectors, in [-1, 1]. Returns 0 for a
- * zero vector (undefined direction) instead of dividing by zero.
- */
+/** Cosine similarity of two equal-length vectors; 0 for a zero vector. */
 export function cosineSimilarity(a: readonly number[], b: readonly number[]): number {
   if (a.length !== b.length) {
     throw new Error(`Vectors must have the same length (got ${a.length} and ${b.length}).`);
@@ -94,103 +41,69 @@ export function cosineSimilarity(a: readonly number[], b: readonly number[]): nu
   return dot / (Math.sqrt(normA) * Math.sqrt(normB));
 }
 
-/**
- * Validates the statically-imported role-embeddings JSON. Returns null for
- * any shape that doesn't match RoleEmbeddingsFileSchema -- including the
- * `[]` placeholder committed before scripts/precompute-role-embeddings.ts
- * has ever run. An empty roles list in an otherwise valid file is still
- * returned as-is; estimateExposure treats zero roles the same as null.
- */
-function parseRoleEmbeddings(json: unknown): RoleEmbeddingsFile | null {
-  const parsed = RoleEmbeddingsFileSchema.safeParse(json);
-  return parsed.success ? parsed.data : null;
+export type BorrowedFrom = { roleId: string; title: string };
+export type MatchedVia = "exact" | "alias" | "llm";
+
+export type ExposureEstimateResult =
+  | { status: "matched"; matchedVia: MatchedVia; exposure: CatalogueExposure | null; borrowedFrom: BorrowedFrom }
+  | { status: "no_close_match"; matchedVia: "alias" | "llm" }
+  | { status: "model_unavailable" };
+
+function normalizeTitle(title: string): string {
+  return title.trim().toLowerCase().replace(/\s+/g, " ");
 }
 
-/** Validated once at module load, since the import is static (bundled, not re-read per request). */
-const STATIC_ROLE_EMBEDDINGS = parseRoleEmbeddings(roleEmbeddingsJson);
+const PickSchema = z.object({ roleId: z.string() });
 
-function loadRoleEmbeddingsFromModule(): RoleEmbeddingsFile | null {
-  return STATIC_ROLE_EMBEDDINGS;
+async function defaultPickRole(title: string): Promise<string> {
+  const modelResult = getModel();
+  if (!modelResult.ok) throw new Error(modelResult.error);
+  return pickRoleWithModel(modelResult.model, title);
 }
 
-async function embedTitleWithGemini(title: string): Promise<number[]> {
-  const env = getEnv();
-  if (!env.googleApiKey) {
-    throw new Error("GOOGLE_GENERATIVE_AI_API_KEY is not set.");
-  }
-  const google = createGoogle({ apiKey: env.googleApiKey });
-  const { embedding } = await embed({
-    model: google.embeddingModel(EMBEDDING_MODEL),
-    value: title,
-    // No providerOptions.google.taskType: scripts/precompute-role-embeddings.ts
-    // computes the stored role embeddings without one, so a query embedding
-    // must be produced the same way or cosines against them are meaningless.
-    providerOptions: { google: { outputDimensionality: EMBEDDING_DIMENSIONS } },
+export async function pickRoleWithModel(model: LanguageModel, title: string): Promise<string> {
+  const list = CATALOGUE.occupations.map((o) => `${o.id}: ${o.title}`).join("\n");
+  const { object } = await generateObject({
+    model,
+    schema: PickSchema,
+    system:
+      "You map a job title (English, Bahasa Malaysia or other) to the single closest role in a fixed list. " +
+      'Answer with that role\'s id only if it is essentially the same job; otherwise answer "none".',
+    prompt: `Roles:\n${list}\n\nJob title: ${title}`,
   });
-  return embedding;
+  return object.roleId.trim();
 }
 
 export type ExposureEstimateDeps = {
-  /** Default: Gemini embed (gemini-embedding-001, 768 dims). Inject a stub in tests to avoid any network call. */
-  embedTitle?: (title: string) => Promise<number[]>;
-  /** Default: the statically-imported + zod-validated src/data/role-embeddings.json. */
-  loadRoleEmbeddings?: () => RoleEmbeddingsFile | null;
+  /** Default: getModel() + generateObject. Returns a catalogue id or "none". Inject a stub in tests. */
+  pickRole?: (title: string) => Promise<string>;
 };
 
-/**
- * Estimates exposure for a job title that may not be one of the 40 curated
- * Laluan roles. Never throws: a missing/empty embeddings file, or a failure
- * embedding the title (quota, bad response, no API key, ...), both resolve
- * to { status: "embeddings_unavailable" } rather than an exception.
- */
+function matched(roleId: string, matchedVia: MatchedVia): ExposureEstimateResult | null {
+  const role = CATALOGUE.occupations.find((o) => o.id === roleId);
+  if (!role) return null;
+  return { status: "matched", matchedVia, exposure: role.exposure, borrowedFrom: { roleId: role.id, title: role.title } };
+}
+
+/** Never throws: a model/config failure resolves to { status: "model_unavailable" }. */
 export async function estimateExposure(title: string, deps: ExposureEstimateDeps = {}): Promise<ExposureEstimateResult> {
   const normalized = normalizeTitle(title);
+  const exactRole = CATALOGUE.occupations.find((o) => normalizeTitle(o.title) === normalized);
+  if (exactRole) return matched(exactRole.id, "exact")!;
 
-  const exactRole = CATALOGUE.occupations.find((occupation) => normalizeTitle(occupation.title) === normalized);
-  if (exactRole) {
-    return {
-      status: "exact",
-      exposure: exactRole.exposure,
-      borrowedFrom: { roleId: exactRole.id, title: exactRole.title },
-      similarity: 1,
-    };
+  const alias = lookupRoleAlias(title);
+  if (alias === null) return { status: "no_close_match", matchedVia: "alias" };
+  if (alias !== undefined) {
+    const hit = matched(alias, "alias");
+    if (hit) return hit;
   }
 
-  const loadRoleEmbeddings = deps.loadRoleEmbeddings ?? loadRoleEmbeddingsFromModule;
-  const file = loadRoleEmbeddings();
-  if (!file || file.roles.length === 0) {
-    return { status: "embeddings_unavailable" };
-  }
-
-  const embedTitle = deps.embedTitle ?? embedTitleWithGemini;
-  let queryEmbedding: number[];
+  const pickRole = deps.pickRole ?? defaultPickRole;
+  let picked: string;
   try {
-    queryEmbedding = await embedTitle(title.trim());
+    picked = await pickRole(title.trim());
   } catch {
-    // A quota hit, network error, or missing API key: we cannot produce a
-    // query embedding, so we cannot compare against the stored role
-    // embeddings either. Same outward status as the file being absent --
-    // from the caller's point of view, embedding-based matching just isn't
-    // available right now.
-    return { status: "embeddings_unavailable" };
+    return { status: "model_unavailable" };
   }
-
-  let best: { roleId: string; title: string; similarity: number } | null = null;
-  for (const role of file.roles) {
-    const similarity = cosineSimilarity(queryEmbedding, role.embedding);
-    if (!best || similarity > best.similarity) {
-      best = { roleId: role.roleId, title: role.title, similarity };
-    }
-  }
-  if (!best || best.similarity < EXPOSURE_MATCH_THRESHOLD) {
-    return { status: "no_close_match" };
-  }
-
-  const catalogueRole = CATALOGUE.occupations.find((occupation) => occupation.id === best.roleId);
-  return {
-    status: "matched",
-    exposure: catalogueRole?.exposure ?? null,
-    borrowedFrom: { roleId: best.roleId, title: best.title },
-    similarity: best.similarity,
-  };
+  return matched(picked, "llm") ?? { status: "no_close_match", matchedVia: "llm" };
 }
