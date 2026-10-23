@@ -8,7 +8,7 @@ import { useRef } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import { ArrowRight, Check, Database, HardDrive, UserX } from "lucide-react";
 import { LandingHeroCanvas } from "@/components/landing-hero-canvas";
-import { EASE_OUT, Reveal, RouteLine, Stagger, StaggerItem } from "@/components/motion";
+import { EASE_OUT, Reveal, Stagger, StaggerItem } from "@/components/motion";
 import { formatDayMonthYear } from "@/lib/display";
 import { useFlow } from "@/context/flow-context";
 import { useT, type MessageKey } from "@/lib/i18n";
@@ -94,7 +94,7 @@ export function LandingView({ preview }: { preview: LandingPreview }) {
 
           <motion.div
             {...rise(0.24)}
-            className="mt-6 xl:absolute xl:right-8 xl:bottom-8 xl:z-20 xl:mt-0 xl:w-[460px]"
+            className="mt-6 xl:absolute xl:right-0 xl:bottom-0 xl:z-20 xl:mt-0 xl:w-[520px] xl:rounded-tl-[40px] xl:bg-paper xl:pt-8 xl:pl-8"
           >
             <p className="text-[17px] leading-[1.45] text-balance xl:text-[19px]">{t("landing.lede")}</p>
             <div className="mt-5 flex flex-wrap gap-3">
@@ -133,31 +133,32 @@ export function LandingView({ preview }: { preview: LandingPreview }) {
       {/* The four stops, drawn as one line */}
       <section id="about" className="border-t border-line py-16 md:py-20">
         <Reveal>
-          <h2 className="font-serif text-[28px] font-medium tracking-tight md:text-[32px]">{t("landing.stopsTitle")}</h2>
+          <h2 className="font-serif text-[44px] leading-[0.95] uppercase md:text-[72px]">{t("landing.stopsTitle")}</h2>
         </Reveal>
-        <div className="relative mt-10">
-          <RouteLine
-            d="M 0 1 H 1000"
-            viewBox="0 0 1000 2"
-            preserveAspectRatio="none"
-            strokeWidth={2}
-            duration={1.4}
-            className="absolute top-[7px] right-[12.5%] left-[12.5%] hidden h-[2px] w-[75%] md:block"
-          />
-          <Stagger className="grid grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-4 md:gap-6" delay={0.3} gap={0.18}>
-            {STOPS.map((stop, index) => (
-              <StaggerItem key={stop.titleKey} className="relative flex gap-4 md:flex-col md:items-center md:text-center">
-                <span
-                  className={`mt-0.5 flex size-4 shrink-0 items-center justify-center rounded-full border-2 bg-paper ${index === 0 ? "border-sage bg-sage" : "border-sage"}`}
-                />
-                <div className="md:mt-2">
-                  <p className="text-[15px] font-medium">{t(stop.titleKey)}</p>
-                  <p className="mt-1 text-[13px] leading-relaxed text-grey">{t(stop.bodyKey)}</p>
+        <Stagger className="mt-10 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4" delay={0.3} gap={0.18}>
+          {STOPS.map((stop, index) => (
+            <StaggerItem
+              key={stop.titleKey}
+              className="relative flex min-h-[260px] flex-col overflow-hidden rounded-[40px] bg-card p-7 md:p-8"
+            >
+              <p className={`font-serif text-[56px] leading-none ${index % 2 === 1 ? "text-[#524ae9]" : "text-sage"}`}>
+                {String(index + 1).padStart(2, "0")}
+              </p>
+              <p className="mt-5 text-[20px] leading-tight font-bold">{t(stop.titleKey)}</p>
+              <p className="mt-2 text-[14px] leading-relaxed text-grey">{t(stop.bodyKey)}</p>
+              <div aria-hidden className="relative mt-auto pt-8">
+                <span className="absolute top-8 -left-11 size-8 -translate-y-1/2 rounded-full bg-paper md:-left-12" />
+                <span className="absolute top-8 -right-11 size-8 -translate-y-1/2 rounded-full bg-paper md:-right-12" />
+                <div className="border-t-[1.5px] border-dashed border-line" />
+                <div className="mt-5 flex justify-end gap-1.5">
+                  <i className="size-2.5 rounded-full bg-line" />
+                  <i className="size-2.5 rounded-full bg-line" />
+                  <i className="size-2.5 rounded-full bg-line" />
                 </div>
-              </StaggerItem>
-            ))}
-          </Stagger>
-        </div>
+              </div>
+            </StaggerItem>
+          ))}
+        </Stagger>
 
         <div id="privacy">
           <Reveal delay={0.1} className="mt-16 flex flex-col gap-5 border-t border-line pt-6 md:flex-row md:items-center md:justify-between">
