@@ -124,7 +124,7 @@ export function ProfileView() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, ease: EASE_OUT }}
       >
-        <PageHero className="pt-6 md:pt-10" title={t("profile.heroHeading")} lede={t("profile.heroLede")} />
+        <PageHero className="pt-6 md:pt-10" title={t("profile.heroHeading")} />
       </motion.div>
 
       <div className="mt-12 grid gap-4 md:mt-16 md:grid-cols-[420px_1fr] md:items-start">
@@ -361,10 +361,15 @@ export function ProfileView() {
             </SlideIn>
           </AnimatePresence>
         ) : (
-          <div className="flex min-h-[320px] flex-col items-center justify-center rounded-[40px] border border-dashed border-ink/20 bg-card/50 p-10 text-center">
+          <Ticket notch className="flex min-h-[320px] flex-col items-center justify-center p-10 text-center md:self-stretch">
+            <svg aria-hidden viewBox="0 0 120 64" fill="none" stroke="currentColor" strokeWidth="1.5" className="mb-6 h-16 w-[120px] text-ink/20">
+              <path d="M8 4h104a4 4 0 0 1 4 4v14a10 10 0 0 0 0 20v14a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4V42a10 10 0 0 0 0-20V8a4 4 0 0 1 4-4Z" />
+              <path d="M84 8v48" strokeDasharray="3 4" />
+              <path d="M18 22h44M18 32h30M18 42h38" />
+            </svg>
             <p className="font-serif text-[28px] uppercase">{t("profile.emptyStateTitle")}</p>
             <p className="mt-2 max-w-[320px] text-[14px] text-grey">{t("profile.emptyStateBody")}</p>
-          </div>
+          </Ticket>
         )}
       </div>
     </main>
