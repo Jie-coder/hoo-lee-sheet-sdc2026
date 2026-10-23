@@ -204,7 +204,7 @@ export function PathwayView({
           {/* The line */}
           <section className="order-2 md:order-1">
             <h2 className="font-serif text-[clamp(40px,8vw,64px)] leading-[0.95] uppercase">{t("pathway.theLine")}</h2>
-            <ol className="relative mt-8 pl-12">
+            <ol className="relative mt-8 pl-6 sm:pl-12">
               <span aria-hidden className="absolute top-8 bottom-8 left-[14px] w-1 rounded bg-ink" />
               {visibleSteps.map((step) => {
                 const item = resolveItem(step);
@@ -221,10 +221,10 @@ export function PathwayView({
                 const closedSkill = role.gap.find((skill) => step.closesSkillIds.includes(skill.skillId));
                 const sdgLink = step.sdgTarget ? role.sdg.find((link) => link.target === step.sdgTarget) : undefined;
                 return (
-                  <li key={step.itemId} className="relative grid grid-cols-[32px_1fr] gap-x-5 pb-4 last:pb-0">
+                  <li key={step.itemId} className="relative grid grid-cols-[20px_1fr] gap-x-3 pb-4 last:pb-0 sm:grid-cols-[32px_1fr] sm:gap-x-5">
                     <span
                       aria-hidden
-                      className="relative z-10 mt-7 size-[30px] self-start justify-self-center rounded-full bg-card ring-4 ring-ink"
+                      className="relative z-10 mt-7 size-5 self-start sm:size-[30px] justify-self-center rounded-full bg-card ring-4 ring-ink"
                     />
                     <article className="rounded-[28px] bg-card p-6 sm:p-7">
                       <div className="flex flex-wrap items-start justify-between gap-x-4 gap-y-1 font-mono text-[12px] tracking-[0.04em] text-grey uppercase">
@@ -238,7 +238,7 @@ export function PathwayView({
                           )}
                         </span>
                       </div>
-                      <div className="mt-3 flex items-end justify-between gap-4">
+                      <div className="mt-3 flex flex-col items-start gap-2 sm:flex-row sm:items-end sm:justify-between sm:gap-4">
                         <h3 className="min-w-0 font-sans text-[22px] leading-tight font-bold">
                           <button
                             type="button"
@@ -356,6 +356,14 @@ export function PathwayView({
 
       {/* window.print() surface: all stops expanded, no chrome (globals.css @media print). */}
       <section className="print-only">
+        <div className="print-brand">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/brand/laluan-logo-ember.svg" alt="Laluan" width={90} height={20} />
+          <p>
+            {profile?.name ? `${profile.name} · ` : ""}
+            {fromRole ? `${fromRole} → ${role.title}` : role.title}
+          </p>
+        </div>
         <h1 className="print-h1">{t("pathway.printTitle", { title: role.title })}</h1>
         <p>
           {t("pathway.printDate", {
@@ -382,6 +390,14 @@ export function PathwayView({
                 <span>{providerName}</span>
                 <span>{weeksLabel}</span>
                 <span>{t(COST_LABEL_KEY[item.costType])}</span>
+                {(() => {
+                  const related = role.gap.find((skill) => step.closesSkillIds.includes(skill.skillId));
+                  return related ? (
+                    <span>
+                      {t("pathway.closes")}: <strong>{related.label}</strong>
+                    </span>
+                  ) : null;
+                })()}
                 <span className="print-url">{item.url}</span>
               </li>
             );

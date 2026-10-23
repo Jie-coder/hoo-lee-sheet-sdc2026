@@ -271,7 +271,7 @@ export function InterviewView() {
             <p className="text-[12px] text-grey">
               {t("interview.questionCount", { current: String(turn), total: String(MAX_INTERVIEW_TURNS) })}
             </p>
-            <h2 className="mt-2 font-serif text-[24px] leading-[0.9] font-medium text-balance sm:text-[28px]">
+            <h2 className="mt-2 font-serif text-[24px] leading-[1.05] font-medium text-balance sm:text-[28px]">
               {t(questionTitleKey)}
             </h2>
             {questionSubtitleKey && (

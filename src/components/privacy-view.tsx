@@ -34,7 +34,7 @@ export function PrivacyView() {
   const [cleared, setCleared] = useState(false);
 
   return (
-    <main className="mx-auto w-full max-w-[1440px] px-5 pb-24 sm:px-6 md:px-8">
+    <main className="privacy-page mx-auto w-full max-w-[1440px] px-5 pb-24 sm:px-6 md:px-8">
       <PageHero
         className="pt-6 md:pt-10"
         eyebrow={t("privacyPage.title")}
@@ -44,16 +44,14 @@ export function PrivacyView() {
 
       <section className="mt-16 grid grid-cols-1 gap-4 md:mt-24 md:grid-cols-3">
         {CARDS.map((card) => (
-          <div key={card.title} className="relative rounded-[40px] bg-card p-8">
-            {/* Single punch-hole ticket motif */}
-            <span aria-hidden className="absolute top-8 right-8 size-4 rounded-full bg-paper ring-[1.5px] ring-ink/20" />
-            <h2 className="pr-8 font-serif text-[30px] leading-[0.95] uppercase md:text-[34px]">{t(card.title)}</h2>
+          <div key={card.title} className="relative rounded-[40px] bg-paper p-8">
+            <h2 className="font-serif text-[30px] leading-[0.95] uppercase md:text-[34px]">{t(card.title)}</h2>
             <p className="mt-4 text-[16px] leading-relaxed">{t(card.body)}</p>
           </div>
         ))}
       </section>
 
-      <article className="mt-24 max-w-[680px] text-[16px] leading-relaxed md:mt-28 md:text-[17px]">
+      <article className="mt-24 max-w-[960px] text-[16px] leading-relaxed md:mt-28 md:text-[17px]">
         {SECTIONS.map((section) => (
           <section key={section.heading} className="mt-12 first:mt-0">
             <h2 className="text-[20px] font-bold">{t(section.heading)}</h2>

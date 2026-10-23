@@ -3,12 +3,12 @@ import { Suspense } from "react";
 import { PageHero, SignalLight } from "@/components/caldera";
 import { connection } from "next/server";
 import { runHealthChecks } from "@/lib/health";
-import { translate } from "@/lib/i18n-messages";
+import { StatusText } from "@/components/status-text";
 
 export default function StatusPage() {
   return (
     <div className="mx-auto w-full max-w-[1248px] px-5 pt-14 pb-24 md:px-14 md:pt-20">
-      <PageHero title={translate("en", "status.title")} lede={translate("en", "status.lede")} />
+      <PageHero title={<StatusText k="status.title" />} lede={<StatusText k="status.lede" />} />
 
       {/* Each check makes a network call, so this streams in at request
           time behind the Suspense boundary instead of being prerendered. */}
@@ -24,16 +24,17 @@ async function StatusChecks() {
   const checks = await runHealthChecks();
 
   return (
-    <div className="mt-16 grid grid-cols-1 gap-4 md:grid-cols-2">
+    <div className="mt-16 grid grid-cols-1 gap-4 md:grid-cols-3">
       {checks.map((check) => (
         <div key={check.name} className="rounded-[40px] bg-card p-8">
           <p className="font-mono text-[12px] tracking-[0.06em] uppercase">{check.name}</p>
           <SignalLight
             className="mt-4"
-            level={check.ok ? "low" : "high"}
-            label={check.ok ? translate("en", "status.ok") : translate("en", "status.error")}
+            level={check.ok ? "low" : "pending"}
+            label={<StatusText k={check.ok ? "status.ok" : "status.unavailable"} />}
           />
-          <p className="mt-3 text-[15px] text-grey">{check.message}</p>
+          {/* Raw error text stays in the server logs, not on the public page. */}
+          {check.ok && <p className="mt-3 text-[15px] text-grey">{check.message}</p>}
         </div>
       ))}
     </div>
@@ -42,7 +43,7 @@ async function StatusChecks() {
 
 function StatusSkeleton() {
   return (
-    <div aria-busy="true" aria-live="polite" className="mt-16 grid grid-cols-1 gap-4 md:grid-cols-2">
+    <div aria-busy="true" aria-live="polite" className="mt-16 grid grid-cols-1 gap-4 md:grid-cols-3">
       <div className="h-40 rounded-[40px] bg-card animate-pulse" />
       <div className="h-40 rounded-[40px] bg-card animate-pulse" />
       <div className="h-40 rounded-[40px] bg-card animate-pulse" />

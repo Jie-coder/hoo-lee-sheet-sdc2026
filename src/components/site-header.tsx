@@ -88,15 +88,20 @@ export function SiteHeader() {
           </nav>
         )}
 
-        {/* Flow, mobile: "Step n of 4 · Label" plus a 4-segment bar. */}
+        {/* Flow, mobile: a compact "n/4" plus a 4-segment bar (full label for screen readers). */}
         {onFlow && (
           <div className="flex min-w-0 flex-1 flex-col gap-1.5 md:hidden">
             <span className="font-mono text-[11px] leading-snug break-words tracking-[0.06em] text-ink uppercase">
-              {t("header.stepOf", {
-                n: String(currentIndex + 1),
-                total: String(STEPS.length),
-                label: t(`nav.${STEPS[currentIndex].id}`),
-              })}
+              <span aria-hidden>
+                {currentIndex + 1}/{STEPS.length}
+              </span>
+              <span className="sr-only">
+                {t("header.stepOf", {
+                  n: String(currentIndex + 1),
+                  total: String(STEPS.length),
+                  label: t(`nav.${STEPS[currentIndex].id}`),
+                })}
+              </span>
             </span>
             <div className="flex gap-1">
               {STEPS.map((step, index) => (

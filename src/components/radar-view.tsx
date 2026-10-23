@@ -115,7 +115,7 @@ function InterchangeMap({ radar, onPick }: { radar: Radar; onPick: (skill: Radar
                       DOT[line.id],
                     )}
                   />
-                  <span className="line-clamp-2 font-mono text-[10px] leading-tight tracking-[0.04em] text-ink uppercase group-hover:underline lg:text-[11px]">
+                  <span className="line-clamp-2 font-mono text-[10px] leading-tight break-words [overflow-wrap:anywhere] tracking-[0.04em] text-ink uppercase group-hover:underline lg:text-[11px]">
                     {skill.label}
                   </span>
                 </button>
@@ -324,7 +324,7 @@ export function RadarView({
             ))}
           </section>
 
-          <div className="mt-10 flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
+          <div className="mt-10 flex flex-col gap-12 sm:flex-row sm:items-end sm:justify-between sm:gap-6">
             <SourceRow
               className="mt-0"
               sources={[

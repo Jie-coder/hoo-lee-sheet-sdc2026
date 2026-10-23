@@ -73,16 +73,12 @@ export function ScenarioTabs({ value, onChange }: { value: ScenarioId; onChange:
 
   return (
     <div className="relative w-full sm:w-auto" onPointerLeave={(event) => event.pointerType === "mouse" && setTip(null)}>
-    <div
-      tabIndex={0}
-      role="region"
-      aria-label={t("scenarioTabs.ariaLabel")}
-      className="w-full snap-x snap-mandatory overflow-x-auto focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink pr-8 [mask-image:linear-gradient(to_right,black_calc(100%-40px),transparent)] [scrollbar-width:none] sm:w-auto sm:pr-0 sm:[mask-image:none] [&::-webkit-scrollbar]:hidden">
+    <div className="w-full sm:w-auto">
       <div
         role="tablist"
         aria-label={t("scenarioTabs.ariaLabel")}
         aria-orientation="horizontal"
-        className="inline-flex w-max flex-row items-center gap-0.5 rounded-full bg-card p-1.5 text-[13px]"
+        className="flex w-full flex-row flex-wrap items-center gap-0.5 rounded-[24px] bg-card p-1.5 text-[13px] sm:inline-flex sm:w-max sm:flex-nowrap sm:rounded-full"
       >
         {SCENARIO_IDS.map((id, index) => {
           const selected = value === id;
@@ -105,7 +101,7 @@ export function ScenarioTabs({ value, onChange }: { value: ScenarioId; onChange:
               onBlur={() => setTip(null)}
               onKeyDown={(event) => handleKeyDown(event, index)}
               className={cn(
-                "relative inline-flex shrink-0 snap-start items-center justify-center gap-1.5 rounded-full px-5 py-2.5 whitespace-nowrap transition-colors",
+                "relative inline-flex shrink-0 items-center justify-center gap-1.5 rounded-full px-5 py-2.5 whitespace-nowrap transition-colors",
                 selected ? "font-medium text-paper" : "text-grey hover:text-ink",
               )}
             >
