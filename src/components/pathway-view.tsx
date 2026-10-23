@@ -23,7 +23,6 @@ import {
   Trash2,
   Wallet,
 } from "lucide-react";
-import { toast } from "sonner";
 import { EstimateFooter } from "@/components/estimate-footer";
 import { CountUp, EASE_OUT, Reveal } from "@/components/motion";
 import { SdgBadge } from "@/components/sdg-badge";
@@ -78,7 +77,7 @@ export function PathwayView({
   const router = useRouter();
   const searchParams = useSearchParams();
   const reduce = useReducedMotion();
-  const { t } = useT();
+  const { t, locale } = useT();
   const { hydrated, consent, profile, interviewAnswers, chosenRoleId, setChosenRoleId, resetFlow } = useFlow();
   const { state, retry } = useRoles(profile, interviewAnswers.impact_interest);
   const data = state.status === "ready" ? state.data : null;
@@ -183,7 +182,7 @@ export function PathwayView({
   const languagesLabel = studyLanguages.map(languageLabel).join(", ");
 
   function handleDownload() {
-    toast(t("pathway.downloadUnavailable"));
+    window.print();
   }
 
   function handleDelete() {
@@ -193,7 +192,7 @@ export function PathwayView({
 
   return (
     <div className="pb-16 sm:pb-20">
-      <main className="mx-auto max-w-[1248px] px-4 sm:px-6">
+      <main className="mx-auto max-w-[1248px] px-4 sm:px-6 print-hide">
         <motion.section
           initial={reduce ? false : { opacity: 0, y: 14 }}
           animate={{ opacity: 1, y: 0 }}
@@ -496,8 +495,40 @@ export function PathwayView({
         </section>
 
         <p className="mt-10 text-[12px] leading-relaxed text-grey/80">{t("pathway.catalogueNote")}</p>
+
       </main>
-      <EstimateFooter />
+      <div className="print-hide">
+        <EstimateFooter />
+      </div>
+        <section className="print-only">
+          <h1 className="print-h1">{t("pathway.printTitle", { title: role.title })}</h1>
+          <p>{t("pathway.printDate", { date: new Date().toLocaleDateString(locale === "ms" ? "ms-MY" : "en-GB", { day: "numeric", month: "long", year: "numeric" }) })}</p>
+          <ol>
+            {plan.steps.map((step, index) => {
+              const item = resolveItem(step);
+              if (!item) return null;
+              const providerName = "provider" in item ? item.provider : item.agency;
+              const weeksLabel =
+                step.weekStart === step.weekEnd
+                  ? t("pathway.week", { week: String(step.weekStart) })
+                  : t("pathway.weeksRange", { start: String(step.weekStart), end: String(step.weekEnd) });
+              return (
+                <li key={step.itemId} className="print-ticket">
+                  <span className="print-num">{index + 1}</span>
+                  <span className="print-name">{"title" in item ? item.title : item.name}</span>
+                  <span>{providerName}</span>
+                  <span>{weeksLabel}</span>
+                  <span>{t(COST_LABEL_KEY[item.costType])}</span>
+                  <span className="print-url">{item.url}</span>
+                </li>
+              );
+            })}
+          </ol>
+          <footer className="print-foot">
+            <p>{t("footer.disclaimer")}</p>
+            <p>{t("pathway.printSources")}</p>
+          </footer>
+        </section>
     </div>
   );
 }

@@ -204,3 +204,22 @@
     transition: none;
   }
 }
+
+/* Pathway print / "Download PDF" (window.print). Screen: hidden. */
+.print-only { display: none; }
+@media print {
+  @page { size: A4 portrait; margin: 16mm; }
+  html, body { background: #fff !important; color: #000 !important; }
+  header, nav, footer:not(.print-foot), canvas, video, button,
+  .print-hide, [data-sonner-toaster] { display: none !important; }
+  *, *::before, *::after { animation: none !important; transition: none !important; box-shadow: none !important; }
+  .print-only { display: block !important; color: #000; font-family: var(--font-dm-sans), "DM Sans", sans-serif; font-size: 11pt; }
+  .print-only .print-h1 { font-family: var(--font-anton), "Anton", sans-serif; font-size: 26pt; line-height: 1.1; margin: 0 0 4pt; text-transform: uppercase; }
+  .print-only ol { list-style: none; padding: 0; margin: 14pt 0; }
+  .print-only .print-ticket { display: grid; grid-template-columns: 22pt 1fr; column-gap: 8pt; row-gap: 2pt; border: 0.75pt solid #000; border-radius: 10pt; padding: 8pt 10pt; margin-bottom: 8pt; break-inside: avoid; page-break-inside: avoid; background: #fff; }
+  .print-only .print-ticket > span { grid-column: 2; }
+  .print-only .print-num { grid-column: 1 !important; grid-row: 1 / span 6; font-family: var(--font-anton), "Anton", sans-serif; font-size: 16pt; }
+  .print-only .print-name { font-weight: 600; font-size: 12pt; }
+  .print-only .print-url { font-size: 9pt; word-break: break-all; }
+  .print-only .print-foot { border-top: 0.75pt solid #000; padding-top: 6pt; font-size: 9pt; break-inside: avoid; }
+}

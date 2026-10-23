@@ -390,8 +390,10 @@ export const EN = {
   "pathway.moreStops": "+{count} more stops",
   "pathway.startStop": "Start stop {n} →",
   "pathway.downloadPdf": "Download PDF",
-  "pathway.downloadUnavailable":
-    "Download isn't available in this demo. Use your browser's print or a screenshot instead.",
+  "pathway.printTitle": "Learning route: {title}",
+  "pathway.printDate": "Printed {date}",
+  "pathway.printSources":
+    "Data sources: ESCO v1.2.1 skills; ILO GenAI exposure study (2025); DOSM salaries and wages (2024 to 2025); WEF Future of Jobs Report 2025; course and programme details from each provider.",
   "pathway.duration": "Duration",
   "pathway.weeks": "weeks",
   "pathway.pace": "Pace",
@@ -918,8 +920,10 @@ export const MS: Record<MessageKey, string> = {
   "pathway.moreStops": "+{count} hentian lagi",
   "pathway.startStop": "Mula hentian {n} →",
   "pathway.downloadPdf": "Muat turun PDF",
-  "pathway.downloadUnavailable":
-    "Muat turun tidak tersedia dalam demo ini. Gunakan cetakan pelayar atau tangkapan skrin.",
+  "pathway.printTitle": "Laluan pembelajaran: {title}",
+  "pathway.printDate": "Dicetak {date}",
+  "pathway.printSources":
+    "Sumber data: kemahiran ESCO v1.2.1; kajian pendedahan GenAI ILO (2025); gaji dan upah DOSM (2024 hingga 2025); Laporan Future of Jobs WEF 2025; butiran kursus dan program daripada setiap penyedia.",
   "pathway.duration": "Tempoh",
   "pathway.weeks": "minggu",
   "pathway.pace": "Kadar",
