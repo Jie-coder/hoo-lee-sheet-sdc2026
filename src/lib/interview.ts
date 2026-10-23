@@ -118,6 +118,14 @@ export function normalizeTaskShares(shares: readonly number[]): number[] {
  * Task shares from a main task plus a weight level for each other task.
  * The main task weighs 1.0; others use their level weight, then normalise.
  */
+/**
+ * Task weight levels after "Main task" leaves row `previousMain`: that row's
+ * weight chips are enabled again, keeping the level it had or "lot" if none.
+ */
+export function levelsAfterMainTaskMove(levels: string[], previousMain: number): string[] {
+  return levels.map((level, index) => (index === previousMain && !level ? "lot" : level));
+}
+
 export function taskSharesFromLevels(mainIndex: number, levels: string[]): number[] {
   const shares = levels.map((level, index) => {
     if (index === mainIndex) return 1;

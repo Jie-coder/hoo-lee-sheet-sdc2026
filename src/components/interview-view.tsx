@@ -20,6 +20,7 @@ import {
   TOOL_CHIPS,
   isInterviewDone,
   taskSharesFromLevels,
+  levelsAfterMainTaskMove,
 } from "@/lib/interview";
 import { personaKnownSlots } from "@/lib/persona-slots";
 import { useT, type MessageKey } from "@/lib/i18n";
@@ -69,7 +70,16 @@ export function InterviewView() {
     return capped.length > 0 ? capped : [t("interview.mainTask"), t("interview.secondaryTask")];
   }, [cvTasks, hasCvTasks, profile, t]);
   const [mainTaskIndex, setMainTaskIndex] = useState(0);
-  const [taskLevels, setTaskLevels] = useState<string[]>(() => tasks.map(() => "some"));
+  // The main task row starts with no weight ("") since it's weighted as the main task.
+  const [taskLevels, setTaskLevels] = useState<string[]>(() => tasks.map((_, index) => (index === 0 ? "" : "some")));
+
+  /** Moves "Main task" to a row; the row it leaves gets its weights back, defaulting to "A lot". */
+  function chooseMainTask(index: number) {
+    if (index === mainTaskIndex) return;
+    const previous = mainTaskIndex;
+    setTaskLevels((current) => levelsAfterMainTaskMove(tasks.map((_, i) => current[i] ?? "some"), previous));
+    setMainTaskIndex(index);
+  }
 
   const [selectedTools, setSelectedTools] = useState<string[]>([]);
   const [otherTools, setOtherTools] = useState("");
@@ -293,24 +303,25 @@ export function InterviewView() {
                       <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
                         <span className="text-[14px]">{task}</span>
                         <div className="flex flex-wrap items-center gap-1.5">
-                          <Chip compact selected={mainTaskIndex === index} onClick={() => setMainTaskIndex(index)}>
+                          <Chip compact selected={mainTaskIndex === index} onClick={() => chooseMainTask(index)}>
                             {t("interview.mainTask")}
                           </Chip>
-                          {mainTaskIndex !== index &&
-                            TASK_WEIGHT_LEVELS.map((level) => (
-                              <Chip
-                                key={level.value}
-                                compact
-                                selected={currentTaskLevels[index] === level.value}
-                                onClick={() =>
-                                  setTaskLevels((current) =>
-                                    tasks.map((_, i) => (i === index ? level.value : current[i] ?? "some")),
-                                  )
-                                }
-                              >
-                                {t(level.labelKey)}
-                              </Chip>
-                            ))}
+                          {/* The main task row keeps its weight chips visible but greyed out and disabled. */}
+                          {TASK_WEIGHT_LEVELS.map((level) => (
+                            <Chip
+                              key={level.value}
+                              compact
+                              disabled={mainTaskIndex === index}
+                              selected={mainTaskIndex !== index && currentTaskLevels[index] === level.value}
+                              onClick={() =>
+                                setTaskLevels((current) =>
+                                  tasks.map((_, i) => (i === index ? level.value : current[i] ?? "some")),
+                                )
+                              }
+                            >
+                              {t(level.labelKey)}
+                            </Chip>
+                          ))}
                         </div>
                       </div>
                     </li>
@@ -458,16 +469,24 @@ function ChipRow({ label, children }: { label: string; children: ReactNode }) {
 function Chip({
   selected,
   compact,
+  disabled,
   onClick,
   children,
 }: {
   selected: boolean;
   compact?: boolean;
+  disabled?: boolean;
   onClick: () => void;
   children: ReactNode;
 }) {
   return (
-    <button type="button" aria-pressed={selected} onClick={onClick} className={cn("chip", compact && "chip-sm")}>
+    <button
+      type="button"
+      aria-pressed={selected}
+      disabled={disabled}
+      onClick={onClick}
+      className={cn("chip", compact && "chip-sm", "disabled:cursor-not-allowed disabled:border-line disabled:bg-alt disabled:text-grey/60 disabled:hover:border-line disabled:active:scale-100")}
+    >
       {children}
     </button>
   );

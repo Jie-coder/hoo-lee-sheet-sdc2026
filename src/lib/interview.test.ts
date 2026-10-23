@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { MAX_INTERVIEW_TURNS } from "@/types/contracts";
-import { clampTurn, isInterviewDone, normalizeTaskShares, splitTaskSharesEvenly } from "./interview";
+import { clampTurn, isInterviewDone, levelsAfterMainTaskMove, normalizeTaskShares, splitTaskSharesEvenly } from "./interview";
 
 describe("interview 5-turn cap", () => {
   it("is not done before the max turn", () => {
@@ -43,5 +43,15 @@ describe("task share normalisation", () => {
 
   it("falls back to an even split when every share is zero", () => {
     expect(normalizeTaskShares([0, 0, 0])).toEqual(splitTaskSharesEvenly(3));
+  });
+});
+
+describe("levelsAfterMainTaskMove", () => {
+  it("gives the row Main task left a default of 'lot' when it had no level", () => {
+    expect(levelsAfterMainTaskMove(["", "some", "little"], 0)).toEqual(["lot", "some", "little"]);
+  });
+
+  it("keeps a level the previous main row already had", () => {
+    expect(levelsAfterMainTaskMove(["little", "some"], 0)).toEqual(["little", "some"]);
   });
 });
