@@ -229,8 +229,9 @@ export function RoleCard({
           {salary && hasRealRange(salary) ? (
             <>
               <p className="font-serif text-[30px] leading-none font-normal tabular-nums">
-                {formatMonthlyRange(salary.minMonthlyRm, salary.maxMonthlyRm, t("salary.perMonth"))}
+                {formatMonthlyRange(salary.minMonthlyRm, salary.maxMonthlyRm)}
               </p>
+              <p className="mt-1 text-[12px] text-grey">{t("salary.perMonth")}</p>
               <p className="mt-2 text-[12px] text-grey">
                 <a href={salary.rangeSourceUrl} target="_blank" rel="noreferrer" className="underline underline-offset-4">
                   {salary.rangeSourceRole && salary.rangeSourceRole.toLowerCase() !== role.title.toLowerCase()
@@ -243,7 +244,8 @@ export function RoleCard({
             </>
           ) : salary ? (
             <>
-              <p className="font-serif text-[30px] leading-none font-normal tabular-nums">{formatMonthlyRm(salary.avgMonthlyRm, t("salary.perMonth"))}</p>
+              <p className="font-serif text-[30px] leading-none font-normal tabular-nums">{formatMonthlyRm(salary.avgMonthlyRm)}</p>
+              <p className="mt-1 text-[12px] text-grey">{t("salary.perMonth")}</p>
               <p className="mt-2 text-[12px] text-grey">
                 {t("salary.dosmMajorGroup", { year: String(salary.year) })}
               </p>

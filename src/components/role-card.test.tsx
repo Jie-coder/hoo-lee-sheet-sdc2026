@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { getDefaultNormalizer, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
 import { analyzeProfile } from "@/lib/analyze";
@@ -16,6 +16,8 @@ const result = analyzeProfile(CATALOGUE, {
 });
 const role = { ...result.roles.find((item) => item.occupationId === "o025")!, explanation: "Why this role, in one line." };
 const breakdown = result.breakdown[role.occupationId];
+// Keep non-breaking spaces intact when matching salary text.
+const keepNbsp = { normalizer: getDefaultNormalizer({ collapseWhitespace: false }) };
 
 function renderCard(roleOverrides: Partial<typeof role> = {}) {
   return render(
@@ -123,7 +125,8 @@ describe("RoleCard", () => {
 
       if (hasRealRange(salary)) {
         expect(salary.minMonthlyRm).toBeLessThanOrEqual(salary.maxMonthlyRm);
-        expect(screen.getByText(formatMonthlyRange(salary.minMonthlyRm, salary.maxMonthlyRm))).toBeInTheDocument();
+        expect(screen.getByText(formatMonthlyRange(salary.minMonthlyRm, salary.maxMonthlyRm), keepNbsp)).toBeInTheDocument();
+        expect(formatMonthlyRange(salary.minMonthlyRm, salary.maxMonthlyRm)).not.toMatch(/ /);
         const exact = salary.rangeSourceRole?.toLowerCase() === occupation.title.toLowerCase();
         const name = exact
           ? `${salary.rangeSourceName} ${salary.rangeYear}`
@@ -133,10 +136,12 @@ describe("RoleCard", () => {
       } else {
         expect(salary.sourceType).toBe("dosm_major_group");
         expect(salary.minMonthlyRm).toBeUndefined();
-        expect(screen.getByText(formatMonthlyRm(salary.avgMonthlyRm))).toBeInTheDocument();
+        expect(screen.getByText(formatMonthlyRm(salary.avgMonthlyRm), keepNbsp)).toBeInTheDocument();
+        expect(formatMonthlyRm(salary.avgMonthlyRm)).not.toMatch(/ /);
         expect(screen.getByText(`Industry average · DOSM major group ${salary.year}`)).toBeInTheDocument();
       }
 
+      expect(screen.getByText("/month")).toBeInTheDocument();
       unmount();
     }
   });

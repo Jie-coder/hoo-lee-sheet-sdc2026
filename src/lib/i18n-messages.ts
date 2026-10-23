@@ -102,7 +102,7 @@ export const EN = {
   "roleCard.flagged": "Flagged",
   "roleCard.flagThis": "Flag this",
   "roleCard.salaryUnavailable": "Salary data not available",
-  "salary.perMonth": "/ month",
+  "salary.perMonth": "/month",
   "salary.estimate": "Estimate",
   "salary.dosmMajorGroup": "Industry average · DOSM major group {year}",
   "salary.source": "{source} {year}",
