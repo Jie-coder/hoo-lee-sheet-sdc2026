@@ -201,6 +201,17 @@ export type ScoredRole = Pick<
 >;
 
 /** E = Σ w_i a_i. Shares are not renormalized; see the file header. */
+/**
+ * Clusters never offered as a future route. Routine clerical roles (data
+ * entry, bookkeeping, teller, call centre, reception, admin, cashier,
+ * payroll) are the jobs most exposed to AI automation, so recommending them
+ * as a move contradicts the product. They can still be the user's current
+ * (at-risk) job — only the recommended list excludes them. Applied once, in
+ * analyzeProfile's candidate filter, so /api/roles, results, compare and
+ * print all see the same list.
+ */
+export const NON_RECOMMENDED_CLUSTERS: ReadonlySet<RoleCluster> = new Set<RoleCluster>(["routine_clerical"]);
+
 export function exposureScore(
   tasks: readonly { share: number; automation: number }[],
 ): number {

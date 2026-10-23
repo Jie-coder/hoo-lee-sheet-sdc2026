@@ -23,6 +23,7 @@ import { SOURCE_NAMES, type Catalogue, type CatalogueOccupation } from "@/lib/ca
 import {
   SCORING_PARAMS,
   compareId,
+  NON_RECOMMENDED_CLUSTERS,
   scenarioDemand,
   scoreRoles,
   sdgInterestMatches,
@@ -188,7 +189,11 @@ export function analyzeProfile(catalogue: Catalogue, input: AnalyzeInput): Analy
   const teachable = new Set(catalogue.courses.flatMap((course) => course.skillIds));
 
   const scorable = catalogue.occupations.filter(
-    (occupation) => occupation.id !== input.currentOccupationId && occupation.exposure && occupation.essentialSkillIds.length > 0,
+    (occupation) =>
+      occupation.id !== input.currentOccupationId &&
+      !NON_RECOMMENDED_CLUSTERS.has(occupation.cluster) &&
+      occupation.exposure &&
+      occupation.essentialSkillIds.length > 0,
   );
 
   const levelsByOccupation = new Map(

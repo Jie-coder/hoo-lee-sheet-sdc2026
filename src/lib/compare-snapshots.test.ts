@@ -29,7 +29,9 @@ describe("rankChanges", () => {
 });
 
 describe("analyzeProfile with two signal snapshots", () => {
-  const persona = PERSONAS.aisyah;
+  // Lim Jia Hui: once routine_clerical roles are excluded, her top roles carry
+  // skills whose arXiv momentum differs between the two snapshots.
+  const persona = PERSONAS["lim-jia-hui"];
   const chips = persona.parsed.skills.map((label) => ({ label, selfReported: false }));
   const { skills } = resolveProfileSkills(CATALOGUE, persona.id, chips);
   const input = { skills, currentOccupationId: persona.currentOccupationId, impactInterest: "none" as const };
