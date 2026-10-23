@@ -62,7 +62,7 @@ export function LandingView({ preview }: { preview: LandingPreview }) {
   return (
     <div className="mx-auto max-w-[1248px] px-4 sm:px-6">
       {/* Hero: copy left, the laluan right */}
-      <section className="grid grid-cols-1 items-center gap-10 pt-12 pb-16 md:grid-cols-12 md:gap-8 md:pt-20 md:pb-24">
+      <section id="start" className="grid scroll-mt-20 grid-cols-1 items-center gap-10 pt-12 pb-16 md:grid-cols-12 md:gap-8 md:pt-20 md:pb-24">
         <div className="md:col-span-6">
           <motion.p {...rise(0)} className="text-[12px] font-medium tracking-[0.14em] text-sage uppercase">
             {t("landing.eyebrow")}

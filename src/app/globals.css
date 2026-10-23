@@ -190,7 +190,7 @@
   @apply inline-flex items-center gap-1 rounded-full bg-sulfur px-2.5 py-0.5 text-[11px] leading-5 text-ink;
 }
 @utility panel {
-  @apply rounded-3xl border border-line bg-card;
+  @apply rounded-[40px] border border-line bg-card;
 }
 @utility field {
   @apply w-full rounded-xl border border-line bg-card px-3 py-2 text-[14px] text-ink transition-colors outline-none placeholder:text-grey/60 focus:border-ink/50;

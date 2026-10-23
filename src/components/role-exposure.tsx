@@ -8,10 +8,10 @@ import { catalogueExposure, fetchRoleExposure, lightTone, type LightTone, type R
 import { cn } from "@/lib/utils";
 
 const LIGHT_CLASS: Record<LightTone, string> = {
-  low: "bg-[#3fa34d]",
-  medium: "bg-[#e0b400]",
-  high: "bg-[#d64545]",
-  pending: "bg-[#b5b5b5]",
+  low: "bg-signal-low",
+  medium: "bg-signal-medium",
+  high: "bg-signal-high",
+  pending: "bg-signal-pending",
 };
 
 const LIGHT_LABEL: Record<LightTone, MessageKey> = {
@@ -22,7 +22,12 @@ const LIGHT_LABEL: Record<LightTone, MessageKey> = {
 };
 
 export function SignalLight({ tone, className }: { tone: LightTone; className?: string }) {
-  return <span aria-hidden className={cn("inline-block size-2.5 shrink-0 rounded-full", LIGHT_CLASS[tone], className)} />;
+  return (
+    <span
+      aria-hidden
+      className={cn("inline-block size-2.5 shrink-0 rounded-full ring-[1.5px] ring-ink", LIGHT_CLASS[tone], className)}
+    />
+  );
 }
 
 export function useRoleExposure(occupationId: string, title: string): RoleExposureState {

@@ -17,6 +17,12 @@ const STEPS = [
   { id: "pathway" },
 ] as const;
 
+const SITE_LINKS = [
+  { href: "/#about", key: "footer.about" },
+  { href: "/status", key: "footer.sources" },
+  { href: "/#privacy", key: "footer.privacy" },
+] as const;
+
 function currentStepIndex(pathname: string): number {
   return STEPS.findIndex((step) => pathname.startsWith(`/${step.id}`));
 }
@@ -32,12 +38,26 @@ export function SiteHeader() {
 
   return (
     <header className="sticky top-0 z-50 border-b border-line/80 bg-paper/90 backdrop-blur-md">
-      <div className="mx-auto flex h-16 max-w-[1248px] items-center justify-between gap-4 px-4 sm:px-6">
+      <div className="mx-auto flex h-16 max-w-[1248px] items-center gap-4 px-4 sm:gap-5 sm:px-6">
         <Link href="/" className="shrink-0" aria-label={t("header.homeAria")}>
           {/* Official wordmark. next/image refuses SVG without extra config. */}
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/brand/laluan-logo.svg" alt={t("header.logoAlt")} className="h-7 w-auto" />
+          <img src="/brand/laluan-logo-ember.svg" alt={t("header.logoAlt")} className="h-7 w-auto" />
         </Link>
+
+        {!onFlow && (
+          <nav aria-label={t("header.siteNavAria")} className="hidden items-center gap-1 md:flex">
+            {SITE_LINKS.map((link) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                className="rounded-full px-3 py-1.5 text-[13px] text-grey transition-colors hover:bg-alt hover:text-ink"
+              >
+                {t(link.key)}
+              </Link>
+            ))}
+          </nav>
+        )}
 
         {onFlow && (
           <nav aria-label={t("header.progressAria")} className="hidden min-w-0 flex-1 justify-center md:flex">
@@ -84,16 +104,19 @@ export function SiteHeader() {
           </nav>
         )}
 
-        <div className="flex items-center gap-3">
+        <div className="ml-auto flex items-center gap-3">
           {onFlow && (
             <span className="text-[12px] text-grey md:hidden">
               {currentIndex + 1}/{STEPS.length} {t(`nav.${STEPS[currentIndex].id}`)}
             </span>
           )}
+          {!onFlow && (
+            <span className="hidden text-[11px] tracking-[0.08em] text-grey uppercase lg:inline">{t("header.builtFor")}</span>
+          )}
           <div
             role="group"
             aria-label={t("lang.label")}
-            className="relative flex items-center rounded-full border border-line bg-white p-0.5 text-[12px]"
+            className="relative flex items-center rounded-full border border-line bg-card p-0.5 text-[12px]"
           >
             {SITE_LOCALES.map((language) => {
               const selected = locale === language.id;
@@ -117,6 +140,11 @@ export function SiteHeader() {
               );
             })}
           </div>
+          {!onFlow && (
+            <Link href="/#start" className="btn-primary px-3.5 py-1.5 text-[12px] sm:px-4 sm:py-2 sm:text-[13px]">
+              {t("header.getStarted")}
+            </Link>
+          )}
         </div>
       </div>
     </header>

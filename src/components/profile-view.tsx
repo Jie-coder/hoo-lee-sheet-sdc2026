@@ -216,7 +216,7 @@ export function ProfileView() {
           <SlideIn key={profile.personaId} className="panel mt-8 p-6 sm:p-8">
             <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
               <div className="flex items-center gap-4">
-                <div className="flex size-[60px] shrink-0 items-center justify-center rounded-full bg-[#E6EFEA] font-serif text-[22px] text-[#24634A] md:size-[76px] md:text-[26px]">
+                <div className="flex size-[60px] shrink-0 items-center justify-center rounded-full bg-sage-soft font-serif text-[22px] text-sage-dark md:size-[76px] md:text-[26px]">
                   {initials}
                 </div>
                 <div>
@@ -291,7 +291,7 @@ export function ProfileView() {
                     <button
                       type="button"
                       onClick={() => setSkillsExpanded((expanded) => !expanded)}
-                      className="chip border-[#B9CFC6] bg-[#F1F6F3] font-medium text-[#24634A]"
+                      className="chip border-sage/40 bg-sage-wash font-medium text-sage-dark"
                     >
                       {skillsExpanded ? t("profile.showLess") : `+${profile.skills.length - 6}`}
                     </button>
