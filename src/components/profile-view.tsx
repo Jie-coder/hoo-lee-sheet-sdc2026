@@ -26,9 +26,15 @@ const UPLOAD_STEPS: ReadonlyArray<{ labelKey: MessageKey }> = [
 const STEP_INTERVAL_MS = 900;
 
 /** Short label for a sample pill: first name · job title. */
-function sampleLabel(id: PersonaId): string {
-  const persona = PERSONAS[id];
-  return `${persona.name.split(/\s+/)[0]} · ${persona.jobTitle}`;
+// First names are explicit: Malaysian Chinese names put the surname first.
+const SAMPLE_FIRST_NAMES: Record<PersonaId, string> = {
+  aisyah: "Aisyah",
+  "lim-jia-hui": "Jia Hui",
+  pravin: "Pravin",
+};
+
+export function sampleLabel(id: PersonaId): string {
+  return `${SAMPLE_FIRST_NAMES[id]} · ${PERSONAS[id].jobTitle}`;
 }
 
 /** Length of the loading transition shown after picking a sample CV. */
@@ -55,7 +61,7 @@ export function ProfileView() {
   }, []);
 
   // Sample results are precomputed; this is only a short loading transition
-  // that reuses the upload loader visuals without claiming live analysis.
+  // that shows the same generic loader as an upload.
   function pickSample(id: PersonaId) {
     if (loadingSample || uploading) return;
     setUploadError(null);
@@ -159,7 +165,8 @@ export function ProfileView() {
             <p className="font-mono text-[12px] tracking-[0.06em] text-grey uppercase">{t("profile.orTrySample")}</p>
             <div className="mt-4 grid gap-2 max-md:grid-cols-1">
               {PERSONA_IDS.map((id) => {
-                const selected = profile?.personaId === id;
+                const isLoading = loadingSample === id;
+                const selected = isLoading || (!loadingSample && profile?.personaId === id);
                 return (
                   <button
                     key={id}
@@ -169,11 +176,21 @@ export function ProfileView() {
                     onClick={() => pickSample(id)}
                     className={cn(
                       "flex items-center justify-between rounded-full border-[1.5px] px-6 py-3.5 text-[15px] font-bold transition-colors max-md:gap-3 max-md:text-left max-md:text-[14px]",
-                      selected ? "border-ink bg-ink text-paper" : "border-ink/80 text-ink hover:bg-alt",
+                      isLoading
+                        ? "border-obsidian bg-obsidian text-limestone"
+                        : selected
+                          ? "border-ink bg-ink text-paper"
+                          : "border-ink/80 text-ink hover:bg-alt",
                     )}
                   >
                     <span className="max-md:min-w-0 max-md:truncate">{sampleLabel(id)}</span>
-                    <span aria-hidden className="max-md:shrink-0">{selected ? <Check className="size-4" strokeWidth={2.4} /> : "→"}</span>
+                    <span aria-hidden className="max-md:shrink-0">{isLoading ? (
+                        <Loader2 className="size-4 animate-spin" strokeWidth={2} />
+                      ) : selected ? (
+                        <Check className="size-4" strokeWidth={2.4} />
+                      ) : (
+                        "→"
+                      )}</span>
                   </button>
                 );
               })}
@@ -182,11 +199,7 @@ export function ProfileView() {
             <Perforation className="my-6" />
 
             {/* Upload: collapsed by default, opens on click (progressive disclosure) */}
-            {loadingSample ? (
-              <div className="flex flex-col items-center gap-3 rounded-2xl border border-dashed border-ink/30 px-5 py-8 text-center text-[13px] text-grey">
-                <SampleLoading />
-              </div>
-            ) : !uploadOpen && !uploading ? (
+            {!uploadOpen && !uploading ? (
               <button
                 type="button"
                 data-testid="profile-upload-open"
@@ -251,7 +264,11 @@ export function ProfileView() {
         </div>
 
         {/* Right: passenger ticket, or an empty-state ticket before a pick */}
-        {profile ? (
+        {loadingSample || uploading ? (
+          <Ticket notch className="flex min-h-[320px] flex-col items-center justify-center p-10 text-center md:self-stretch">
+            <ProfileLoading />
+          </Ticket>
+        ) : profile ? (
           <AnimatePresence mode="wait">
             <SlideIn key={profile.personaId}>
               <Ticket notch notchTop="152px" className="p-8 md:p-12">
@@ -475,15 +492,14 @@ function RoleDurationRow({
   );
 }
 
-function SampleLoading() {
+/** Generic waiting state shared by CV upload and sample pick. */
+function ProfileLoading() {
   const { t } = useT();
   return (
-    <ul className="flex flex-col gap-2" data-testid="profile-sample-loading" role="status" aria-live="polite">
-      <li className="flex items-center gap-2 text-ink">
-        <Loader2 className="size-3.5 animate-spin" strokeWidth={2} />
-        {t("profile.loadingSample")}
-      </li>
-    </ul>
+    <div className="flex items-center gap-2 text-[14px] text-ink" data-testid="profile-loading" role="status" aria-live="polite">
+      <Loader2 className="size-4 animate-spin" strokeWidth={2} />
+      {t("profile.loading")}
+    </div>
   );
 }
 
