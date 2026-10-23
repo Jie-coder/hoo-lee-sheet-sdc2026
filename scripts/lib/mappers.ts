@@ -26,7 +26,8 @@ import {
   type SourceRow,
 } from "./row-schemas";
 import {
-  escoUriToId,
+  isCustomSkillId,
+  skillRefToId,
   isBlank,
   isEscoUri,
   parseIntOrBlank,
@@ -88,6 +89,11 @@ function requireSameLength(
   ];
 }
 
+/** Course skills may also be Laluan custom skills ("laluan:<slug>"), defined in custom_skills.csv. */
+function checkCourseSkillRefs(file: string, row: number, column: string, refs: string[]): Issue[] {
+  return checkEscoUris(file, row, column, refs.filter((ref) => !isCustomSkillId(ref)));
+}
+
 function checkEscoUris(file: string, row: number, column: string, uris: string[]): Issue[] {
   return uris
     .filter((uri) => !isEscoUri(uri))
@@ -117,7 +123,7 @@ export function mapCourseRow(raw: Record<string, string>, row: number): CourseRo
   const skills = splitNames(raw.skills ?? "");
   const skillUris = splitNames(raw.skill_uris ?? "");
   issues.push(...requireSameLength(file, row, "skills", skills, "skill_uris", skillUris));
-  issues.push(...checkEscoUris(file, row, "skill_uris", skillUris));
+  issues.push(...checkCourseSkillRefs(file, row, "skill_uris", skillUris));
 
   const hours = parseNumber(raw.hours ?? "");
   if (!hours.ok) {
@@ -149,7 +155,7 @@ export function mapCourseRow(raw: Record<string, string>, row: number): CourseRo
     hours: hours.ok ? hours.value : 0,
     costType: raw.cost_type ?? "",
     certificate: certificate.ok ? certificate.value : false,
-    skillIds: skillUris.map(escoUriToId),
+    skillIds: skillUris.map(skillRefToId),
     lastChecked: raw.last_checked ?? "",
     mode: (raw.mode ?? "").trim().toLowerCase(),
     aiContent: (raw.ai_content ?? "").trim().toLowerCase(),

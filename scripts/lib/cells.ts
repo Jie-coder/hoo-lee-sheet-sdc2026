@@ -82,3 +82,19 @@ export function escoUriToId(uri: string): string {
   const segments = uri.trim().split("/");
   return segments[segments.length - 1].toLowerCase();
 }
+
+const CUSTOM_SKILL_RE = /^laluan:[a-z0-9]+(?:-[a-z0-9]+)*$/;
+
+/**
+ * True for a Laluan custom skill id such as "laluan:office-automation".
+ * These are AI-era skills ESCO has no concept for. They are defined in
+ * data/custom_skills.csv and are never ESCO skills: no ESCO URI, no ESCO link.
+ */
+export function isCustomSkillId(value: string): boolean {
+  return CUSTOM_SKILL_RE.test(value.trim());
+}
+
+/** Skill id for a skill reference: a custom "laluan:" id is kept as is, an ESCO URI becomes its UUID. */
+export function skillRefToId(ref: string): string {
+  return isCustomSkillId(ref) ? ref.trim() : escoUriToId(ref);
+}

@@ -2566,6 +2566,9 @@
   "83e97138-899a-4af8-9187-47823e875841": "follow the statutory obligations",
   "047fcf0a-2936-49fb-b4eb-97cdd8d09d0b": "maintain statutory books",
   "3838a64c-78dc-4f3f-a0c0-9f604e33eefd": "maintain internal communication systems",
+  "laluan:manage-ai-chatbots": "manage AI chatbots",
+  "laluan:prompting-ai-review": "prompt AI tools and review their output",
+  "laluan:office-automation": "automate office workflows",
   "9710092c-f174-4e84-95bf-2064d39ad7a0": "manage content metadata",
   "2af29864-c941-40a5-ae7b-2b6c4b92c0d7": "speech recognition",
   "9ff9db9d-d14b-426e-83f3-e7449af6c79f": "manage data",
@@ -3562,6 +3565,7 @@
   "a4e50b95-8962-4408-81f9-f5de71461276": "calculate benefits",
   "ee6a9d20-0132-4f31-9da3-32fdc5749a9b": "allocate paychecks",
   "3dfa5c1e-a2cc-4c09-9e60-d21b28072c37": "trade union regulations",
+  "laluan:ai-scheduling-meetings": "use AI for scheduling and meetings",
   "0e1fe34b-f4e7-4642-8c8b-5a05ac3438e5": "manage schedule of tasks",
   "83e6510b-ffeb-4aec-959c-4265fd0ff7b7": "attend to detail",
   "fdf15b35-9028-4acb-bfd2-43f00a015cd9": "use personal organization software",
@@ -3578,6 +3582,24 @@
   "377861af-f966-4c87-a2db-7e99904312b9": "geographic information systems",
   "e80f9e50-71ff-4bb7-8b7d-eb232685d17f": "perform water testing procedures",
   "6d3edede-8951-4621-a835-e04323300fa0": "English"
+ },
+ "customSkills": {
+  "laluan:manage-ai-chatbots": {
+   "label": "manage AI chatbots",
+   "description": "Laluan custom skill, not an ESCO concept: build, configure, monitor and hand off AI chatbots and agents for customer and office work."
+  },
+  "laluan:ai-scheduling-meetings": {
+   "label": "use AI for scheduling and meetings",
+   "description": "Laluan custom skill, not an ESCO concept: use AI assistants to schedule meetings, take notes and draft follow-ups."
+  },
+  "laluan:prompting-ai-review": {
+   "label": "prompt AI tools and review their output",
+   "description": "Laluan custom skill, not an ESCO concept: write effective prompts for generative AI and check its output for accuracy and bias."
+  },
+  "laluan:office-automation": {
+   "label": "automate office workflows",
+   "description": "Laluan custom skill, not an ESCO concept: build no-code automated workflows for repetitive office and admin tasks, such as approvals and notifications."
+  }
  },
  "skillGroups": {
   "000709ed-2be5-4193-b056-45a97698d828": "fe317a4c-e4e0-45ee-8b0d-204a68014f9e",
@@ -9436,6 +9458,117 @@
    "lastChecked": "2026-10-23",
    "mode": "online",
    "aiContent": "none"
+  },
+  {
+   "id": "c779",
+   "title": "Create and publish agents with Microsoft Copilot Studio",
+   "provider": "Microsoft Learn",
+   "url": "https://learn.microsoft.com/en-us/training/paths/work-power-virtual-agents/",
+   "languages": [
+    "en",
+    "zh"
+   ],
+   "hours": 4,
+   "costType": "free",
+   "certificate": false,
+   "skillIds": [
+    "laluan:manage-ai-chatbots"
+   ],
+   "lastChecked": "2026-10-23",
+   "mode": "online",
+   "aiContent": "ai"
+  },
+  {
+   "id": "c780",
+   "title": "Building AI Powered Chatbots Without Programming",
+   "provider": "Coursera",
+   "url": "https://www.coursera.org/learn/building-ai-powered-chatbots",
+   "languages": [
+    "en"
+   ],
+   "hours": 10,
+   "costType": "free",
+   "certificate": false,
+   "skillIds": [
+    "laluan:manage-ai-chatbots"
+   ],
+   "lastChecked": "2026-10-23",
+   "mode": "online",
+   "aiContent": "ai"
+  },
+  {
+   "id": "c783",
+   "title": "Google Prompting Essentials",
+   "provider": "Coursera",
+   "url": "https://www.coursera.org/specializations/prompting-essentials-google",
+   "languages": [
+    "en"
+   ],
+   "hours": 9,
+   "costType": "paid",
+   "certificate": false,
+   "skillIds": [
+    "laluan:prompting-ai-review"
+   ],
+   "lastChecked": "2026-10-23",
+   "mode": "online",
+   "aiContent": "ai"
+  },
+  {
+   "id": "c784",
+   "title": "Prompt Engineering for ChatGPT",
+   "provider": "Coursera",
+   "url": "https://www.coursera.org/learn/prompt-engineering",
+   "languages": [
+    "en",
+    "zh"
+   ],
+   "hours": 18,
+   "costType": "free",
+   "certificate": false,
+   "skillIds": [
+    "laluan:prompting-ai-review"
+   ],
+   "lastChecked": "2026-10-23",
+   "mode": "online",
+   "aiContent": "ai"
+  },
+  {
+   "id": "c785",
+   "title": "Get started with Power Automate",
+   "provider": "Microsoft Learn",
+   "url": "https://learn.microsoft.com/en-us/training/modules/get-started-flows/",
+   "languages": [
+    "en",
+    "zh"
+   ],
+   "hours": 1,
+   "costType": "free",
+   "certificate": false,
+   "skillIds": [
+    "laluan:office-automation"
+   ],
+   "lastChecked": "2026-10-23",
+   "mode": "online",
+   "aiContent": "digital"
+  },
+  {
+   "id": "c786",
+   "title": "Automate tasks and processes with Jira",
+   "provider": "Coursera",
+   "url": "https://www.coursera.org/projects/automate-tasks-and-processes-with-jira",
+   "languages": [
+    "en"
+   ],
+   "hours": 2,
+   "costType": "free",
+   "certificate": false,
+   "skillIds": [
+    "laluan:office-automation"
+   ],
+   "lastChecked": "2026-10-23",
+   "mode": "online",
+   "aiContent": "digital"
   }
  ],
  "programmes": [

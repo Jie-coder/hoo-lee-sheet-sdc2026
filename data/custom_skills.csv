@@ -1,0 +1,5 @@
+id,label_en,description
+laluan:manage-ai-chatbots,manage AI chatbots,"Laluan custom skill, not an ESCO concept: build, configure, monitor and hand off AI chatbots and agents for customer and office work."
+laluan:ai-scheduling-meetings,use AI for scheduling and meetings,"Laluan custom skill, not an ESCO concept: use AI assistants to schedule meetings, take notes and draft follow-ups."
+laluan:prompting-ai-review,prompt AI tools and review their output,"Laluan custom skill, not an ESCO concept: write effective prompts for generative AI and check its output for accuracy and bias."
+laluan:office-automation,automate office workflows,"Laluan custom skill, not an ESCO concept: build no-code automated workflows for repetitive office and admin tasks, such as approvals and notifications."
