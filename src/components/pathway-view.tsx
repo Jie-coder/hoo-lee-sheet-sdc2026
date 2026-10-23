@@ -176,7 +176,7 @@ export function PathwayView({
         >
           <span aria-hidden className="absolute top-[64%] -left-[18px] size-9 rounded-full bg-paper max-md:size-6 max-md:-left-3" />
           <span aria-hidden className="absolute top-[64%] -right-[18px] size-9 rounded-full bg-paper max-md:size-6 max-md:-right-3" />
-          <div className="grid gap-10 md:grid-cols-[1.25fr_1fr] md:items-end">
+          <div className="grid gap-10 md:grid-cols-[1fr_1fr] md:items-end">
             <div>
               <p className="font-mono text-[12px] tracking-[0.06em] text-limestone/70 uppercase">
                 {fromRole
@@ -187,7 +187,7 @@ export function PathwayView({
                 {t("pathway.heroHeading", { weeks: String(totalWeeks), title: role.title })}
               </h1>
             </div>
-            <dl className="grid grid-cols-2 gap-x-6 gap-y-7 md:pr-6 [&>div]:min-w-0">
+            <dl className="grid grid-cols-2 gap-x-6 gap-y-7 [&>div]:min-w-0">
               <HeroStat label={t("pathway.pace")} value={t("pathway.hoursPerWeek", { hours: String(hoursPerWeek) })} />
               <HeroStat label={t("pathway.cost")} value={mostlyFree ? t("pathway.mostlyFree") : t("pathway.mixedCost")} />
               <HeroStat
@@ -400,7 +400,7 @@ function HeroStat({ label, value }: { label: string; value: string }) {
   return (
     <div>
       <dt className="font-mono text-[12px] tracking-[0.06em] text-limestone/70 uppercase">{label}</dt>
-      <dd className="mt-1.5 font-serif text-[clamp(28px,4vw,44px)] leading-[0.95] break-words">{value}</dd>
+      <dd className="mt-1.5 font-serif text-[clamp(26px,3vw,44px)] leading-[0.95] [overflow-wrap:anywhere] lg:[overflow-wrap:normal]">{value}</dd>
     </div>
   );
 }
