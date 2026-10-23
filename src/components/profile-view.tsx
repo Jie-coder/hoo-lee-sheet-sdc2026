@@ -325,12 +325,12 @@ export function ProfileView() {
                 <p className="mt-7 mb-1 text-[12px] text-grey">{t("profile.rolesLabel")}</p>
                 <ul className="divide-y divide-line text-[14px]">
                   {profile.roles.map((role, index) => (
-                    <li key={index} className="flex items-center gap-2 py-2">
+                    <li key={index} className="flex flex-wrap items-end gap-x-2 gap-y-2 py-2">
                       <input
                         value={role.title}
                         onChange={(event) => updateRole(index, { title: event.target.value })}
                         placeholder={t("profile.roleTitlePlaceholder")}
-                        className="min-w-0 flex-1 rounded-lg border border-transparent px-2 py-1 transition-colors hover:border-line focus:border-line focus:outline-none"
+                        className="h-10 min-w-[12rem] flex-1 rounded-lg border border-transparent px-2 py-1 transition-colors hover:border-line focus:border-line focus:outline-none"
                       />
                       {(() => {
                         // Design option B: one pill, units inside the border.
@@ -339,37 +339,42 @@ export function ProfileView() {
                         const numberClass =
                           "h-[30px] w-[38px] [appearance:textfield] rounded-full bg-sage-wash text-center font-semibold text-sage-dark tabular-nums outline-none focus-visible:ring-2 focus-visible:ring-sage/60 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none";
                         return (
-                          <span className="flex h-10 shrink-0 items-center rounded-full border border-line bg-white px-1.5 text-[14px]">
-                            <input
-                              type="number"
-                              inputMode="numeric"
-                              min={0}
-                              max={MAX_YEARS}
-                              step={1}
-                              aria-label={t("profile.yearsLabel")}
-                              value={split.years}
-                              onChange={(event) =>
-                                updateRole(index, { years: yearsMonthsToDecimal(Number(event.target.value), split.months) })
-                              }
-                              className={numberClass}
-                            />
-                            <span className="pr-3 pl-2 text-[13px] text-grey">{t("profile.yearsShort")}</span>
-                            <span aria-hidden className="mr-1.5 h-5 w-px bg-line" />
-                            <input
-                              type="number"
-                              inputMode="numeric"
-                              min={0}
-                              max={MAX_MONTHS}
-                              step={1}
-                              aria-label={t("profile.monthsLabel")}
-                              value={split.months}
-                              onChange={(event) =>
-                                updateRole(index, { years: yearsMonthsToDecimal(split.years, Number(event.target.value)) })
-                              }
-                              className={numberClass}
-                            />
-                            <span className="pr-3 pl-2 text-[13px] text-grey">{t("profile.monthsShort")}</span>
-                          </span>
+                          <div className="flex shrink-0 flex-col gap-1">
+                            <span className="text-[10px] leading-none font-medium tracking-[0.12em] text-grey uppercase">
+                              {t("profile.durationLabel")}
+                            </span>
+                            <span className="flex h-10 shrink-0 items-center rounded-full border border-line bg-white px-1.5 text-[14px]">
+                              <input
+                                type="number"
+                                inputMode="numeric"
+                                min={0}
+                                max={MAX_YEARS}
+                                step={1}
+                                aria-label={t("profile.yearsLabel")}
+                                value={split.years}
+                                onChange={(event) =>
+                                  updateRole(index, { years: yearsMonthsToDecimal(Number(event.target.value), split.months) })
+                                }
+                                className={numberClass}
+                              />
+                              <span className="pr-3 pl-2 text-[13px] text-grey">{t("profile.yearsShort")}</span>
+                              <span aria-hidden className="mr-1.5 h-5 w-px bg-line" />
+                              <input
+                                type="number"
+                                inputMode="numeric"
+                                min={0}
+                                max={MAX_MONTHS}
+                                step={1}
+                                aria-label={t("profile.monthsLabel")}
+                                value={split.months}
+                                onChange={(event) =>
+                                  updateRole(index, { years: yearsMonthsToDecimal(split.years, Number(event.target.value)) })
+                                }
+                                className={numberClass}
+                              />
+                              <span className="pr-3 pl-2 text-[13px] text-grey">{t("profile.monthsShort")}</span>
+                            </span>
+                          </div>
                         );
                       })()}
                       <button
