@@ -1,5 +1,5 @@
 // AI Exposure intro (design exposure-intro-v3): the Caldera headline pattern,
-// then three alternating card + illustration rows. The methodology lives in a
+// then three equal-height cards in a row (stacked on mobile), each with a fixed-aspect illustration panel. The methodology lives in a
 // "How exposure is measured" expander on card 03 (spec §4), not inline.
 "use client";
 
@@ -11,11 +11,10 @@ import type { MessageKey } from "@/lib/i18n-messages";
 const ROWS: ReadonlyArray<{
   n: 1 | 2 | 3;
   panel: "violet" | "ember";
-  mirrored: boolean;
 }> = [
-  { n: 1, panel: "violet", mirrored: false },
-  { n: 2, panel: "ember", mirrored: true },
-  { n: 3, panel: "violet", mirrored: false },
+  { n: 1, panel: "violet" },
+  { n: 2, panel: "ember" },
+  { n: 3, panel: "violet" },
 ];
 
 export function ExposureIntro() {
@@ -27,13 +26,10 @@ export function ExposureIntro() {
         lede={t("exposureIntro.lede")}
         titleClassName="text-[clamp(44px,11vw,56px)] md:text-[clamp(56px,6.5vw,88px)]"
       />
-      <div className="mt-12 flex flex-col gap-4 md:mt-16">
-        {ROWS.map(({ n, panel, mirrored }) => (
-          <div
-            key={n}
-            className={`flex flex-col gap-4 md:h-[520px] ${mirrored ? "md:flex-row-reverse" : "md:flex-row"}`}
-          >
-            <div className="flex flex-col justify-between gap-8 rounded-[40px] bg-card p-8 md:w-[44%] md:shrink-0 md:p-10">
+      <div className="mt-12 grid grid-cols-1 items-stretch gap-4 md:mt-16 md:grid-cols-3">
+        {ROWS.map(({ n, panel }) => (
+          <div key={n} className="flex h-full min-w-0 flex-col gap-6 rounded-[40px] bg-card p-6 md:p-8">
+            <div className="flex flex-1 flex-col justify-center gap-6">
               {/* eslint-disable-next-line @next/next/no-img-element -- static decorative icon */}
               <img src={`/exposure/ic${n}.svg`} alt="" aria-hidden className="size-[72px] rounded-[18px] bg-ink p-3" />
               <div>
@@ -63,7 +59,7 @@ export function ExposureIntro() {
               </div>
             </div>
             <div
-              className={`aspect-[820/520] overflow-hidden rounded-[40px] md:aspect-auto md:min-w-0 md:flex-1 ${panel === "ember" ? "bg-sage" : "bg-plasma"}`}
+              className={`aspect-[820/520] w-full shrink-0 overflow-hidden rounded-[28px] ${panel === "ember" ? "bg-sage" : "bg-plasma"}`}
               aria-hidden
             >
               {/* eslint-disable-next-line @next/next/no-img-element -- static decorative illustration */}
@@ -72,14 +68,14 @@ export function ExposureIntro() {
           </div>
         ))}
       </div>
-      <div className="mt-8 px-2 md:px-4">
-        <p className="text-grey">
+      <div className="mt-8">
+        <p className="text-center font-mono text-[13px] leading-relaxed text-grey">
           {t("exposureIntro.notJobLoss")}{" "}
           <a
             href="https://www.ilo.org/sites/default/files/2025-05/WP140_web.pdf"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-sage-dark underline-offset-2 hover:underline"
+            className="text-sage underline-offset-2 hover:underline"
           >
             {t("exposureIntro.sourceLink")} ↗
           </a>
