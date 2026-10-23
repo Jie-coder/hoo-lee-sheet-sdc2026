@@ -252,7 +252,17 @@ export function analyzeProfile(catalogue: Catalogue, input: AnalyzeInput): Analy
   });
 
   const topByScenario = Object.fromEntries(
-    SCENARIO_IDS.map((scenario) => [scenario, topRoleIdsForScenario(roles, scenario)]),
+    SCENARIO_IDS.map((scenario) => [scenario, topRoleIdsForScenario(
+        roles.map((role) => ({
+          ...role,
+          sdgMatch: sdgInterestMatches(
+            (byId.get(role.occupationId) as CatalogueOccupation).sdg.map((sdg) => ({ target: sdg.target, tier: sdg.tier })),
+            input.impactInterest,
+          ),
+        })),
+        scenario,
+      ),
+    ]),
   ) as Record<ScenarioId, Set<string>>;
 
   const breakdown: Record<string, RoleBreakdown> = {};

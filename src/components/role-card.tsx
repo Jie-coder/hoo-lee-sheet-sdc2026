@@ -33,6 +33,7 @@ export function RoleCard({
   onChoose,
   isPrimary,
   relatedSkills = [],
+  sdgMatch = false,
 }: {
   role: RoleResult;
   rank: number;
@@ -44,6 +45,8 @@ export function RoleCard({
   isPrimary: boolean;
   /** Essential skills that earned half credit from a related skill the user has. */
   relatedSkills?: readonly string[];
+  /** The role's SDG mapping matches the user's chosen impact interest (ranking bonus applied). */
+  sdgMatch?: boolean;
 }) {
   const reduce = useReducedMotion();
   const { t } = useT();
@@ -82,6 +85,9 @@ export function RoleCard({
           <span className="font-serif text-[56px] leading-none tabular-nums">{formatFitPercent(role.fit)}</span>
           <span className="font-mono text-[12px] tracking-[0.06em] text-grey uppercase">{t("results.skillFit")}</span>
         </div>
+        {sdgMatch && (
+          <p className="mt-2 font-mono text-[11px] tracking-[0.04em] text-sage-dark uppercase">{t("results.sdgMatch")}</p>
+        )}
         {stretch && (
           <p className="mt-2 font-mono text-[11px] tracking-[0.04em] text-grey uppercase" title={t("results.stretchHint")}>
             {t("results.stretchRoute")}

@@ -198,6 +198,7 @@ export function ResultsView() {
                       onChoose={handleChoose}
                       isPrimary={index === 0}
                       relatedSkills={breakdown?.relatedSkillLabels}
+                      sdgMatch={breakdown?.interestMatch ?? false}
                     />
                   );
                 })}

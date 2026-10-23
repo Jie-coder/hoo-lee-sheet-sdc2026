@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { analyzeProfile, RELATED_SKILL_CREDIT } from "./analyze";
 import { CATALOGUE, type Catalogue } from "./catalogue";
+import { rankRoles } from "./rank-roles";
 import { explainRole } from "./explain";
 import { resolveProfileSkills } from "./profile-skills";
 import { NON_RECOMMENDED_CLUSTERS, SCORING_PARAMS } from "./scoring";
@@ -205,6 +206,42 @@ describe("related skill labels", () => {
       const breakdown = result.breakdown[role.occupationId];
       expect(breakdown.relatedSkillLabels).toHaveLength(breakdown.relatedSkills);
       expect(breakdown.relatedSkillLabels.length).toBeLessThanOrEqual(SCORING_PARAMS.relatedSkillCap);
+    }
+  });
+});
+
+describe("SDG choice boost", () => {
+  const clusterOf = new Map(CATALOGUE.occupations.map((o) => [o.id, o.cluster]));
+  const run = (id: (typeof PERSONA_IDS)[number], impactInterest: "none" | "environment" | "health") => {
+    const persona = PERSONAS[id];
+    const chips = persona.parsed.skills.map((label) => ({ label, selfReported: false }));
+    const { skills } = resolveProfileSkills(CATALOGUE, id, chips);
+    return analyzeProfile(CATALOGUE, { skills, currentOccupationId: persona.currentOccupationId, impactInterest });
+  };
+
+  it("leaves ranking unchanged when no SDG is chosen", () => {
+    expect(run("aisyah", "none").roles).toEqual(personaResult("aisyah").roles);
+    for (const role of Object.values(run("aisyah", "none").breakdown)) expect(role.interestMatch).toBe(false);
+  });
+
+  it("puts a green_sustainability role first for Aisyah when she picks environment", () => {
+    const roles = rankRoles(run("aisyah", "environment").roles, "co");
+    expect(clusterOf.get(roles[0].occupationId)).toBe("green_sustainability");
+    expect(clusterOf.get(rankRoles(run("aisyah", "none").roles, "co")[0].occupationId)).not.toBe("green_sustainability");
+  });
+
+  it("lets a health-matching role surface for Lim when she picks health", () => {
+    const result = run("lim-jia-hui", "health");
+    const top = rankRoles(result.roles, "co")[0];
+    expect(result.breakdown[top.occupationId].interestMatch).toBe(true);
+    expect(top.fit).toBeGreaterThanOrEqual(SCORING_PARAMS.minFitFallback);
+  });
+
+  it.each(["none", "environment", "health"] as const)("still excludes routine_clerical with interest %s", (interest) => {
+    for (const id of PERSONA_IDS) {
+      for (const role of run(id, interest).roles) {
+        expect(NON_RECOMMENDED_CLUSTERS.has(clusterOf.get(role.occupationId)!)).toBe(false);
+      }
     }
   });
 });
