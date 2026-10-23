@@ -1,6 +1,6 @@
 // Skill Radar entry point: a Sulfur card with radar line-art, a title and a pill
 // link to /radar. "compact" sits under the Results exposure band; "large" closes
-// the /exposure explainer.
+// sits above "See my results" on /exposure-intro.
 "use client";
 
 import Link from "next/link";
