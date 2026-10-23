@@ -19,6 +19,9 @@
   --color-btn2: #d4d3ce;
   --color-sage: #fc5000;
   --color-sage-dark: #c43e00;
+  --color-plasma: #524ae9;
+  --color-obsidian: #070607;
+  --color-limestone: #f7f6f2;
   --color-sage-tint: #ffb38f;
   --color-sage-soft: #ffe4d6;
   --color-sage-wash: #fff2ec;
@@ -140,6 +143,9 @@
   }
   body {
     @apply bg-background text-foreground;
+    /* Caldera: Pumice page with a faint dot grid. Illustration panels sit on top. */
+    background-image: radial-gradient(#07060718 1px, transparent 1.2px);
+    background-size: 14px 14px;
     font-feature-settings: "cv11", "ss01";
     font-weight: 500;
     -webkit-font-smoothing: antialiased;

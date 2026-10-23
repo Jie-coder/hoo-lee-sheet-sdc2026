@@ -7,25 +7,20 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useRef } from "react";
 import { motion, useReducedMotion } from "framer-motion";
-import { ArrowRight, Check, Database, HardDrive, UserX } from "lucide-react";
+import { ArrowRight, Check } from "lucide-react";
 import { LandingHeroCanvas } from "@/components/landing-hero-canvas";
 import { EASE_OUT, Reveal, Stagger, StaggerItem } from "@/components/motion";
+import { SdgChip } from "@/components/caldera";
 import { formatDayMonthYear } from "@/lib/display";
 import { useFlow } from "@/context/flow-context";
 import { useT, type MessageKey } from "@/lib/i18n";
 import type { LandingPreview } from "@/lib/landing-preview";
 
+/** Three marketing stops (spec §1), alternating Ember/Plasma/Ember numbers. */
 const STOPS = [
-  { titleKey: "nav.profile", bodyKey: "landing.stop1.body" },
-  { titleKey: "nav.interview", bodyKey: "landing.stop2.body" },
-  { titleKey: "nav.results", bodyKey: "landing.stop3.body" },
-  { titleKey: "nav.pathway", bodyKey: "landing.stop4.body" },
-] as const;
-
-const PROMISES = [
-  { icon: UserX, key: "landing.promise1" },
-  { icon: HardDrive, key: "landing.promise2" },
-  { icon: Database, key: "landing.promise3" },
+  { titleKey: "landing.stopA.title", bodyKey: "landing.stopA.body", footKey: "landing.stopA.foot", accent: "sage", sulfur: false },
+  { titleKey: "landing.stopB.title", bodyKey: "landing.stopB.body", footKey: "landing.stopB.foot", accent: "plasma", sulfur: false },
+  { titleKey: "landing.stopC.title", bodyKey: "landing.stopC.body", footKey: "landing.stopC.foot", accent: "sage", sulfur: true },
 ] as const;
 
 const BUILT_ON: ReadonlyArray<MessageKey> = [
@@ -136,59 +131,88 @@ export function LandingView({ preview }: { preview: LandingPreview }) {
         </div>
       </section>
 
-      {/* The four stops, drawn as one line */}
-      <section id="about" className="border-t border-line py-16 md:py-20">
-        <Reveal>
-          <h2 className="font-serif text-[44px] leading-[0.95] uppercase md:text-[72px]">{t("landing.stopsTitle")}</h2>
-        </Reveal>
-        <Stagger className="mt-10 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4" delay={0.3} gap={0.18}>
+      {/* THREE STOPS TO YOUR NEXT ROLE */}
+      <section id="about" className="py-20 md:py-28">
+        <div className="grid items-end gap-5 md:grid-cols-12 md:gap-8">
+          <Reveal className="md:col-span-7">
+            <h2 className="font-serif text-[44px] leading-[0.92] uppercase md:text-[clamp(56px,6vw,96px)]">
+              {t("landing.threeStopsHeading")}
+            </h2>
+          </Reveal>
+          <Reveal delay={0.1} className="md:col-span-4 md:col-start-9">
+            <p className="text-[17px] leading-[1.45] text-grey md:text-[19px]">{t("landing.threeStopsLede")}</p>
+          </Reveal>
+        </div>
+
+        <Stagger className="mt-12 grid grid-cols-1 gap-4 md:grid-cols-3" delay={0.2} gap={0.16}>
           {STOPS.map((stop, index) => (
             <StaggerItem
               key={stop.titleKey}
-              className="relative flex min-h-[260px] flex-col overflow-hidden rounded-[40px] bg-card p-7 md:p-8"
+              className="relative flex min-h-[320px] flex-col overflow-hidden rounded-[40px] bg-card p-8 md:p-10"
             >
-              <p className={`font-serif text-[56px] leading-none ${index % 2 === 1 ? "text-[#524ae9]" : "text-sage"}`}>
+              <p className={`font-serif text-[64px] leading-none md:text-[72px] ${stop.accent === "plasma" ? "text-plasma" : "text-sage"}`}>
                 {String(index + 1).padStart(2, "0")}
               </p>
-              <p className="mt-5 text-[20px] leading-tight font-bold">{t(stop.titleKey)}</p>
-              <p className="mt-2 text-[14px] leading-relaxed text-grey">{t(stop.bodyKey)}</p>
+              <p className="mt-6 text-[26px] leading-tight font-bold">{t(stop.titleKey)}</p>
+              <p className="mt-3 text-[16px] leading-relaxed text-grey">{t(stop.bodyKey)}</p>
               <div aria-hidden className="relative mt-auto pt-8">
-                <span className="absolute top-8 -left-11 size-8 -translate-y-1/2 rounded-full bg-paper md:-left-12" />
-                <span className="absolute top-8 -right-11 size-8 -translate-y-1/2 rounded-full bg-paper md:-right-12" />
-                <div className="border-t-[1.5px] border-dashed border-line" />
-                <div className="mt-5 flex justify-end gap-1.5">
-                  <i className="size-2.5 rounded-full bg-line" />
-                  <i className="size-2.5 rounded-full bg-line" />
-                  <i className="size-2.5 rounded-full bg-line" />
+                <span className="absolute top-8 -left-12 size-9 -translate-y-1/2 rounded-full bg-paper max-md:-left-11 max-md:size-8" />
+                <span className="absolute top-8 -right-12 size-9 -translate-y-1/2 rounded-full bg-paper max-md:-right-11 max-md:size-8" />
+                <div className="border-t-[1.5px] border-dashed border-ink/20" />
+                <div className="mt-5 flex items-center justify-between">
+                  {stop.sulfur ? (
+                    <span className="rounded-md bg-sulfur px-2 py-1 font-mono text-[11px] tracking-[0.06em] text-ink uppercase">
+                      {t(stop.footKey)}
+                    </span>
+                  ) : (
+                    <span className="font-mono text-[11px] tracking-[0.06em] text-grey uppercase">{t(stop.footKey)}</span>
+                  )}
+                  <span className="flex gap-1.5">
+                    <i className="size-2.5 rounded-full bg-line" />
+                    <i className="size-2.5 rounded-full bg-line" />
+                    <i className="size-2.5 rounded-full bg-line" />
+                  </span>
                 </div>
               </div>
             </StaggerItem>
           ))}
         </Stagger>
+      </section>
 
-        <div id="privacy">
-          <Reveal delay={0.1} className="mt-16 border-t border-line pt-6">
-            <ul className="-mx-4 flex gap-1.5 overflow-x-auto px-4 pb-1 whitespace-nowrap [scrollbar-width:none] sm:mx-0 sm:px-0">
-              {PROMISES.map((item) => (
-                <li key={item.key} className="tag shrink-0 gap-1.5">
-                  <item.icon className="size-3.5" strokeWidth={1.6} />
-                  {t(item.key)}
-                </li>
-              ))}
-              {BUILT_ON.map((labelKey) => (
-                <li key={labelKey} className="tag shrink-0">
-                  {t(labelKey)}
-                </li>
-              ))}
-            </ul>
-          </Reveal>
-        </div>
-        <p className="mt-4 text-[12px] text-grey/80">
-          {t("landing.trendChecked", {
-            date: formatDayMonthYear(preview.signalsAsOf, t),
-            name: preview.personaName,
-          })}
-        </p>
+      {/* Built on public labour data (Plasma block) */}
+      <section id="privacy" className="pb-20 md:pb-28">
+        <Reveal className="overflow-hidden rounded-[40px] bg-plasma px-8 py-12 text-card md:px-12 md:py-14">
+          <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
+            <div>
+              <h2 className="font-serif text-[32px] leading-[0.95] uppercase md:text-[48px]">{t("landing.sourcesBlockHeading")}</h2>
+              <p className="mt-3 max-w-[460px] text-[15px] text-card/80">{t("landing.sourcesBlockLede")}</p>
+            </div>
+            <Link
+              href="/data-sources"
+              className="inline-flex shrink-0 items-center gap-2 rounded-full border-[1.5px] border-card px-5 py-3 text-[14px] font-bold text-card transition-colors hover:bg-card hover:text-plasma"
+            >
+              {t("footer.sources")}
+              <ArrowRight className="size-4" strokeWidth={1.8} />
+            </Link>
+          </div>
+          <ul className="mt-8 flex flex-wrap gap-2">
+            {BUILT_ON.map((labelKey) => (
+              <li
+                key={labelKey}
+                className="rounded-full bg-card/15 px-3 py-1.5 font-mono text-[11px] tracking-[0.04em] text-card uppercase"
+              >
+                {t(labelKey)}
+              </li>
+            ))}
+          </ul>
+          <p className="mt-6 flex flex-wrap items-center gap-2 text-[12px] text-card/70">
+            <SdgChip>{t("landing.heroSdg")}</SdgChip>
+            {t("landing.trendChecked", {
+              date: formatDayMonthYear(preview.signalsAsOf, t),
+              name: preview.personaName,
+            })}
+          </p>
+        </Reveal>
       </section>
     </div>
   );

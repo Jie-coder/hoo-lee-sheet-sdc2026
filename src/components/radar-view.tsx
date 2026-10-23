@@ -7,7 +7,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { motion, useReducedMotion } from "framer-motion";
 import { ArrowDownRight, ArrowRight, ArrowUpRight } from "lucide-react";
-import { EstimateFooter } from "@/components/estimate-footer";
+import { SourceRow } from "@/components/caldera";
 import { EASE_OUT, Stagger, StaggerItem } from "@/components/motion";
 import { SignalDateToggle } from "@/components/signal-date-toggle";
 import { InfoPopover } from "@/components/ui/info-popover";
@@ -269,7 +269,9 @@ export function RadarView({
           </motion.div>
         )}
       </div>
-      <EstimateFooter />
+      <div className="mx-auto max-w-[1248px] px-4 pb-12 sm:px-6">
+        <SourceRow />
+      </div>
     </div>
   );
 }

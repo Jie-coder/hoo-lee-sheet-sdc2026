@@ -12,7 +12,7 @@ import {
   useState,
   type ReactNode,
 } from "react";
-import type { PersonaId } from "@/mocks/personas";
+import { PERSONAS, type PersonaId } from "@/mocks/personas";
 import type { LanguageCode, ParsedCvEducation, ParsedCvRole, PartialSlots } from "@/types/contracts";
 
 export type FlowSkill = {
@@ -71,6 +71,7 @@ type FlowContextValue = FlowState & {
   /** True once sessionStorage has been read; guards redirects on first paint. */
   hydrated: boolean;
   setConsent: (consent: boolean) => void;
+  setSampleProfile: (personaId: PersonaId) => void;
   setUploadedProfile: (parsed: UploadedCv) => void;
   updateProfile: (patch: Partial<Pick<FlowProfile, "name" | "roles" | "education">>) => void;
   addSkill: (label: string) => void;
@@ -112,6 +113,29 @@ export function FlowProvider({ children }: { children: ReactNode }) {
 
   const setConsent = useCallback((consent: boolean) => {
     setState((prev) => ({ ...prev, consent, consentAt: consent ? new Date().toISOString() : null }));
+  }, []);
+
+  const setSampleProfile = useCallback((personaId: PersonaId) => {
+    const persona = PERSONAS[personaId];
+    const unmatched = new Set(persona.unmatchedSkills);
+    setState((prev) => ({
+      ...prev,
+      profile: {
+        personaId,
+        name: persona.parsed.name ?? persona.name,
+        roles: persona.parsed.roles.map((role) => ({ ...role })),
+        education: persona.parsed.education.map((item) => ({ ...item })),
+        courseLanguages: persona.courseLanguages,
+        skills: persona.parsed.skills.map((label, index) => ({
+          id: slugify(label, index),
+          label,
+          // A persona skill is "matched" unless its CV label has no ESCO row
+          // (the hand-checked unmatched list in the persona card).
+          matched: !unmatched.has(label),
+          selfReported: false,
+        })),
+      },
+    }));
   }, []);
 
   const setUploadedProfile = useCallback((parsed: UploadedCv) => {
@@ -202,6 +226,7 @@ export function FlowProvider({ children }: { children: ReactNode }) {
       ...state,
       hydrated,
       setConsent,
+      setSampleProfile,
       setUploadedProfile,
       updateProfile,
       addSkill,
@@ -216,6 +241,7 @@ export function FlowProvider({ children }: { children: ReactNode }) {
       state,
       hydrated,
       setConsent,
+      setSampleProfile,
       setUploadedProfile,
       updateProfile,
       addSkill,

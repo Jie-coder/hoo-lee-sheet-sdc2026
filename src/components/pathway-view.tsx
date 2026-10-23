@@ -23,7 +23,7 @@ import {
   Trash2,
   Wallet,
 } from "lucide-react";
-import { EstimateFooter } from "@/components/estimate-footer";
+import { SourceRow } from "@/components/caldera";
 import { CountUp, EASE_OUT, Reveal } from "@/components/motion";
 import { SdgBadge } from "@/components/sdg-badge";
 import { SdgLegend } from "@/components/sdg-legend";
@@ -497,8 +497,8 @@ export function PathwayView({
         <p className="mt-10 text-[12px] leading-relaxed text-grey/80">{t("pathway.catalogueNote")}</p>
 
       </main>
-      <div className="print-hide">
-        <EstimateFooter />
+      <div className="print-hide mx-auto max-w-[1248px] px-4 pb-12 sm:px-6">
+        <SourceRow />
       </div>
         <section className="print-only">
           <h1 className="print-h1">{t("pathway.printTitle", { title: role.title })}</h1>

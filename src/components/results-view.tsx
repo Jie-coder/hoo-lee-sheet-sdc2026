@@ -9,7 +9,7 @@ import { LayoutGroup, motion, useReducedMotion } from "framer-motion";
 import { RefreshCw } from "lucide-react";
 import { toast } from "sonner";
 import { useFlow } from "@/context/flow-context";
-import { EstimateFooter } from "@/components/estimate-footer";
+import { SourceRow } from "@/components/caldera";
 import { EASE_OUT } from "@/components/motion";
 import { RoleCard } from "@/components/role-card";
 import { ScenarioTabs, SCENARIO_ILLUSTRATIVE, SCENARIO_LABEL, SCENARIO_SUMMARY } from "@/components/scenario-tabs";
@@ -210,7 +210,9 @@ export function ResultsView() {
           </>
         )}
       </div>
-      <EstimateFooter />
+      <div className="mx-auto max-w-[1248px] px-4 pb-12 sm:px-6">
+        <SourceRow />
+      </div>
     </div>
   );
 }

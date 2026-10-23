@@ -1,13 +1,12 @@
-// App header: Laluan wordmark, the four steps drawn as stations on one
-// route line (the laluan), and the course-language preference pill.
+// App header (Caldera §0): wordmark left, the flow rail (mono stations with
+// ringed dots and dashed links) on flow pages or the site nav on content pages,
+// and the EN·BM toggle right. Plain — no bar background.
 "use client";
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { motion, useReducedMotion } from "framer-motion";
-import { Check } from "lucide-react";
+import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
-import { EASE_OUT } from "@/components/motion";
 import { SITE_LOCALES, useT } from "@/lib/i18n";
 
 const STEPS = [
@@ -18,9 +17,10 @@ const STEPS = [
 ] as const;
 
 const SITE_LINKS = [
-  { href: "/#about", key: "footer.about" },
-  { href: "/status", key: "footer.sources" },
-  { href: "/#privacy", key: "footer.privacy" },
+  { href: "/about", key: "footer.about" },
+  { href: "/data-sources", key: "footer.sources" },
+  { href: "/privacy", key: "footer.privacy" },
+  { href: "/radar", key: "footer.radar" },
 ] as const;
 
 function currentStepIndex(pathname: string): number {
@@ -31,16 +31,13 @@ function currentStepIndex(pathname: string): number {
 
 export function SiteHeader() {
   const pathname = usePathname();
-  const reduce = useReducedMotion();
   const { locale, setLocale, t } = useT();
   const currentIndex = currentStepIndex(pathname);
   const onFlow = currentIndex >= 0;
-  // The sage line reaches the centre of the current station.
-  const fill = onFlow ? currentIndex / (STEPS.length - 1) : 0;
 
   return (
-    <header className="sticky top-0 z-50 border-b border-line/80 bg-paper/90 backdrop-blur-md">
-      <div className="mx-auto flex h-16 max-w-[1248px] items-center gap-4 px-4 sm:gap-5 sm:px-6">
+    <header className="w-full">
+      <div className="mx-auto flex h-20 max-w-[1440px] items-center gap-4 px-4 sm:px-6 md:px-8">
         <Link href="/" className="shrink-0" aria-label={t("header.homeAria")}>
           {/* Official wordmark. next/image refuses SVG without extra config. */}
           {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -48,12 +45,12 @@ export function SiteHeader() {
         </Link>
 
         {!onFlow && (
-          <nav aria-label={t("header.siteNavAria")} className="hidden items-center gap-1 md:flex">
+          <nav aria-label={t("header.siteNavAria")} className="ml-6 hidden items-center gap-1 md:flex">
             {SITE_LINKS.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
-                className="rounded-full px-3 py-1.5 text-[13px] text-grey transition-colors hover:bg-alt hover:text-ink"
+                className="rounded-full px-3 py-1.5 text-[14px] text-ink/80 transition-colors hover:bg-alt hover:text-ink"
               >
                 {t(link.key)}
               </Link>
@@ -63,42 +60,27 @@ export function SiteHeader() {
 
         {onFlow && (
           <nav aria-label={t("header.progressAria")} className="hidden min-w-0 flex-1 justify-center md:flex">
-            <ol className="relative grid w-full max-w-[420px] grid-cols-4">
-              {/* guide + fill, drawn between the first and last station centres */}
-              <span aria-hidden className="absolute top-[7px] right-[12.5%] left-[12.5%] h-px bg-line" />
-              <motion.span
-                aria-hidden
-                className="absolute top-[7px] left-[12.5%] h-px origin-left bg-sage"
-                style={{ width: "75%" }}
-                initial={reduce ? { scaleX: fill } : { scaleX: 0 }}
-                animate={{ scaleX: fill }}
-                transition={{ duration: reduce ? 0 : 0.9, ease: EASE_OUT }}
-              />
+            <ol className="flex items-center font-mono text-[12px] tracking-[0.06em] uppercase">
               {STEPS.map((step, index) => {
                 const complete = index < currentIndex;
                 const current = index === currentIndex;
                 return (
-                  <li
-                    key={step.id}
-                    className="relative flex flex-col items-center gap-1.5"
-                    aria-current={current ? "step" : undefined}
-                  >
-                    <motion.span
-                      className={cn(
-                        "flex size-[15px] items-center justify-center rounded-full border-2 bg-paper",
-                        complete && "border-sage bg-sage text-paper",
-                        current && "border-ink bg-ink",
-                        !complete && !current && "border-line",
-                      )}
-                      initial={reduce ? false : { scale: 0.6 }}
-                      animate={{ scale: 1 }}
-                      transition={{ type: "spring", stiffness: 420, damping: 24, delay: reduce ? 0 : 0.25 + index * 0.12 }}
-                    >
-                      {complete && <Check className="size-2.5" strokeWidth={3} />}
-                    </motion.span>
-                    <span className={cn("text-[11px] tracking-wide", current ? "font-medium text-ink" : "text-grey")}>
-                      {t(`nav.${step.id}`)}
+                  <li key={step.id} className="flex items-center" aria-current={current ? "step" : undefined}>
+                    <span className="flex items-center gap-2 px-3.5">
+                      <span
+                        aria-hidden
+                        className={cn(
+                          "size-3 rounded-full ring-[1.5px] ring-ink",
+                          current && "bg-ink",
+                          complete && "bg-ink/35",
+                          !current && !complete && "bg-transparent",
+                        )}
+                      />
+                      <span className={current ? "text-ink" : "text-grey"}>{t(`nav.${step.id}`)}</span>
                     </span>
+                    {index < STEPS.length - 1 && (
+                      <span aria-hidden className="w-10 border-t-[1.5px] border-dashed border-ink/40" />
+                    )}
                   </li>
                 );
               })}
@@ -106,19 +88,37 @@ export function SiteHeader() {
           </nav>
         )}
 
-        <div className="ml-auto flex items-center gap-3">
-          {onFlow && (
-            <span className="text-[12px] text-grey md:hidden">
-              {currentIndex + 1}/{STEPS.length} {t(`nav.${STEPS[currentIndex].id}`)}
+        {/* Flow, mobile: "Step n of 4 · Label" plus a 4-segment bar. */}
+        {onFlow && (
+          <div className="flex min-w-0 flex-1 flex-col gap-1.5 md:hidden">
+            <span className="truncate font-mono text-[11px] tracking-[0.06em] text-ink uppercase">
+              {t("header.stepOf", {
+                n: String(currentIndex + 1),
+                total: String(STEPS.length),
+                label: t(`nav.${STEPS[currentIndex].id}`),
+              })}
             </span>
-          )}
+            <div className="flex gap-1">
+              {STEPS.map((step, index) => (
+                <span
+                  key={step.id}
+                  className={cn("h-1 flex-1 rounded-full", index <= currentIndex ? "bg-ink" : "bg-ink/15")}
+                />
+              ))}
+            </div>
+          </div>
+        )}
+
+        <div className="ml-auto flex shrink-0 items-center gap-3">
           {!onFlow && (
-            <span className="hidden text-[11px] tracking-[0.08em] text-grey uppercase lg:inline">{t("header.builtFor")}</span>
+            <span className="hidden font-mono text-[11px] tracking-[0.08em] text-grey uppercase lg:inline">
+              {t("header.builtFor")}
+            </span>
           )}
           <div
             role="group"
             aria-label={t("lang.label")}
-            className="relative flex items-center rounded-full border border-line bg-card p-0.5 text-[12px]"
+            className="relative flex items-center rounded-full border border-ink/20 p-0.5 text-[12px]"
           >
             {SITE_LOCALES.map((language) => {
               const selected = locale === language.id;
@@ -128,7 +128,10 @@ export function SiteHeader() {
                   type="button"
                   aria-pressed={selected}
                   onClick={() => setLocale(language.id)}
-                  className={cn("relative z-10 rounded-full px-2.5 py-1 transition-colors", selected ? "text-paper" : "text-grey hover:text-ink")}
+                  className={cn(
+                    "relative z-10 rounded-full px-2.5 py-1 font-mono tracking-[0.04em] transition-colors",
+                    selected ? "text-paper" : "text-grey hover:text-ink",
+                  )}
                 >
                   {selected && (
                     <motion.span
@@ -142,11 +145,6 @@ export function SiteHeader() {
               );
             })}
           </div>
-          {!onFlow && (
-            <Link href="/#start" className="btn-primary px-3.5 py-1.5 text-[12px] sm:px-4 sm:py-2 sm:text-[13px]">
-              {t("header.getStarted")}
-            </Link>
-          )}
         </div>
       </div>
     </header>
