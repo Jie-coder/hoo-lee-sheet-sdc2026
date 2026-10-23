@@ -34,7 +34,7 @@ export const PERSONAS: Record<PersonaId, PersonaCard> = {
     name: "Aisyah binti Rahman",
     initials: "AR",
     age: 23,
-    jobTitle: "Administrative assistant",
+    jobTitle: "Administrative Assistant",
     location: "Bayan Lepas, Penang",
     summary: "Data entry, scheduling, reports and customer emails at a trading office.",
     courseLanguages: ["ms", "en"],

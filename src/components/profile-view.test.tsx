@@ -24,7 +24,7 @@ afterEach(() => {
 
 describe("sampleLabel", () => {
   it("uses first names and the sample CV job title", () => {
-    expect(sampleLabel("aisyah")).toBe("Aisyah · Administrative assistant");
+    expect(sampleLabel("aisyah")).toBe("Aisyah · Administrative Assistant");
     expect(sampleLabel("lim-jia-hui")).toBe("Jia Hui · Senior Accounts Assistant");
     expect(sampleLabel("pravin")).toBe("Pravin · Customer Support Agent");
   });
@@ -49,6 +49,10 @@ describe("ProfileView sample loading", () => {
     const button = screen.getByRole("button", { name: new RegExp(firstName) });
     expect(button).toHaveClass("bg-obsidian", "text-limestone");
     expect(button).toHaveAttribute("aria-busy", "true");
+    expect(button).not.toHaveClass("opacity-40");
+    const other = screen.getByRole("button", { name: /Jia Hui/ });
+    expect(other).toBeDisabled();
+    expect(other).toHaveClass("opacity-40", "disabled:cursor-not-allowed");
     expect(screen.queryByDisplayValue(persona.name)).not.toBeInTheDocument();
 
     await act(async () => {

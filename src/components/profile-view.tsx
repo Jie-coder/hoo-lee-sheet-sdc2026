@@ -175,9 +175,11 @@ export function ProfileView() {
                     aria-busy={loadingSample === id}
                     onClick={() => pickSample(id)}
                     className={cn(
-                      "flex items-center justify-between rounded-full border-[1.5px] px-6 py-3.5 text-[15px] font-bold transition-colors max-md:gap-3 max-md:text-left max-md:text-[14px]",
+                      "flex items-center justify-between rounded-full border-[1.5px] px-6 py-3.5 text-[15px] font-bold transition-colors disabled:cursor-not-allowed max-md:gap-3 max-md:text-left max-md:text-[14px]",
                       isLoading
                         ? "border-obsidian bg-obsidian text-limestone"
+                        : loadingSample || uploading
+                          ? "border-ink/80 text-ink opacity-40"
                         : selected
                           ? "border-ink bg-ink text-paper"
                           : "border-ink/80 text-ink hover:bg-alt",
