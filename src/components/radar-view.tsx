@@ -289,8 +289,19 @@ export function RadarView({
                 key={line.id}
                 type="button"
                 role="tab"
+                id={`radar-tab-${line.id}`}
+                aria-controls={`radar-panel-${line.id}`}
                 aria-selected={tab === line.id}
+                tabIndex={tab === line.id ? 0 : -1}
                 onClick={() => setTab(line.id)}
+                onKeyDown={(event) => {
+                  if (event.key !== "ArrowRight" && event.key !== "ArrowLeft") return;
+                  event.preventDefault();
+                  const i = LINES.findIndex((l) => l.id === line.id);
+                  const next = LINES[(i + (event.key === "ArrowRight" ? 1 : LINES.length - 1)) % LINES.length];
+                  setTab(next.id);
+                  document.getElementById(`radar-tab-${next.id}`)?.focus();
+                }}
                 className={cn(
                   "flex-1 rounded-full px-3 py-2 font-mono text-[11px] tracking-[0.06em] uppercase transition-colors",
                   tab === line.id ? "bg-ink text-card" : "text-ink",
@@ -302,7 +313,12 @@ export function RadarView({
           </div>
           <section aria-label={t("radar.listsLabel")} className="mt-4 grid grid-cols-1 gap-4 md:mt-4 md:grid-cols-3">
             {LINES.map((line) => (
-              <div key={line.id} className={cn(tab === line.id ? "block" : "hidden", "md:block")}>
+              <div
+                key={line.id}
+                id={`radar-panel-${line.id}`}
+                aria-labelledby={`radar-tab-${line.id}`}
+                className={cn(tab === line.id ? "block" : "hidden", "md:block")}
+              >
                 <SkillList radar={radar} direction={line.id} onPick={onPick} />
               </div>
             ))}

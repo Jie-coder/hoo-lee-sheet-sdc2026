@@ -219,6 +219,9 @@
   header, nav, footer:not(.print-foot), canvas, video, button,
   .print-hide, [data-sonner-toaster] { display: none !important; }
   *, *::before, *::after { animation: none !important; transition: none !important; box-shadow: none !important; }
+  body:has(.print-only) * { visibility: hidden !important; }
+  body:has(.print-only) .print-only, body:has(.print-only) .print-only * { visibility: visible !important; }
+  body:has(.print-only) .print-only { position: absolute; top: 0; left: 0; right: 0; }
   .print-only { display: block !important; color: #000; font-family: var(--font-dm-sans), "DM Sans", sans-serif; font-size: 11pt; }
   .print-only .print-h1 { font-family: var(--font-anton), "Anton", sans-serif; font-size: 26pt; line-height: 1.1; margin: 0 0 4pt; text-transform: uppercase; }
   .print-only ol { list-style: none; padding: 0; margin: 14pt 0; }

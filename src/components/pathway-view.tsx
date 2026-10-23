@@ -187,7 +187,7 @@ export function PathwayView({
                 {t("pathway.heroHeading", { weeks: String(totalWeeks), title: role.title })}
               </h1>
             </div>
-            <dl className="grid grid-cols-2 gap-x-6 gap-y-7">
+            <dl className="grid grid-cols-2 gap-x-6 gap-y-7 md:pr-6 [&>div]:min-w-0">
               <HeroStat label={t("pathway.pace")} value={t("pathway.hoursPerWeek", { hours: String(hoursPerWeek) })} />
               <HeroStat label={t("pathway.cost")} value={mostlyFree ? t("pathway.mostlyFree") : t("pathway.mixedCost")} />
               <HeroStat
@@ -260,15 +260,15 @@ export function PathwayView({
                         </a>
                       </div>
 
+                      {closedSkill && (
+                        <p className="mt-2 text-[14px] leading-snug text-grey">
+                          {t("pathway.closes")}: <span className="font-bold text-ink">{closedSkill.label}</span>
+                        </p>
+                      )}
                       {expanded && (
                         <>
                           <Perforation className="my-5" />
                           <p className="text-[14px] leading-relaxed text-grey">
-                            {closedSkill && (
-                              <>
-                                {t("pathway.closes")}: <span className="font-bold text-ink">{closedSkill.label}</span>.{" "}
-                              </>
-                            )}
                             {step.why}
                           </p>
                           <div className="mt-4 flex flex-wrap gap-2">
@@ -400,7 +400,7 @@ function HeroStat({ label, value }: { label: string; value: string }) {
   return (
     <div>
       <dt className="font-mono text-[12px] tracking-[0.06em] text-limestone/70 uppercase">{label}</dt>
-      <dd className="mt-1.5 font-serif text-[clamp(28px,5vw,44px)] leading-none">{value}</dd>
+      <dd className="mt-1.5 font-serif text-[clamp(28px,4vw,44px)] leading-[0.95] break-words">{value}</dd>
     </div>
   );
 }

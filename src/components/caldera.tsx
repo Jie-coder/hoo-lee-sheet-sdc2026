@@ -266,7 +266,7 @@ export function Drawer({
             transition={{ type: "spring", stiffness: 420, damping: 40 }}
           >
             <div className="mb-5 flex items-start justify-between gap-4">
-              <h2 className="font-serif text-[24px] leading-tight uppercase">{title}</h2>
+              <h2 className="font-serif text-[24px] leading-[0.9] uppercase">{title}</h2>
               <button
                 type="button"
                 onClick={onClose}

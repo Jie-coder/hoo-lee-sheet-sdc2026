@@ -91,7 +91,7 @@ export function SiteHeader() {
         {/* Flow, mobile: "Step n of 4 · Label" plus a 4-segment bar. */}
         {onFlow && (
           <div className="flex min-w-0 flex-1 flex-col gap-1.5 md:hidden">
-            <span className="truncate font-mono text-[11px] tracking-[0.06em] text-ink uppercase">
+            <span className="font-mono text-[11px] leading-snug break-words tracking-[0.06em] text-ink uppercase">
               {t("header.stepOf", {
                 n: String(currentIndex + 1),
                 total: String(STEPS.length),

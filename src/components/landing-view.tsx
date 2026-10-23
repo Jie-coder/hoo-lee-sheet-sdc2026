@@ -69,7 +69,7 @@ export function LandingView({ preview }: { preview: LandingPreview }) {
             </motion.p>
             <motion.h1
               {...rise(0.08)}
-              className="mt-3 max-w-[900px] font-serif text-[clamp(52px,12vw,84px)] leading-[0.92] tracking-[-0.01em] text-balance uppercase xl:mt-4 xl:text-[clamp(64px,8vw,120px)]"
+              className="mt-3 max-w-[900px] font-serif text-[clamp(52px,12vw,84px)] leading-[0.92] tracking-[-0.01em] text-balance uppercase xl:mt-4 xl:max-w-[calc(64%-24px)] xl:text-[clamp(64px,6.4vw,104px)]"
             >
               {t("landing.heroHeading")}
             </motion.h1>

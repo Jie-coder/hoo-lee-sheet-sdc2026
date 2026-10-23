@@ -56,6 +56,7 @@ export function ExposureView() {
         <div className="flex flex-col justify-between gap-8 rounded-[40px] bg-card p-8 md:p-10">
           <p className="font-mono text-[12px] tracking-[0.06em] text-grey uppercase">{t("exposurePage.whatHeading")}</p>
           <div>
+            <p className="mb-6 text-[16px] leading-relaxed">{t("exposurePage.whatBody")}</p>
             <ul className="space-y-3 text-[18px] font-bold">
               {LIGHTS.map((light) => (
                 <li key={light.level}>
@@ -77,9 +78,6 @@ export function ExposureView() {
           className="order-2 h-[220px] md:order-1 md:h-auto md:min-h-[360px]"
         />
         <div className="order-1 rounded-[40px] bg-card p-8 md:order-2 md:p-10">
-          <Expander summary={t("exposurePage.whatHeading")}>
-            <p>{t("exposurePage.whatBody")}</p>
-          </Expander>
           <Expander summary={t("exposurePage.howHeading")}>
             <p>{t("exposurePage.howCatalogue")}</p>
             <p>{t("exposurePage.howMatch")}</p>

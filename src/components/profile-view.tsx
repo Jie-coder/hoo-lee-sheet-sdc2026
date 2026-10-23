@@ -232,13 +232,14 @@ export function ProfileView() {
               <Ticket notch notchTop="152px" className="p-8 md:p-12">
                 {/* Header */}
                 <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-                  <div className="min-w-0">
+                  <div className="min-w-0 sm:flex-1">
                     <p className="font-mono text-[12px] tracking-[0.06em] text-grey uppercase">{t("profile.passengerLabel")}</p>
-                    <input
+                    <textarea
+                      rows={1}
                       value={profile.name}
-                      onChange={(event) => updateProfile({ name: event.target.value })}
+                      onChange={(event) => updateProfile({ name: event.target.value.replace(/\n/g, " ") })}
                       aria-label={t("profile.nameLabel")}
-                      className="mt-2.5 w-full min-w-0 bg-transparent font-serif text-[clamp(32px,8vw,56px)] leading-[0.95] tracking-[-0.01em] uppercase outline-none focus:underline"
+                      className="mt-2.5 block w-full min-w-0 resize-none overflow-hidden bg-transparent font-serif text-[clamp(32px,6vw,52px)] leading-[0.9] tracking-[-0.01em] uppercase outline-none [field-sizing:content] focus:underline"
                     />
                     {education && (
                       <p className="mt-2 text-[15px] text-grey">
@@ -392,12 +393,13 @@ function RoleDurationRow({
     <li className="flex flex-col gap-2 border-b border-ink/10 py-4 last:border-b-0 md:grid md:grid-cols-[1.2fr_1fr_auto_auto] md:items-center md:gap-4">
       {/* Mobile line 1: role + company. Desktop: both dissolve into the grid. */}
       <div className="flex items-baseline justify-between gap-3 md:contents">
-        <input
+        <textarea
+          rows={1}
           value={title}
-          onChange={(event) => onTitle(event.target.value)}
+          onChange={(event) => onTitle(event.target.value.replace(/\n/g, " "))}
           placeholder={t("profile.roleTitlePlaceholder")}
           aria-label={t("profile.roleFieldLabel")}
-          className="min-w-0 flex-1 bg-transparent text-[15px] font-bold outline-none focus:underline"
+          className="min-w-0 flex-1 resize-none overflow-hidden bg-transparent text-[15px] leading-snug font-bold outline-none [field-sizing:content] focus:underline"
         />
         <span className="shrink-0 text-[14px] text-grey">{t("profile.companyFromCv")}</span>
       </div>

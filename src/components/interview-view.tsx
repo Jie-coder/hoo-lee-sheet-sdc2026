@@ -214,7 +214,7 @@ export function InterviewView() {
         transition={{ duration: 0.6, ease: EASE_OUT }}
         className="pt-6 pb-10 md:pt-10"
       >
-        <PageHero title={t("interview.title")} titleClassName="md:text-[clamp(48px,7vw,96px)]" />
+        <PageHero title={t("interview.title")} lede={t("interview.lede")} titleClassName="md:text-[clamp(48px,7vw,96px)]" />
       </motion.div>
 
       {/* Progress: five stations on one line */}
@@ -271,7 +271,7 @@ export function InterviewView() {
             <p className="text-[12px] text-grey">
               {t("interview.questionCount", { current: String(turn), total: String(MAX_INTERVIEW_TURNS) })}
             </p>
-            <h2 className="mt-2 font-serif text-[24px] leading-snug font-medium text-balance sm:text-[28px]">
+            <h2 className="mt-2 font-serif text-[24px] leading-[0.9] font-medium text-balance sm:text-[28px]">
               {t(questionTitleKey)}
             </h2>
             {questionSubtitleKey && (
