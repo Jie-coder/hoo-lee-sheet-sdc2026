@@ -5,6 +5,7 @@
 "use client";
 
 import { useState } from "react";
+import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { Drawer, PageHero, Perforation, SdgChip, SourceRow } from "@/components/caldera";
@@ -43,6 +44,12 @@ const DOT: Record<Direction, string> = {
   flat: "bg-card",
   declining: "bg-sage",
 };
+
+/** Where the Radar's back pill goes: back to /exposure-intro when opened from there, else Results. */
+export function radarBackLink(from: string | null): { href: string; label: MessageKey } {
+  if (from === "exposure-intro") return { href: "/exposure-intro", label: "radar.back" };
+  return { href: "/results", label: "radar.backToResults" };
+}
 
 function skillsFor(radar: Radar, direction: Direction): RadarSkill[] {
   return direction === "rising" ? radar.rising : direction === "flat" ? radar.steady : radar.declining;
@@ -246,6 +253,7 @@ export function RadarView({
   links: SkillLinks;
 }) {
   const { t } = useT();
+  const back = radarBackLink(useSearchParams().get("from"));
   const [signalDate, setSignalDate] = useState<SignalDate>("today");
   const [tab, setTab] = useState<Direction>("rising");
   const [picked, setPicked] = useState<{ skill: RadarSkill; direction: Direction } | null>(null);
@@ -254,8 +262,17 @@ export function RadarView({
 
   return (
     <main className="mx-auto w-full max-w-[1440px] px-5 pb-24 sm:px-6 md:px-8">
+      <div className="pt-6 md:pt-8">
+        <Link
+          href={back.href}
+          data-testid="radar-back"
+          className="inline-flex items-center rounded-full border-[1.5px] border-obsidian px-4 py-1.5 text-[14px] font-bold text-obsidian transition-colors hover:bg-obsidian hover:text-limestone focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-obsidian"
+        >
+          {t(back.label)}
+        </Link>
+      </div>
       <PageHero
-        className="pt-6 md:pt-10"
+        className="pt-6 md:pt-8"
         eyebrow={t("radar.eyebrow")}
         title={t("radar.heroHeading")}
         lede={t("radar.lede")}

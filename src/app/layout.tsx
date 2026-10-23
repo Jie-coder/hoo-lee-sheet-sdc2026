@@ -27,7 +27,8 @@ const dmSans = DM_Sans({
 // to this face. Preload stays off: the CJK files are large and only needed
 // when those glyphs appear.
 const notoSansSc = Noto_Sans_SC({
-  weight: "400",
+  // 400 body + 700 to match bold DM Sans titles (adding 500 breaks the Turbopack font fetch).
+  weight: ["400", "700"],
   subsets: ["latin"],
   display: "swap",
   preload: false,

@@ -225,7 +225,7 @@ body:has(.privacy-page) { background-color: var(--color-limestone); background-i
   body:has(.print-only) * { visibility: hidden !important; }
   body:has(.print-only) .print-only, body:has(.print-only) .print-only * { visibility: visible !important; }
   body:has(.print-only) .print-only { position: absolute; top: 0; left: 0; right: 0; }
-  .print-only { display: block !important; color: #000; font-family: var(--font-dm-sans), "DM Sans", sans-serif; font-size: 11pt; }
+  .print-only { display: block !important; color: #000; font-family: var(--font-dm-sans), "DM Sans", var(--font-noto-sans-sc), "Noto Sans SC", "Noto Sans CJK SC", sans-serif; font-size: 11pt; }
   .print-only .print-h1 { font-family: var(--font-anton), "Anton", sans-serif; font-size: 26pt; line-height: 1.1; margin: 0 0 4pt; text-transform: uppercase; }
   .print-only ol { list-style: none; padding: 0; margin: 14pt 0; }
   .print-only .print-ticket { width: auto; max-width: 100%; box-sizing: border-box; display: grid; grid-template-columns: 22pt 1fr; column-gap: 8pt; row-gap: 2pt; border: 0.75pt solid #000; border-radius: 10pt; padding: 8pt 10pt; margin-bottom: 8pt; break-inside: avoid; page-break-inside: avoid; background: #fff; }

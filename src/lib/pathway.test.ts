@@ -7,6 +7,8 @@ import {
   AI_READINESS_PROGRAMME_ID,
   buildPathwayPlan,
   filterCoursesByLanguage,
+  missingChineseCourse,
+  courseLanguagePill,
   normalizeUrl,
   pickCourseForSkill,
   programmeEligibilityStatus,
@@ -464,5 +466,31 @@ describe("no two steps in one pathway share a URL (demo CVs)", () => {
       const normalizedUrls = plan.steps.map((step) => normalizeUrl(itemUrl(step)));
       expect(new Set(normalizedUrls).size).toBe(normalizedUrls.length);
     }
+  });
+});
+
+describe("missingChineseCourse", () => {
+  const en = course({ id: "en", languages: ["en"], skillIds: ["a"] });
+  const zh = course({ id: "zh", languages: ["zh", "en"], skillIds: ["b"] });
+  it("flags a skill with no Chinese course only when Chinese is the sole language", () => {
+    expect(missingChineseCourse(["a"], [en, zh], ["zh"])).toBe(true);
+    expect(missingChineseCourse(["a"], [en, zh], ["en", "zh"])).toBe(false);
+  });
+  it("does not flag when a Chinese course exists or Chinese is not preferred", () => {
+    expect(missingChineseCourse(["b"], [en, zh], ["zh"])).toBe(false);
+    expect(missingChineseCourse(["a"], [en, zh], ["en"])).toBe(false);
+    expect(missingChineseCourse([], [en, zh], ["zh"])).toBe(false);
+  });
+  it("still falls back to the English course for that skill", () => {
+    expect(pickCourseForSkill("a", [en, zh], ["zh"])?.id).toBe("en");
+  });
+});
+
+describe("courseLanguagePill", () => {
+  it("labels from the course language field", () => {
+    expect(courseLanguagePill(["zh"], ["zh"])).toBe("ZH");
+    expect(courseLanguagePill(["en"], ["zh"])).toBe("EN");
+    expect(courseLanguagePill(["ms", "en"], ["en"])).toBe("EN");
+    expect(courseLanguagePill(["ms", "en"], ["zh"])).toBe("BM");
   });
 });
