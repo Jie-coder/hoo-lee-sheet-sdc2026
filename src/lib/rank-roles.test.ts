@@ -20,3 +20,15 @@ describe("isStretchRoute", () => {
     expect(isStretchRoute(0.15)).toBe(false);
   });
 });
+
+describe("rankRoles near-tie", () => {
+  const r = (occupationId: string, score: number, fit: number) =>
+    ({ occupationId, fit, byScenario: { co: score, dis: score, sup: score } }) as unknown as RoleResult;
+  it("breaks scores within 0.005 by displayed Fit, but not wider gaps", () => {
+    const roles = [r("a", 0.411, 0.2), r("b", 0.408, 0.2)];
+    const shown = (role: RoleResult) => (role.occupationId === "b" ? 0.35 : role.fit);
+    expect(rankRoles(roles, "co", shown).map((x) => x.occupationId)).toEqual(["b", "a"]);
+    expect(rankRoles([r("a", 0.42, 0.2), r("b", 0.41, 0.2)], "co", shown).map((x) => x.occupationId)).toEqual(["a", "b"]);
+    expect(rankRoles(roles, "co").map((x) => x.occupationId)).toEqual(["a", "b"]);
+  });
+});

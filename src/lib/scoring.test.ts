@@ -16,6 +16,8 @@ import {
   skillMomentum,
   skillsMatch,
   topRoleIdsForScenario,
+  INTEREST_FIT_BONUS,
+  displayFit,
   type CandidateRole,
   type EssentialSkillInput,
   type ScenarioRankable,
@@ -649,5 +651,14 @@ describe("topRoleIdsForScenario SDG eligibility", () => {
     expect([...topRoleIdsForScenario(roles, "co")].sort()).toEqual(["a", "b", "m"]);
     // Without the match flag, m is below minFit and stays out.
     expect([...topRoleIdsForScenario(roles.map((x) => ({ ...x, sdgMatch: false })), "co")].sort()).toEqual(["a", "b", "c"]);
+  });
+});
+
+describe("displayFit", () => {
+  it("adds INTEREST_FIT_BONUS only for a match, capped at 1", () => {
+    expect(INTEREST_FIT_BONUS).toBe(0.15);
+    expect(displayFit(0.1, true)).toBeCloseTo(0.25, 12);
+    expect(displayFit(0.1, false)).toBe(0.1);
+    expect(displayFit(0.95, true)).toBe(1);
   });
 });

@@ -69,7 +69,7 @@ export type RoleBreakdown = {
   interestMatch: boolean;
   /** Raw skill fit (same as role.fit). Drives ranking and the Transition route label. */
   skillFit: number;
-  /** Displayed Fit: FIT_WEIGHTS blend of skill fit and interest match; equals skillFit when no interest is chosen. */
+  /** Displayed Fit: skillFit + INTEREST_FIT_BONUS (max 1) when the role matches the chosen interest, else skillFit. */
   displayFit: number;
   status: { label: string; tone: RoleStatusTone };
   /** ESCO group id of each gap skill, for "related course" suggestions on the pathway. */
@@ -300,7 +300,7 @@ export function analyzeProfile(catalogue: Catalogue, input: AnalyzeInput): Analy
         })),
       interestMatch,
       skillFit: role.fit,
-      displayFit: displayFit(role.fit, (input.impactInterest ?? "none") !== "none", interestMatch),
+      displayFit: displayFit(role.fit, interestMatch),
       status: statusFor(role, topByScenario, interestMatch, input.impactInterest),
       gapGroups: Object.fromEntries(
         role.gap.flatMap((skill) =>

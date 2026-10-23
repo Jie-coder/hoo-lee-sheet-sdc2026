@@ -4,7 +4,7 @@ import { CATALOGUE, type Catalogue } from "./catalogue";
 import { rankRoles } from "./rank-roles";
 import { explainRole } from "./explain";
 import { resolveProfileSkills } from "./profile-skills";
-import { FIT_WEIGHTS, NON_RECOMMENDED_CLUSTERS, SCORING_PARAMS, STRETCH_FIT_THRESHOLD, isStretchRoute } from "./scoring";
+import { INTEREST_FIT_BONUS, NON_RECOMMENDED_CLUSTERS, SCORING_PARAMS, STRETCH_FIT_THRESHOLD, isStretchRoute } from "./scoring";
 import { PERSONA_IDS, PERSONAS } from "@/mocks/personas";
 import { AnalyzeResponseSchema, SCENARIO_IDS } from "@/types/contracts";
 
@@ -246,7 +246,7 @@ describe("SDG choice boost", () => {
   });
 });
 
-describe("displayed Fit (FIT_WEIGHTS)", () => {
+describe("displayed Fit (INTEREST_FIT_BONUS)", () => {
   const run = (id: (typeof PERSONA_IDS)[number], impactInterest: "none" | "environment" | "health") => {
     const persona = PERSONAS[id];
     const chips = persona.parsed.skills.map((label) => ({ label, selfReported: false }));
@@ -262,17 +262,17 @@ describe("displayed Fit (FIT_WEIGHTS)", () => {
     }
   });
 
-  it("is 0.8 * skill fit + 0.2 for a matching role, 0.8 * skill fit otherwise", () => {
+  it("is skill fit + 0.15 (max 1) for a matching role and unchanged otherwise", () => {
     const result = run("aisyah", "environment");
     let matched = 0;
     for (const role of result.roles) {
       const b = result.breakdown[role.occupationId];
-      const expected = FIT_WEIGHTS.skill * role.fit + (b.interestMatch ? FIT_WEIGHTS.interest : 0);
+      const expected = b.interestMatch ? Math.min(1, role.fit + INTEREST_FIT_BONUS) : role.fit;
       expect(b.displayFit).toBeCloseTo(expected, 12);
       if (b.interestMatch) matched += 1;
     }
     expect(matched).toBeGreaterThan(0);
-    expect(FIT_WEIGHTS).toEqual({ skill: 0.8, interest: 0.2 });
+    expect(INTEREST_FIT_BONUS).toBe(0.15);
   });
 
   it("keeps the Transition route label on raw skill fit", () => {

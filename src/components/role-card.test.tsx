@@ -115,12 +115,13 @@ describe("RoleCard", () => {
         onChoose={vi.fn()}
         isPrimary
         sdgMatch
-        displayFit={0.28}
+        displayFit={0.25}
       />,
     );
-    expect(screen.getByText("28%")).toBeInTheDocument();
+    expect(screen.getByText("25%")).toBeInTheDocument();
     expect(screen.getByText("Transition route")).toBeInTheDocument();
+    expect(screen.getByText("Matches your SDG choice")).toBeInTheDocument();
     await user.click(screen.getByRole("button", { name: "Why" }));
-    expect(within(screen.getByRole("dialog")).getByText(/Skill match 10% \(×0\.8 = 8%\) \+ interest bonus 20%/)).toBeInTheDocument();
+    expect(within(screen.getByRole("dialog")).getByText(/^Skill match 10% \+ interest bonus 15%/)).toBeInTheDocument();
   });
 });

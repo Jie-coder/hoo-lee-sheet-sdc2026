@@ -9,7 +9,7 @@ import { motion, useReducedMotion } from "framer-motion";
 import { Drawer, Perforation, SdgChip, SignalLight, Ticket } from "@/components/caldera";
 import { EASE_OUT } from "@/components/motion";
 import { SourcesDisclosure } from "@/components/sources-disclosure";
-import { FIT_WEIGHTS, isStretchRoute } from "@/lib/scoring";
+import { isStretchRoute } from "@/lib/scoring";
 import { formatFitPercent, missingValue } from "@/lib/display";
 import { useT, type MessageKey } from "@/lib/i18n";
 import { formatMonthlyRange, formatMonthlyRm, hasRealRange, salaryForRole } from "@/lib/salary";
@@ -48,7 +48,7 @@ export function RoleCard({
   relatedSkills?: readonly string[];
   /** The role's SDG mapping matches the user's chosen impact interest (ranking bonus applied). */
   sdgMatch?: boolean;
-  /** Displayed Fit (skill fit blended with interest, FIT_WEIGHTS). Defaults to raw skill fit. */
+  /** Displayed Fit (skill fit + INTEREST_FIT_BONUS when the role matches the SDG choice). Defaults to raw skill fit. */
   displayFit?: number;
 }) {
   const reduce = useReducedMotion();
@@ -60,17 +60,11 @@ export function RoleCard({
   const fitPercent = Math.round(shownFit * 100);
   // Transition route stays on raw skill fit, not the interest-blended Fit.
   const stretch = isStretchRoute(role.fit);
-  const interestPart = shownFit - FIT_WEIGHTS.skill * role.fit;
+  const interestPart = shownFit - role.fit;
   const fitBreakdown =
-    displayFit !== undefined && sdgMatch
-      ? t("results.fitBreakdownInterest", {
-          skill: formatFitPercent(role.fit),
-          weighted: formatFitPercent(FIT_WEIGHTS.skill * role.fit),
-          interest: formatFitPercent(interestPart),
-        })
-      : displayFit !== undefined && displayFit !== role.fit
-        ? t("results.fitBreakdownNoMatch", { skill: formatFitPercent(role.fit), weighted: formatFitPercent(displayFit) })
-        : t("results.fitBreakdownSkill", { skill: formatFitPercent(role.fit) });
+    interestPart > 0
+      ? t("results.fitBreakdownInterest", { skill: formatFitPercent(role.fit), interest: formatFitPercent(interestPart) })
+      : t("results.fitBreakdownSkill", { skill: formatFitPercent(role.fit) });
   const tone = scoreBand(role.exposure);
   const topSdg = role.sdg[0];
   const salary = salaryForRole(role.occupationId);
