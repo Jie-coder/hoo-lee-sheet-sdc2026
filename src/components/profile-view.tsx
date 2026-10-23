@@ -31,6 +31,9 @@ function sampleLabel(id: PersonaId): string {
   return `${persona.name.split(/\s+/)[0]} · ${persona.jobTitle}`;
 }
 
+/** Length of the loading transition shown after picking a sample CV. */
+export const SAMPLE_LOADING_MS = 2500;
+
 export function ProfileView() {
   const router = useRouter();
   const { t } = useT();
@@ -42,8 +45,28 @@ export function ProfileView() {
   const [uploadOpen, setUploadOpen] = useState(false);
   const [uploadError, setUploadError] = useState<string | null>(null);
   const [stepIndex, setStepIndex] = useState(0);
+  const [loadingSample, setLoadingSample] = useState<PersonaId | null>(null);
+  const sampleTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const reduce = useReducedMotion();
+
+  useEffect(() => () => {
+    if (sampleTimerRef.current) clearTimeout(sampleTimerRef.current);
+  }, []);
+
+  // Sample results are precomputed; this is only a short loading transition
+  // that reuses the upload loader visuals without claiming live analysis.
+  function pickSample(id: PersonaId) {
+    if (loadingSample || uploading) return;
+    setUploadError(null);
+    setSkillsExpanded(false);
+    setLoadingSample(id);
+    sampleTimerRef.current = setTimeout(() => {
+      sampleTimerRef.current = null;
+      setSampleProfile(id);
+      setLoadingSample(null);
+    }, SAMPLE_LOADING_MS);
+  }
 
   useEffect(() => {
     if (hydrated && !consent) router.replace("/");
@@ -141,11 +164,9 @@ export function ProfileView() {
                   <button
                     key={id}
                     type="button"
-                    onClick={() => {
-                      setUploadError(null);
-                      setSkillsExpanded(false);
-                      setSampleProfile(id);
-                    }}
+                    disabled={loadingSample !== null || uploading}
+                    aria-busy={loadingSample === id}
+                    onClick={() => pickSample(id)}
                     className={cn(
                       "flex items-center justify-between rounded-full border-[1.5px] px-6 py-3.5 text-[15px] font-bold transition-colors max-md:gap-3 max-md:text-left max-md:text-[14px]",
                       selected ? "border-ink bg-ink text-paper" : "border-ink/80 text-ink hover:bg-alt",
@@ -161,7 +182,11 @@ export function ProfileView() {
             <Perforation className="my-6" />
 
             {/* Upload: collapsed by default, opens on click (progressive disclosure) */}
-            {!uploadOpen && !uploading ? (
+            {loadingSample ? (
+              <div className="flex flex-col items-center gap-3 rounded-2xl border border-dashed border-ink/30 px-5 py-8 text-center text-[13px] text-grey">
+                <SampleLoading />
+              </div>
+            ) : !uploadOpen && !uploading ? (
               <button
                 type="button"
                 data-testid="profile-upload-open"
@@ -447,6 +472,18 @@ function RoleDurationRow({
         </button>
       </div>
     </li>
+  );
+}
+
+function SampleLoading() {
+  const { t } = useT();
+  return (
+    <ul className="flex flex-col gap-2" data-testid="profile-sample-loading" role="status" aria-live="polite">
+      <li className="flex items-center gap-2 text-ink">
+        <Loader2 className="size-3.5 animate-spin" strokeWidth={2} />
+        {t("profile.loadingSample")}
+      </li>
+    </ul>
   );
 }
 
