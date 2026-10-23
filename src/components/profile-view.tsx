@@ -134,7 +134,7 @@ export function ProfileView() {
 
           <div className="rounded-[40px] bg-card p-7">
             <p className="font-mono text-[12px] tracking-[0.06em] text-grey uppercase">{t("profile.orTrySample")}</p>
-            <div className="mt-4 grid gap-2">
+            <div className="mt-4 grid gap-2 max-md:grid-cols-1">
               {PERSONA_IDS.map((id) => {
                 const selected = profile?.personaId === id;
                 return (
@@ -147,12 +147,12 @@ export function ProfileView() {
                       setSampleProfile(id);
                     }}
                     className={cn(
-                      "flex items-center justify-between rounded-full border-[1.5px] px-6 py-3.5 text-[15px] font-bold transition-colors",
+                      "flex items-center justify-between rounded-full border-[1.5px] px-6 py-3.5 text-[15px] font-bold transition-colors max-md:gap-3 max-md:text-left max-md:text-[14px]",
                       selected ? "border-ink bg-ink text-paper" : "border-ink/80 text-ink hover:bg-alt",
                     )}
                   >
-                    {sampleLabel(id)}
-                    <span aria-hidden>{selected ? <Check className="size-4" strokeWidth={2.4} /> : "→"}</span>
+                    <span className="max-md:min-w-0 max-md:truncate">{sampleLabel(id)}</span>
+                    <span aria-hidden className="max-md:shrink-0">{selected ? <Check className="size-4" strokeWidth={2.4} /> : "→"}</span>
                   </button>
                 );
               })}
