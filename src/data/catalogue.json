@@ -2573,6 +2573,9 @@
   "47a49cd6-097d-457a-9f7b-c290c14930d5": "analyse big data",
   "edebd83d-35f6-4ed5-a940-6c203d178c01": "data science",
   "f37d9f67-2e79-4958-8307-1ce9d6dcc8bd": "apply customer engagement strategy",
+  "50b100ea-74fd-4706-99db-3e4ca55e51b8": "perform data cleansing",
+  "fecf8a0d-62c4-4e71-9b03-0f4fc2ad7bf5": "data models",
+  "cc7370dd-69fa-4c67-a96f-d4d135d38700": "data quality assessment",
   "9710092c-f174-4e84-95bf-2064d39ad7a0": "manage content metadata",
   "2af29864-c941-40a5-ae7b-2b6c4b92c0d7": "speech recognition",
   "9ff9db9d-d14b-426e-83f3-e7449af6c79f": "manage data",
@@ -2620,7 +2623,6 @@
   "906323f4-00c4-4c3b-ab5a-8af77be3456e": "create data sets",
   "1a4cc54f-1e53-442b-a6d2-1682dc8ef8f9": "creatively use digital technologies",
   "25f0ea33-b4a2-4f31-b7b4-7d20e827b180": "data mining",
-  "fecf8a0d-62c4-4e71-9b03-0f4fc2ad7bf5": "data models",
   "c3e36d05-8ae8-447f-bb2b-6f9409f85389": "deliver visual presentation of data",
   "8c4c49d4-9708-433f-8ca7-bf2c5211ee49": "develop creative ideas",
   "bb165899-d95f-4433-95f2-173fefd716d2": "develop statistical software",
@@ -2709,7 +2711,6 @@
   "79e29b8b-47d1-470d-b7b1-32506bfe7d9a": "collect ICT data",
   "48db96bf-3314-45c6-bad8-fdb6e20e5639": "data engineering",
   "e9575f7f-053a-439e-8074-f93df3334e92": "data ethics",
-  "cc7370dd-69fa-4c67-a96f-d4d135d38700": "data quality assessment",
   "54c9c155-9293-4329-8ed2-2e76e8b519d4": "define data quality criteria",
   "327d15c8-29ff-4ad4-a4fe-6536d777a45f": "documentation types",
   "2daec0e6-f0c1-43e8-8178-aedba99130ec": "establish data processes",
@@ -2719,7 +2720,6 @@
   "46ec0033-3c71-415e-bcff-b065675ba2dc": "integrate ICT data",
   "1e77e42a-181f-4b48-8e74-201ce50ffc29": "interpret current data",
   "07889c08-7220-47c8-96f7-6068fbea00dc": "normalise data",
-  "50b100ea-74fd-4706-99db-3e4ca55e51b8": "perform data cleansing",
   "4216e465-7baa-4884-a241-54b197bb9278": "perform data mining",
   "5f0082ab-2131-49b5-94d6-a1821daf57d6": "apply for research funding",
   "833289fa-3646-4010-9d9e-93ba8c9ef2d8": "apply research ethics and scientific integrity principles in research activities",
@@ -9701,6 +9701,67 @@
    "lastChecked": "2026-10-23",
    "mode": "online",
    "aiContent": "none"
+  },
+  {
+   "id": "c794",
+   "title": "Kursus Power BI Basic",
+   "provider": "Digital Analytic Solution Sdn. Bhd. (Belajar Power BI)",
+   "url": "https://belajarpowerbi.com/freepbi",
+   "languages": [
+    "ms"
+   ],
+   "hours": 4,
+   "costType": "free",
+   "certificate": false,
+   "skillIds": [
+    "65e58886-bd1e-4c5b-8ca5-8d9b353c8aa1",
+    "143769cb-b61e-47d8-a61e-eedfbec1016c"
+   ],
+   "lastChecked": "2026-10-23",
+   "mode": "online",
+   "aiContent": "digital"
+  },
+  {
+   "id": "c795",
+   "title": "E-Learning Power BI",
+   "provider": "Digital Analytic Solution Sdn. Bhd. (Belajar Power BI)",
+   "url": "https://belajarpowerbi.com/elearning",
+   "languages": [
+    "ms"
+   ],
+   "hours": 15,
+   "costType": "paid",
+   "certificate": true,
+   "skillIds": [
+    "50b100ea-74fd-4706-99db-3e4ca55e51b8",
+    "fecf8a0d-62c4-4e71-9b03-0f4fc2ad7bf5",
+    "65e58886-bd1e-4c5b-8ca5-8d9b353c8aa1",
+    "143769cb-b61e-47d8-a61e-eedfbec1016c"
+   ],
+   "lastChecked": "2026-10-23",
+   "mode": "online",
+   "aiContent": "digital"
+  },
+  {
+   "id": "c796",
+   "title": "Power BI + AI Mastery",
+   "provider": "Digital Analytic Solution Sdn. Bhd. (Belajar Power BI)",
+   "url": "https://belajarpowerbi.com/webinar",
+   "languages": [
+    "ms"
+   ],
+   "hours": 8,
+   "costType": "hrdcorp_claimable",
+   "certificate": true,
+   "skillIds": [
+    "cc7370dd-69fa-4c67-a96f-d4d135d38700",
+    "50b100ea-74fd-4706-99db-3e4ca55e51b8",
+    "fecf8a0d-62c4-4e71-9b03-0f4fc2ad7bf5",
+    "65e58886-bd1e-4c5b-8ca5-8d9b353c8aa1"
+   ],
+   "lastChecked": "2026-10-23",
+   "mode": "online",
+   "aiContent": "ai"
   }
  ],
  "programmes": [
