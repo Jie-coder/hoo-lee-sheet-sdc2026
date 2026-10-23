@@ -1,4 +1,4 @@
-// Results (spec §5): the current role's AI exposure, three role tickets, and a
+// Results (spec §5): the current role's AI exposure, the role tickets, and a
 // scenario pill that re-ranks them with a 300ms FLIP. Every number comes from
 // POST /api/roles; there is no example data on this page.
 "use client";
@@ -18,6 +18,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import type { SignalDate } from "@/lib/analyze";
 import { explainRole } from "@/lib/explain";
 import { useT, type MessageKey } from "@/lib/i18n";
+import { ticketsHeading } from "@/lib/i18n-messages";
 import { rankRoles } from "@/lib/rank-roles";
 import { useRoles } from "@/lib/use-roles";
 import { PERSONAS } from "@/mocks/personas";
@@ -32,7 +33,7 @@ const BAND_LEVEL: Record<"low" | "medium" | "high", MessageKey> = {
 export function ResultsView() {
   const router = useRouter();
   const reduce = useReducedMotion();
-  const { t } = useT();
+  const { t, locale } = useT();
   const { hydrated, consent, profile, interviewAnswers, setChosenRoleId } = useFlow();
   const [signalDate, setSignalDate] = useState<SignalDate>("today");
   const { state, retry } = useRoles(profile, interviewAnswers.impact_interest, signalDate);
@@ -175,7 +176,7 @@ export function ResultsView() {
           <section className="mt-24">
             <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
               <h2 className="font-serif text-[clamp(40px,8vw,64px)] leading-[0.9] uppercase">
-                {t("results.ticketsHeading")}
+                {ticketsHeading(locale, ranked.length)}
               </h2>
               <ScenarioTabs value={scenario} onChange={setScenario} />
             </div>
