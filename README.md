@@ -2,20 +2,35 @@
 
 > Laluan reads your CV, asks up to five interview questions, and shows how much AI affects your current work, which future roles fit you under three future scenarios, the skills you are missing, and a learning pathway built from real Malaysian courses and government programmes.
 
-Team **Hoo Lee Sheet** · SDC Hackathon 2026 · **Domain 1: Aiversecity Future-Ready Workforce**
+---
 
-**SDG alignment:** SDG 8 Decent Work and Economic Growth (primary), plus SDG 4 Quality Education and SDG 10 Reduced Inequalities.
+## Team Information
+
+| Field | Details |
+|---|---|
+| **Team Name** | Hoo Lee Sheet |
+| **Team Domain** | Domain 1: The AiverseCity Future-Ready Workforce Domain |
+| **SDG Track (1–17)** | SDG 8 Decent Work and Economic Growth (primary); SDG 4 Quality Education and SDG 10 Reduced Inequalities (secondary) |
+| **Team Leader** | Tan Bing Jie |
+| **University** | Xiamen University Malaysia (XMUM) |
+| **Number of Members** | 3 |
 
 ## Links
 
 | Resource | Link |
 |---|---|
-| Live app (main) | https://hoo-lee-sheet-sdc-2026.replit.app (Replit Core, Autoscale deployment, Asia region) |
+| GitHub Repository | https://github.com/Jie-coder/hoo-lee-sheet-sdc2026 |
+| Live Demo | https://hoo-lee-sheet-sdc-2026.replit.app (Replit, Autoscale deployment) |
 | Backup | https://laluan.vercel.app (Vercel) |
-| GitHub repository | https://github.com/Jie-coder/hoo-lee-sheet-sdc2026 (public) |
-| Pitch & demo video | https://youtu.be/ZLO1yevPaB8 (YouTube, 5:06) |
+| RunPod Endpoint | Not used |
+| Slide Deck | https://youtu.be/ZLO1yevPaB8 |
+| Demo Video | https://youtu.be/ZLO1yevPaB8 |
 
-## The problem
+---
+
+## Overview
+
+### Problem
 
 Workers hear that AI will change their jobs but have no clear view of *how much*
 it touches the tasks they actually do, which roles they could move into, and
@@ -23,7 +38,11 @@ what to learn next. Generic career advice also ignores Malaysian demand data and
 the courses and programmes that are actually available locally, in the
 languages people learn in.
 
-## What Laluan does
+### Solution
+
+Laluan uses AI to parse a CV and run a short interview, then matches skills to ESCO, measures AI exposure of the current role, and ranks future roles with deterministic formulas under three WEF-based scenarios. It ends with a learning pathway from real Malaysian courses and government programmes.
+
+### Key Features
 
 1. **CV parsing**: upload a CV (PDF, parsed with `unpdf`); the AI extracts skills and work history into a Zod-validated structure (`src/lib/parse-cv.ts`, `POST /api/parse-cv`).
 2. **Short interview**: at most 5 questions (`MAX_INTERVIEW_TURNS = 5`, `src/types/contracts.ts`).
@@ -43,7 +62,9 @@ languages people learn in.
 
 Other pages: `/exposure`, `/radar`, `/data-sources`, `/privacy`, `/about`, `/status`.
 
-## Tech stack
+Other pages: `/exposure`, `/radar`, `/data-sources`, `/privacy`, `/about`, `/status`.
+
+### Tech Stack
 
 | Layer | Technology |
 |---|---|
@@ -57,19 +78,18 @@ Other pages: `/exposure`, `/radar`, `/data-sources`, `/privacy`, `/about`, `/sta
 | Hosting | Replit (main, Autoscale) and Vercel (backup) |
 | Runtime | Node.js ≥ 24 |
 
-## How AI is used
+### How AI is used
 
 Provider selection is in [`src/lib/ai.ts`](./src/lib/ai.ts) (`getModel()`):
 
-- **Replit (main):** when `AI_INTEGRATIONS_ANTHROPIC_API_KEY` and `AI_INTEGRATIONS_ANTHROPIC_BASE_URL` are set (Replit AI Integrations), the app uses **Claude Haiku** (`claude-haiku-4-5`), regardless of `AI_PROVIDER`.
-- **Vercel (backup) / default:** **Google Gemini** (default `gemini-3.8-flash`, overridable with `AI_MODEL`).
-- **Optional:** a self-hosted model on RunPod (vLLM, OpenAI-compatible) when `AI_PROVIDER=runpod`.
-- **Embeddings:** always Gemini `gemini-embedding-001`, 768 dimensions (skill matching and precompute scripts).
+- **Replit (main):** when `AI_INTEGRATIONS_ANTHROPIC_API_KEY` and `AI_INTEGRATIONS_ANTHROPIC_BASE_URL` are set (Replit AI Integrations), the app uses **Claude Haiku** (`claude-haiku-4-5`).
+- **Vercel (backup) / fallback:** **Google Gemini** (default `gemini-3.8-flash`, overridable with `AI_MODEL`).
+- **Embeddings:** Gemini `gemini-embedding-001`, 768 dimensions (skill matching and precompute scripts).
 - **Mock mode:** `AI_MOCK=true` returns fixtures instead of calling any provider.
 
 The scoring and ranking are not AI: they are deterministic formulas so the same input always gives the same output.
 
-## Data sources
+### Data sources
 
 From [`data/sources.csv`](./data/sources.csv) (also shown in the app at `/data-sources`). Licences are copied from that file.
 
@@ -92,7 +112,66 @@ From [`data/sources.csv`](./data/sources.csv) (also shown in the app at `/data-s
 
 40 curated occupations are in [`data/occupations.csv`](./data/occupations.csv). See [`data/README.md`](./data/README.md) for the CSV spec and licensing rules. Demo CVs in `demo/cv/` are synthetic and clearly marked.
 
-## Run locally
+### Privacy
+
+No login; CV files are not stored. Browsers can only read catalogue tables; user sessions are server-only (Supabase RLS).
+
+---
+
+## Project Structure
+
+```
+.
+├── data/                 # CSV datasets + spec (data/README.md)
+├── demo/cv/              # synthetic demo CVs
+├── docs/                 # progress, tasks, personas, design
+├── public/               # static assets (brand)
+├── runpod/
+│   └── handler.py        # unused stub (RunPod not used in the prototype)
+├── scripts/              # data import, catalogue build, fetchers, precompute
+├── src/
+│   ├── app/              # Next.js pages and API routes
+│   ├── components/       # UI components (tests alongside as *.test.tsx)
+│   ├── data/             # generated catalogue, aliases, synonyms
+│   ├── fixtures/         # mock AI responses
+│   └── lib/              # ai, parse-cv, skill-match, scoring, rank-roles, pathway, exposure
+├── submission/
+│   ├── SDC2026_HooLeeSheet_Preliminary.pdf
+│   ├── SDC2026_HooLeeSheet_TechDeclaration.pdf
+│   └── SDC2026_HooLeeSheet_Replit_POU.pdf
+├── supabase/             # migrations (12 tables, pgvector, RLS)
+├── .env.example
+├── .replit               # Replit run + Autoscale deployment config
+├── DECLARATION.md
+├── LICENSE
+├── package.json
+└── README.md
+```
+
+### Architecture
+
+```
+User ──► Next.js app on Replit (pages + API routes)
+              │
+              ├──► Replit AI Integrations: Anthropic claude-haiku-4-5 (chat)
+              ├──► Google Gemini: gemini-embedding-001 (embeddings)
+              ├──► Supabase (Postgres + pgvector, server-side only)
+              └──► Deterministic scoring / ranking ──► results + pathway
+
+Backup: same app on Vercel, using Gemini (gemini-3.8-flash) for chat.
+```
+
+---
+
+## How to Run
+
+### Option 1: Run on Replit (Recommended)
+
+1. Import this repository via **Create Repl → Import from GitHub**.
+2. Add the variables from `.env.example` in the **Secrets** tab (Replit AI Integrations supplies `AI_INTEGRATIONS_ANTHROPIC_API_KEY` and `AI_INTEGRATIONS_ANTHROPIC_BASE_URL`).
+3. Click **Run**. `.replit` runs `npm install && npm run dev` on port 3000. Publishing uses the Autoscale deployment (`npm ci && npm run build`, then `npm run start`).
+
+### Option 2: Run Locally
 
 Prerequisites: Node.js 24 (see `.nvmrc`) and git.
 
@@ -108,13 +187,13 @@ npm run dev                  # http://localhost:3000
 
 | Name | Purpose |
 |---|---|
-| `AI_PROVIDER` | `google` (default) or `runpod` |
-| `AI_MODEL` | Optional model override (required for RunPod) |
+| `AI_PROVIDER` | `google` (default); the `runpod` value belongs to the unused RunPod stub |
+| `AI_MODEL` | Optional model override |
 | `GOOGLE_GENERATIVE_AI_API_KEY` | Gemini key |
 | `AI_MOCK` | `true` returns fixtures, no AI calls |
 | `SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_URL` | Supabase project URL |
 | `SUPABASE_SERVICE_ROLE_KEY` | Server-side Supabase key |
-| `RUNPOD_BASE_URL`, `RUNPOD_API_KEY`, `RUNPOD_ENDPOINT_ID` | Optional RunPod |
+| `RUNPOD_BASE_URL`, `RUNPOD_API_KEY`, `RUNPOD_ENDPOINT_ID` | Unused stub (RunPod not used); leave empty |
 | `GEMINI_API_KEY` | Used by `scripts/import-data.ts --apply` |
 | `AI_INTEGRATIONS_ANTHROPIC_API_KEY`, `AI_INTEGRATIONS_ANTHROPIC_BASE_URL` | Replit AI Integrations (Claude Haiku) |
 
@@ -130,48 +209,70 @@ Never commit `.env.local` or any key. On Replit, keys go in **Secrets**.
 | `npm run build-catalogue` | Build `src/data/catalogue.json` from the CSVs |
 | `npm run precompute-demo-cvs`, `npm run precompute-role-embeddings` | Precompute demo results and role embeddings |
 
-### Deploy
+### Run Tests
 
-- **Replit:** the repo's `.replit` runs `next dev` on port 3000 and deploys as Autoscale (`npm ci && npm run build`, then `npm run start`).
-- **Vercel:** standard Next.js deployment, Gemini provider.
-
-## Project structure
-
-```
-data/          CSV datasets + spec (data/README.md)
-demo/cv/       synthetic demo CVs
-docs/          progress, tasks, personas, design
-runpod/        optional RunPod handler
-scripts/       data import, catalogue build, fetchers, precompute
-src/app/       pages and API routes
-src/components UI components
-src/lib/       ai, parse-cv, skill-match, scoring, rank-roles, pathway, exposure
-src/data/      generated catalogue, aliases, synonyms
-supabase/      migrations (12 tables, pgvector, RLS)
-submission/    official submission documents
+```bash
+npm test
 ```
 
-## Privacy
+---
 
-No login; CV files are not stored. Browsers can only read catalogue tables; user sessions are server-only (Supabase RLS).
+## How We Use Replit *(Required)*
 
-## AI tools used in development
+- **Hosting:** the main deployment is on Replit at the Live Demo link, as an **Autoscale** deployment configured in `.replit`.
+- **AI:** Replit AI Integrations provide Anthropic **`claude-haiku-4-5`** for the chat model in production.
+- **Secrets:** keys are stored in Replit Secrets, never in the code.
+
+📄 Proof of use: [`submission/SDC2026_HooLeeSheet_Replit_POU.pdf`](submission/SDC2026_HooLeeSheet_Replit_POU.pdf)
+
+## How We Use RunPod *(Required)*
+
+RunPod was **not used** in this prototype. Inference uses Replit AI Integrations (Anthropic `claude-haiku-4-5`) on Replit, and Google Gemini (`gemini-3.8-flash` as fallback and on the Vercel backup, `gemini-embedding-001` for embeddings). [`runpod/handler.py`](runpod/handler.py) is an unused stub.
+
+---
+
+## Challenges & Learnings
+
+- **Keeping results explainable:** AI is limited to CV parsing, the interview and title mapping; scoring and ranking are deterministic formulas so the same input always gives the same output.
+- **Not inventing data:** unmatched skills stay as raw CV text flagged `matched: false`, and every figure links to a source with its licence.
+- **Cost-aware matching:** skill matching tries exact ESCO labels and a synonym list before a single embedding call.
+
+### AI tools used in development
 
 - **Development:** Grok (AI agents), Claude Code, OpenCode and Cursor helped write code and docs. The team reviewed all changes through pull requests.
 - **In the product:** Claude Haiku 4.5 (`claude-haiku-4-5`, via Replit AI Integrations on Replit), Gemini (`gemini-3.8-flash`, on Vercel and as default) and `gemini-embedding-001` (embeddings).
 
-## Pre-existing code
+### Pre-existing code
 
 This repo starts from our declared starter (`Jie-coder/sdc-starter`, tag `starter-v0`, commit `57171fe`, rule 8.2). See [`DECLARATION.md`](./DECLARATION.md).
 
-## Team: Hoo Lee Sheet
+## Future Improvements
 
-| Member | GitHub |
-|---|---|
-| Bing Jie Tan | [@Jie-coder](https://github.com/Jie-coder) |
-| Henry Wong Yi Siang | [@henrywwawesome-wq](https://github.com/henrywwawesome-wq) |
-| Tiffany Yek Sii Qi | [@Tiffany06yek](https://github.com/Tiffany06yek) |
+To be decided after the preliminary round.
+
+## Team
+
+| Name | Role | GitHub |
+|---|---|---|
+| Tan Bing Jie | Team Leader & Developer | [@Jie-coder](https://github.com/Jie-coder) |
+| Henry Wong Yi Siang | Design Research & Data (Spreadsheet) | [@henrywwawesome-wq](https://github.com/henrywwawesome-wq) |
+| Tiffany Yek Sii Chee | Video Production & Course Research | [@Tiffany06yek](https://github.com/Tiffany06yek) |
+
+---
+
+## Submission Checklist
+
+- [x] Team name, domain (Domain 1 / Domain 2) and SDG track filled in
+- [x] Slide deck link added
+- [x] Demo video link added
+- [x] Replit used, with proof of use in `submission/`
+- [ ] RunPod used, with proof of use in `submission/`
+- [x] Preliminary submission completed (`SDC2026_HooLeeSheet_Preliminary.pdf`)
+- [x] Technology declaration completed (`SDC2026_HooLeeSheet_TechDeclaration.pdf`)
+- [x] Submission files renamed with your team name (replace `TeamName`)
+- [ ] "How to Run" steps verified
+- [x] No API keys or secrets committed to the repository
 
 ## License
 
-Licensed under the **Apache License, Version 2.0**. See [`LICENSE`](LICENSE) (`"license": "Apache-2.0"` in `package.json`). You may use, modify and distribute this code under its terms, which include keeping the copyright and licence notices. Third-party data keeps its own licence (see Data sources).
+This project is licensed under the [Apache License 2.0](LICENSE). Third-party data keeps its own licence (see Data sources).
