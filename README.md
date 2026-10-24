@@ -248,6 +248,7 @@ This repo starts from our declared starter (`Jie-coder/sdc-starter`, tag `starte
 
 ## Future Improvements
 
+To be decided after the preliminary round.
 
 ## Team
 
