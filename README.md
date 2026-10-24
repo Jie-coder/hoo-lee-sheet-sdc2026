@@ -4,12 +4,14 @@
 
 Team **Hoo Lee Sheet** · SDC Hackathon 2026 · **Domain 1: Aiversecity Future-Ready Workforce**
 
+**SDG alignment:** SDG 8 Decent Work and Economic Growth (primary), SDG 4 Quality Education.
+
 ## Links
 
 | Resource | Link |
 |---|---|
-| Live app (main, Replit) | https://hoo-lee-sheet-sdc-2026.replit.app |
-| Backup (Vercel) | https://laluan.vercel.app |
+| Live app (main) | https://hoo-lee-sheet-sdc-2026.replit.app (Replit Core, Autoscale deployment, Asia region) |
+| Backup | https://laluan.vercel.app (Vercel) |
 | GitHub repository | https://github.com/Jie-coder/hoo-lee-sheet-sdc2026 |
 
 ## The problem
@@ -29,7 +31,11 @@ languages people learn in.
 4. **AI exposure**: exposure E = sum over tasks of (share of the week × how much AI can do it). High exposure means AI touches a lot of the work, not that the job disappears. Job titles outside the 40 curated roles are mapped via exact title, an alias table (`src/data/role-aliases.json`), then the chat model choosing one of the 40 ids or "none" (`src/lib/exposure-estimate.ts`); the exposure figure is always the matched catalogue role's real value.
 5. **3-scenario ranking** (`src/lib/scoring.ts`, `src/lib/rank-roles.ts`; plain deterministic maths, no AI):
    Rank R = 0.5·Fit + 0.3·Demand + 0.2·(1 − θ·E), plus an SDG bonus when a role's SDG link matches your chosen impact interest. R is computed under each of three scenarios (multipliers in `data/scenarios.csv`, cited from WEF reports). A role in the **top 3 of all three scenarios is marked robust**. Skill momentum from arXiv (`ln((recent+1)/(prev+1))`) can raise a skill's importance by up to 30%. All weights live in `SCORING_PARAMS`.
-6. **Tickets**: each recommended role is shown as a "ticket" on the results page, with why it ranked, the skill gaps (top 5), SDG badges and source chips; switching scenario re-ranks the tickets.
+6. **Tickets**: how the results are chosen:
+   - Each of the 3 futures (scenarios) takes its **top 3 roles** by R.
+   - A role is **robust** only if it is in the top 3 of **all three** futures.
+   - The tickets are the **distinct roles across those three top-3 lists**, so the number of tickets varies by CV (from 3, when all three futures agree, up to 9).
+   - Each ticket shows why the role ranked, the top 5 skill gaps, SDG badges and source chips; switching scenario re-ranks them.
 7. **Pathway**: a learning pathway that closes the skill gaps using courses and government programmes (`src/lib/pathway.ts`, `/pathway`).
 8. **Course recommendations in EN / BM / ZH**: courses are tagged with languages `en`, `ms`, `zh`; the user can select several.
 9. **SDG preference**: the user picks an impact interest; matching roles get the SDG bonus (`occupation_sdg.csv`).
@@ -64,18 +70,26 @@ The scoring and ranking are not AI: they are deterministic formulas so the same 
 
 ## Data sources
 
-Listed in [`data/sources.csv`](./data/sources.csv) and shown in the app at `/data-sources`:
+From [`data/sources.csv`](./data/sources.csv) (also shown in the app at `/data-sources`). Licences are copied from that file.
 
-- **ESCO** (European Commission): occupations and skills; skill URIs are the canonical skill ids.
-- **Custom `laluan:` skills** ([`data/custom_skills.csv`](./data/custom_skills.csv)): skills not in ESCO (e.g. `laluan:manage-ai-chatbots`), each marked "Laluan custom skill, not an ESCO concept".
-- **Anthropic Economic Index** and **ILO GenAI Exposure 2025**: task exposure.
-- **WEF Future of Jobs Report 2025** and **WEF Four Futures for Jobs 2030**: scenario figures, cited one figure at a time with page.
-- **OpenDOSM** (labour force, and Salaries & Wages by Occupation): Malaysian demand and salary.
-- **arXiv API**: skill momentum signals.
-- Also listed: Stanford AI Index, OECD.AI, GitHub Innovation Graph, Lightcast Open Skills.
-- Courses (`data/courses.csv`) and government programmes (`data/programmes.csv`), collected by the team; 40 curated occupations (`data/occupations.csv`).
+| Source | Publisher | Used for | Licence |
+|---|---|---|---|
+| ESCO | European Commission | Occupations and skills; skill URIs are the canonical skill ids | Reuse with attribution (Commission Decision 2011/833/EU) |
+| Custom `laluan:` skills ([`data/custom_skills.csv`](./data/custom_skills.csv)) | Team Hoo Lee Sheet | Skills not in ESCO (e.g. `laluan:manage-ai-chatbots`), each marked "not an ESCO concept" | Apache 2.0 (part of this repo) |
+| Anthropic Economic Index | Anthropic | Task AI exposure | CC-BY |
+| ILO GenAI Exposure 2025 | ILO | Occupation AI exposure | CC BY 4.0 |
+| WEF Future of Jobs Report 2025 | World Economic Forum | Scenario figures, cited one figure at a time with page | © 2025 WEF, all rights reserved (cited, not copied) |
+| WEF Four Futures for Jobs 2030 | World Economic Forum | Scenario framing | © WEF, all rights reserved (cited, not copied) |
+| OpenDOSM (Labour Force Survey) | DOSM | Malaysian demand | CC BY 4.0 |
+| OpenDOSM Salaries & Wages by Occupation | DOSM | Salary by role | CC BY 4.0 |
+| arXiv API | Cornell University | Skill momentum signals | CC0 (metadata) |
+| GitHub Innovation Graph | GitHub | Trend signal | CC0 |
+| OECD.AI | OECD | Trend signal | CC BY 4.0 |
+| Stanford AI Index Report | Stanford HAI | Context | CC BY-ND |
+| Lightcast Open Skills | Lightcast | Skills reference | Proprietary, free non-profit tier |
+| Courses ([`data/courses.csv`](./data/courses.csv)) and government programmes ([`data/programmes.csv`](./data/programmes.csv)) | Various providers, collected by the team | Pathway and course recommendations | See source terms |
 
-See [`data/README.md`](./data/README.md) for the CSV spec and licensing rules. Demo CVs in `demo/cv/` are synthetic and clearly marked.
+40 curated occupations are in [`data/occupations.csv`](./data/occupations.csv). See [`data/README.md`](./data/README.md) for the CSV spec and licensing rules. Demo CVs in `demo/cv/` are synthetic and clearly marked.
 
 ## Run locally
 
@@ -140,18 +154,23 @@ submission/    official submission documents
 
 No login; CV files are not stored. Browsers can only read catalogue tables; user sessions are server-only (Supabase RLS).
 
+## AI tools used in development
+
+- **Development:** Grok (AI agents), Claude Code, OpenCode and Cursor helped write code and docs. The team reviewed all changes through pull requests.
+- **In the product:** Claude Haiku 4.5 (`claude-haiku-4-5`, via Replit AI Integrations on Replit), Gemini (`gemini-3.8-flash`, on Vercel and as default) and `gemini-embedding-001` (embeddings).
+
 ## Pre-existing code
 
 This repo starts from our declared starter (`Jie-coder/sdc-starter`, tag `starter-v0`, commit `57171fe`, rule 8.2). See [`DECLARATION.md`](./DECLARATION.md).
 
 ## Team: Hoo Lee Sheet
 
-| Name | GitHub |
+| Member | GitHub |
 |---|---|
 | Bing Jie Tan | [@Jie-coder](https://github.com/Jie-coder) |
-| Henry | [@henrywwawesome-wq](https://github.com/henrywwawesome-wq) |
-| Tiffany | [@Tiffany06yek](https://github.com/Tiffany06yek) |
+| Team member | [@henrywwawesome-wq](https://github.com/henrywwawesome-wq) |
+| Team member | [@Tiffany06yek](https://github.com/Tiffany06yek) |
 
 ## License
 
-[Apache License 2.0](LICENSE).
+Licensed under the **Apache License, Version 2.0**. See [`LICENSE`](LICENSE) (`"license": "Apache-2.0"` in `package.json`). You may use, modify and distribute this code under its terms, which include keeping the copyright and licence notices. Third-party data keeps its own licence (see Data sources).
