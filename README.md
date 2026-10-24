@@ -12,7 +12,8 @@ Team **Hoo Lee Sheet** · SDC Hackathon 2026 · **Domain 1: Aiversecity Future-R
 |---|---|
 | Live app (main) | https://hoo-lee-sheet-sdc-2026.replit.app (Replit Core, Autoscale deployment, Asia region) |
 | Backup | https://laluan.vercel.app (Vercel) |
-| GitHub repository | https://github.com/Jie-coder/hoo-lee-sheet-sdc2026 |
+| GitHub repository | https://github.com/Jie-coder/hoo-lee-sheet-sdc2026 (public) |
+| Pitch & demo video | https://youtu.be/ZLO1yevPaB8 (YouTube, 5:06) |
 
 ## The problem
 
