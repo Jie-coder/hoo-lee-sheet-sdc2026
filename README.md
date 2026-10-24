@@ -74,7 +74,7 @@ From [`data/sources.csv`](./data/sources.csv) (also shown in the app at `/data-s
 
 | Source | Publisher | Used for | Licence |
 |---|---|---|---|
-| ESCO | European Commission | Occupations and skills; skill URIs are the canonical skill ids | Reuse with attribution (Commission Decision 2011/833/EU) |
+| ESCO | European Commission | Occupations and skills; skill URIs are the canonical skill ids | Free reuse with acknowledgement |
 | Custom `laluan:` skills ([`data/custom_skills.csv`](./data/custom_skills.csv)) | Team Hoo Lee Sheet | Skills not in ESCO (e.g. `laluan:manage-ai-chatbots`), each marked "not an ESCO concept" | Apache 2.0 (part of this repo) |
 | Anthropic Economic Index | Anthropic | Task AI exposure | CC-BY |
 | ILO GenAI Exposure 2025 | ILO | Occupation AI exposure | CC BY 4.0 |
@@ -168,8 +168,8 @@ This repo starts from our declared starter (`Jie-coder/sdc-starter`, tag `starte
 | Member | GitHub |
 |---|---|
 | Bing Jie Tan | [@Jie-coder](https://github.com/Jie-coder) |
-| Team member | [@henrywwawesome-wq](https://github.com/henrywwawesome-wq) |
-| Team member | [@Tiffany06yek](https://github.com/Tiffany06yek) |
+| Henry Wong Yi Siang | [@henrywwawesome-wq](https://github.com/henrywwawesome-wq) |
+| Tiffany Yek Sii Qi | [@Tiffany06yek](https://github.com/Tiffany06yek) |
 
 ## License
 
