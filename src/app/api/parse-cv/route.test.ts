@@ -1,3 +1,6 @@
+// @vitest-environment node
+// Route handlers run on Node; jsdom's FormData/File are not recognised by
+// Node's (undici) Request, which would serialise the body as text/plain.
 import { afterEach, describe, expect, it } from "vitest";
 import { MAX_CV_BYTES } from "@/lib/cv-upload-limits";
 import { POST } from "./route";
