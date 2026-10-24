@@ -248,7 +248,9 @@ This repo starts from our declared starter (`Jie-coder/sdc-starter`, tag `starte
 
 ## Future Improvements
 
-To be decided after the preliminary round.
+1. **Live salary and job data**: replace the manually checked JobStreet salaries with scheduled automatic updates, and add newer DOSM releases.
+2. **More roles and Bahasa Malaysia**: expand beyond the current 40 roles and add a Bahasa Malaysia interface to reach more users.
+3. **Real-user validation**: test with real users to validate pathway gap coverage and SDG mapping accuracy, replacing the three synthetic personas.
 
 ## Team
 
