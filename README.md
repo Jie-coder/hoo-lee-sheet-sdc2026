@@ -4,7 +4,7 @@
 
 Team **Hoo Lee Sheet** · SDC Hackathon 2026 · **Domain 1: Aiversecity Future-Ready Workforce**
 
-**SDG alignment:** SDG 8 Decent Work and Economic Growth (primary), SDG 4 Quality Education.
+**SDG alignment:** SDG 8 Decent Work and Economic Growth (primary), plus SDG 4 Quality Education and SDG 10 Reduced Inequalities.
 
 ## Links
 
