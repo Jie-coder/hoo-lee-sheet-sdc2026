@@ -136,9 +136,9 @@ No login; CV files are not stored. Browsers can only read catalogue tables; user
 │   ├── fixtures/         # mock AI responses
 │   └── lib/              # ai, parse-cv, skill-match, scoring, rank-roles, pathway, exposure
 ├── submission/
-│   ├── SDC2026_HooLeeSheet_Preliminary.pdf
-│   ├── SDC2026_HooLeeSheet_TechDeclaration.pdf
-│   └── SDC2026_HooLeeSheet_Replit_POU.pdf
+│   ├── SDC2026_Hoo_Lee_Sheet_Preliminary.pdf
+│   ├── SDC2026_Hoo_Lee_Sheet_TechDeclaration.pdf
+│   └── SDC2026_Hoo_Lee_Sheet_Replit_POU.pdf
 ├── supabase/             # migrations (12 tables, pgvector, RLS)
 ├── .env.example
 ├── .replit               # Replit run + Autoscale deployment config
@@ -223,7 +223,7 @@ npm test
 - **AI:** Replit AI Integrations provide Anthropic **`claude-haiku-4-5`** for the chat model in production.
 - **Secrets:** keys are stored in Replit Secrets, never in the code.
 
-📄 Proof of use: [`submission/SDC2026_HooLeeSheet_Replit_POU.pdf`](submission/SDC2026_HooLeeSheet_Replit_POU.pdf)
+📄 Proof of use: [`submission/SDC2026_Hoo_Lee_Sheet_Replit_POU.pdf`](submission/SDC2026_Hoo_Lee_Sheet_Replit_POU.pdf)
 
 ## How We Use RunPod *(Required)*
 
@@ -269,8 +269,8 @@ This repo starts from our declared starter (`Jie-coder/sdc-starter`, tag `starte
 - [x] Demo video link added
 - [x] Replit used, with proof of use in `submission/`
 - [ ] RunPod used, with proof of use in `submission/`
-- [x] Preliminary submission completed (`SDC2026_HooLeeSheet_Preliminary.pdf`)
-- [x] Technology declaration completed (`SDC2026_HooLeeSheet_TechDeclaration.pdf`)
+- [x] Preliminary submission completed (`SDC2026_Hoo_Lee_Sheet_Preliminary.pdf`)
+- [x] Technology declaration completed (`SDC2026_Hoo_Lee_Sheet_TechDeclaration.pdf`)
 - [x] Submission files renamed with your team name (replace `TeamName`)
 - [ ] "How to Run" steps verified
 - [x] No API keys or secrets committed to the repository
