@@ -106,7 +106,9 @@ export const EN = {
   "results.changeOut": "{title} out",
   "results.changeMove": "{title} #{before} → #{after}",
   "results.eyebrow": "{name} · {role}",
-  "results.heroHeading": "Three routes out of here",
+  "results.heroHeading": "{count} routes out of here",
+  "results.heroHeadingOne": "One route out of here",
+  "results.heroHeadingPending": "Routes out of here",
   "results.heroLede": "{matched} of {total} skills matched. Ranked by score (skill match, demand, AI exposure and your SDG choice) under the scenario you pick. Open a ticket to see why.",
   "results.currentRoleLabel": "01 · Your current role",
   "results.exposureSentence": "About {percent} of {role}’s tasks could be assisted by generative AI.",
@@ -732,7 +734,9 @@ export const MS: Record<MessageKey, string> = {
   "results.changeOut": "{title} keluar",
   "results.changeMove": "{title} #{before} → #{after}",
   "results.eyebrow": "{name} · {role}",
-  "results.heroHeading": "Tiga laluan keluar dari sini",
+  "results.heroHeading": "{count} laluan keluar dari sini",
+  "results.heroHeadingOne": "Satu laluan keluar dari sini",
+  "results.heroHeadingPending": "Laluan keluar dari sini",
   "results.heroLede": "{matched} daripada {total} kemahiran dipadankan. Disusun mengikut skor (padanan kemahiran, permintaan, pendedahan AI dan pilihan SDG anda) di bawah senario yang anda pilih. Buka tiket untuk lihat sebabnya.",
   "results.currentRoleLabel": "01 · Peranan semasa anda",
   "results.exposureSentence": "Kira-kira {percent} tugas {role} boleh dibantu oleh AI generatif.",
@@ -1273,6 +1277,14 @@ export function countWord(locale: SiteLocale, n: number): string {
 export function ticketsHeading(locale: SiteLocale, count: number): string {
   if (count === 1) return translate(locale, "results.ticketsHeadingOne");
   const text = translate(locale, "results.ticketsHeading", { count: countWord(locale, count) });
+  return text.charAt(0).toUpperCase() + text.slice(1);
+}
+
+/** Results hero heading for the number of tickets rendered; 0 (still loading) gets a count-free heading. */
+export function heroHeading(locale: SiteLocale, count: number): string {
+  if (count <= 0) return translate(locale, "results.heroHeadingPending");
+  if (count === 1) return translate(locale, "results.heroHeadingOne");
+  const text = translate(locale, "results.heroHeading", { count: countWord(locale, count) });
   return text.charAt(0).toUpperCase() + text.slice(1);
 }
 

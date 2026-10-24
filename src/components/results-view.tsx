@@ -18,7 +18,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import type { SignalDate } from "@/lib/analyze";
 import { explainRole } from "@/lib/explain";
 import { useT, type MessageKey } from "@/lib/i18n";
-import { ticketsHeading } from "@/lib/i18n-messages";
+import { heroHeading, ticketsHeading } from "@/lib/i18n-messages";
 import { rankRoles } from "@/lib/rank-roles";
 import { useRoles } from "@/lib/use-roles";
 import { PERSONAS } from "@/mocks/personas";
@@ -85,7 +85,7 @@ export function ResultsView() {
                 : profile.name
               : currentRole
           }
-          title={t("results.heroHeading")}
+          title={heroHeading(locale, ranked.length)}
           lede={
             data
               ? t("results.heroLede", { matched: String(matchedCount), total: String(profile.skills.length) })
