@@ -272,7 +272,7 @@ This repo starts from our declared starter (`Jie-coder/sdc-starter`, tag `starte
 - [x] Preliminary submission completed (`SDC2026_Hoo_Lee_Sheet_Preliminary.pdf`)
 - [x] Technology declaration completed (`SDC2026_Hoo_Lee_Sheet_TechDeclaration.pdf`)
 - [x] Submission files renamed with your team name (replace `TeamName`)
-- [ ] "How to Run" steps verified
+- [x] "How to Run" steps verified
 - [x] No API keys or secrets committed to the repository
 
 ## License
