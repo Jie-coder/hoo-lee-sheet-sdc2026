@@ -23,7 +23,7 @@
 | Live Demo | https://hoo-lee-sheet-sdc-2026.replit.app (Replit, Autoscale deployment) |
 | Backup | https://laluan.vercel.app (Vercel) |
 | RunPod Endpoint | Not used |
-| Slide Deck | TBD |
+| Slide Deck | https://youtu.be/ZLO1yevPaB8 |
 | Demo Video | https://youtu.be/ZLO1yevPaB8 |
 
 ---
@@ -248,24 +248,23 @@ This repo starts from our declared starter (`Jie-coder/sdc-starter`, tag `starte
 
 ## Future Improvements
 
-- [ ] Add the pitch slide deck link.
 
 ## Team
 
 | Name | Role | GitHub |
 |---|---|---|
-| Tan Bing Jie | Team Leader | [@Jie-coder](https://github.com/Jie-coder) |
-| Henry Wong Yi Siang | TBD | [@henrywwawesome-wq](https://github.com/henrywwawesome-wq) |
-| Tiffany Yek Sii Chee | TBD | [@Tiffany06yek](https://github.com/Tiffany06yek) |
+| Tan Bing Jie | Team Leader & Developer | [@Jie-coder](https://github.com/Jie-coder) |
+| Henry Wong Yi Siang | Design Research & Data (Spreadsheet) | [@henrywwawesome-wq](https://github.com/henrywwawesome-wq) |
+| Tiffany Yek Sii Chee | Video Production & Course Research | [@Tiffany06yek](https://github.com/Tiffany06yek) |
 
 ---
 
 ## Submission Checklist
 
 - [x] Team name, domain (Domain 1 / Domain 2) and SDG track filled in
-- [ ] Slide deck link added
+- [x] Slide deck link added
 - [x] Demo video link added
-- [ ] Replit used, with proof of use in `submission/`
+- [x] Replit used, with proof of use in `submission/`
 - [ ] RunPod used, with proof of use in `submission/`
 - [x] Preliminary submission completed (`SDC2026_HooLeeSheet_Preliminary.pdf`)
 - [x] Technology declaration completed (`SDC2026_HooLeeSheet_TechDeclaration.pdf`)
