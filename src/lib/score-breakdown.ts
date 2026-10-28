@@ -42,6 +42,8 @@ export type ScoreBreakdown = {
   roleMomentum: number;
   rankScore: number;
   total: number;
+  /** Total recomputed with momentum 0 for every skill (same demand, exposure and SDG). */
+  noTrendTotal: number;
   components: {
     fit: { value: number; weight: number; points: number };
     demand: { value: number; weight: number; points: number };
@@ -89,6 +91,20 @@ export function scoreBreakdown(role: CandidateRole, opts: BreakdownOptions): Sco
 
   const total = scenarioRank({ fit: trendFit, demand, exposure, theta, sdgMatch: sdgMatch === 1 });
 
+  const noTrendFit = roleFitScore(
+    role.essentialSkills.map((skill) => ({
+      importance: skillImportance(skill.baseImportance, 0),
+      level: skill.level,
+    })),
+  );
+  const noTrendTotal = scenarioRank({
+    fit: noTrendFit,
+    demand,
+    exposure,
+    theta,
+    sdgMatch: sdgMatch === 1,
+  });
+
   const fitPoints = SCORING_PARAMS.alpha * fit;
   const demandPoints = SCORING_PARAMS.beta * demand;
   const exposureValue = 1 - theta * exposure;
@@ -110,6 +126,7 @@ export function scoreBreakdown(role: CandidateRole, opts: BreakdownOptions): Sco
     roleMomentum: roleMom,
     rankScore: trendFit,
     total,
+    noTrendTotal,
     components: {
       fit: { value: fit, weight: SCORING_PARAMS.alpha, points: fitPoints },
       demand: { value: demand, weight: SCORING_PARAMS.beta, points: demandPoints },

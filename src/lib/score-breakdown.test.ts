@@ -5,7 +5,6 @@ import {
   exposureScore,
   rankScore,
   roleFitScore,
-  roleMomentum,
   scenarioDemand,
   scenarioRank,
   sdgInterestMatches,
@@ -87,6 +86,22 @@ describe("scoreBreakdown", () => {
     expect(componentSum).toBeCloseTo(result.total, 12);
     expect(result.fit).toBeLessThan(1);
     expect(skillSum).toBeCloseTo(result.components.fit.points, 12);
+  });
+
+  it("computes noTrendTotal with zero momentum so its delta is 0 and rankScore equals fit", () => {
+    const zeroed = scoreBreakdown(role, { ...opts, momentumMultiplier: 0 });
+    expect(zeroed.rankScore).toBeCloseTo(zeroed.fit, 12);
+    expect(zeroed.noTrendTotal).toBeCloseTo(zeroed.total, 12);
+    expect((zeroed.total - zeroed.noTrendTotal) * 100).toBeCloseTo(0, 12);
+
+    const zeroMomentumRole: CandidateRole = {
+      ...role,
+      roleMomentum: 0,
+      essentialSkills: role.essentialSkills.map((skill) => ({ ...skill, momentum: 0 })),
+    };
+    const flat = scoreBreakdown(zeroMomentumRole, opts);
+    expect(flat.rankScore).toBeCloseTo(flat.fit, 12);
+    expect(flat.noTrendTotal).toBeCloseTo(flat.total, 12);
   });
 
   it("applies momentumMultiplier before skillImportance", () => {

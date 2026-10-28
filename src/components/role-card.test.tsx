@@ -3,6 +3,7 @@ import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
 import { analyzeProfile } from "@/lib/analyze";
 import { CATALOGUE } from "@/lib/catalogue";
+import { formatFitPercent } from "@/lib/display";
 import { formatMonthlyRange, formatMonthlyRm, hasRealRange, salaryForRole } from "@/lib/salary";
 import { RoleCard } from "./role-card";
 
@@ -116,12 +117,15 @@ describe("RoleCard", () => {
         isPrimary
         sdgMatch
         displayFit={0.25}
+        breakdown={{ ...result.breakdown[role.occupationId], calibratedFit: 0.25 }}
       />,
     );
     expect(screen.getByText("25%")).toBeInTheDocument();
     expect(screen.getByText("Transition route")).toBeInTheDocument();
     expect(screen.getByText("Matches your SDG choice")).toBeInTheDocument();
     await user.click(screen.getByRole("button", { name: "Why" }));
-    expect(within(screen.getByRole("dialog")).getByText(/^Skill match 10% \+ interest bonus 15%/)).toBeInTheDocument();
+    const drawer = screen.getByRole("dialog");
+    expect(within(drawer).getByText(`Fit ${formatFitPercent(0.25)} (raw 10%)`)).toBeInTheDocument();
+    expect(within(drawer).getByText(/^Skill match #\d+ of \d+$/)).toBeInTheDocument();
   });
 });

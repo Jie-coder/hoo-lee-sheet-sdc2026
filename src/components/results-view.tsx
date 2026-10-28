@@ -50,8 +50,7 @@ export function ResultsView() {
   if (!profile) return null;
 
   const data = state.status === "ready" ? state.data : null;
-  const shownFit = (role: RoleResult) => data?.breakdown[role.occupationId]?.displayFit ?? role.fit;
-  const ranked = data ? rankRoles(data.roles, scenario, shownFit) : [];
+  const ranked = data ? rankRoles(data.roles, scenario) : [];
   const persona = profile.personaId === "upload" ? null : PERSONAS[profile.personaId];
   const currentRole = profile.roles[0]?.title || persona?.jobTitle;
   const matchedCount = data?.skillMatches.filter((match) => match.escoLabels.length > 0).length ?? 0;
@@ -59,7 +58,7 @@ export function ResultsView() {
   const sameAsCo =
     data != null &&
     scenario !== "co" &&
-    rankRoles(data.roles, "co", shownFit)
+    rankRoles(data.roles, "co")
       .map((role) => role.occupationId)
       .join() === ranked.map((role) => role.occupationId).join();
 

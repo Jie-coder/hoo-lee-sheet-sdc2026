@@ -18,10 +18,19 @@
 //   trendFit = rankScore(F_r, roleMomentum_r, adoption)
 //   rankScore(fit, momentum, adoption) = fit · (1 + trendBeta · tanh(adoption · momentum))
 // roleMomentum is the mean momentum over a role's essential skills that have
-// a signal, and 0 when none do. Ranking therefore uses
+// a signal, and 0 when none do. The displayed byScenario totals therefore use
 //   α · rankScore + β D + γ (1 − θ E) + SDG.
 // trendBeta is named for the trend boost because beta is already the demand
 // weight. Raw fit still drives the minFit filter and is returned as fit.
+//
+// Role-list inclusion (which roles make a scenario's top 3) is deliberately
+// adoption-independent: it ranks candidates by the same formula with raw fit
+// in place of trendFit,
+//   α · F_r + β D + γ (1 − θ E) + SDG,
+// and applies minFit/minFitFallback to that selection score. The trend boost
+// can reorder the displayed cards but never changes which roles are shown,
+// so moving the adoption slider cannot add or drop a role. The displayed
+// byScenario totals still include rankScore. See scoreRoles below.
 //
 // h_s is 1 (clear), 0.5 (partial, self-reported, or a related ESCO skill the
 // user holds — see relatedSkillCredit below), or 0 (missing).
@@ -74,6 +83,9 @@
 //   occupationId ascending. Ties do not expand the cut. robust means the
 //   role is inside that cut in every scenario. The returned list is the
 //   union of the three cuts, ordered by the co-pilot R then occupationId.
+// - Card order uses the same strict comparator (rankRoles in rank-roles.ts):
+//   scenario total descending, then occupationId ascending. There is no
+//   near-tie epsilon; equal totals are the only tie.
 // - Display bands stay in contracts.scoreBand. Values here are full precision;
 //   two-decimal display is a UI rule and is not applied, so rounding cannot
 //   change a rank.
@@ -461,7 +473,10 @@ type PreparedRole = {
   fit: number;
   exposure: number;
   augmentation: number;
+  /** Displayed totals: include the adoption-driven trend boost (rankScore). */
   byScenario: ScenarioScores;
+  /** Selection totals: raw fit, no trend boost, so role inclusion cannot depend on adoption. */
+  selectionByScenario: ScenarioScores;
   gap: GapSkill[];
   sdgMatch: boolean;
 };
@@ -535,6 +550,19 @@ export function scoreRoles(
         }),
       ]),
     ) as ScenarioScores;
+    // Inclusion ignores adoption: same formula with raw fit instead of trendFit.
+    const selectionByScenario = Object.fromEntries(
+      SCENARIO_IDS.map((scenario) => [
+        scenario,
+        scenarioRank({
+          fit,
+          demand: scenarioDemand(role.cluster, scenario),
+          exposure,
+          theta: SCORING_PARAMS.theta[scenario],
+          sdgMatch,
+        }),
+      ]),
+    ) as ScenarioScores;
 
     return {
       role,
@@ -542,6 +570,7 @@ export function scoreRoles(
       exposure,
       augmentation,
       byScenario,
+      selectionByScenario,
       gap: skillGap(role.essentialSkills),
       sdgMatch,
     };
@@ -550,7 +579,7 @@ export function scoreRoles(
   const rankable: ScenarioRankable[] = prepared.map((item) => ({
     occupationId: item.role.occupationId,
     fit: item.fit,
-    byScenario: item.byScenario,
+    byScenario: item.selectionByScenario,
     sdgMatch: item.sdgMatch,
   }));
   const topByScenario = Object.fromEntries(
