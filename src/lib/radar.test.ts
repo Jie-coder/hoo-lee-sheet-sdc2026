@@ -1,6 +1,14 @@
 import { describe, expect, it } from "vitest";
 import { CATALOGUE } from "./catalogue";
-import { buildRadar, FLAT_MOMENTUM, percentChange } from "./radar";
+import {
+  buildRadar,
+  FLAT_MOMENTUM,
+  keywordMomentumSE,
+  MOMENTUM_Z95,
+  percentChange,
+  skillMomentumBand,
+} from "./radar";
+import { skillMomentum } from "./scoring";
 
 describe("buildRadar on the real catalogue", () => {
   const today = buildRadar(CATALOGUE, "today")!;
@@ -50,6 +58,48 @@ describe("buildRadar on the real catalogue", () => {
   it("changes when the trend data changes (the toggle moves the radar)", () => {
     const labels = (radar: typeof today) => radar.rising.map((skill) => skill.label).join();
     expect(labels(today)).not.toBe(labels(prior));
+  });
+
+  it("gives every skill a band centred on its momentum", () => {
+    for (const skill of [...today.rising, ...today.declining, ...today.steady]) {
+      expect(skill.band).not.toBeNull();
+      expect(Math.abs(skill.band!.momentum - skill.momentum)).toBeLessThan(1e-9);
+    }
+  });
+});
+
+describe("keywordMomentumSE", () => {
+  it("uses the delta-method standard error for Poisson counts", () => {
+    expect(keywordMomentumSE(45, 46)).toBeCloseTo(Math.sqrt(1 / 46 + 1 / 47), 12);
+  });
+});
+
+describe("skillMomentumBand", () => {
+  it("is symmetric around the momentum", () => {
+    const band = skillMomentumBand([{ recent: 45, previous: 46 }])!;
+    expect(band.momentum).toBeCloseTo(skillMomentum(45, 46), 12);
+    expect(band.high - band.momentum).toBeCloseTo(band.momentum - band.low, 12);
+    expect(band.high - band.momentum).toBeCloseTo(MOMENTUM_Z95 * band.se, 12);
+  });
+
+  it("averages multiple keywords and combines their variances", () => {
+    const keywords = [
+      { recent: 45, previous: 46 },
+      { recent: 120, previous: 90 },
+    ];
+    const band = skillMomentumBand(keywords)!;
+    const expectedMomentum =
+      (skillMomentum(45, 46) + skillMomentum(120, 90)) / 2;
+    const expectedSE =
+      Math.sqrt(keywordMomentumSE(45, 46) ** 2 + keywordMomentumSE(120, 90) ** 2) / 2;
+    expect(band.momentum).toBeCloseTo(expectedMomentum, 12);
+    expect(band.se).toBeCloseTo(expectedSE, 12);
+    expect(band.low).toBeCloseTo(expectedMomentum - MOMENTUM_Z95 * expectedSE, 12);
+    expect(band.high).toBeCloseTo(expectedMomentum + MOMENTUM_Z95 * expectedSE, 12);
+  });
+
+  it("returns null for no keywords", () => {
+    expect(skillMomentumBand([])).toBeNull();
   });
 });
 
