@@ -1,6 +1,7 @@
 import { render, screen, within } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
-import { newEntryIds, RankList } from "./trend-override-panel";
+import { ChangeSummary, newEntryIds, RankList } from "./trend-override-panel";
+import { readFileSync } from "node:fs";
 import { translate } from "@/lib/i18n-messages";
 
 const before = [
@@ -30,5 +31,38 @@ describe("change-the-data NEW highlight", () => {
   it("translates the badge", () => {
     expect(translate("en", "override.new")).toBe("NEW");
     expect(translate("ms", "override.new")).toBe("BARU");
+  });
+
+  it("never highlights the radar (rising) list; Sulfur only for persona new entries", () => {
+    const src = readFileSync("src/components/trend-override-panel.tsx", "utf8");
+    const rising = src.split("\n").find((line) => line.includes('testId="override-rising-after"'));
+    expect(rising).toBeDefined();
+    expect(rising).not.toContain("newIds");
+    expect(src.match(/bg-sulfur/g)).toHaveLength(1);
+  });
+
+  it("renders the rising-style list without newIds with no override-row-new", () => {
+    render(<RankList title="After" items={after} testId="rising-after" />);
+    expect(screen.queryByTestId("override-row-new")).toBeNull();
+  });
+});
+
+describe("change-the-data summary", () => {
+  it("emphasises the first item and puts the rest on a smaller grey line", () => {
+    render(<ChangeSummary label="What changed" changes={["Data scientist new at #3", "Web developer out", "A #2 → #4"]} empty="No change" />);
+    const first = screen.getByTestId("override-changes-first");
+    expect(first).toHaveTextContent("What changed: Data scientist new at #3");
+    expect(first).toHaveClass("font-bold", "text-ink");
+    const rest = screen.getByTestId("override-changes-rest");
+    expect(rest).toHaveTextContent("Web developer out; A #2 → #4");
+    expect(rest).toHaveClass("text-grey", "text-[12px]");
+  });
+
+  it("omits the second line when only one item changed, and shows the empty text", () => {
+    const { unmount } = render(<ChangeSummary label="Apa berubah" changes={["X baharu"]} empty="Tiada" />);
+    expect(screen.queryByTestId("override-changes-rest")).toBeNull();
+    unmount();
+    render(<ChangeSummary label="x" changes={[]} empty="Tiada perubahan" />);
+    expect(screen.getByTestId("override-changes")).toHaveTextContent("Tiada perubahan");
   });
 });

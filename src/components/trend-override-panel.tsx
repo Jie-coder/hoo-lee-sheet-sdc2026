@@ -77,6 +77,30 @@ export function RankList({
   );
 }
 
+/** "What changed" summary: first item on its own line, dark and bold; the rest smaller and grey. */
+export function ChangeSummary({ label, changes, empty }: { label: string; changes: string[]; empty: string }) {
+  if (!changes.length) {
+    return (
+      <p className="mt-3 text-[13px] text-grey" data-testid="override-changes">
+        {empty}
+      </p>
+    );
+  }
+  const [first, ...rest] = changes;
+  return (
+    <div className="mt-3" data-testid="override-changes">
+      <p className="text-[14px] font-bold text-ink" data-testid="override-changes-first">
+        {label}: {first}
+      </p>
+      {rest.length > 0 && (
+        <p className="mt-0.5 text-[12px] text-grey" data-testid="override-changes-rest">
+          {rest.join("; ")}
+        </p>
+      )}
+    </div>
+  );
+}
+
 export function TrendOverridePanel({ signals }: { signals: SignalsInUse }) {
   const { t } = useT();
   const readings = useMemo(
@@ -117,7 +141,10 @@ export function TrendOverridePanel({ signals }: { signals: SignalsInUse }) {
     roles.slice(0, 5).map((role) => ({ id: role.occupationId, label: role.title, value: role.byScenario.co.toFixed(3) }));
   const risingItems = (roles: typeof risingBefore) =>
     roles.map((role) => ({ id: role.occupationId, label: role.title, value: signed(role.momentum) }));
-  const changes = persona.changes.map((change) => describeChangeShort(change, t));
+  // New entries first (stable within each group), so the emphasised first line is the new role.
+  const changes = [...persona.changes]
+    .sort((a, b) => Number(a.before != null) - Number(b.before != null))
+    .map((change) => describeChangeShort(change, t));
 
   return (
     <section
@@ -135,7 +162,7 @@ export function TrendOverridePanel({ signals }: { signals: SignalsInUse }) {
         {t("override.title")}
       </h2>
       <p className="mt-4 max-w-[680px] text-[16px] leading-relaxed text-grey">{t("override.lede")}</p>
-      <p role="note" className="mt-3 max-w-[680px] rounded-lg bg-sulfur px-3 py-2 text-[13px] font-medium">
+      <p role="note" className="mt-3 max-w-[680px] rounded-lg border border-line bg-limestone px-3 py-2 text-[13px] font-medium">
         {t("override.notice")}
       </p>
 
@@ -215,7 +242,7 @@ export function TrendOverridePanel({ signals }: { signals: SignalsInUse }) {
           <p className="text-[16px] font-bold">{t("override.risingHeading")}</p>
           <div className="mt-3 grid grid-cols-1 gap-4 sm:grid-cols-2">
             <RankList title={t("override.before")} items={risingItems(risingBefore)} testId="override-rising-before" />
-            <RankList title={t("override.after")} items={risingItems(risingAfter)} testId="override-rising-after" newIds={newEntryIds(risingItems(risingBefore), risingItems(risingAfter))} />
+            <RankList title={t("override.after")} items={risingItems(risingAfter)} testId="override-rising-after" />
           </div>
           {active && !risingChanged && <p className="mt-3 text-[13px] text-grey">{t("override.noChange")}</p>}
         </div>
@@ -226,9 +253,7 @@ export function TrendOverridePanel({ signals }: { signals: SignalsInUse }) {
             <RankList title={t("override.after")} items={roleItems(persona.after)} testId="override-persona-after" newIds={newEntryIds(roleItems(persona.before), roleItems(persona.after))} />
           </div>
           {active && (
-            <p className="mt-3 text-[13px] text-grey" data-testid="override-changes">
-              {changes.length ? `${t("override.changes")}: ${changes.join("; ")}` : t("override.noChange")}
-            </p>
+            <ChangeSummary label={t("override.changes")} changes={changes} empty={t("override.noChange")} />
           )}
         </div>
       </div>
