@@ -23,21 +23,50 @@ function clampMomentum(value: number): number {
   return Math.min(MAX_MOMENTUM, Math.max(-MAX_MOMENTUM, Math.round(value * 100) / 100));
 }
 
-function RankList({ title, items, testId }: { title: string; items: { id: string; label: string; value: string }[]; testId: string }) {
+/** Ids in `after` that were not in `before` (roles newly entering the shown ranking). */
+export function newEntryIds(before: { id: string }[], after: { id: string }[]): Set<string> {
+  const seen = new Set(before.map((item) => item.id));
+  return new Set(after.filter((item) => !seen.has(item.id)).map((item) => item.id));
+}
+
+export function RankList({
+  title,
+  items,
+  testId,
+  newIds,
+}: {
+  title: string;
+  items: { id: string; label: string; value: string }[];
+  testId: string;
+  newIds?: Set<string>;
+}) {
   const { t } = useT();
   return (
     <div className="min-w-0">
       <p className="font-mono text-[11px] tracking-[0.06em] text-grey uppercase">{title}</p>
       {items.length ? (
         <ol data-testid={testId} className="mt-2 space-y-1 text-[14px]">
-          {items.map((item, index) => (
-            <li key={item.id} className="flex items-baseline justify-between gap-3">
-              <span className="min-w-0 truncate first-letter:uppercase">
-                <span className="font-mono text-[12px] text-grey">#{index + 1}</span> {item.label}
-              </span>
-              <span className="shrink-0 font-mono text-[12px] text-grey tabular-nums">{item.value}</span>
-            </li>
-          ))}
+          {items.map((item, index) => {
+            const isNew = newIds?.has(item.id) ?? false;
+            const muted = isNew ? "text-ink" : "text-grey";
+            return (
+              <li
+                key={item.id}
+                data-testid={isNew ? "override-row-new" : undefined}
+                className={`flex items-baseline justify-between gap-3${isNew ? " -mx-2 rounded-md bg-sulfur px-2 text-ink" : ""}`}
+              >
+                <span className="min-w-0 truncate first-letter:uppercase">
+                  <span className={`font-mono text-[12px] ${muted}`}>#{index + 1}</span> {item.label}
+                  {isNew && (
+                    <span className="ml-1.5 rounded-full bg-ink px-1.5 py-px align-middle font-mono text-[10px] font-bold tracking-[0.06em] text-sulfur">
+                      {t("override.new")}
+                    </span>
+                  )}
+                </span>
+                <span className={`shrink-0 font-mono text-[12px] tabular-nums ${muted}`}>{item.value}</span>
+              </li>
+            );
+          })}
         </ol>
       ) : (
         <p className="mt-2 text-[14px] text-grey">{t("override.none")}</p>
@@ -184,7 +213,7 @@ export function TrendOverridePanel({ signals }: { signals: SignalsInUse }) {
           <p className="text-[16px] font-bold">{t("override.risingHeading")}</p>
           <div className="mt-3 grid grid-cols-1 gap-4 sm:grid-cols-2">
             <RankList title={t("override.before")} items={risingItems(risingBefore)} testId="override-rising-before" />
-            <RankList title={t("override.after")} items={risingItems(risingAfter)} testId="override-rising-after" />
+            <RankList title={t("override.after")} items={risingItems(risingAfter)} testId="override-rising-after" newIds={newEntryIds(risingItems(risingBefore), risingItems(risingAfter))} />
           </div>
           {active && !risingChanged && <p className="mt-3 text-[13px] text-grey">{t("override.noChange")}</p>}
         </div>
@@ -192,7 +221,7 @@ export function TrendOverridePanel({ signals }: { signals: SignalsInUse }) {
           <p className="text-[16px] font-bold">{t("override.personaHeading", { name: PERSONA.name })}</p>
           <div className="mt-3 grid grid-cols-1 gap-4 sm:grid-cols-2">
             <RankList title={t("override.before")} items={roleItems(persona.before)} testId="override-persona-before" />
-            <RankList title={t("override.after")} items={roleItems(persona.after)} testId="override-persona-after" />
+            <RankList title={t("override.after")} items={roleItems(persona.after)} testId="override-persona-after" newIds={newEntryIds(roleItems(persona.before), roleItems(persona.after))} />
           </div>
           {active && (
             <p className="mt-3 text-[13px] text-grey" data-testid="override-changes">
