@@ -9,10 +9,9 @@ import { CATALOGUE } from "@/lib/catalogue";
 import { describeChangeShort } from "@/lib/compare-snapshots";
 import { useT } from "@/lib/i18n";
 import type { MomentumOverride } from "@/lib/live-signals";
-import { compareOverride, risingRoleRanking, type SignalsInUse } from "@/lib/trend-override";
-import { PERSONAS } from "@/mocks/personas";
+import { compareOverride, DEFAULT_OVERRIDE_PERSONA, personaRef, risingRoleRanking, type SignalsInUse } from "@/lib/trend-override";
+import { PERSONA_IDS, PERSONAS, type PersonaId } from "@/mocks/personas";
 
-const PERSONA = PERSONAS.aisyah;
 const MAX_MOMENTUM = 10;
 
 function signed(value: number): string {
@@ -65,13 +64,15 @@ export function TrendOverridePanel({ signals }: { signals: SignalsInUse }) {
   const [selected, setSelected] = useState(readings[0]?.skillId ?? "");
   const base = readings.find((reading) => reading.skillId === selected) ?? readings[0];
   const [override, setOverride] = useState<MomentumOverride | null>(null);
+  const [personaId, setPersonaId] = useState<PersonaId>(DEFAULT_OVERRIDE_PERSONA);
+  const PERSONA = PERSONAS[personaId];
   const active = override && override.skillId === base?.skillId ? override : null;
   const momentum = active?.momentum ?? base?.value ?? 0;
   const overrides = useMemo(() => (active ? [active] : []), [active]);
 
   const persona = useMemo(
-    () => compareOverride(CATALOGUE, signals, { id: PERSONA.id, currentOccupationId: PERSONA.currentOccupationId }, "co", overrides),
-    [signals, overrides],
+    () => compareOverride(CATALOGUE, signals, personaRef(personaId), "co", overrides),
+    [signals, overrides, personaId],
   );
   const risingBefore = useMemo(() => risingRoleRanking(CATALOGUE, signals), [signals]);
   const risingAfter = useMemo(() => risingRoleRanking(CATALOGUE, signals, overrides), [signals, overrides]);
@@ -107,7 +108,22 @@ export function TrendOverridePanel({ signals }: { signals: SignalsInUse }) {
         {t("override.notice")}
       </p>
 
-      <div className="mt-6 grid grid-cols-1 gap-4 md:grid-cols-2">
+      <div className="mt-6 grid grid-cols-1 gap-4 md:grid-cols-3">
+        <label className="flex flex-col gap-1 text-[13px]">
+          {t("override.persona")}
+          <select
+            data-testid="override-persona"
+            value={personaId}
+            onChange={(event) => setPersonaId(event.target.value as PersonaId)}
+            className="rounded-lg border border-line bg-white px-3 py-2 text-[15px]"
+          >
+            {PERSONA_IDS.map((id) => (
+              <option key={id} value={id}>
+                {PERSONAS[id].name}
+              </option>
+            ))}
+          </select>
+        </label>
         <label className="flex flex-col gap-1 text-[13px]">
           {t("override.keyword")}
           <select

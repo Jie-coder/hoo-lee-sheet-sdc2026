@@ -1,8 +1,8 @@
 import { describe, expect, it } from "vitest";
 import { CATALOGUE } from "@/lib/catalogue";
 import { bundledSnapshot, toSignalSnapshot } from "@/lib/live-signals";
-import { compareOverride, risingRoleRanking } from "@/lib/trend-override";
-import { PERSONAS } from "@/mocks/personas";
+import { compareOverride, DEFAULT_OVERRIDE_PERSONA, personaRef, rankPersona, risingRoleRanking } from "@/lib/trend-override";
+import { PERSONA_IDS, PERSONAS } from "@/mocks/personas";
 
 const persona = { id: PERSONAS.aisyah.id, currentOccupationId: PERSONAS.aisyah.currentOccupationId };
 const trend = bundledSnapshot(CATALOGUE);
@@ -35,5 +35,16 @@ describe("change-the-data override", () => {
     for (let i = 1; i < before.length; i++) {
       expect(before[i - 1].byScenario.co).toBeGreaterThanOrEqual(before[i].byScenario.co);
     }
+  });
+
+  it("selecting a persona changes the ranked list input", () => {
+    expect(DEFAULT_OVERRIDE_PERSONA).toBe("aisyah");
+    expect(personaRef("aisyah")).toEqual(persona);
+    const lists = PERSONA_IDS.map((id) => {
+      const ref = personaRef(id);
+      expect(ref.id).toBe(PERSONAS[id].id);
+      return rankPersona(CATALOGUE, signals, ref, "co").map((role) => `${role.occupationId}:${role.byScenario.co.toFixed(4)}`).join();
+    });
+    expect(new Set(lists).size).toBe(PERSONA_IDS.length);
   });
 });

@@ -6,9 +6,19 @@ import type { Catalogue } from "@/lib/catalogue";
 import { rankChanges, type RankChange } from "@/lib/compare-snapshots";
 import { applyMomentumOverrides, applySignals, type MomentumOverride, type TrendSnapshot } from "@/lib/live-signals";
 import { buildRadar } from "@/lib/radar";
+import { PERSONAS, type PersonaId } from "@/mocks/personas";
 import type { RoleResult, ScenarioId, SignalSnapshot } from "@/types/contracts";
 
 export type PersonaRef = { id: string; currentOccupationId: string | null };
+/** The panel opens on Aisyah; Jia Hui and Pravin are the other demo synthetic CVs. */
+export const DEFAULT_OVERRIDE_PERSONA: PersonaId = "aisyah";
+
+/** What rankPersona needs from a demo persona. */
+export function personaRef(id: PersonaId): PersonaRef {
+  const persona = PERSONAS[id];
+  return { id: persona.id, currentOccupationId: persona.currentOccupationId };
+}
+
 export type SignalsInUse = { snapshot: SignalSnapshot; trend: TrendSnapshot };
 
 function scored(catalogue: Catalogue, signals: SignalsInUse, overrides: readonly MomentumOverride[]): Catalogue {
