@@ -36,6 +36,8 @@ export type Radar = {
   /** Momentum within ±FLAT_MOMENTUM: no clear direction. */
   steady: RadarSkill[];
   risingRoles: RadarRole[];
+  /** Every role with a signal, highest momentum first (ties by title); includes roles at or below zero. */
+  rolesByMomentum: RadarRole[];
   decliningRoles: RadarRole[];
   /** Roles with no essential skill that has a signal: the radar can't say. */
   rolesWithoutSignal: number;
@@ -92,6 +94,7 @@ export function buildRadar(catalogue: Catalogue, signalDate: SignalDate): Radar 
     rising: skills.filter((skill) => skill.momentum > FLAT_MOMENTUM),
     declining: skills.filter((skill) => skill.momentum < -FLAT_MOMENTUM).reverse(),
     steady: skills.filter((skill) => Math.abs(skill.momentum) <= FLAT_MOMENTUM),
+    rolesByMomentum: byMomentum,
     risingRoles: byMomentum.filter((role) => role.momentum > 0).slice(0, TOP_ROLES),
     decliningRoles: [...byMomentum].reverse().filter((role) => role.momentum < 0).slice(0, TOP_ROLES),
     rolesWithoutSignal: catalogue.occupations.length - roles.length,

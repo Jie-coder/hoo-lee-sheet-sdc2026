@@ -3,7 +3,7 @@
 // nothing is sent or stored, so no other user sees it.
 import { analyzeProfile } from "@/lib/analyze";
 import type { Catalogue } from "@/lib/catalogue";
-import { rankChanges, type RankChange } from "@/lib/compare-snapshots";
+import { positionChanges, type RankChange } from "@/lib/compare-snapshots";
 import { applyMomentumOverrides, applySignals, type MomentumOverride, type TrendSnapshot } from "@/lib/live-signals";
 import { buildRadar } from "@/lib/radar";
 import { PERSONAS, type PersonaId } from "@/mocks/personas";
@@ -55,11 +55,18 @@ export function compareOverride(
 ): OverrideComparison {
   const before = rankPersona(catalogue, signals, persona, scenario);
   const after = overrides.length ? rankPersona(catalogue, signals, persona, scenario, overrides) : before;
-  return { before, after, changes: rankChanges(before, after, scenario) };
+  return { before, after, changes: positionChanges(before, after) };
 }
 
-/** The radar's "rising roles" (mean momentum of their essential skills), with these signals. */
+export const TREND_ROLE_COUNT = 5;
+
+/**
+ * Roles ordered by trend momentum (mean momentum of their essential skills that
+ * have a signal), highest first, with these signals. Not only roles above zero:
+ * with the current arXiv data every role's mean is <= 0, so a "> 0" filter left
+ * the panel empty on both sides.
+ */
 export function risingRoleRanking(catalogue: Catalogue, signals: SignalsInUse, overrides: readonly MomentumOverride[] = []) {
   const radar = buildRadar(scored(catalogue, signals, overrides), "today");
-  return radar ? radar.risingRoles.map((role) => ({ occupationId: role.occupationId, title: role.title, momentum: role.momentum })) : [];
+  return radar ? radar.rolesByMomentum.slice(0, TREND_ROLE_COUNT).map((role) => ({ occupationId: role.occupationId, title: role.title, momentum: role.momentum })) : [];
 }

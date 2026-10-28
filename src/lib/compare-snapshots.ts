@@ -13,14 +13,22 @@ export type RankChange = {
   after: number | null;
 };
 
-/** Every role whose rank differs between `before` and `after` in `scenario`, biggest move first. */
+/** Every role whose rank differs between `before` and `after` in `scenario`, biggest move first. Ranks use rankRoles() (Fit-led tie rule). */
 export function rankChanges(
   before: readonly RoleResult[],
   after: readonly RoleResult[],
   scenario: ScenarioId,
 ): RankChange[] {
+  return positionChanges(rankRoles(before, scenario), rankRoles(after, scenario));
+}
+
+/**
+ * Every role whose position differs between two lists that are already in
+ * display order (no re-sorting, no tie rule), biggest move first.
+ */
+export function positionChanges(before: readonly RoleResult[], after: readonly RoleResult[]): RankChange[] {
   const rank = (roles: readonly RoleResult[]) =>
-    new Map(rankRoles(roles, scenario).map((role, index) => [role.occupationId, { title: role.title, rank: index + 1 }]));
+    new Map(roles.map((role, index) => [role.occupationId, { title: role.title, rank: index + 1 }]));
   const was = rank(before);
   const now = rank(after);
   const ids = new Set([...was.keys(), ...now.keys()]);
