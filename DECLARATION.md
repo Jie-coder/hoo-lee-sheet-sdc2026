@@ -5,9 +5,14 @@ official hacking period. It contains only generic, reusable infrastructure
 (framework setup, UI components, an AI call wrapper, a database connection, a
 status page) and **no domain-specific features or content**.
 
-The final pre-hackathon state is the git tag **`starter-v0`**. Any commit
-reachable from that tag was written before hacking started. All work after
-that tag was produced during the hacking period.
+The final pre-hackathon state is the git tag **`starter-v0`** in the separate
+(private) starter repository `Jie-coder/sdc-starter`, pointing at commit
+`57171fecfff5901a392debbf25e599127785da63` (committed 2026-10-17 14:32 UTC+8).
+That tag does **not** exist in this repository: the exact file tree of
+`starter-v0` was imported here, without its git history, as commit
+**`80cc8dc`** (`chore: import declared pre-existing starter ...`,
+2026-10-19 22:05 UTC+8), the first commit on `main`. All work after that
+commit was produced during the hacking period.
 
 ## Third-party libraries
 
@@ -67,3 +72,17 @@ Versions below are the `^` semver ranges declared in `package.json`; the exact r
 
 All AI-generated code is reviewed by the team before it is merged, and the
 code is kept simple and commented so team members can explain every file.
+
+## AI tool source per pull request (hacking period)
+
+Where a commit has no `Tool:` trailer, the source below was determined from
+the build machine's logs.
+
+| PR | Commits | Tool source |
+|---|---|---|
+| #65 | a7a3e4a, cf2808f | Coded directly by Kai |
+| #66 | 0191b0d, 3ccf2db | Coded directly by Jarvis (Grok Bot); no Claude Code / OpenCode activity in the logs for 2026-10-23 21:47–22:20 UTC+8, branch `jarvis/nav-back-steps` |
+| #67 | 98c8941, 8b5e1f4, 59fdca2, 43423ef | Coded directly by Jarvis (Grok Bot); same log window, branch `jarvis/footer-logo` |
+| #68 | afa2b21, a040d59 | Coded directly by Kai |
+| #70 | 7840eaf, d7fc539, b46a2b6 | Coded directly by Kai |
+| #71 | 3ccade0 | Coded directly by Kai |
