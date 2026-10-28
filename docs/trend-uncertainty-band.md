@@ -12,6 +12,12 @@ Band = momentum ± 1.96 · SE (approximate 95% range). If the band crosses zero,
 
 Every number comes from data/keywords.csv (or keywords_prior.csv for the prior snapshot); 1.96 is the standard normal 95% value.
 
-## Not covered
-Keyword choice, arXiv indexing lag, and snapshot-to-snapshot drift. The prior/today spread was considered but
-there are only 2 snapshots, too few for a spread estimate. Role-level bands (and the "Trend ±x.x pts" row in PR #86) are not wired here because #86 is not on main.
+## Labels on /radar
+When a Rising or Falling skill's 95% range crosses zero, /radar shows "Unclear" (BM "Tidak jelas") instead. Flat skills, scores and other pages are unchanged. With today's snapshot this changes 5 of the 6 Rising/Falling labels (asserted in src/lib/radar.test.ts via countUnclearLabels).
+
+## Limitations
+- A skill's keywords are correlated (they overlap in papers and topics), but the method treats them as independent, so the band may be too narrow.
+- arXiv indexing has a lag: recent papers can still be missing from the last-90-days count, which biases recent momentum down. The band does not cover this.
+- Keyword choice is not covered: a different set of keywords for the same skill could give a different momentum.
+- Only 2 snapshots exist, too few for a spread across snapshots.
+- The band is on /radar only. It is not part of the rank score (see README, Future Improvements).

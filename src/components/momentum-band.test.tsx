@@ -1,7 +1,16 @@
 import { render, screen } from "@testing-library/react";
-import { describe, expect, it } from "vitest";
-import { MomentumBandStrip } from "./radar-view";
+import { describe, expect, it, vi } from "vitest";
+import catalogue from "@/data/catalogue.json";
+import type { Catalogue } from "@/lib/catalogue";
 import { EN, MS } from "@/lib/i18n-messages";
+import { buildRadar, displayDirection } from "@/lib/radar";
+import { MomentumBandStrip, RadarView } from "./radar-view";
+
+vi.mock("next/navigation", () => ({
+  useSearchParams: () => new URLSearchParams(),
+}));
+
+const today = buildRadar(catalogue as unknown as Catalogue, "today")!;
 
 function fillLeft(): string {
   const strip = screen.getByTestId("momentum-band");
@@ -65,5 +74,36 @@ describe("radar.band i18n", () => {
       expect(value.toLowerCase(), key).not.toContain("machine");
       expect(value.toLowerCase(), key).not.toContain("mesin");
     }
+  });
+});
+
+
+describe("radar.unclear i18n", () => {
+  const cjk = /[\u3000-\u303f\u3040-\u30ff\u3400-\u4dbf\u4e00-\u9fff\uf900-\ufaff\uff00-\uffef]/;
+
+  it("says Unclear in EN and Tidak jelas in MS", () => {
+    expect(EN["radar.unclear"]).toBe("Unclear");
+    expect(MS["radar.unclear"]).toBe("Tidak jelas");
+  });
+
+  it("contains no CJK characters in either language", () => {
+    expect(EN["radar.unclear"]).not.toMatch(cjk);
+    expect(MS["radar.unclear"]).not.toMatch(cjk);
+  });
+});
+
+describe("RadarView skill list unclear labels", () => {
+  it("shows exactly the five rising/declining skills as unclear, and none of the steady ones", () => {
+    const directional = [
+      ...today.rising.map((skill) => ({ skill, direction: "rising" as const })),
+      ...today.declining.map((skill) => ({ skill, direction: "declining" as const })),
+    ];
+    const unclear = directional.filter(({ skill, direction }) => displayDirection(direction, skill.band) === "unclear");
+    expect(unclear).toHaveLength(5);
+    expect(unclear.length).toBeLessThan(directional.length);
+    expect(today.steady.filter((skill) => displayDirection("flat", skill.band) === "unclear")).toHaveLength(0);
+
+    render(<RadarView today={today} prior={null} dates={{ today: today.asOf, prior: null }} links={{}} />);
+    expect(screen.getAllByTestId("unclear-label")).toHaveLength(5);
   });
 });

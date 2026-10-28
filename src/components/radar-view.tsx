@@ -16,7 +16,7 @@ import type { SignalDate } from "@/lib/analyze";
 import { formatDayMonthYear, formatShortDate } from "@/lib/display";
 import { useT } from "@/lib/i18n";
 import type { MessageKey } from "@/lib/i18n-messages";
-import { MOMENTUM_Z95, percentChange, type MomentumBand, type Radar, type RadarSkill } from "@/lib/radar";
+import { displayDirection, MOMENTUM_Z95, percentChange, type MomentumBand, type Radar, type RadarSkill } from "@/lib/radar";
 import { cn } from "@/lib/utils";
 import type { IsoDate } from "@/types/contracts";
 
@@ -183,7 +183,14 @@ function SkillList({
                 onClick={() => onPick(skill, direction)}
                 className="flex w-full items-center justify-between gap-3 py-3 text-left hover:underline"
               >
-                <span className="text-[16px] font-medium first-letter:uppercase">{skill.label}</span>
+                <span className="flex flex-col gap-0.5">
+                  <span className="text-[16px] font-medium first-letter:uppercase">{skill.label}</span>
+                  {displayDirection(direction, skill.band) === "unclear" && (
+                    <span data-testid="unclear-label" className="font-mono text-[11px] tracking-[0.06em] text-grey uppercase">
+                      {t("radar.unclear")}
+                    </span>
+                  )}
+                </span>
                 <span className="flex shrink-0 flex-col items-end gap-1">
                   <span className="font-mono text-[12px] text-grey tabular-nums">
                     {signed(skill.momentum)}
@@ -210,7 +217,12 @@ function SkillDrawerBody({ skill, direction, radar, links }: { skill: RadarSkill
     <div className="flex flex-col gap-6 text-[15px]">
       <p className="flex items-center gap-2 font-mono text-[12px] tracking-[0.06em] uppercase">
         <span aria-hidden className={cn("size-3.5 rounded-full ring-[1.5px] ring-ink", DOT[direction])} />
-        {t(line.label)} {line.arrow} · {t("radar.momentum", { value: signed(skill.momentum) })}
+        {displayDirection(direction, skill.band) === "unclear" ? (
+          <span data-testid="direction-label">{t("radar.unclear")} ?</span>
+        ) : (
+          <span data-testid="direction-label">{t(line.label)} {line.arrow}</span>
+        )}{" "}
+        · {t("radar.momentum", { value: signed(skill.momentum) })}
       </p>
 
       {skill.band && (

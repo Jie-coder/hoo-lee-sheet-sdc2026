@@ -2,12 +2,15 @@ import { describe, expect, it } from "vitest";
 import { CATALOGUE } from "./catalogue";
 import {
   buildRadar,
+  countUnclearLabels,
+  displayDirection,
   FLAT_MOMENTUM,
   keywordMomentumSE,
   MOMENTUM_Z95,
   percentChange,
   skillMomentumBand,
 } from "./radar";
+import type { MomentumBand } from "./radar";
 import { skillMomentum } from "./scoring";
 
 describe("buildRadar on the real catalogue", () => {
@@ -100,6 +103,43 @@ describe("skillMomentumBand", () => {
 
   it("returns null for no keywords", () => {
     expect(skillMomentumBand([])).toBeNull();
+  });
+});
+
+describe("displayDirection", () => {
+  const band = (crossesZero: boolean): MomentumBand => ({
+    momentum: crossesZero ? 0.01 : 0.2,
+    se: 0.1,
+    low: crossesZero ? -0.19 : 0.1,
+    high: crossesZero ? 0.21 : 0.3,
+    crossesZero,
+  });
+
+  it("shows a rising skill as unclear when its band crosses zero", () => {
+    expect(displayDirection("rising", band(true))).toBe("unclear");
+  });
+
+  it("shows a declining skill as unclear when its band crosses zero", () => {
+    expect(displayDirection("declining", band(true))).toBe("unclear");
+  });
+
+  it("never changes flat, even when its band crosses zero", () => {
+    expect(displayDirection("flat", band(true))).toBe("flat");
+  });
+
+  it("keeps rising when its band does not cross zero", () => {
+    expect(displayDirection("rising", band(false))).toBe("rising");
+  });
+
+  it("leaves the direction unchanged when there is no band", () => {
+    expect(displayDirection("rising", null)).toBe("rising");
+    expect(displayDirection("declining", null)).toBe("declining");
+  });
+});
+
+describe("countUnclearLabels on the real catalogue", () => {
+  it("counts the rising/declining skills whose band crosses zero", () => {
+    expect(countUnclearLabels(buildRadar(CATALOGUE, "today")!)).toEqual({ changed: 5, total: 6 });
   });
 });
 

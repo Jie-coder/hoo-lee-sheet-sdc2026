@@ -146,6 +146,33 @@ export function buildRadar(catalogue: Catalogue, signalDate: SignalDate): Radar 
   };
 }
 
+export type DisplayDirection = "rising" | "flat" | "declining" | "unclear";
+
+/**
+ * The direction to show for a skill. A rising or declining momentum whose
+ * uncertainty band crosses zero is displayed as unclear, because the data
+ * cannot rule out no change; flat is never changed.
+ */
+export function displayDirection(
+  direction: "rising" | "flat" | "declining",
+  band: MomentumBand | null,
+): DisplayDirection {
+  if (direction !== "flat" && band?.crossesZero) return "unclear";
+  return direction;
+}
+
+/** How many of the rising/declining skills are shown as unclear, out of both groups. */
+export function countUnclearLabels(radar: Radar): { changed: number; total: number } {
+  const directional = [
+    ...radar.rising.map((skill) => ({ direction: "rising" as const, band: skill.band })),
+    ...radar.declining.map((skill) => ({ direction: "declining" as const, band: skill.band })),
+  ];
+  return {
+    changed: directional.filter(({ direction, band }) => displayDirection(direction, band) === "unclear").length,
+    total: directional.length,
+  };
+}
+
 /** "+12%" / "−8%": the change in papers between the two windows, for one keyword. */
 export function percentChange(keyword: Pick<CatalogueKeyword, "recent" | "previous">): string {
   const change = ((keyword.recent - keyword.previous) / Math.max(keyword.previous, 1)) * 100;
