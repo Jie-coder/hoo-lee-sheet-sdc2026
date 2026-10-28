@@ -235,11 +235,19 @@ export function RoleCard({
               })}
             </p>
             <p className="mt-1 font-mono text-[12px] tracking-[0.04em] text-grey uppercase tabular-nums">
-              {t("results.drawerRanks", {
-                totalRank: String(breakdown.totalRank[scenario]),
-                fitRank: String(breakdown.fitRank.rank),
-                total: String(breakdown.fitRank.total),
-              })}
+              <span className="whitespace-nowrap">
+                {t("results.drawerTotalRank", {
+                  rank: String(breakdown.totalRank[scenario]),
+                  total: String(breakdown.fitRank.total),
+                })}
+              </span>
+              {" · "}
+              <span className="whitespace-nowrap">
+                {t("results.drawerFitRank", {
+                  rank: String(breakdown.fitRank.rank),
+                  total: String(breakdown.fitRank.total),
+                })}
+              </span>
             </p>
             <p className="mt-1 text-[12px] text-grey">
               {t("results.hiddenThreshold", {

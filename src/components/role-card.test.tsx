@@ -131,16 +131,16 @@ describe("RoleCard", () => {
     const drawer = screen.getByRole("dialog");
     expect(within(drawer).getByText(`Fit ${formatFitPercent(0.25)} (raw 10%)`)).toBeInTheDocument();
     expect(
-      within(drawer).getByText(
-        `Total score #${breakdown.totalRank.co} of ${breakdown.fitRank.total} roles · Skill match #${breakdown.fitRank.rank} of ${breakdown.fitRank.total}`,
-      ),
+      within(drawer).getByText(`Total score #${breakdown.totalRank.co} of ${breakdown.fitRank.total} roles`),
     ).toBeInTheDocument();
+    expect(
+      within(drawer).getByText(`Skill match #${breakdown.fitRank.rank} of ${breakdown.fitRank.total}`),
+    ).toBeInTheDocument();
+    expect(within(drawer).getByText("·")).toBeInTheDocument();
     const minFit = Math.round(SCORING_PARAMS.minFit * 100);
     const fallback = Math.round(SCORING_PARAMS.minFitFallback * 100);
     expect(
-      within(drawer).getByText(
-        `Roles with raw skill match below ${minFit}% are hidden (down to ${fallback}% if too few roles qualify or the role matches your SDG choice).`,
-      ),
+      within(drawer).getByText(`Roles under ${minFit}% skill match are hidden (${fallback}% fallback).`),
     ).toBeInTheDocument();
   });
 });
