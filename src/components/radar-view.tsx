@@ -73,8 +73,8 @@ export function MomentumBandStrip({ band, className }: { band: MomentumBand; cla
   const right = pos(band.high);
   return (
     <span aria-hidden data-testid="momentum-band" className={cn("relative block h-2.5 w-full rounded-full bg-ink/10", className)}>
-      <span className="absolute inset-y-0 rounded-full bg-sulfur ring-1 ring-obsidian/40" style={{ left: `${left}%`, width: `${Math.max(right - left, 1)}%` }} />
-      <span className="absolute inset-y-[-2px] left-1/2 border-l border-dashed border-obsidian/50" />
+      <span className="absolute inset-y-0 rounded-full bg-sulfur ring-1 ring-obsidian/70" style={{ left: `${left}%`, width: `${Math.max(right - left, 1)}%` }} />
+      <span className="absolute inset-y-[-3px] left-1/2 border-l border-dashed border-obsidian/70" />
       <span className="absolute inset-y-[-3px] w-[2px] -translate-x-1/2 bg-obsidian" style={{ left: `${pos(band.momentum)}%` }} />
     </span>
   );
@@ -192,11 +192,11 @@ function SkillList({
                   )}
                 </span>
                 <span className="flex shrink-0 flex-col items-end gap-1">
-                  <span className="font-mono text-[12px] text-grey tabular-nums">
+                  <span className="font-mono text-[12px] whitespace-nowrap text-grey tabular-nums">
                     {signed(skill.momentum)}
                     {skill.band && <> {t("radar.bandPlusMinus", { value: (MOMENTUM_Z95 * skill.band.se).toFixed(2) })}</>}
                   </span>
-                  {skill.band && <MomentumBandStrip band={skill.band} className="w-20" />}
+                  {skill.band && <MomentumBandStrip band={skill.band} className="w-24" />}
                 </span>
               </button>
             </li>
@@ -213,12 +213,13 @@ function SkillDrawerBody({ skill, direction, radar, links }: { skill: RadarSkill
   const { t } = useT();
   const link = links[skill.skillId];
   const line = LINES.find((item) => item.id === direction)!;
+  const unclear = displayDirection(direction, skill.band) === "unclear";
   return (
     <div className="flex flex-col gap-6 text-[15px]">
       <p className="flex items-center gap-2 font-mono text-[12px] tracking-[0.06em] uppercase">
-        <span aria-hidden className={cn("size-3.5 rounded-full ring-[1.5px] ring-ink", DOT[direction])} />
-        {displayDirection(direction, skill.band) === "unclear" ? (
-          <span data-testid="direction-label">{t("radar.unclear")} ?</span>
+        <span aria-hidden className={cn("size-3.5 rounded-full ring-[1.5px] ring-ink", unclear ? "bg-grey" : DOT[direction])} />
+        {unclear ? (
+          <span data-testid="direction-label">{t("radar.unclear")}</span>
         ) : (
           <span data-testid="direction-label">{t(line.label)} {line.arrow}</span>
         )}{" "}
@@ -233,8 +234,12 @@ function SkillDrawerBody({ skill, direction, radar, links }: { skill: RadarSkill
           </p>
           <MomentumBandStrip band={skill.band} className="mt-2" />
           <p className="mt-2 text-[13px] text-grey">
-            {t(skill.band.crossesZero ? "radar.bandUnclear" : "radar.bandClear")} {t("radar.bandMethod")}
+            {t(skill.band.crossesZero ? "radar.bandUnclear" : "radar.bandClear")}
           </p>
+          <details className="mt-2 text-[13px] text-grey">
+            <summary className="cursor-pointer font-medium underline underline-offset-4">{t("radar.bandHow")}</summary>
+            <p className="mt-1">{t("radar.bandMethod")}</p>
+          </details>
         </div>
       )}
 

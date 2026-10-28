@@ -1,5 +1,7 @@
 import { describe, expect, it } from "vitest";
+import catalogueJson from "@/data/catalogue.json";
 import { CATALOGUE } from "./catalogue";
+import type { Catalogue } from "./catalogue";
 import {
   buildRadar,
   countUnclearLabels,
@@ -68,6 +70,44 @@ describe("buildRadar on the real catalogue", () => {
       expect(skill.band).not.toBeNull();
       expect(Math.abs(skill.band!.momentum - skill.momentum)).toBeLessThan(1e-9);
     }
+  });
+});
+
+describe("buildRadar on a live snapshot", () => {
+  const live = structuredClone(catalogueJson) as unknown as Catalogue;
+  for (const signal of Object.values(live.signals)) signal.momentum += 0.3;
+  for (const keyword of live.keywords.today) {
+    keyword.recent += 50;
+    keyword.previous += 50;
+  }
+  const radar = buildRadar(live, "today")!;
+
+  it("centres every band on the skill's live momentum, not the keyword mean", () => {
+    const skills = [...radar.rising, ...radar.steady, ...radar.declining];
+    for (const skill of skills) {
+      expect(skill.band).not.toBeNull();
+      expect(skill.band!.momentum).toBe(skill.momentum);
+      const se =
+        Math.sqrt(
+          skill.keywords.reduce(
+            (sum, keyword) => sum + keywordMomentumSE(keyword.recent, keyword.previous) ** 2,
+            0,
+          ),
+        ) / skill.keywords.length;
+      expect(skill.band!.se).toBeCloseTo(se, 12);
+      expect(skill.band!.low).toBeCloseTo(skill.momentum - MOMENTUM_Z95 * se, 12);
+      expect(skill.band!.high).toBeCloseTo(skill.momentum + MOMENTUM_Z95 * se, 12);
+    }
+    expect(
+      skills.some((skill) => {
+        const mean =
+          skill.keywords.reduce(
+            (sum, keyword) => sum + skillMomentum(keyword.recent, keyword.previous),
+            0,
+          ) / skill.keywords.length;
+        return Math.abs(skill.momentum - mean) > 1e-9;
+      }),
+    ).toBe(true);
   });
 });
 

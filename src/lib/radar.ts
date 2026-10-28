@@ -71,17 +71,20 @@ export function keywordMomentumSE(recent: number, previous: number): number {
 }
 
 /**
- * Mean keyword momentum with a 95% uncertainty band. The keywords are treated
- * as independent, so the variance of the mean is the sum of the keyword
- * variances divided by k². Returns null when there are no keywords.
+ * Keyword momentum with a 95% uncertainty band. The keywords are treated as
+ * independent, so the variance of their mean is the sum of the keyword
+ * variances divided by k². When a centre is given (the skill's stored signal),
+ * the band is centred on it instead of on the keyword mean. Returns null when
+ * there are no keywords.
  */
 export function skillMomentumBand(
   keywords: Pick<CatalogueKeyword, "recent" | "previous">[],
+  centre?: number,
 ): MomentumBand | null {
   if (keywords.length === 0) return null;
   const k = keywords.length;
   const momenta = keywords.map((keyword) => skillMomentum(keyword.recent, keyword.previous));
-  const momentum = momenta.reduce((sum, value) => sum + value, 0) / k;
+  const momentum = centre ?? momenta.reduce((sum, value) => sum + value, 0) / k;
   const variance =
     keywords.reduce((sum, keyword) => sum + keywordMomentumSE(keyword.recent, keyword.previous) ** 2, 0) / k ** 2;
   const se = Math.sqrt(variance);
@@ -107,7 +110,7 @@ export function buildRadar(catalogue: Catalogue, signalDate: SignalDate): Radar 
         skillId,
         label: catalogue.skills[skillId] ?? skillId,
         momentum: signal.momentum,
-        band: skillMomentumBand(skillKeywords),
+        band: skillMomentumBand(skillKeywords, signal.momentum),
         keywords: skillKeywords,
       };
     })
