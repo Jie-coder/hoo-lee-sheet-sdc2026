@@ -55,10 +55,12 @@ export function RankList({
                 data-testid={isNew ? "override-row-new" : undefined}
                 className={`flex items-baseline justify-between gap-3${isNew ? " -mx-2 rounded-md bg-sulfur px-2 text-ink" : ""}`}
               >
-                <span className="min-w-0 truncate first-letter:uppercase">
-                  <span className={`font-mono text-[12px] ${muted}`}>#{index + 1}</span> {item.label}
+                <span className="flex min-w-0 items-baseline gap-1.5">
+                  <span className="min-w-0 truncate first-letter:uppercase">
+                    <span className={`font-mono text-[12px] ${muted}`}>#{index + 1}</span> {item.label}
+                  </span>
                   {isNew && (
-                    <span className="ml-1.5 rounded-full bg-ink px-1.5 py-px align-middle font-mono text-[10px] font-bold tracking-[0.06em] text-sulfur">
+                    <span className="shrink-0 rounded-full bg-ink px-1.5 py-px font-mono text-[10px] font-bold tracking-[0.06em] text-sulfur">
                       {t("override.new")}
                     </span>
                   )}
