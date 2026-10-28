@@ -65,10 +65,23 @@ Versions below are the `^` semver ranges declared in `package.json`; the exact r
 
 ## AI tools used
 
+### Development tools (used to write code)
+
+- **Cursor (cloud agents)** — AI coding agents used to write code during
+  the hacking period (contracts, scoring engine, early results page).
+- **OpenCode** — AI coding agent (DeepSeek model) used for edits from
+  23 Oct onwards.
 - **Claude Code (Anthropic)** — AI coding assistant used to generate most of
   the starter code under human supervision.
 - **Grok Bot** — AI assistant used to orchestrate the work, review and fix
   the generated code, and verify build/lint/runtime checks.
+
+### Models / APIs called by the app at runtime
+
+- **Google Gemini** — `gemini-3.8-flash` chat model on the Vercel backup and
+  as fallback; `gemini-embedding-001` embeddings for skill matching.
+- **Anthropic Claude Haiku 4.5** (`claude-haiku-4-5`) — chat model on Replit,
+  via Replit AI Integrations.
 
 All AI-generated code is reviewed by the team before it is merged, and the
 code is kept simple and commented so team members can explain every file.
@@ -81,7 +94,7 @@ the build machine's logs.
 | PR | Commits | Tool source |
 |---|---|---|
 | #65 | a7a3e4a, cf2808f | Coded directly by Kai |
-| #66 | 0191b0d, 3ccf2db | Coded directly by Jarvis (Grok Bot); no Claude Code / OpenCode activity in the logs for 2026-10-23 21:47–22:20 UTC+8, branch `jarvis/nav-back-steps` |
+| #66 | 0191b0d, 3ccf2db, b262081 | Coded directly by Jarvis (Grok Bot); no Claude Code / OpenCode activity in the logs for 2026-10-23 21:47–22:20 UTC+8, branch `jarvis/nav-back-steps` |
 | #67 | 98c8941, 8b5e1f4, 59fdca2, 43423ef | Coded directly by Jarvis (Grok Bot); same log window, branch `jarvis/footer-logo` |
 | #68 | afa2b21, a040d59 | Coded directly by Kai |
 | #70 | 7840eaf, d7fc539, b46a2b6 | Coded directly by Kai |
