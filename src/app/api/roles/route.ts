@@ -2,6 +2,7 @@
 // (src/data/catalogue.json, built from data/*.csv). No LLM and no API key:
 // the same profile always gets the same result. See src/lib/analyze.ts.
 import { z } from "zod";
+import { clampAdoptionSpeed } from "@/lib/adoption";
 import { analyzeProfile, SIGNAL_DATES } from "@/lib/analyze";
 import { catalogueFor, getActiveSignals, type ActiveSignals } from "@/lib/signals";
 import { resolveProfileSkills } from "@/lib/profile-skills";
@@ -17,6 +18,7 @@ const RequestSchema = z.strictObject({
   impactInterest: ImpactInterestSchema.default("none"),
   /** Rank with today's arXiv snapshot, or the one ~30 days earlier. */
   signalDate: z.enum(SIGNAL_DATES).default("today"),
+  adoptionSpeed: z.number().min(0.5).max(2).default(1),
   /** Upload only: the CV's most recent job title, so that job is not recommended back. */
   currentJobTitle: z.string().trim().max(200).optional(),
   /**
@@ -51,7 +53,7 @@ export async function POST(request: Request) {
     );
   }
 
-  const { personaId, skills: chips, impactInterest, signalDate, currentJobTitle, overrides = [] } = parsed.data;
+  const { personaId, skills: chips, impactInterest, signalDate, adoptionSpeed, currentJobTitle, overrides = [] } = parsed.data;
   const active = await getActiveSignals();
   const catalogue = catalogueFor(active, overrides);
   const { skills, matches } = resolveProfileSkills(catalogue, personaId, chips);
@@ -59,7 +61,13 @@ export async function POST(request: Request) {
     personaId === "upload"
       ? detectCurrentOccupationId(currentJobTitle, catalogue.occupations)
       : PERSONAS[personaId].currentOccupationId;
-  const result = analyzeProfile(catalogue, { skills, currentOccupationId, impactInterest, signalDate });
+  const result = analyzeProfile(catalogue, {
+    skills,
+    currentOccupationId,
+    impactInterest,
+    signalDate,
+    adoption: clampAdoptionSpeed(adoptionSpeed),
+  });
 
   const response: RolesResponse = {
     ...result,

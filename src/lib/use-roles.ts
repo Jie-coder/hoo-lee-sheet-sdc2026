@@ -25,12 +25,14 @@ export function rolesRequest(
   profile: FlowProfile,
   impactInterest: ImpactInterest | undefined,
   signalDate: SignalDate = "today",
+  adoptionSpeed: number = 1,
 ): RolesRequest {
   return {
     personaId: profile.personaId,
     skills: profile.skills.map((skill) => ({ label: skill.label, selfReported: skill.selfReported })),
     impactInterest: impactInterest ?? "none",
     signalDate,
+    adoptionSpeed,
     ...(profile.personaId === "upload" && profile.roles[0]?.title ? { currentJobTitle: profile.roles[0].title } : {}),
   };
 }
@@ -39,10 +41,11 @@ export function useRoles(
   profile: FlowProfile | null,
   impactInterest: ImpactInterest | undefined,
   signalDate: SignalDate = "today",
+  adoptionSpeed: number = 1,
 ) {
   const key = useMemo(
-    () => (profile ? JSON.stringify(rolesRequest(profile, impactInterest, signalDate)) : null),
-    [profile, impactInterest, signalDate],
+    () => (profile ? JSON.stringify(rolesRequest(profile, impactInterest, signalDate, adoptionSpeed)) : null),
+    [profile, impactInterest, signalDate, adoptionSpeed],
   );
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [, setLoaded] = useState(0);

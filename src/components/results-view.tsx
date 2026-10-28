@@ -9,12 +9,14 @@ import { LayoutGroup, motion, useReducedMotion } from "framer-motion";
 import { RefreshCw } from "lucide-react";
 import { useFlow } from "@/context/flow-context";
 import { Drawer, IllustrationPanel, PageHero, SignalLight, SourceRow } from "@/components/caldera";
+import { AdoptionSpeedSlider } from "@/components/adoption-speed-slider";
 import { EASE_OUT } from "@/components/motion";
 import { RadarEntry } from "@/components/radar-entry";
 import { RoleCard } from "@/components/role-card";
 import { ScenarioTabs, SCENARIO_LABEL } from "@/components/scenario-tabs";
 import { SignalDateToggle } from "@/components/signal-date-toggle";
 import { Skeleton } from "@/components/ui/skeleton";
+import { ADOPTION_SPEED } from "@/lib/adoption";
 import type { SignalDate } from "@/lib/analyze";
 import { explainRole } from "@/lib/explain";
 import { useT, type MessageKey } from "@/lib/i18n";
@@ -36,7 +38,8 @@ export function ResultsView() {
   const { t, locale } = useT();
   const { hydrated, consent, profile, interviewAnswers, setChosenRoleId } = useFlow();
   const [signalDate, setSignalDate] = useState<SignalDate>("today");
-  const { state, retry } = useRoles(profile, interviewAnswers.impact_interest, signalDate);
+  const [adoptionSpeed, setAdoptionSpeed] = useState<number>(ADOPTION_SPEED.default);
+  const { state, retry } = useRoles(profile, interviewAnswers.impact_interest, signalDate, adoptionSpeed);
   const [scenario, setScenario] = useState<ScenarioId>("co");
   const [chosenId, setChosenId] = useState<string | null>(null);
   const [howOpen, setHowOpen] = useState(false);
@@ -179,6 +182,7 @@ export function ResultsView() {
               </h2>
               <ScenarioTabs value={scenario} onChange={setScenario} />
             </div>
+            <AdoptionSpeedSlider value={adoptionSpeed} onChange={setAdoptionSpeed} />
             <p className="mt-3 font-mono text-[12px] tracking-[0.06em] text-grey/70 uppercase" aria-live="polite">
               {sameAsCo
                 ? t("results.sameScenarioOrder", { scenario: t(SCENARIO_LABEL.co) })
