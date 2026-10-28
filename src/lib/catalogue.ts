@@ -2,7 +2,7 @@
 // scripts/build-catalogue.ts into src/data/catalogue.json. Types only here,
 // plus the loader: no file system access, so it works on any host.
 import catalogueJson from "@/data/catalogue.json";
-import type { ClusterId, Course, IsoDate, Programme } from "@/types/contracts";
+import type { ClusterId, Course, IsoDate, Programme, SdgTargetId } from "@/types/contracts";
 
 /** One dataset from sources.csv, by name. */
 export type CatalogueSource = {
@@ -20,6 +20,12 @@ export type CatalogueExposure = {
   asOf: IsoDate;
   /** True when ISCO-08 has no code for this exact job, so the figure is for a wider group. */
   groupEstimate: boolean;
+};
+
+/** The SDG target one ESCO skill group contributes to, from skill_group_sdg.csv. */
+export type CatalogueGroupSdg = {
+  target: SdgTargetId;
+  reason: string;
 };
 
 /** An SDG target for one occupation, from occupation_sdg.csv. */
@@ -91,6 +97,8 @@ export type Catalogue = {
   skillGroups: Record<string, string>;
   /** ESCO group id -> label, e.g. "managing, gathering and storing digital data". */
   groupLabels: Record<string, string>;
+  /** ESCO group id -> its SDG target and reason (data/skill_group_sdg.csv). */
+  groupSdg: Record<string, CatalogueGroupSdg>;
   signals: Record<string, CatalogueSignal>;
   /** The same keywords counted about 30 days earlier (data/keywords_prior.csv), or null when not collected. */
   priorSignalsAsOf: IsoDate | null;

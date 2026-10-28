@@ -18,6 +18,7 @@ import {
   mapOccupationSkillRow,
   mapProgrammeRow,
   mapScenarioRow,
+  mapSkillGroupSdgRow,
   mapSourceRow,
 } from "./lib/mappers";
 import {
@@ -53,6 +54,7 @@ import type {
   OccupationRow,
   OccupationSkillRow,
   ScenarioRow,
+  SkillGroupSdgRow,
   SourceRow,
 } from "./lib/row-schemas";
 
@@ -85,6 +87,7 @@ export type FileRunOutcome = {
   validSources: SourceRow[];
   validExposures: ExposureRow[];
   validOccupationSkills: OccupationSkillRow[];
+  validSkillGroupSdg: SkillGroupSdgRow[];
   validDemand: DemandRow[];
   validScenarios: ScenarioRow[];
   skillPairs: { skills: string[]; skillUris: string[] }[];
@@ -150,6 +153,12 @@ type OccupationSkillRecord = {
   occupationId: string;
   sourceName: string;
 };
+type SkillGroupSdgRecord = {
+  row: number;
+  groupUri: string;
+  valid: boolean;
+  value: SkillGroupSdgRow | null;
+};
 type DemandRecord = {
   row: number;
   /** cluster + isco_major_group + metric + period, for the duplicate check. */
@@ -197,6 +206,7 @@ export function runFile(key: FileKey, dir: string): FileRunOutcome {
     validSources: [],
     validExposures: [],
     validOccupationSkills: [],
+    validSkillGroupSdg: [],
     validDemand: [],
     validScenarios: [],
     skillPairs: [],
@@ -237,6 +247,7 @@ export function runFile(key: FileKey, dir: string): FileRunOutcome {
   const exposureRecords: ExposureRecord[] = [];
   const occupationRecords: OccupationRecord[] = [];
   const occupationSkillRecords: OccupationSkillRecord[] = [];
+  const skillGroupSdgRecords: SkillGroupSdgRecord[] = [];
   const demandRecords: DemandRecord[] = [];
   const scenarioRecords: ScenarioRecord[] = [];
 
@@ -317,6 +328,15 @@ export function runFile(key: FileKey, dir: string): FileRunOutcome {
         occupationId: raw.occupation_id ?? "",
         sourceName: raw.source_name ?? "",
       });
+    } else if (key === "skill_group_sdg") {
+      const result = mapSkillGroupSdgRow(raw, rowNumber);
+      issues.push(...result.issues);
+      skillGroupSdgRecords.push({
+        row: rowNumber,
+        groupUri: (raw.group_uri ?? "").trim(),
+        valid: result.value !== null,
+        value: result.value,
+      });
     } else if (key === "demand") {
       const result = mapDemandRow(raw, rowNumber);
       issues.push(...result.issues);
@@ -338,6 +358,7 @@ export function runFile(key: FileKey, dir: string): FileRunOutcome {
   let validSources: SourceRow[] = [];
   let validExposures: ExposureRow[] = [];
   let validOccupationSkills: OccupationSkillRow[] = [];
+  let validSkillGroupSdg: SkillGroupSdgRow[] = [];
   let validDemand: DemandRow[] = [];
   let validScenarios: ScenarioRow[] = [];
   let skillPairs: { skills: string[]; skillUris: string[] }[] = [];
@@ -420,6 +441,35 @@ export function runFile(key: FileKey, dir: string): FileRunOutcome {
         sourceName: r.sourceName,
       })),
     };
+  } else if (key === "skill_group_sdg") {
+    // One SDG target per ESCO skill group.
+    const dup = finalizeDuplicates("skill_group_sdg.csv", "group_uri", (r) => r.groupUri, skillGroupSdgRecords);
+    issues.push(...dup.issues);
+    validRows = dup.validRows;
+    invalidRows = dup.invalidRows;
+    validSkillGroupSdg = dup.kept.filter((r) => r.value).map((r) => r.value as SkillGroupSdgRow);
+
+    // group_uri must be one of the groups in skill_groups.csv.
+    const groupsPath = join(dir, "skill_groups.csv");
+    if (existsSync(groupsPath)) {
+      const { header: groupHeader, rows: groupRows } = parseCsv(readFileSync(groupsPath, "utf8"));
+      const groupIndex = groupHeader.indexOf("group_uri");
+      const groups =
+        groupIndex < 0 ? new Set<string>() : new Set(groupRows.map((cells) => (cells[groupIndex] ?? "").trim()));
+      for (const record of dup.kept) {
+        if (record.groupUri.length > 0 && !groups.has(record.groupUri)) {
+          issues.push({
+            file: "skill_group_sdg.csv",
+            row: record.row,
+            column: "group_uri",
+            value: record.groupUri,
+            message: `"${record.groupUri}" is not a group_uri in skill_groups.csv`,
+            hint: "use a group_uri from skill_groups.csv, or regenerate it with scripts/fetch-esco-skill-groups.ts",
+            severity: "error",
+          });
+        }
+      }
+    }
   } else if (key === "demand") {
     // One figure per cluster, major group, metric and period.
     const dup = finalizeDuplicates(
@@ -499,6 +549,7 @@ export function runFile(key: FileKey, dir: string): FileRunOutcome {
     validSources,
     validExposures,
     validOccupationSkills,
+    validSkillGroupSdg,
     validDemand,
     validScenarios,
     skillPairs,

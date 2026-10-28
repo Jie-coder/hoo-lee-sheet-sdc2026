@@ -154,6 +154,7 @@ export function buildCatalogue(dir: string): Catalogue {
   const exposure = checkedOutcome("exposure", dir);
   const occupations = checkedOutcome("occupations", dir);
   const occupationSkills = checkedOutcome("occupation_skills", dir);
+  const skillGroupSdg = checkedOutcome("skill_group_sdg", dir);
 
   const sourceByName = Object.fromEntries(
     sources.validSources.map((source) => [
@@ -260,6 +261,17 @@ export function buildCatalogue(dir: string): Catalogue {
     groupLabels[groupId] = row.group_label;
   }
 
+  // One SDG target per ESCO skill group, keyed by the same group id as
+  // skillGroups/groupLabels so skillSdg() can walk skill -> group -> target.
+  const groupSdg: Catalogue["groupSdg"] = {};
+  for (const row of skillGroupSdg.validSkillGroupSdg) {
+    const groupId = escoUriToId(row.groupUri);
+    if (!(groupId in groupLabels)) {
+      throw new Error(`skill_group_sdg.csv: group_uri ${row.groupUri} is not in skill_groups.csv`);
+    }
+    groupSdg[groupId] = { target: row.sdgTarget, reason: row.sdgReason };
+  }
+
   return {
     signalsAsOf,
     occupations: occupationList,
@@ -267,6 +279,7 @@ export function buildCatalogue(dir: string): Catalogue {
     customSkills,
     skillGroups,
     groupLabels,
+    groupSdg,
     signals,
     priorSignalsAsOf: prior?.asOf ?? null,
     priorSignals: prior?.signals ?? null,

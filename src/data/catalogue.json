@@ -4711,6 +4711,180 @@
   "70ac2c90-656a-4fa3-886c-5b9305db2087": "processing information",
   "0231": "language acquisition"
  },
+ "groupSdg": {
+  "1021": {
+   "target": "6.2",
+   "reason": "Sanitation workers help communities gain safe and adequate sanitation and hygiene."
+  },
+  "062a9fde-cd91-44f9-9a2f-9e2bc3b281fd": {
+   "target": "12.6",
+   "reason": "Environmental advisers help companies adopt sustainable practices and report them honestly."
+  },
+  "08104c27-d4b2-4d40-ae97-dde65e71712f": {
+   "target": "8.8",
+   "reason": "Safety advisers help keep workplaces safe and protect the rights of workers."
+  },
+  "0a4c5823-8b09-4e6b-95b4-8036ef3b9c4c": {
+   "target": "10.2",
+   "reason": "Advocates help communities voice their needs and gain inclusion in public life."
+  },
+  "29fbde52-e525-4653-96d0-acd59ccb28d8": {
+   "target": "1.3",
+   "reason": "Service assistants help vulnerable people reach social protection and support."
+  },
+  "0512": {
+   "target": "3.b",
+   "reason": "Biochemists advance research on medicines and vaccines for major diseases."
+  },
+  "0732": {
+   "target": "9.1",
+   "reason": "Civil engineers build safe reliable infrastructure that supports development."
+  },
+  "969845ce-6895-44a8-a3d2-b8c2d8b5de21": {
+   "target": "4.2",
+   "reason": "Child care workers give young children a healthy start and prepare them for school."
+  },
+  "8064ae65-5d1b-44e1-9aaf-246a4285a9a6": {
+   "target": "12.6",
+   "reason": "Compliance with green standards pushes companies toward sustainable practices."
+  },
+  "5bcec244-3efe-45ac-8891-0ab4a91e9c48": {
+   "target": "8.8",
+   "reason": "Following safety rules keeps workplaces safe and protects workers."
+  },
+  "0611": {
+   "target": "4.4",
+   "reason": "These are ICT skills of the kind counted under SDG indicator 4.4.1 for youth and adults."
+  },
+  "d6a8a2a4-4e21-4ea6-b267-b5c63e687cfd": {
+   "target": "3.4",
+   "reason": "Counsellors support mental health and help people cope with personal and social problems."
+  },
+  "b2c688b0-9106-466d-8b88-eafdfe608e7d": {
+   "target": "9.1",
+   "reason": "Structural designers create safe infrastructure for economic development."
+  },
+  "db54693e-bcb0-4dae-8885-a43d510fb71f": {
+   "target": "3.8",
+   "reason": "Health programme planners extend quality health services to more people."
+  },
+  "d700aa7a-0ed8-4967-a32c-4cb6075ab3b9": {
+   "target": "3.8",
+   "reason": "Diagnosticians help patients get timely and correct treatment."
+  },
+  "61d1dab2-6007-4b7c-9380-cd88207fa30f": {
+   "target": "11.6",
+   "reason": "Waste workers keep cities clean and reduce environmental impact."
+  },
+  "0111": {
+   "target": "4.1",
+   "reason": "Education researchers improve teaching quality and learning outcomes."
+  },
+  "0713": {
+   "target": "7.1",
+   "reason": "Energy workers extend reliable and modern energy services."
+  },
+  "0521": {
+   "target": "15.1",
+   "reason": "Environmental scientists study and protect ecosystems and their services."
+  },
+  "0412": {
+   "target": "8.10",
+   "reason": "Banks and insurers widen access to financial services for all."
+  },
+  "50e42de7-4a5c-4f94-b160-765f547d840c": {
+   "target": "10.2",
+   "reason": "Assistive device specialists help people with disabilities take part fully in society."
+  },
+  "0421": {
+   "target": "16.3",
+   "reason": "Legal professionals uphold the rule of law and help people obtain fair access to justice."
+  },
+  "0914": {
+   "target": "3.8",
+   "reason": "Diagnostic technology enables quality essential health services for all."
+  },
+  "0912": {
+   "target": "3.8",
+   "reason": "Medical professionals deliver essential care that moves countries toward universal health coverage."
+  },
+  "0913": {
+   "target": "3.1",
+   "reason": "Midwives and nurses protect the health of mothers during pregnancy and birth."
+  },
+  "8bf9699c-f964-4e4b-ac3d-55aface09cbc": {
+   "target": "7.1",
+   "reason": "Energy operators deliver reliable modern energy services to households and firms."
+  },
+  "0916": {
+   "target": "3.8",
+   "reason": "Pharmacists ensure safe access to essential medicines for all."
+  },
+  "b88bddd4-210e-405f-bbdf-729bb66605a0": {
+   "target": "3.8",
+   "reason": "Appropriate prescribing supports quality essential health care."
+  },
+  "2b6e15f5-dfa0-4e7c-9687-5665b07e56a4": {
+   "target": "16.10",
+   "reason": "Privacy protection safeguards fundamental freedoms in the digital space."
+  },
+  "34691a8a-ec8e-4eaa-b6e7-f4dbf144c644": {
+   "target": "8.10",
+   "reason": "Advisers help people access banking insurance and financial services."
+  },
+  "0a400212-8693-4b1f-b0ca-d1f82c321916": {
+   "target": "3.8",
+   "reason": "Health workers deliver essential care toward universal health coverage."
+  },
+  "c75655c3-ed29-441e-b403-4dd65bc891a5": {
+   "target": "3.8",
+   "reason": "Medical advice helps people receive safe and appropriate care."
+  },
+  "73e602a0-f80f-4f56-8e21-3db4fd08709d": {
+   "target": "3.8",
+   "reason": "Clinical carers provide essential services that improve health for all."
+  },
+  "4bbdc5eb-b710-4b76-816d-04926f7ac4a1": {
+   "target": "3.4",
+   "reason": "Therapists support mental health and recovery from illness."
+  },
+  "0313": {
+   "target": "3.4",
+   "reason": "Psychologists promote mental health and wellbeing."
+  },
+  "0923": {
+   "target": "10.2",
+   "reason": "Social workers help excluded people take part fully in society."
+  },
+  "0542": {
+   "target": "17.19",
+   "reason": "Statisticians build the measures countries need to track development."
+  },
+  "335be43a-3267-400e-b5cb-c9e234dc7544": {
+   "target": "4.1",
+   "reason": "Teachers help learners complete quality primary and secondary education."
+  },
+  "caede8f1-6658-4d78-9eb4-2ad2c7ebf09b": {
+   "target": "4.4",
+   "reason": "Training builds the skills youth and adults need for decent jobs."
+  },
+  "0112": {
+   "target": "4.2",
+   "reason": "Pre-school trainers improve early childhood care and education."
+  },
+  "ee2576c0-1af5-44b5-8c0c-2002541d1ccc": {
+   "target": "3.c",
+   "reason": "Health trainers strengthen the health workforce."
+  },
+  "98fb499f-9155-412d-a8a0-95ba97126fec": {
+   "target": "4.4",
+   "reason": "These are ICT skills of the kind counted under SDG indicator 4.4.1 for youth and adults."
+  },
+  "446a36a5-2376-439f-b46b-4a214ba0acdf": {
+   "target": "4.4",
+   "reason": "These are ICT skills of the kind counted under SDG indicator 4.4.1 for youth and adults."
+  }
+ },
  "signals": {
   "9710092c-f174-4e84-95bf-2064d39ad7a0": {
    "momentum": -0.02150620522096362,

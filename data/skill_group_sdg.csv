@@ -1,0 +1,44 @@
+group_uri,group_label,sdg_target,sdg_reason,checked_on
+http://data.europa.eu/esco/skill/062a9fde-cd91-44f9-9a2f-9e2bc3b281fd,advising on environmental issues,12.6,Environmental advisers help companies adopt sustainable practices and report them honestly.,2026-10-29
+http://data.europa.eu/esco/skill/08104c27-d4b2-4d40-ae97-dde65e71712f,advising on workplace health and safety issues,8.8,Safety advisers help keep workplaces safe and protect the rights of workers.,2026-10-29
+http://data.europa.eu/esco/skill/0a4c5823-8b09-4e6b-95b4-8036ef3b9c4c,advocating for individual or community needs,10.2,Advocates help communities voice their needs and gain inclusion in public life.,2026-10-29
+http://data.europa.eu/esco/skill/29fbde52-e525-4653-96d0-acd59ccb28d8,assisting people to access services,1.3,Service assistants help vulnerable people reach social protection and support.,2026-10-29
+http://data.europa.eu/esco/isced-f/0512,biochemistry,3.b,Biochemists advance research on medicines and vaccines for major diseases.,2026-10-29
+http://data.europa.eu/esco/isced-f/0732,building and civil engineering,9.1,Civil engineers build safe reliable infrastructure that supports development.,2026-10-29
+http://data.europa.eu/esco/skill/969845ce-6895-44a8-a3d2-b8c2d8b5de21,caring for children,4.2,Child care workers give young children a healthy start and prepare them for school.,2026-10-29
+http://data.europa.eu/esco/isced-f/1021,community sanitation,6.2,Sanitation workers help communities gain safe and adequate sanitation and hygiene.,2026-10-29
+http://data.europa.eu/esco/skill/8064ae65-5d1b-44e1-9aaf-246a4285a9a6,complying with environmental protection laws and standards,12.6,Compliance with green standards pushes companies toward sustainable practices.,2026-10-29
+http://data.europa.eu/esco/skill/5bcec244-3efe-45ac-8891-0ab4a91e9c48,complying with health and safety procedures,8.8,Following safety rules keeps workplaces safe and protects workers.,2026-10-29
+http://data.europa.eu/esco/isced-f/0611,computer use,4.4,These are ICT skills of the kind counted under SDG indicator 4.4.1 for youth and adults.,2026-10-29
+http://data.europa.eu/esco/skill/d6a8a2a4-4e21-4ea6-b267-b5c63e687cfd,"counselling on personal, family or social issues",3.4,Counsellors support mental health and help people cope with personal and social problems.,2026-10-29
+http://data.europa.eu/esco/skill/b2c688b0-9106-466d-8b88-eafdfe608e7d,designing structures or facilities,9.1,Structural designers create safe infrastructure for economic development.,2026-10-29
+http://data.europa.eu/esco/skill/db54693e-bcb0-4dae-8885-a43d510fb71f,developing health programmes,3.8,Health programme planners extend quality health services to more people.,2026-10-29
+http://data.europa.eu/esco/skill/d700aa7a-0ed8-4967-a32c-4cb6075ab3b9,diagnosing health conditions,3.8,Diagnosticians help patients get timely and correct treatment.,2026-10-29
+http://data.europa.eu/esco/skill/61d1dab2-6007-4b7c-9380-cd88207fa30f,disposing of non-hazardous waste or debris,11.6,Waste workers keep cities clean and reduce environmental impact.,2026-10-29
+http://data.europa.eu/esco/isced-f/0111,education science,4.1,Education researchers improve teaching quality and learning outcomes.,2026-10-29
+http://data.europa.eu/esco/isced-f/0713,electricity and energy,7.1,Energy workers extend reliable and modern energy services.,2026-10-29
+http://data.europa.eu/esco/isced-f/0521,environmental sciences,15.1,Environmental scientists study and protect ecosystems and their services.,2026-10-29
+http://data.europa.eu/esco/isced-f/0412,"finance, banking and insurance",8.10,Banks and insurers widen access to financial services for all.,2026-10-29
+http://data.europa.eu/esco/skill/50e42de7-4a5c-4f94-b160-765f547d840c,fitting assistive devices,10.2,Assistive device specialists help people with disabilities take part fully in society.,2026-10-29
+http://data.europa.eu/esco/isced-f/0421,law,16.3,Legal professionals uphold the rule of law and help people obtain fair access to justice.,2026-10-29
+http://data.europa.eu/esco/isced-f/0914,medical diagnostic and treatment technology,3.8,Diagnostic technology enables quality essential health services for all.,2026-10-29
+http://data.europa.eu/esco/isced-f/0912,medicine,3.8,Medical professionals deliver essential care that moves countries toward universal health coverage.,2026-10-29
+http://data.europa.eu/esco/isced-f/0913,nursing and midwifery,3.1,Midwives and nurses protect the health of mothers during pregnancy and birth.,2026-10-29
+http://data.europa.eu/esco/skill/8bf9699c-f964-4e4b-ac3d-55aface09cbc,operating energy production or distribution equipment,7.1,Energy operators deliver reliable modern energy services to households and firms.,2026-10-29
+http://data.europa.eu/esco/isced-f/0916,pharmacy,3.8,Pharmacists ensure safe access to essential medicines for all.,2026-10-29
+http://data.europa.eu/esco/skill/b88bddd4-210e-405f-bbdf-729bb66605a0,"prescribing and ordering medical tests, treatments or devices",3.8,Appropriate prescribing supports quality essential health care.,2026-10-29
+http://data.europa.eu/esco/skill/2b6e15f5-dfa0-4e7c-9687-5665b07e56a4,protecting privacy and personal data,16.10,Privacy protection safeguards fundamental freedoms in the digital space.,2026-10-29
+http://data.europa.eu/esco/skill/34691a8a-ec8e-4eaa-b6e7-f4dbf144c644,providing financial advice,8.10,Advisers help people access banking insurance and financial services.,2026-10-29
+http://data.europa.eu/esco/skill/0a400212-8693-4b1f-b0ca-d1f82c321916,providing health care or medical treatments,3.8,Health workers deliver essential care toward universal health coverage.,2026-10-29
+http://data.europa.eu/esco/skill/c75655c3-ed29-441e-b403-4dd65bc891a5,providing medical advice,3.8,Medical advice helps people receive safe and appropriate care.,2026-10-29
+http://data.europa.eu/esco/skill/73e602a0-f80f-4f56-8e21-3db4fd08709d,"providing medical, dental and nursing care",3.8,Clinical carers provide essential services that improve health for all.,2026-10-29
+http://data.europa.eu/esco/skill/4bbdc5eb-b710-4b76-816d-04926f7ac4a1,providing psychological and occupational therapies,3.4,Therapists support mental health and recovery from illness.,2026-10-29
+http://data.europa.eu/esco/isced-f/0313,psychology,3.4,Psychologists promote mental health and wellbeing.,2026-10-29
+http://data.europa.eu/esco/isced-f/0923,social work and counselling,10.2,Social workers help excluded people take part fully in society.,2026-10-29
+http://data.europa.eu/esco/isced-f/0542,statistics,17.19,Statisticians build the measures countries need to track development.,2026-10-29
+http://data.europa.eu/esco/skill/335be43a-3267-400e-b5cb-c9e234dc7544,teaching academic or vocational subjects,4.1,Teachers help learners complete quality primary and secondary education.,2026-10-29
+http://data.europa.eu/esco/skill/caede8f1-6658-4d78-9eb4-2ad2c7ebf09b,teaching and training,4.4,Training builds the skills youth and adults need for decent jobs.,2026-10-29
+http://data.europa.eu/esco/isced-f/0112,training for pre-school teachers,4.2,Pre-school trainers improve early childhood care and education.,2026-10-29
+http://data.europa.eu/esco/skill/ee2576c0-1af5-44b5-8c0c-2002541d1ccc,training on health or medical topics,3.c,Health trainers strengthen the health workforce.,2026-10-29
+http://data.europa.eu/esco/skill/98fb499f-9155-412d-a8a0-95ba97126fec,using digital tools for collaboration and productivity,4.4,These are ICT skills of the kind counted under SDG indicator 4.4.1 for youth and adults.,2026-10-29
+http://data.europa.eu/esco/skill/446a36a5-2376-439f-b46b-4a214ba0acdf,"using word processing, publishing and presentation software",4.4,These are ICT skills of the kind counted under SDG indicator 4.4.1 for youth and adults.,2026-10-29

@@ -14,6 +14,7 @@ import { formatDayMonthYear, missingValue } from "@/lib/display";
 import { useT, type MessageKey } from "@/lib/i18n";
 import { buildPathwayPlan, courseLanguagePill, missingChineseCourse } from "@/lib/pathway";
 import { pathwaySdgTotal } from "@/lib/sdg-total";
+import { skillSdg } from "@/lib/skill-sdg";
 import { useRoles } from "@/lib/use-roles";
 import { cn } from "@/lib/utils";
 import type { Course, CostType, PlanStep, Programme } from "@/types/contracts";
@@ -353,12 +354,20 @@ export function PathwayView({
               <ul className="mt-5 space-y-2.5 text-[15px]">
                 {role.gap.map((skill) => {
                   const covered = closedSkillIds.has(skill.skillId);
+                  const sdg = skillSdg(skill.skillId);
                   return (
                     <li key={skill.skillId} className={cn("flex items-start gap-2.5", !covered && "text-grey/60")}>
                       <span aria-hidden className="mt-1.5 text-[10px]">
                         {covered ? "●" : "○"}
                       </span>
-                      <span>{skill.label}</span>
+                      <span>
+                        <span>{skill.label}</span>
+                        <span className="mt-0.5 block text-[12px] leading-snug text-grey/80">
+                          {sdg
+                            ? t("skillSdg.target", { target: sdg.target, reason: sdg.reason })
+                            : t("skillSdg.noDirectLink")}
+                        </span>
+                      </span>
                     </li>
                   );
                 })}

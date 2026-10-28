@@ -3,7 +3,7 @@
 // list this script proposes, demand and scenarios. camelCase, same style as
 // contracts.ts.
 import { z } from "zod";
-import { ClusterIdSchema, IsoDateSchema, ScenarioIdSchema } from "../../src/types/contracts";
+import { ClusterIdSchema, IsoDateSchema, ScenarioIdSchema, SdgTargetIdSchema } from "../../src/types/contracts";
 
 export const DATA_FORMATS = ["API", "CSV", "PDF"] as const;
 export const DataFormatSchema = z.enum(DATA_FORMATS);
@@ -66,6 +66,21 @@ export const ExposureRowSchema = z
   })
   .describe("exposure.csv row: one published exposure value, copied as-is.");
 export type ExposureRow = z.infer<typeof ExposureRowSchema>;
+
+/**
+ * One row of skill_group_sdg.csv: the one SDG target a group in ESCO's skills
+ * hierarchy contributes to, with the reason and the date it was checked.
+ */
+export const SkillGroupSdgRowSchema = z
+  .strictObject({
+    groupUri: z.url(),
+    groupLabel: z.string().min(1),
+    sdgTarget: SdgTargetIdSchema,
+    sdgReason: z.string().min(1),
+    checkedOn: IsoDateSchema,
+  })
+  .describe("skill_group_sdg.csv row: one SDG target for one ESCO skill group.");
+export type SkillGroupSdgRow = z.infer<typeof SkillGroupSdgRowSchema>;
 
 export const SKILL_RELATIONS = ["essential", "optional"] as const;
 export const SkillRelationSchema = z.enum(SKILL_RELATIONS);
