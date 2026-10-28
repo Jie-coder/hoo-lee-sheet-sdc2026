@@ -6,7 +6,6 @@ import type { Catalogue } from "@/lib/catalogue";
 import { rankChanges, type RankChange } from "@/lib/compare-snapshots";
 import { applyMomentumOverrides, applySignals, type MomentumOverride, type TrendSnapshot } from "@/lib/live-signals";
 import { buildRadar } from "@/lib/radar";
-import { rankRoles } from "@/lib/rank-roles";
 import type { RoleResult, ScenarioId, SignalSnapshot } from "@/types/contracts";
 
 export type PersonaRef = { id: string; currentOccupationId: string | null };
@@ -27,7 +26,12 @@ export function rankPersona(
   const withSignals = scored(catalogue, signals, overrides);
   const skills = (withSignals.personaSkills[persona.id] ?? []).map((row) => ({ skillId: row.skillId, level: 1 }));
   const result = analyzeProfile(withSignals, { skills, currentOccupationId: persona.currentOccupationId, impactInterest: "none" });
-  return rankRoles(result.roles, scenario);
+  // Strictly by the score the panel displays. rankRoles() treats scores within
+  // SCORE_TIE_EPSILON (0.005) as a tie and orders those by Fit, which is right for
+  // the Fit-led result cards but looked wrong next to a 3-decimal score column.
+  return [...result.roles].sort(
+    (a, b) => b.byScenario[scenario] - a.byScenario[scenario] || (a.occupationId < b.occupationId ? -1 : a.occupationId > b.occupationId ? 1 : 0),
+  );
 }
 
 export type OverrideComparison = { before: RoleResult[]; after: RoleResult[]; changes: RankChange[] };

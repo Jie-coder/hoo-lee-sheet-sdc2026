@@ -10,6 +10,21 @@ import type { IsoDate, SignalReading, SignalSnapshot } from "@/types/contracts";
 
 export const TREND_SOURCE_NAME = "arXiv API";
 
+/** The app's display zone: every fetch and "signal checked" date is a Malaysia (MYT, UTC+8) date. */
+export const TREND_TIME_ZONE = "Asia/Kuala_Lumpur";
+
+/** The MYT calendar date of an instant, e.g. 2026-10-28T18:49Z -> 2026-10-29. */
+export function mytDate(instant: Date): IsoDate {
+  return new Intl.DateTimeFormat("en-CA", { timeZone: TREND_TIME_ZONE, year: "numeric", month: "2-digit", day: "2-digit" }).format(instant) as IsoDate;
+}
+
+/** Oldest data date among keywords this snapshot did not re-count (null when all were re-counted). */
+export function carriedOverFrom(trend: TrendSnapshot): IsoDate | null {
+  const refreshed = new Set(trend.refreshed);
+  const dates = trend.keywords.filter((keyword) => !refreshed.has(keyword.keyword)).map((keyword) => keyword.recentWindow.end).sort();
+  return (dates[0] as IsoDate | undefined) ?? null;
+}
+
 /** Where the snapshot in use came from: a stored live fetch, or the counts bundled at build time. */
 export type SnapshotOrigin = "live" | "bundled";
 

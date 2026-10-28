@@ -78,4 +78,23 @@ describe("/api/refresh-signals and /api/signals", () => {
     const response = await POST(post({ keywords: "nope" }) as never);
     expect(response.status).toBe(400);
   });
+
+  it("default refresh stops at its budget; ?full=1 re-counts every keyword", async () => {
+    let clock = 0;
+    const timed = {
+      fetchImpl: async () => atom(40),
+      now: () => new Date(Date.UTC(2026, 0, 5) + clock),
+      sleep: async (ms: number) => {
+        clock += ms;
+      },
+    };
+    arxivTestHooks.options = timed;
+    const partial = await (await POST(post() as never)).json();
+    expect(partial.refreshed).toHaveLength(3);
+    expect(partial.skipped.length).toBeGreaterThan(0);
+    clock = 0;
+    const full = await (await POST(new Request("http://localhost/api/refresh-signals?full=1", { method: "POST" }) as never)).json();
+    expect(full.skipped).toEqual([]);
+    expect(full.refreshed.length + full.failed.length).toBe(full.active.trend.keywords.length);
+  });
 });

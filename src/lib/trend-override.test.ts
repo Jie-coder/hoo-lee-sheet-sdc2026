@@ -29,4 +29,11 @@ describe("change-the-data override", () => {
     );
     expect(changed).toBe(true);
   });
+
+  it("persona ranking is ordered by the score the panel shows", () => {
+    const { before } = compareOverride(CATALOGUE, signals, persona, "co", []);
+    for (let i = 1; i < before.length; i++) {
+      expect(before[i - 1].byScenario.co).toBeGreaterThanOrEqual(before[i].byScenario.co);
+    }
+  });
 });

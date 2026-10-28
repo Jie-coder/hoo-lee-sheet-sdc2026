@@ -3,6 +3,7 @@
 "use client";
 
 import { RefreshButton } from "@/components/refresh-button";
+import { formatDayMonthYear } from "@/lib/display";
 import { fetchedParts } from "@/lib/format-fetched";
 import { useT } from "@/lib/i18n";
 import type { TrendInfo } from "@/lib/trend-info";
@@ -33,7 +34,18 @@ export function TrendStatus({ info, className }: { info: TrendInfo; className?: 
         <p className="text-[13px] text-grey">
           <span data-testid="trend-origin" data-source={info.source}>{originLabel}</span>
           {info.source !== "bundled" && (
-            <> · {t("trend.refreshedCount", { count: String(info.refreshedCount), total: String(info.total) })}</>
+            <>
+              {" · "}
+              <span data-testid="trend-recounted">
+                {info.carriedFrom
+                  ? t("trend.refreshedPartial", {
+                      count: String(info.refreshedCount),
+                      total: String(info.total),
+                      date: formatDayMonthYear(info.carriedFrom, t),
+                    })
+                  : t("trend.refreshedCount", { count: String(info.refreshedCount), total: String(info.total) })}
+              </span>
+            </>
           )}
         </p>
         {info.warning && <p className="text-[12px] text-signal-high">{t("trend.fallback")}</p>}

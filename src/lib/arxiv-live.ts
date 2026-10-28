@@ -7,12 +7,14 @@
 import "server-only";
 import { arxivCountUrl, arxivWindows, parseTotalResults } from "../../scripts/lib/arxiv";
 import type { CatalogueKeyword } from "@/lib/catalogue";
-import { arxivQueryFromUrl, TREND_SOURCE_NAME, withCounts, type TrendSnapshot } from "@/lib/live-signals";
-import type { IsoDate } from "@/types/contracts";
+import { arxivQueryFromUrl, mytDate, TREND_SOURCE_NAME, withCounts, type TrendSnapshot } from "@/lib/live-signals";
 
 export const ARXIV_DELAY_MS = 3100;
 export const ARXIV_TIMEOUT_MS = 10_000;
-export const DEFAULT_BUDGET_MS = 45_000;
+/** Default refresh: the stalest keywords that fit in ~20 s (3 keywords at arXiv's 3 s rate), fast enough on stage. */
+export const DEFAULT_BUDGET_MS = 20_000;
+/** Full re-count of all keywords (?full=1): 25 keywords x 2 calls x 3.1 s is about 2.6 min. */
+export const FULL_BUDGET_MS = 280_000;
 const USER_AGENT = "Laluan/0.1 (SDC Hackathon 2026; https://github.com/Jie-coder/hoo-lee-sheet-sdc2026)";
 
 export type FetchLike = (url: string, init?: RequestInit) => Promise<Response>;
@@ -59,7 +61,8 @@ export async function refreshFromArxiv(base: TrendSnapshot, options: RefreshOpti
   const timeoutMs = options.timeoutMs ?? ARXIV_TIMEOUT_MS;
   const budgetMs = options.budgetMs ?? (Number(process.env.ARXIV_REFRESH_BUDGET_MS) || DEFAULT_BUDGET_MS);
   const started = now().getTime();
-  const asOf = now().toISOString().slice(0, 10) as IsoDate;
+  // The data date is the MYT calendar day of the fetch (fetchedAt stays a full ISO timestamp).
+  const asOf = mytDate(now());
   const windows = arxivWindows(asOf);
 
   const wanted = options.keywords ? new Set(options.keywords) : null;
