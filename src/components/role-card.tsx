@@ -76,9 +76,9 @@ export function RoleCard({
   const [skillsExpanded, setSkillsExpanded] = useState(false);
 
   const shownFit = displayFit ?? role.fit;
-  // Headline Fit is the calibrated value (raw fit / best raw fit this profile
-  // reaches on any scorable role, see calibrateFit in lib/score-breakdown.ts).
-  // Raw fit stays visible in the rank line and the drawer.
+  // Headline Fit is the calibrated value (raw fit / the fixed global
+  // denominator, see calibrateFit in lib/score-breakdown.ts), so the score is
+  // comparable across users. Raw fit stays visible in the rank line and drawer.
   const headlineFit = breakdown ? breakdown.calibratedFit : shownFit;
   const fitPercent = Math.round(headlineFit * 100);
   // Transition route stays on raw skill fit, not the interest-blended Fit.

@@ -172,16 +172,22 @@ describe("scoreBreakdown", () => {
 });
 
 describe("calibrateFit", () => {
-  it("divides raw fit by the profile's best raw fit", () => {
+  it("divides raw fit by a fixed denominator", () => {
     expect(calibrateFit(0.1, 0.2)).toBeCloseTo(0.5, 12);
     expect(calibrateFit(0.2, 0.2)).toBe(1);
   });
 
-  it("caps at 1 when raw fit exceeds the best", () => {
+  it("defaults to the global fixed denominator", () => {
+    const denominator = SCORING_PARAMS.fitCalibrationDenominator;
+    expect(calibrateFit(0.1)).toBeCloseTo(Math.min(1, 0.1 / denominator), 12);
+    expect(calibrateFit(denominator * 2)).toBe(1);
+  });
+
+  it("caps at 1 when raw fit exceeds the denominator", () => {
     expect(calibrateFit(0.3, 0.2)).toBe(1);
   });
 
-  it("returns 0 when no role has a positive raw fit", () => {
+  it("returns 0 when the denominator is zero or negative", () => {
     expect(calibrateFit(0, 0)).toBe(0);
     expect(calibrateFit(0.1, 0)).toBe(0);
     expect(calibrateFit(0.1, -1)).toBe(0);

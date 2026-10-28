@@ -295,8 +295,6 @@ export function analyzeProfile(catalogue: Catalogue, input: AnalyzeInput): Analy
       })),
     ),
   }));
-  const bestRawFit = allFits.reduce((best, item) => Math.max(best, item.fit), 0);
-
   const breakdown: Record<string, RoleBreakdown> = {};
   for (const role of roles) {
     const occupation = byId.get(role.occupationId) as CatalogueOccupation;
@@ -343,7 +341,7 @@ export function analyzeProfile(catalogue: Catalogue, input: AnalyzeInput): Analy
         ]),
       ) as Record<ScenarioId, ScoreBreakdown>,
       whatIf: whatIf(candidate, { scenario: "co", impactInterest: input.impactInterest, adoption: input.adoption }, 5),
-      calibratedFit: calibrateFit(role.fit, bestRawFit),
+      calibratedFit: calibrateFit(role.fit),
       fitRank: fitRank(allFits, role.occupationId),
     };
   }

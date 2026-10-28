@@ -189,14 +189,19 @@ export function whatIf(
 /**
  * Calibration method: raw fit F is a share of a role's importance-weighted
  * essential skills, so a real CV rarely exceeds ~0.25 on any role. The
- * calibrated value divides F by the best raw fit this same profile reaches on
- * any scorable role (the best achievable overlap for this profile), so 100%
- * means "your strongest match", not "every skill". It is a monotone rescale:
- * it never changes ranking, uses no constants, and the raw F is always shown
- * beside it.
+ * calibrated value divides F by a fixed global denominator
+ * (SCORING_PARAMS.fitCalibrationDenominator, the p95 raw fit over the
+ * reference personas x occupations), capped at 1. Because the denominator is
+ * the same for everyone, calibrated scores compare across users rather than
+ * being relative to each user's own best role. It is a monotone rescale, so
+ * it never changes ranking, and the raw F is always shown beside it. A
+ * denominator of 0 or less yields 0.
  */
-export function calibrateFit(rawFit: number, bestRawFit: number): number {
-  return bestRawFit <= 0 ? 0 : Math.min(1, rawFit / bestRawFit);
+export function calibrateFit(
+  rawFit: number,
+  denominator: number = SCORING_PARAMS.fitCalibrationDenominator,
+): number {
+  return denominator <= 0 ? 0 : Math.min(1, rawFit / denominator);
 }
 
 /** Ranking by fit descending, then occupationId ascending (1-based). */

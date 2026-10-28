@@ -171,6 +171,11 @@ describe("rankScore", () => {
   it("equals fit when momentum is zero", () => {
     expect(rankScore(0.4, 0)).toBeCloseTo(0.4, 12);
     expect(rankScore(0.4, 0, 3)).toBeCloseTo(0.4, 12);
+    for (const fit of [0, 0.05, 0.13, 0.4, 0.75, 1]) {
+      for (const adoption of [0, 0.5, 1, 2, 10]) {
+        expect(rankScore(fit, 0, adoption)).toBe(fit);
+      }
+    }
   });
 
   it("changes with adoption when momentum is non-zero", () => {

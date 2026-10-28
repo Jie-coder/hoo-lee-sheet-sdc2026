@@ -136,6 +136,15 @@ export const SCORING_PARAMS = {
   relatedSkillCap: 10,
   /** Essential-skill count above which the fit denominator is scaled down. See the file header. */
   essentialSkillCap: 25,
+  /**
+   * Fixed denominator for the displayed calibrated fit. Derived as the p95
+   * (nearest-rank) of the non-zero raw fits (fitScore, today's signals) over
+   * the reference population: the 3 demo personas in src/mocks/personas.ts
+   * (PERSONA_IDS, skills resolved via resolveProfileSkills as in
+   * analyze.test.ts) x all occupations in CATALOGUE. Recomputed by
+   * src/lib/fit-calibration.test.ts.
+   */
+  fitCalibrationDenominator: 0.3,
   /** Minimum fit F a role needs to be eligible for a scenario's top 3. See "Minimum fit filter" in the file header. */
   minFit: 0.13,
   /** Looser fit bar used for a scenario only when minFit leaves fewer than topN roles eligible. See the file header. */
