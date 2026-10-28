@@ -24,6 +24,8 @@ import { displayFit,
   SCORING_PARAMS,
   compareId,
   NON_RECOMMENDED_CLUSTERS,
+  roleFitScore,
+  roleMomentum,
   scenarioDemand,
   scoreRoles,
   sdgInterestMatches,
@@ -32,6 +34,14 @@ import { displayFit,
   type CandidateRole,
   type EssentialSkillInput,
 } from "@/lib/scoring";
+import {
+  calibrateFit,
+  fitRank,
+  scoreBreakdown,
+  whatIf,
+  type ScoreBreakdown,
+  type WhatIfItem,
+} from "./score-breakdown";
 /** Neutral skill weight, the same value the importer writes (DEFAULT_BASE_IMPORTANCE in scripts/lib/apply.ts). */
 const BASE_IMPORTANCE = 1;
 
@@ -45,6 +55,8 @@ export type AnalyzeInput = {
   impactInterest: ImpactInterest;
   /** Which arXiv snapshot to rank with: today's, or the one ~30 days earlier. Defaults to today. */
   signalDate?: SignalDate;
+  /** Adoption level for the role trend boost in rankScore. Defaults to SCORING_PARAMS.defaultAdoption. */
+  adoption?: number;
 };
 
 /** "prior" is the snapshot in data/keywords_prior.csv, about 30 days before "today". */
@@ -74,6 +86,10 @@ export type RoleBreakdown = {
   status: { label: string; tone: RoleStatusTone };
   /** ESCO group id of each gap skill, for "related course" suggestions on the pathway. */
   gapGroups: Record<string, string>;
+  score: Record<ScenarioId, ScoreBreakdown>;
+  whatIf: WhatIfItem[];
+  calibratedFit: number;
+  fitRank: { rank: number; total: number };
 };
 
 export type AnalyzeResult = {
@@ -226,10 +242,11 @@ export function analyzeProfile(catalogue: Catalogue, input: AnalyzeInput): Analy
         }),
       ),
       sdgLinks: occupation.sdg.map((sdg) => ({ target: sdg.target, tier: sdg.tier })),
+      roleMomentum: roleMomentum(occupation.essentialSkillIds, signals),
     };
   });
 
-  const scored = scoreRoles(candidates, input.impactInterest);
+  const scored = scoreRoles(candidates, input.impactInterest, { adoption: input.adoption });
   const byId = new Map(scorable.map((occupation) => [occupation.id, occupation]));
   const asOf = signalsAsOf;
 
@@ -269,9 +286,21 @@ export function analyzeProfile(catalogue: Catalogue, input: AnalyzeInput): Analy
     ]),
   ) as Record<ScenarioId, Set<string>>;
 
+  const allFits = candidates.map((candidate) => ({
+    occupationId: candidate.occupationId,
+    fit: roleFitScore(
+      candidate.essentialSkills.map((skill) => ({
+        importance: skillImportance(skill.baseImportance, skill.momentum),
+        level: skill.level,
+      })),
+    ),
+  }));
+  const bestRawFit = allFits.reduce((best, item) => Math.max(best, item.fit), 0);
+
   const breakdown: Record<string, RoleBreakdown> = {};
   for (const role of roles) {
     const occupation = byId.get(role.occupationId) as CatalogueOccupation;
+    const candidate = candidates.find((item) => item.occupationId === role.occupationId) as CandidateRole;
     const interestMatch = sdgInterestMatches(
       occupation.sdg.map((sdg) => ({ target: sdg.target, tier: sdg.tier })),
       input.impactInterest,
@@ -307,6 +336,15 @@ export function analyzeProfile(catalogue: Catalogue, input: AnalyzeInput): Analy
           catalogue.skillGroups[skill.skillId] ? [[skill.skillId, catalogue.skillGroups[skill.skillId]]] : [],
         ),
       ),
+      score: Object.fromEntries(
+        SCENARIO_IDS.map((scenario) => [
+          scenario,
+          scoreBreakdown(candidate, { scenario, impactInterest: input.impactInterest, adoption: input.adoption }),
+        ]),
+      ) as Record<ScenarioId, ScoreBreakdown>,
+      whatIf: whatIf(candidate, { scenario: "co", impactInterest: input.impactInterest, adoption: input.adoption }, 5),
+      calibratedFit: calibrateFit(role.fit, bestRawFit),
+      fitRank: fitRank(allFits, role.occupationId),
     };
   }
 

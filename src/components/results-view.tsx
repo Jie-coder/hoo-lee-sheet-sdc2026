@@ -203,6 +203,8 @@ export function ResultsView() {
                       relatedSkills={breakdown?.relatedSkillLabels}
                       sdgMatch={breakdown?.interestMatch ?? false}
                       displayFit={breakdown?.displayFit}
+                      breakdown={breakdown}
+                      scenario={scenario}
                     />
                   );
                 })}

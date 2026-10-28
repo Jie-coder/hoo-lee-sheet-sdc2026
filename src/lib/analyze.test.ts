@@ -282,3 +282,39 @@ describe("displayed Fit (INTEREST_FIT_BONUS)", () => {
     expect(isStretchRoute(care.fit)).toBe(true);
   });
 });
+
+describe("trend term (rankScore) moves the demo ranking", () => {
+  function run(id: (typeof PERSONA_IDS)[number], signalDate: "today" | "prior", adoption?: number) {
+    const persona = PERSONAS[id];
+    const chips = persona.parsed.skills.map((label) => ({ label, selfReported: false }));
+    const { skills } = resolveProfileSkills(CATALOGUE, id, chips);
+    return analyzeProfile(CATALOGUE, {
+      skills,
+      currentOccupationId: persona.currentOccupationId,
+      impactInterest: "none",
+      signalDate,
+      adoption,
+    });
+  }
+  const ids = (result: ReturnType<typeof run>) => rankRoles(result.roles, "co").map((role) => role.title);
+
+  it("changing momentum in the snapshot changes Pravin's ranking (code generation keyword)", () => {
+    expect(ids(run("pravin", "prior"))).not.toEqual(ids(run("pravin", "today")));
+    expect(ids(run("pravin", "prior"))).toContain("Data scientist");
+  });
+
+  it("adoption 0.5 / 1 / 2 scales the trend term; Aisyah's list changes between 0.5 and 1", () => {
+    const half = run("aisyah", "today", 0.5);
+    const one = run("aisyah", "today", 1);
+    const two = run("aisyah", "today", 2);
+    expect(ids(half)).toContain("Statistician");
+    expect(ids(one)).not.toContain("Statistician");
+    const analyst = (r: ReturnType<typeof run>) => r.roles.find((role) => role.title === "Data analyst")!.byScenario.co;
+    expect(analyst(half)).toBeGreaterThan(analyst(one));
+    expect(analyst(one)).toBeGreaterThan(analyst(two));
+  });
+
+  it("adoption defaults to 1", () => {
+    expect(run("pravin", "today").roles).toEqual(run("pravin", "today", 1).roles);
+  });
+});

@@ -8,6 +8,7 @@
 // a signal. Most roles have few such skills, so every role says how many.
 import type { SignalDate } from "@/lib/analyze";
 import type { Catalogue, CatalogueKeyword } from "@/lib/catalogue";
+import { roleMomentum } from "@/lib/scoring";
 import type { IsoDate } from "@/types/contracts";
 
 export type RadarSkill = {
@@ -70,9 +71,7 @@ export function buildRadar(catalogue: Catalogue, signalDate: SignalDate): Radar 
       const signalSkills = occupation.essentialSkillIds
         .filter((id) => signals[id])
         .map((id) => ({ label: catalogue.skills[id] ?? id, momentum: signals[id].momentum }));
-      const momentum = signalSkills.length
-        ? signalSkills.reduce((sum, skill) => sum + skill.momentum, 0) / signalSkills.length
-        : 0;
+      const momentum = roleMomentum(occupation.essentialSkillIds, signals);
       return {
         occupationId: occupation.id,
         title: occupation.title,

@@ -6,7 +6,9 @@ import {
   augmentationScore,
   exposureScore,
   matchedSkillLevel,
+  rankScore,
   roleFitScore,
+  roleMomentum,
   scenarioDemand,
   scenarioRank,
   scoreRoles,
@@ -31,6 +33,8 @@ describe("SCORING_PARAMS", () => {
     expect(SCORING_PARAMS.lambda).toBe(0.3);
     expect(SCORING_PARAMS.skillMatchCosine).toBe(0.82);
     expect(SCORING_PARAMS.sdgBonus).toBe(0.1);
+    expect(SCORING_PARAMS.trendBeta).toBe(0.3);
+    expect(SCORING_PARAMS.defaultAdoption).toBe(1);
     expect(SCORING_PARAMS.topN).toBe(3);
     expect(SCORING_PARAMS.gapSize).toBe(5);
     expect(SCORING_PARAMS.relatedSkillCredit).toBe(0.5);
@@ -144,6 +148,38 @@ describe("skillImportance", () => {
   it("saturates the boost near λ as momentum grows", () => {
     // tanh(20) ≈ 1, so imp ≈ 1 * (1 + 0.3) = 1.3
     expect(skillImportance(1, 20)).toBeCloseTo(1.3, 6);
+  });
+});
+
+describe("roleMomentum", () => {
+  it("averages momentum over the ids that have a signal", () => {
+    const signals = {
+      a: { momentum: 1 },
+      c: { momentum: 2 },
+    };
+    // Only a and c have signals: (1 + 2) / 2 = 1.5.
+    expect(roleMomentum(["a", "b", "c", "missing"], signals)).toBeCloseTo(1.5, 12);
+  });
+
+  it("returns 0 when no essential skill has a signal", () => {
+    expect(roleMomentum(["a", "b"], {})).toBe(0);
+    expect(roleMomentum([], { a: { momentum: 1 } })).toBe(0);
+  });
+});
+
+describe("rankScore", () => {
+  it("equals fit when momentum is zero", () => {
+    expect(rankScore(0.4, 0)).toBeCloseTo(0.4, 12);
+    expect(rankScore(0.4, 0, 3)).toBeCloseTo(0.4, 12);
+  });
+
+  it("changes with adoption when momentum is non-zero", () => {
+    const low = rankScore(0.4, 1, 0.5);
+    const high = rankScore(0.4, 1, 2);
+    expect(high).toBeGreaterThan(low);
+    expect(high).toBeCloseTo(0.4 * (1 + SCORING_PARAMS.trendBeta * Math.tanh(2)), 12);
+    // Negative momentum damps the fit.
+    expect(rankScore(0.4, -1)).toBeLessThan(0.4);
   });
 });
 
