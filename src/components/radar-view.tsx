@@ -10,6 +10,7 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { Drawer, PageHero, Perforation, SdgChip, SourceRow } from "@/components/caldera";
 import { SignalDateToggle } from "@/components/signal-date-toggle";
+import { TrendStatus, type TrendInfo } from "@/components/trend-status";
 import { InfoPopover } from "@/components/ui/info-popover";
 import type { SignalDate } from "@/lib/analyze";
 import { formatDayMonthYear, formatShortDate } from "@/lib/display";
@@ -246,11 +247,14 @@ export function RadarView({
   prior,
   dates,
   links,
+  trend,
 }: {
   today: Radar | null;
   prior: Radar | null;
   dates: { today: IsoDate; prior: IsoDate | null };
   links: SkillLinks;
+  /** The live trend snapshot in use, with the Refresh button. */
+  trend?: TrendInfo;
 }) {
   const { t } = useT();
   const back = radarBackLink(useSearchParams().get("from"));
@@ -278,6 +282,8 @@ export function RadarView({
         titleLeading="leading-[1.1]"
         lede={t("radar.lede")}
       />
+
+      {trend && <TrendStatus info={trend} className="mt-8" />}
 
       <div className="mt-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <p className="flex items-center gap-1 font-mono text-[12px] tracking-[0.06em] uppercase">

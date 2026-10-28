@@ -3,7 +3,7 @@
 // the same profile always gets the same result. See src/lib/analyze.ts.
 import { z } from "zod";
 import { analyzeProfile, SIGNAL_DATES } from "@/lib/analyze";
-import { CATALOGUE } from "@/lib/catalogue";
+import { catalogueFor, getActiveSignals, type ActiveSignals } from "@/lib/signals";
 import { resolveProfileSkills } from "@/lib/profile-skills";
 import { detectCurrentOccupationId } from "@/lib/role-aliases";
 import { PERSONA_IDS, PERSONAS } from "@/mocks/personas";
@@ -19,11 +19,21 @@ const RequestSchema = z.strictObject({
   signalDate: z.enum(SIGNAL_DATES).default("today"),
   /** Upload only: the CV's most recent job title, so that job is not recommended back. */
   currentJobTitle: z.string().trim().max(200).optional(),
+  /**
+   * Test override ("change the data" panel): set skills' momentum in the
+   * active snapshot for this request only. Never stored, so other users never see it.
+   */
+  overrides: z
+    .array(z.strictObject({ skillId: z.string().min(1).max(300), momentum: z.number().min(-10).max(10) }))
+    .max(50)
+    .optional(),
 });
 
 export type RolesRequest = z.input<typeof RequestSchema>;
 export type RolesResponse = ReturnType<typeof analyzeProfile> & {
   skillMatches: ReturnType<typeof resolveProfileSkills>["matches"];
+  /** The trend snapshot this ranking used: source, fetch time, live or bundled, and whether a test override was applied. */
+  trend: Pick<ActiveSignals, "source" | "fetchedAt" | "store" | "warning"> & { asOf: string; overridden: boolean };
 };
 
 export async function POST(request: Request) {
@@ -41,14 +51,27 @@ export async function POST(request: Request) {
     );
   }
 
-  const { personaId, skills: chips, impactInterest, signalDate, currentJobTitle } = parsed.data;
-  const { skills, matches } = resolveProfileSkills(CATALOGUE, personaId, chips);
+  const { personaId, skills: chips, impactInterest, signalDate, currentJobTitle, overrides = [] } = parsed.data;
+  const active = await getActiveSignals();
+  const catalogue = catalogueFor(active, overrides);
+  const { skills, matches } = resolveProfileSkills(catalogue, personaId, chips);
   const currentOccupationId =
     personaId === "upload"
-      ? detectCurrentOccupationId(currentJobTitle, CATALOGUE.occupations)
+      ? detectCurrentOccupationId(currentJobTitle, catalogue.occupations)
       : PERSONAS[personaId].currentOccupationId;
-  const result = analyzeProfile(CATALOGUE, { skills, currentOccupationId, impactInterest, signalDate });
+  const result = analyzeProfile(catalogue, { skills, currentOccupationId, impactInterest, signalDate });
 
-  const response: RolesResponse = { ...result, skillMatches: matches };
+  const response: RolesResponse = {
+    ...result,
+    skillMatches: matches,
+    trend: {
+      source: active.source,
+      store: active.store,
+      warning: active.warning,
+      fetchedAt: active.fetchedAt,
+      asOf: active.snapshot.asOf,
+      overridden: overrides.length > 0,
+    },
+  };
   return Response.json(response);
 }
