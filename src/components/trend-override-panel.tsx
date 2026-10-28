@@ -6,7 +6,7 @@
 import { useMemo, useState } from "react";
 import { FlaskConical, RotateCcw } from "lucide-react";
 import { CATALOGUE } from "@/lib/catalogue";
-import { describeChangeShort } from "@/lib/compare-snapshots";
+import { describeChangeShort, type RankChange } from "@/lib/compare-snapshots";
 import { useT } from "@/lib/i18n";
 import type { MomentumOverride } from "@/lib/live-signals";
 import { compareOverride, DEFAULT_OVERRIDE_PERSONA, personaRef, risingRoleRanking, type SignalsInUse } from "@/lib/trend-override";
@@ -24,9 +24,50 @@ function clampMomentum(value: number): number {
 }
 
 /** Ids in `after` that were not in `before` (roles newly entering the shown ranking). */
-export function newEntryIds(before: { id: string }[], after: { id: string }[]): Set<string> {
+export function newEntryIds(before: readonly { id: string }[], after: readonly { id: string }[]): Set<string> {
   const seen = new Set(before.map((item) => item.id));
   return new Set(after.filter((item) => !seen.has(item.id)).map((item) => item.id));
+}
+
+export type RowHighlight =
+  | { kind: "new"; ids: Set<string> }
+  | { kind: "moved"; id: string; before: number; after: number };
+
+/** Badge for the biggest mover: "↓3 · #1 → #4" (drop) or "↑1 · #4 → #3" (rise). */
+export function movedBadge(before: number, after: number): string {
+  const delta = after - before;
+  return `${delta > 0 ? "↓" : "↑"}${Math.abs(delta)} · #${before} → #${after}`;
+}
+
+/**
+ * Which row of the shown after-ranking to highlight. New entries (vs the shown before-list) win;
+ * otherwise the shown role whose rank moved the most (tie: better before rank, then id). Null when nothing moved.
+ */
+export function pickHighlight(
+  changes: readonly RankChange[],
+  shownBefore: readonly { id: string }[],
+  shownAfter: readonly { id: string }[],
+): RowHighlight | null {
+  const fresh = newEntryIds(shownBefore, shownAfter);
+  if (fresh.size) return { kind: "new", ids: fresh };
+  const shown = new Set(shownAfter.map((item) => item.id));
+  const moved = changes
+    .filter((c): c is RankChange & { before: number; after: number } => c.before != null && c.after != null && c.before !== c.after)
+    .filter((c) => shown.has(c.occupationId))
+    .sort(
+      (a, b) =>
+        Math.abs(b.after - b.before) - Math.abs(a.after - a.before) ||
+        a.before - b.before ||
+        a.occupationId.localeCompare(b.occupationId),
+    )[0];
+  return moved ? { kind: "moved", id: moved.occupationId, before: moved.before, after: moved.after } : null;
+}
+
+/** Summary order: the highlighted role(s) first, then the rest in their existing order. */
+export function orderChanges(changes: readonly RankChange[], highlight: RowHighlight | null): RankChange[] {
+  const first = (c: RankChange) =>
+    highlight == null ? false : highlight.kind === "new" ? highlight.ids.has(c.occupationId) || c.before == null : c.occupationId === highlight.id;
+  return [...changes].sort((a, b) => Number(first(b)) - Number(first(a)));
 }
 
 export function RankList({
@@ -34,11 +75,13 @@ export function RankList({
   items,
   testId,
   newIds,
+  highlight,
 }: {
   title: string;
   items: { id: string; label: string; value: string }[];
   testId: string;
   newIds?: Set<string>;
+  highlight?: RowHighlight | null;
 }) {
   const { t } = useT();
   return (
@@ -47,21 +90,23 @@ export function RankList({
       {items.length ? (
         <ol data-testid={testId} className="mt-2 space-y-1 text-[14px]">
           {items.map((item, index) => {
-            const isNew = newIds?.has(item.id) ?? false;
-            const muted = isNew ? "text-ink" : "text-grey";
+            const isNew = (newIds?.has(item.id) || (highlight?.kind === "new" && highlight.ids.has(item.id))) ?? false;
+            const moved = !isNew && highlight?.kind === "moved" && highlight.id === item.id ? highlight : null;
+            const lit = isNew || moved != null;
+            const muted = lit ? "text-ink" : "text-grey";
             return (
               <li
                 key={item.id}
-                data-testid={isNew ? "override-row-new" : undefined}
-                className={`flex items-baseline justify-between gap-3${isNew ? " -mx-2 rounded-md bg-sulfur px-2 text-ink" : ""}`}
+                data-testid={isNew ? "override-row-new" : moved ? "override-row-moved" : undefined}
+                className={`flex items-baseline justify-between gap-3${lit ? " -mx-2 rounded-md bg-sulfur px-2 text-ink" : ""}`}
               >
                 <span className="flex min-w-0 items-baseline gap-1.5">
                   <span className="min-w-0 truncate first-letter:uppercase">
                     <span className={`font-mono text-[12px] ${muted}`}>#{index + 1}</span> {item.label}
                   </span>
-                  {isNew && (
+                  {lit && (
                     <span className="shrink-0 rounded-full bg-ink px-1.5 py-px font-mono text-[10px] font-bold tracking-[0.06em] text-sulfur">
-                      {t("override.new")}
+                      {moved ? movedBadge(moved.before, moved.after) : t("override.new")}
                     </span>
                   )}
                 </span>
@@ -141,10 +186,11 @@ export function TrendOverridePanel({ signals }: { signals: SignalsInUse }) {
     roles.slice(0, 5).map((role) => ({ id: role.occupationId, label: role.title, value: role.byScenario.co.toFixed(3) }));
   const risingItems = (roles: typeof risingBefore) =>
     roles.map((role) => ({ id: role.occupationId, label: role.title, value: signed(role.momentum) }));
-  // New entries first (stable within each group), so the emphasised first line is the new role.
-  const changes = [...persona.changes]
-    .sort((a, b) => Number(a.before != null) - Number(b.before != null))
-    .map((change) => describeChangeShort(change, t));
+  // The highlighted role (new entries, else the biggest mover) leads the summary.
+  const shownBefore = roleItems(persona.before);
+  const shownAfter = roleItems(persona.after);
+  const highlight = pickHighlight(persona.changes, shownBefore, shownAfter);
+  const changes = orderChanges(persona.changes, highlight).map((change) => describeChangeShort(change, t));
 
   return (
     <section
@@ -249,8 +295,8 @@ export function TrendOverridePanel({ signals }: { signals: SignalsInUse }) {
         <div className="rounded-[24px] bg-paper p-5">
           <p className="text-[16px] font-bold">{t("override.personaHeading", { name: PERSONA.name })}</p>
           <div className="mt-3 grid grid-cols-1 gap-4 sm:grid-cols-2">
-            <RankList title={t("override.before")} items={roleItems(persona.before)} testId="override-persona-before" />
-            <RankList title={t("override.after")} items={roleItems(persona.after)} testId="override-persona-after" newIds={newEntryIds(roleItems(persona.before), roleItems(persona.after))} />
+            <RankList title={t("override.before")} items={shownBefore} testId="override-persona-before" />
+            <RankList title={t("override.after")} items={shownAfter} testId="override-persona-after" highlight={highlight} />
           </div>
           {active && (
             <ChangeSummary label={t("override.changes")} changes={changes} empty={t("override.noChange")} />
