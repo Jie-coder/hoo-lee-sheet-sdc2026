@@ -71,8 +71,8 @@ Versions below are the `^` semver ranges declared in `package.json`; the exact r
   the hacking period (contracts, scoring engine, early results page).
 - **OpenCode** — AI coding agent (DeepSeek model) used for edits from
   23 Oct onwards.
-- **Claude Code (Anthropic)** — AI coding assistant used to generate most of
-  the starter code under human supervision.
+- **Claude Code (Anthropic)** — AI coding assistant used to write code from
+  T06 onwards, under human supervision.
 - **Grok Bot** — AI assistant used to orchestrate the work, review and fix
   the generated code, and verify build/lint/runtime checks.
 
