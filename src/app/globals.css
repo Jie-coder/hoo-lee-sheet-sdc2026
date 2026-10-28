@@ -10,6 +10,7 @@
   --font-sans: var(--font-dm-sans), var(--font-noto-sans-sc), "Noto Sans CJK SC", system-ui, sans-serif;
   --font-serif: var(--font-anton), "Anton", system-ui, sans-serif;
   --font-mono: var(--font-geist-mono);
+  --font-data: var(--font-dm-mono);
   --font-heading: var(--font-serif);
   --color-paper: #e2e2df;
   --color-ink: #070607;

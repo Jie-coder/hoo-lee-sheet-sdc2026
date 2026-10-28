@@ -5,6 +5,7 @@ import { analyzeProfile } from "@/lib/analyze";
 import { CATALOGUE } from "@/lib/catalogue";
 import { formatFitPercent } from "@/lib/display";
 import { formatMonthlyRange, formatMonthlyRm, hasRealRange, salaryForRole } from "@/lib/salary";
+import { SCORING_PARAMS } from "@/lib/scoring";
 import { RoleCard } from "./role-card";
 
 // Real pipeline: a profile with five of a nurse's essential skills ranks
@@ -106,6 +107,7 @@ describe("RoleCard", () => {
 
   it("shows blended Fit on the face, raw skill match in the Why drawer, Transition route on raw fit", async () => {
     const user = userEvent.setup();
+    const breakdown = { ...result.breakdown[role.occupationId], calibratedFit: 0.25 };
     render(
       <RoleCard
         role={{ ...role, fit: 0.1 }}
@@ -117,15 +119,28 @@ describe("RoleCard", () => {
         isPrimary
         sdgMatch
         displayFit={0.25}
-        breakdown={{ ...result.breakdown[role.occupationId], calibratedFit: 0.25 }}
+        breakdown={breakdown}
       />,
     );
     expect(screen.getByText("25%")).toBeInTheDocument();
+    expect(screen.getByText(`Score ${(breakdown.score.co.total * 100).toFixed(1)}`)).toBeInTheDocument();
+    expect(screen.queryByText(/of 32/)).not.toBeInTheDocument();
     expect(screen.getByText("Transition route")).toBeInTheDocument();
     expect(screen.getByText("Matches your SDG choice")).toBeInTheDocument();
     await user.click(screen.getByRole("button", { name: "Why" }));
     const drawer = screen.getByRole("dialog");
     expect(within(drawer).getByText(`Fit ${formatFitPercent(0.25)} (raw 10%)`)).toBeInTheDocument();
-    expect(within(drawer).getByText(/^Skill match #\d+ of \d+$/)).toBeInTheDocument();
+    expect(
+      within(drawer).getByText(
+        `Total score #${breakdown.totalRank.co} of ${breakdown.fitRank.total} roles · Skill match #${breakdown.fitRank.rank} of ${breakdown.fitRank.total}`,
+      ),
+    ).toBeInTheDocument();
+    const minFit = Math.round(SCORING_PARAMS.minFit * 100);
+    const fallback = Math.round(SCORING_PARAMS.minFitFallback * 100);
+    expect(
+      within(drawer).getByText(
+        `Roles with raw skill match below ${minFit}% are hidden (down to ${fallback}% if too few roles qualify or the role matches your SDG choice).`,
+      ),
+    ).toBeInTheDocument();
   });
 });

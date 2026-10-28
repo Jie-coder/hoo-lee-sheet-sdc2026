@@ -1,6 +1,6 @@
 // Root layout: Laluan fonts, paper theme, app header, and toasts.
 import type { Metadata } from "next";
-import { Anton, DM_Sans, Geist_Mono, Noto_Sans_SC } from "next/font/google";
+import { Anton, DM_Mono, DM_Sans, Geist_Mono, Noto_Sans_SC } from "next/font/google";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 import { Toaster } from "@/components/ui/sonner";
@@ -42,6 +42,13 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+const dmMono = DM_Mono({
+  subsets: ["latin"],
+  weight: ["400", "500"],
+  variable: "--font-dm-mono",
+  display: "swap",
+});
+
 export const metadata: Metadata = {
   title: {
     default: "Laluan",
@@ -61,7 +68,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
-      className={`${anton.variable} ${dmSans.variable} ${notoSansSc.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${anton.variable} ${dmSans.variable} ${notoSansSc.variable} ${geistMono.variable} ${dmMono.variable} h-full antialiased`}
     >
       <body className="flex min-h-full flex-col">
         <FlowProvider>

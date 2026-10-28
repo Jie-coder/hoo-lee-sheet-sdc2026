@@ -9,7 +9,7 @@ import { motion, useReducedMotion } from "framer-motion";
 import { Drawer, Perforation, SdgChip, SignalLight, Ticket } from "@/components/caldera";
 import { EASE_OUT } from "@/components/motion";
 import { SourcesDisclosure } from "@/components/sources-disclosure";
-import { isStretchRoute } from "@/lib/scoring";
+import { isStretchRoute, SCORING_PARAMS } from "@/lib/scoring";
 import { formatFitPercent, missingValue } from "@/lib/display";
 import { useT, type MessageKey } from "@/lib/i18n";
 import type { RoleBreakdown } from "@/lib/analyze";
@@ -39,6 +39,8 @@ function signedPoints(value: number): string {
 }
 
 const SKILLS_COLLAPSED = 3;
+const MIN_FIT_PERCENT = Math.round(SCORING_PARAMS.minFit * 100);
+const MIN_FIT_FALLBACK_PERCENT = Math.round(SCORING_PARAMS.minFitFallback * 100);
 
 export function RoleCard({
   role,
@@ -135,10 +137,8 @@ export function RoleCard({
         </div>
         {scenarioScore && breakdown && (
           <p className="mt-2 font-mono text-[12px] tracking-[0.06em] text-ink uppercase tabular-nums">
-            {t("results.scoreRankLine", {
+            {t("results.scoreLine", {
               score: (scenarioScore.total * 100).toFixed(1),
-              rank: String(breakdown.totalRank[scenario]),
-              total: String(breakdown.fitRank.total),
             })}
           </p>
         )}
@@ -235,9 +235,16 @@ export function RoleCard({
               })}
             </p>
             <p className="mt-1 font-mono text-[12px] tracking-[0.04em] text-grey uppercase tabular-nums">
-              {t("results.fitRank", {
-                rank: String(breakdown.fitRank.rank),
+              {t("results.drawerRanks", {
+                totalRank: String(breakdown.totalRank[scenario]),
+                fitRank: String(breakdown.fitRank.rank),
                 total: String(breakdown.fitRank.total),
+              })}
+            </p>
+            <p className="mt-1 text-[12px] text-grey">
+              {t("results.hiddenThreshold", {
+                minFit: String(MIN_FIT_PERCENT),
+                fallback: String(MIN_FIT_FALLBACK_PERCENT),
               })}
             </p>
           </>
@@ -262,13 +269,13 @@ export function RoleCard({
                   <Fragment key={row.key}>
                     <div className="grid grid-cols-[1fr_auto_auto_auto] items-baseline gap-x-3">
                       <span>{t(row.label)}</span>
-                      <span className="min-w-14 text-right font-mono text-[12px] tracking-[0.04em] whitespace-nowrap text-grey tabular-nums">
+                      <span className="min-w-14 text-right font-data text-[12px] tracking-[0.04em] whitespace-nowrap text-grey tabular-nums">
                         {value}
                       </span>
-                      <span className="w-12 text-right font-mono text-[12px] tracking-[0.04em] text-grey tabular-nums">
+                      <span className="w-12 text-right font-data text-[12px] tracking-[0.04em] text-grey tabular-nums">
                         × {component.weight}
                       </span>
-                      <span className="w-14 text-right font-mono text-[12px] tracking-[0.04em] text-ink tabular-nums">
+                      <span className="w-14 text-right font-data text-[12px] tracking-[0.04em] text-ink tabular-nums">
                         {signedPoints(component.points * 100)}
                       </span>
                     </div>
@@ -286,7 +293,7 @@ export function RoleCard({
                 <span>{t("results.component.total")}</span>
                 <span className="min-w-14" />
                 <span className="w-12" />
-                <span className="w-14 text-right font-mono text-[12px] tracking-[0.04em] text-ink tabular-nums">
+                <span className="w-14 text-right font-data text-[12px] tracking-[0.04em] text-ink tabular-nums">
                   {(scenarioScore.total * 100).toFixed(1)}
                 </span>
               </div>
