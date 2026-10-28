@@ -27,6 +27,13 @@ describe("change-the-data NEW highlight", () => {
     expect(rows[0]).toHaveTextContent("Data scientist");
     expect(rows[0]).toHaveClass("bg-sulfur");
     expect(within(rows[0]).getByText("NEW")).toBeInTheDocument();
+    const name = within(rows[0]).getByTestId("override-row-name");
+    expect(name).not.toHaveClass("truncate");
+    expect(name).toHaveClass("block");
+    const badge = within(rows[0]).getByTestId("override-row-badge");
+    expect(badge).toHaveClass("block");
+    expect(badge).toHaveTextContent("NEW");
+    expect(name).not.toContainElement(within(rows[0]).getByText("NEW"));
   });
 
   it("translates the badge", () => {
@@ -117,6 +124,13 @@ describe("change-the-data biggest-mover highlight", () => {
     expect(rows[0]).toHaveTextContent("Web developer");
     expect(rows[0]).toHaveClass("bg-sulfur", "text-ink");
     expect(within(rows[0]).getByText("↓1 · #1 → #2")).toHaveClass("bg-ink", "text-sulfur");
+    const name = within(rows[0]).getByTestId("override-row-name");
+    expect(name).not.toHaveClass("truncate");
+    expect(name.className).not.toMatch(/truncate|ellipsis|whitespace-nowrap/);
+    const badge = within(rows[0]).getByTestId("override-row-badge");
+    expect(badge).toHaveClass("block");
+    expect(badge).toHaveTextContent("↓1 · #1 → #2");
+    expect(name).not.toContainElement(within(rows[0]).getByText("↓1 · #1 → #2"));
     expect(screen.queryByTestId("override-row-new")).toBeNull();
   });
 });

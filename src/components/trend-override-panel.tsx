@@ -100,16 +100,24 @@ export function RankList({
                 data-testid={isNew ? "override-row-new" : moved ? "override-row-moved" : undefined}
                 className={`flex items-baseline justify-between gap-3${lit ? " -mx-2 rounded-md bg-sulfur px-2 text-ink" : ""}`}
               >
-                <span className="flex min-w-0 items-baseline gap-1.5">
-                  <span className="min-w-0 truncate first-letter:uppercase">
-                    <span className={`font-mono text-[12px] ${muted}`}>#{index + 1}</span> {item.label}
-                  </span>
-                  {lit && (
-                    <span className="shrink-0 rounded-full bg-ink px-1.5 py-px font-mono text-[10px] font-bold tracking-[0.06em] text-sulfur">
-                      {moved ? movedBadge(moved.before, moved.after) : t("override.new")}
+                {lit ? (
+                  <span className="min-w-0" data-testid="override-row-body">
+                    <span className="block break-words first-letter:uppercase" data-testid="override-row-name">
+                      <span className={`font-mono text-[12px] ${muted}`}>#{index + 1}</span> {item.label}
                     </span>
-                  )}
-                </span>
+                    <span className="block pb-0.5" data-testid="override-row-badge">
+                      <span className="inline-block rounded-full bg-ink px-1.5 py-px font-mono text-[10px] font-bold tracking-[0.06em] text-sulfur">
+                        {moved ? movedBadge(moved.before, moved.after) : t("override.new")}
+                      </span>
+                    </span>
+                  </span>
+                ) : (
+                  <span className="flex min-w-0 items-baseline gap-1.5">
+                    <span className="min-w-0 truncate first-letter:uppercase">
+                      <span className={`font-mono text-[12px] ${muted}`}>#{index + 1}</span> {item.label}
+                    </span>
+                  </span>
+                )}
                 <span className={`shrink-0 font-mono text-[12px] tabular-nums ${muted}`}>{item.value}</span>
               </li>
             );
