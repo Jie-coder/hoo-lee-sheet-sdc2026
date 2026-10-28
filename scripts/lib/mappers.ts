@@ -114,7 +114,7 @@ export type CourseRowResult = MapResult<Course> & {
   skillUris: string[];
 };
 
-/** Maps one courses.csv row. skills/skill_uris, sdg_target/sdg_reason/summary are editorial: not part of CourseSchema, but checked here. */
+/** Maps one courses.csv row. skills/skill_uris and summary are editorial: not part of CourseSchema, but checked here. */
 export function mapCourseRow(raw: Record<string, string>, row: number): CourseRowResult {
   const file = "courses.csv";
   const issues: Issue[] = [];
@@ -156,6 +156,8 @@ export function mapCourseRow(raw: Record<string, string>, row: number): CourseRo
     costType: raw.cost_type ?? "",
     certificate: certificate.ok ? certificate.value : false,
     skillIds: skillUris.map(skillRefToId),
+    sdgTarget: raw.sdg_target ?? "",
+    sdgReason: raw.sdg_reason ?? "",
     lastChecked: raw.last_checked ?? "",
     mode: (raw.mode ?? "").trim().toLowerCase(),
     aiContent: (raw.ai_content ?? "").trim().toLowerCase(),
@@ -168,7 +170,7 @@ export function mapCourseRow(raw: Record<string, string>, row: number): CourseRo
         file,
         row,
         raw,
-        columnOverrides: { skillIds: "skills" },
+        columnOverrides: { skillIds: "skills", sdgTarget: "sdg_target", sdgReason: "sdg_reason" },
       })
     );
   }

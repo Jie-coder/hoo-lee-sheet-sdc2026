@@ -13,6 +13,7 @@ import { useFlow } from "@/context/flow-context";
 import { formatDayMonthYear, missingValue } from "@/lib/display";
 import { useT, type MessageKey } from "@/lib/i18n";
 import { buildPathwayPlan, courseLanguagePill, missingChineseCourse } from "@/lib/pathway";
+import { pathwaySdgTotal } from "@/lib/sdg-total";
 import { useRoles } from "@/lib/use-roles";
 import { cn } from "@/lib/utils";
 import type { Course, CostType, PlanStep, Programme } from "@/types/contracts";
@@ -124,6 +125,12 @@ export function PathwayView({
     if (step.kind === "course") return courses.find((course) => course.id === step.itemId) ?? null;
     return programmes.find((programme) => programme.id === step.itemId) ?? null;
   }
+
+  const planCourses = plan.steps
+    .filter((step) => step.kind === "course")
+    .map((step) => resolveItem(step))
+    .filter((item): item is Course => item !== null && "title" in item);
+  const sdgTotal = pathwaySdgTotal(planCourses, role.sdg);
 
   // One note under THE LINE when Chinese is selected and some step had to fall
   // back to a course in none of the selected languages.
@@ -380,6 +387,49 @@ export function PathwayView({
             <IllustrationPanel src="/illustrations/u1.svg" panel="plasma" className="h-[240px]" />
           </aside>
         </div>
+
+        <section className="mt-14" data-testid="pathway-sdg-total">
+          <h2 className="font-serif text-[clamp(28px,4vw,40px)] leading-[0.95] uppercase">
+            {t("pathway.sdgTotalTitle")}
+          </h2>
+          {sdgTotal.goals.length === 0 ? (
+            <p className="mt-3 text-[14px] text-grey">{t("pathway.sdgTotalEmpty")}</p>
+          ) : (
+            <ul className="mt-5 space-y-4">
+              {sdgTotal.goals.map((goal) => (
+                <li key={goal.goal} className="rounded-[28px] bg-card p-6">
+                  <p className="font-mono text-[12px] tracking-[0.04em] text-grey uppercase">
+                    {t("pathway.sdgTotalGoal", { goal: String(goal.goal), count: String(goal.count) })}
+                  </p>
+                  <ul className="mt-3 space-y-3">
+                    {goal.targets.map((target) => (
+                      <li key={target.target}>
+                        <p className="text-[14px] font-bold">
+                          {t("pathway.sdgTotalTarget", { target: target.target, count: String(target.count) })}
+                        </p>
+                        {target.roleReason && (
+                          <p className="mt-1 text-[13px] leading-snug text-grey">
+                            {t("pathway.sdgTotalRoleReason", { reason: target.roleReason })}
+                          </p>
+                        )}
+                        {target.courses.length > 0 && (
+                          <ul className="mt-2 space-y-2">
+                            {target.courses.map((course) => (
+                              <li key={course.id}>
+                                <p className="text-[14px] font-bold">{course.title}</p>
+                                <p className="text-[13px] leading-snug text-grey">{course.reason}</p>
+                              </li>
+                            ))}
+                          </ul>
+                        )}
+                      </li>
+                    ))}
+                  </ul>
+                </li>
+              ))}
+            </ul>
+          )}
+        </section>
 
         <SourceRow
           className="mt-14"
