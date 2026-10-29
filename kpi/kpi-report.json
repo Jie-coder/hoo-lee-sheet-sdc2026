@@ -1,0 +1,3421 @@
+{
+  "snapshot": {
+    "asOf": "2026-10-19",
+    "gitSha": "58855882e2c3d69ed0a2093e83819f1d1449a434"
+  },
+  "warning": "KPI1 depends on arXiv trend momentum and must be re-run after the persona re-run on refreshed trend data.",
+  "rows": [
+    {
+      "kpi": "KPI1 Role #1 pathway gap coverage",
+      "value": "mean 86.7% (min 60.0%)",
+      "target": "each ≥80%, mean ≥90%",
+      "status": "FAIL"
+    },
+    {
+      "kpi": "KPI2 Dated sources",
+      "value": "104/104 (100.0%)",
+      "target": "100%",
+      "status": "PASS"
+    },
+    {
+      "kpi": "KPI3 SDG coverage",
+      "value": "occupations 100.0% (40/40); skills 25.8% (220/854)",
+      "target": "100% occupations, 100% skills",
+      "status": "FAIL"
+    },
+    {
+      "kpi": "KPI4 Minutes to finished pathway",
+      "value": "Not measured (placeholder)",
+      "target": "<3 minutes",
+      "status": "PLACEHOLDER"
+    },
+    {
+      "kpi": "KPI5 SDG hand-check (50 pairs)",
+      "value": "hand-check not started (0/45 rated; wrote kpi/sdg-handcheck-50.csv)",
+      "target": "overall ≥80%, direct ≥90%, κ≥0.6",
+      "status": "PLACEHOLDER"
+    }
+  ],
+  "details": {
+    "kpi1": {
+      "status": "FAIL",
+      "value": "mean 86.7% (min 60.0%)",
+      "target": "each ≥80%, mean ≥90%",
+      "mean": 86.66666666666667,
+      "min": 60,
+      "rank1": [
+        {
+          "personaId": "aisyah",
+          "personaName": "Aisyah binti Rahman",
+          "occupationId": "o010",
+          "title": "Data scientist",
+          "coveragePct": 100,
+          "closed": [
+            "31c69100-b612-4a61-8db5-fd314318854c",
+            "348b74cd-49ce-4844-8bdf-ec188b497213",
+            "6360a934-cc87-4954-9656-b32db20592e3",
+            "65e58886-bd1e-4c5b-8ca5-8d9b353c8aa1",
+            "7ee4c2ea-b349-4bd2-81a3-ec31475d4833"
+          ],
+          "open": [],
+          "openDetail": []
+        },
+        {
+          "personaId": "lim-jia-hui",
+          "personaName": "Lim Jia Hui",
+          "occupationId": "o010",
+          "title": "Data scientist",
+          "coveragePct": 60,
+          "closed": [
+            "348b74cd-49ce-4844-8bdf-ec188b497213",
+            "6360a934-cc87-4954-9656-b32db20592e3",
+            "9cf681c7-89ec-470c-b651-7fe03786f586"
+          ],
+          "open": [
+            "65e58886-bd1e-4c5b-8ca5-8d9b353c8aa1",
+            "7ee4c2ea-b349-4bd2-81a3-ec31475d4833"
+          ],
+          "openDetail": [
+            {
+              "skillId": "65e58886-bd1e-4c5b-8ca5-8d9b353c8aa1",
+              "label": "data visualisation software",
+              "reason": "funded course exists but was not picked into the plan (cap/language)"
+            },
+            {
+              "skillId": "7ee4c2ea-b349-4bd2-81a3-ec31475d4833",
+              "label": "statistics",
+              "reason": "funded course exists but was not picked into the plan (cap/language)"
+            }
+          ]
+        },
+        {
+          "personaId": "pravin",
+          "personaName": "Pravin a/l Murugan",
+          "occupationId": "o020",
+          "title": "Environmental scientist",
+          "coveragePct": 100,
+          "closed": [
+            "081d7679-5070-4777-bece-a28c49f15636",
+            "089ee650-297e-4716-87d1-440743b70a0d",
+            "5641a2af-9eb2-4209-9fc6-856f78f2d2f2",
+            "6f5850ea-5785-4e2c-b062-743066fd5bdb",
+            "75f312e1-622b-4751-8d93-815b32feaf8d"
+          ],
+          "open": [],
+          "openDetail": []
+        }
+      ],
+      "sensitivity": [
+        {
+          "personaId": "aisyah",
+          "personaName": "Aisyah binti Rahman",
+          "rank": 1,
+          "occupationId": "o010",
+          "title": "Data scientist",
+          "co": 0.41134000000000004,
+          "gap": 5,
+          "closed": 5,
+          "coveragePct": 100
+        },
+        {
+          "personaId": "aisyah",
+          "personaName": "Aisyah binti Rahman",
+          "rank": 2,
+          "occupationId": "o009",
+          "title": "Data analyst",
+          "co": 0.4077673758724012,
+          "gap": 5,
+          "closed": 4,
+          "coveragePct": 80
+        },
+        {
+          "personaId": "aisyah",
+          "personaName": "Aisyah binti Rahman",
+          "rank": 3,
+          "occupationId": "o020",
+          "title": "Environmental scientist",
+          "co": 0.40682,
+          "gap": 5,
+          "closed": 5,
+          "coveragePct": 100
+        },
+        {
+          "personaId": "lim-jia-hui",
+          "personaName": "Lim Jia Hui",
+          "rank": 1,
+          "occupationId": "o010",
+          "title": "Data scientist",
+          "co": 0.41134000000000004,
+          "gap": 5,
+          "closed": 3,
+          "coveragePct": 60
+        },
+        {
+          "personaId": "lim-jia-hui",
+          "personaName": "Lim Jia Hui",
+          "rank": 2,
+          "occupationId": "o009",
+          "title": "Data analyst",
+          "co": 0.3984154083372393,
+          "gap": 5,
+          "closed": 4,
+          "coveragePct": 80
+        },
+        {
+          "personaId": "lim-jia-hui",
+          "personaName": "Lim Jia Hui",
+          "rank": 3,
+          "occupationId": "o027",
+          "title": "Gerontology social worker",
+          "co": 0.39327999999999996,
+          "gap": 5,
+          "closed": 5,
+          "coveragePct": 100
+        },
+        {
+          "personaId": "pravin",
+          "personaName": "Pravin a/l Murugan",
+          "rank": 1,
+          "occupationId": "o020",
+          "title": "Environmental scientist",
+          "co": 0.42682,
+          "gap": 5,
+          "closed": 5,
+          "coveragePct": 100
+        },
+        {
+          "personaId": "pravin",
+          "personaName": "Pravin a/l Murugan",
+          "rank": 2,
+          "occupationId": "o003",
+          "title": "Mobile application developer",
+          "co": 0.4256390181365881,
+          "gap": 5,
+          "closed": 5,
+          "coveragePct": 100
+        },
+        {
+          "personaId": "pravin",
+          "personaName": "Pravin a/l Murugan",
+          "rank": 3,
+          "occupationId": "o002",
+          "title": "Web developer",
+          "co": 0.4163961695350354,
+          "gap": 5,
+          "closed": 4,
+          "coveragePct": 80
+        }
+      ]
+    },
+    "kpi2": {
+      "status": "PASS",
+      "value": "104/104 (100.0%)",
+      "target": "100%",
+      "total": 104,
+      "dated": 104,
+      "pct": 100,
+      "failures": []
+    },
+    "kpi3": {
+      "status": "FAIL",
+      "value": "occupations 100.0% (40/40); skills 25.8% (220/854)",
+      "target": "100% occupations, 100% skills",
+      "occupations": {
+        "tagged": 40,
+        "total": 40,
+        "pct": 100,
+        "untagged": []
+      },
+      "skills": {
+        "tagged": 220,
+        "total": 854,
+        "pct": 25.76112412177986,
+        "untagged": [
+          {
+            "id": "000709ed-2be5-4193-b056-45a97698d828",
+            "label": "apply anti-oppressive practices",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "00b9a3aa-7070-4bb5-8020-f228a97cf42f",
+            "label": "draft scientific or academic papers and technical documentation",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "00e53a0a-c0ba-4c9f-a2ed-4706d5832a00",
+            "label": "guarantee customer satisfaction",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "020918ef-4b55-47c1-8430-ab7b8f6a7377",
+            "label": "migrate existing data",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "020b3c27-bae1-4b85-9d6f-eccee0f5ed99",
+            "label": "manage supplies",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "022dc430-872a-473a-9cf4-fed4895e58ad",
+            "label": "define database physical structure",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "0295b2a4-fb86-495f-9547-d479532fc4c2",
+            "label": "trace financial transactions",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "029e2bb0-6dd8-4600-bb89-ac7480ae8fb0",
+            "label": "contribute to quality physiotherapy services",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "030de41b-bb8b-4e4b-859c-9afd4c17605b",
+            "label": "check information on prescriptions",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "03b9b491-fc9b-4868-914a-bf7cd47b5041",
+            "label": "create solutions to problems",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "03ff0d53-573a-47a0-a0ad-1995815a4339",
+            "label": "information structure",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "0450eaee-1a00-4622-8f4e-5356fce816d2",
+            "label": "hygiene in a health care setting",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "047fcf0a-2936-49fb-b4eb-97cdd8d09d0b",
+            "label": "maintain statutory books",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "049c8caf-dd12-45fc-9bfa-b64051f32a19",
+            "label": "respond to changing situations in health care",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "04e84553-2795-4098-b0ad-e7921628b32c",
+            "label": "support harmed social service users",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "04fe962b-4017-4eb7-9139-7d69b6922bc9",
+            "label": "use an application-specific interface",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "052b829c-67c5-466f-9300-0e0b001a68ef",
+            "label": "prepare energy performance contracts",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "054f26ab-cfdc-4077-883c-1c4c9e9b310a",
+            "label": "define firewall rules",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "062320e5-79d1-45e8-8b7e-5deeb53279a2",
+            "label": "perform online data analysis",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "06358891-8424-43c5-891e-d40f226bef40",
+            "label": "manage IT security compliances",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "06670261-ea6b-4b52-a915-c7d4ff837f74",
+            "label": "identify statistical patterns",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "071233c4-ad2b-4f50-b79f-768d2231163e",
+            "label": "domain name service",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "072a702d-70c3-4959-91c7-85e69d143894",
+            "label": "manage a healthcare unit budget",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "0760bfac-9a03-427a-ad84-ccd33a2f2ae8",
+            "label": "mathematical modelling",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "077fb5d5-a9a2-4e27-b1b0-fe3149ba3da0",
+            "label": "provide medicines information",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "07889c08-7220-47c8-96f7-6068fbea00dc",
+            "label": "normalise data",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "08371fe9-c658-4f6a-966f-71dbb0ab683d",
+            "label": "accounting department processes",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "0839eea4-c57b-4c14-b19b-923fbedb5d88",
+            "label": "perform business research",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "0868eef3-2213-4572-9343-74931345a7d3",
+            "label": "administer ICT system",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "089bab26-a854-40fb-8c04-5be4f693315a",
+            "label": "integrate strategic foundation in daily performance",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "08a5f6dd-d3dd-4371-9919-6d730f34499c",
+            "label": "mount photovoltaic panels",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "08b04e53-ed25-41a2-9f90-0b9cd939ba3d",
+            "label": "manage research data",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "08ee68b2-0a6d-4bdf-a870-a36c0dc8064e",
+            "label": "produce statistical financial records",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "092f44f6-8631-460c-a862-f79f5c15dc03",
+            "label": "delegate emergency care",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "09473fea-69ea-40dc-9ff4-bbaaff10840e",
+            "label": "conduct engineering site audits",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "09f2f811-a3fb-4de3-a70f-6420a6935575",
+            "label": "systems development life-cycle",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "0a43729f-2a79-4dae-9faa-95520daae79f",
+            "label": "apply company policies",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "0a48d064-dd04-47fb-a00d-85e9b4874033",
+            "label": "business management principles",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "0ab03c6c-281b-48f4-83e0-10eeb27a1bae",
+            "label": "network management system tools",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "0ad6d5e8-593f-4191-843c-439b23a468ca",
+            "label": "conduct energy audit",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "0af062de-eb43-41e9-9b96-249e2cd22d26",
+            "label": "use markup languages",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "0b0335f3-0aa1-491e-895e-81fc8774a300",
+            "label": "develop automated migration methods",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "0b144726-21c2-46ed-8d13-c03d27f61604",
+            "label": "perform multiple tasks at the same time",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "0b8da079-f587-403f-a6ad-cd18b8150044",
+            "label": "gather technical information",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "0bc42cda-a6f0-4cac-9b34-7911faba0bd4",
+            "label": "microbiology-bacteriology",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "0cb013af-6dd9-4fb2-b34e-63dda1a5cf82",
+            "label": "operate cash register",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "0cd351e5-8798-482e-88a0-4d3eb8fec257",
+            "label": "adjust physiotherapy interventions",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "0d6714c6-720e-4985-9791-5ab85d28da79",
+            "label": "gather data",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "0d6c9508-1cd6-4cea-98d2-d5fe2f5c6a73",
+            "label": "process customer requests based on the REACh Regulation 1907 2006",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "0d85dc6f-ea26-49a9-85b9-532441b000e2",
+            "label": "handle the logistics of medicinal products",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "0da516ee-e70e-4384-be13-f5ff80be8127",
+            "label": "communicate with customers",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "0da6cab1-0ee9-4391-a299-f71fbf21db56",
+            "label": "ICT network routing",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "0dc8813a-cebd-4a42-acc8-9a7c4e6e3663",
+            "label": "test procedures in electricity transmission",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "0dd4d328-f015-463d-9a7e-06b7041f0b26",
+            "label": "consumer goods industry",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "0e0c9c11-b39e-43cf-ba95-2fe646f5de64",
+            "label": "identify customer requirements",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "0f298334-ae4a-4ab7-96c2-0d90d2883768",
+            "label": "assist individuals with disabilities in community activities",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "0f3ac478-54fa-4305-b077-50e3c0baeb8c",
+            "label": "manage physiotherapy staff",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "0f46a403-9606-465f-8247-8ae975ff4f35",
+            "label": "communicate verbal instructions",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "0ffdb6ac-03b5-4f1c-bfcc-3d9cb874fdf9",
+            "label": "ethical hacking principles",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "1019423b-3368-4f83-b24f-19e5fa23e816",
+            "label": "software UI design patterns",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "103f7814-d262-4df6-a1b6-759bc51f76cb",
+            "label": "sustainable technologies",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "11c56452-fcec-4b00-9695-cca4728e5048",
+            "label": "marketing analytics",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "123cf7c5-6a3b-419d-be4f-49a6cc020f9f",
+            "label": "interactive media",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "128f0b4c-8da7-467b-9196-7c691e067a1e",
+            "label": "assign homework",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "13e2378e-0d10-450d-843a-b3592575826e",
+            "label": "implement marketing strategies",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "143769cb-b61e-47d8-a61e-eedfbec1016c",
+            "label": "business intelligence",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "14d1e367-3efe-4ec5-86ae-eca48710ee4e",
+            "label": "implement ICT security policies",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "1585fc98-bfe4-461f-97fc-734055a2c3ce",
+            "label": "characteristics of products",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "15a33d76-4640-438d-ae64-fdc0c1d3eebc",
+            "label": "customer service",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "16284f84-15c9-4542-b122-a6d584f937ee",
+            "label": "manage clinical risk",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "16f61a5b-23ba-4268-8517-82c77c4041a1",
+            "label": "examine budgets",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "172020d1-e151-445b-8173-e2a5fb16fe51",
+            "label": "utilise computer-aided software engineering tools",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "18d3f89a-6ac5-4ca6-bf93-0baec4e13bcd",
+            "label": "install photovoltaic systems",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "190be8c6-69a6-4aff-8320-473aee68d4c8",
+            "label": "orthopaedic manual physiotherapy",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "1973c966-f236-40c9-b2d4-5d71a89019be",
+            "label": "use spreadsheets software",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "1a6c7e0d-fc13-41d7-a5c0-8ca00606de89",
+            "label": "promote sustainable energy",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "1b3370df-c280-470c-ac35-951f42ca8b19",
+            "label": "promote a positive image of nursing",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "1b61166d-0495-4f16-aff0-f564d3a8afb3",
+            "label": "analytical chemistry",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "1b70a55d-b8a4-49fc-96c6-15ab4cff2522",
+            "label": "use data processing techniques",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "1ba59ce0-7fec-434b-8d5c-9b275250a26c",
+            "label": "prepare presentation material",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "1bba98a7-92b9-450b-9235-e0c905f8f3c4",
+            "label": "information architecture",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "1d86f05e-e9cc-40ce-99d8-2b21cc71b16b",
+            "label": "solution deployment",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "1e77e42a-181f-4b48-8e74-201ce50ffc29",
+            "label": "interpret current data",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "1f6eac42-e5aa-4fa7-a75d-a4eea12c618e",
+            "label": "disseminate internal communications",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "207f87c4-ac68-4987-990c-636ca19c2626",
+            "label": "calculate wages",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "209a5498-3449-4689-8ed9-bd08cab4fd78",
+            "label": "engineering principles",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "20a8fe89-d4eb-4698-8521-8881c13377e0",
+            "label": "interact professionally in research and professional environments",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "20f57a7f-b90e-4403-8c77-5ddd89b5835b",
+            "label": "prepare lesson content",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "2164e860-7f20-48bc-b98c-5d9f8a561550",
+            "label": "design computer network",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "2179e0fd-7431-41a3-bbf4-76451c615ce2",
+            "label": "inspect electrical supplies",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "21c5790c-0930-4d74-b3b0-84caf5af12ea",
+            "label": "manage budgets",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "21d2f96d-35f7-4e3f-9745-c533d2dd6e97",
+            "label": "computer programming",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "21e0cad8-4eef-42be-b18b-0f8e37f0dbd0",
+            "label": "product life-cycle",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "229b10cf-6f3a-490c-9706-01c107df0562",
+            "label": "facilitate teamwork between students",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "22c45bf7-e52b-475f-847b-c32a87f65a5d",
+            "label": "circular economy",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "23845010-4c1e-41d3-94a3-940bcab65bce",
+            "label": "monitor nature conservation",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "2475cd27-8d6c-4318-a364-21395b23acba",
+            "label": "empathise with the healthcare user",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "2522a6ce-3202-4ac8-9f5b-b9cb5a3a83a1",
+            "label": "debug software",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "25f0ea33-b4a2-4f31-b7b4-7d20e827b180",
+            "label": "data mining",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "26a6e6d2-1c9a-4d7e-8c04-5ba16d1f53da",
+            "label": "greet guests",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "270c4de9-97f9-4a7a-95d1-63670f1ec3bc",
+            "label": "ecosystem management",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "27273605-2400-4392-a6d6-cc8161a2d445",
+            "label": "ensure compliance with waste legislative regulations",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "27ed854c-15b8-4ba2-90e9-ae888a219703",
+            "label": "perform business analysis",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "2806b5cb-964b-4148-84aa-7efdbeffe9e3",
+            "label": "involve service users and carers in care planning",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "28ca2f0b-9fb2-487a-9f10-9688e5191ec4",
+            "label": "work within communities",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "28ca596e-5e2f-4149-a28d-42d2c4c20227",
+            "label": "assess the development of youth",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "292549e6-08ec-456c-b008-eba7a0a68428",
+            "label": "analyse market financial trends",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "29bfe2cd-f011-4f94-a3aa-f77768e60460",
+            "label": "analyse energy consumption",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "29fb0fb5-dfc4-4098-ac9b-3a712000f48f",
+            "label": "manage database",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "2a2fa8e8-aaf3-4abf-a60b-af6415f1c6d4",
+            "label": "strive for company growth",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "2a58e994-74b9-4211-85ac-cfb409a9b667",
+            "label": "botany",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "2a8c1070-b7a6-4e4b-998a-21e885b6fb13",
+            "label": "obtain healthcare user's medical status information",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "2b1e2927-3542-48da-9063-02925e7562c1",
+            "label": "disseminate results to the scientific community",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "2b34764d-637c-48f5-aa70-31e15c965db6",
+            "label": "operate open source software",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "2b7a79e5-84d8-4880-be66-3d9bb05bea17",
+            "label": "use software design patterns",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "2b8386c1-eed6-42ff-bd99-349eca9ea46e",
+            "label": "meet standards of practice in social services",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "2b92a5b2-6758-4ee3-9fb4-b6387a55cc8f",
+            "label": "perform data analysis",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "2c28fc20-8a60-4311-8899-5ef8729c05b3",
+            "label": "design process",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "2c8199c8-4e40-49b3-b878-caee6e1c1bc0",
+            "label": "investigate pollution",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "2d407c34-5699-42dc-ab58-373652d69aef",
+            "label": "support social service users in skills management",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "2d6904db-9e16-42a5-bc12-c5acb8bfab18",
+            "label": "safe management of medicines",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "2d6d4784-0992-48e7-b100-22d7229b3f0a",
+            "label": "translate requirements into visual design",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "2daec0e6-f0c1-43e8-8178-aedba99130ec",
+            "label": "establish data processes",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "2ddb1226-1117-4eb4-ae65-3a2f5a5a3c80",
+            "label": "ICT network security risks",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "2de4572a-4724-4f76-afc2-72a568a264ac",
+            "label": "speak different languages",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "2f8a2712-d20c-4e5f-b34a-738f55486aa0",
+            "label": "apply quality standards in social services",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "2ff405ec-f59c-4a7b-84b6-9776a49582c4",
+            "label": "bookkeeping regulations",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "30685aeb-512f-4517-adc8-63bdc1eefb8e",
+            "label": "design a solar heating system",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "30d49832-84bd-4d97-9441-aef97a76a8d0",
+            "label": "apply problem solving in social service",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "3181325d-0590-4c6e-8db1-8278427c18ff",
+            "label": "analyse information processes",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "31c69100-b612-4a61-8db5-fd314318854c",
+            "label": "execute analytical mathematical calculations",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "32428b21-514b-42c2-81b5-244a7804ea74",
+            "label": "procurement of ICT network equipment",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "327d15c8-29ff-4ad4-a4fe-6536d777a45f",
+            "label": "documentation types",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "339ac029-066a-4985-9f9d-b3d7c8fea0bb",
+            "label": "manage staff",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "342af3a1-4fdc-4ddc-898a-bb82a7f62efe",
+            "label": "record healthcare users' progress related to treatment",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "348b74cd-49ce-4844-8bdf-ec188b497213",
+            "label": "visual presentation techniques",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "34d6ed30-5d35-44b9-9498-fd15badb5f28",
+            "label": "advise on market strategies",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "36931cb7-ca3f-4be1-8428-f38eefc8e1ed",
+            "label": "execute email marketing",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "37520413-563e-4d99-a14c-1c6dca3cf833",
+            "label": "create manufacturing guidelines",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "3757c242-0042-4940-aedb-2af63e080dba",
+            "label": "apply crisis intervention",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "3786b61f-f22e-48d1-af8d-ad4c354534db",
+            "label": "manufacturing processes",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "37f621a7-8346-472a-b6fd-a226751a27d8",
+            "label": "organic chemistry",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "382c11ed-20d5-4ae7-b60e-15fec527fa6c",
+            "label": "apply statistical analysis techniques",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "3892f2ff-714e-4201-823d-5d6fc5bab621",
+            "label": "check compatibility of materials",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "397da142-ab35-48fe-b154-7c38f447adfb",
+            "label": "digital systems",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "398304c5-6073-4968-afc7-394fbd837d74",
+            "label": "measure effectiveness of the service provided",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "39f67488-cfd3-4370-8d7e-da98163102d9",
+            "label": "evaluate research activities",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "3a2d5b45-56e4-4f5a-a55a-4a4a65afdc43",
+            "label": "machine learning",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "3a5231a0-8c30-48ee-b671-08e2debd4441",
+            "label": "organisational policies",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "3aa7e88e-bebd-48b1-94ba-6efddeecf08f",
+            "label": "protect vulnerable social service users",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "3aeab77e-daa2-4851-95fc-d236c3b5718e",
+            "label": "maintain logbooks",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "3c03ee71-4a23-448f-b79e-81fd75d27dca",
+            "label": "apply change management",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "3cb68bb2-66fc-495a-af82-012338a9402b",
+            "label": "interpret business information",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "3d3ee5c3-4286-457f-9f76-1704011f7e11",
+            "label": "comply with legal regulations",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "3d427a49-4f85-42cd-8a92-62d4a34f41a1",
+            "label": "file documents",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "3e04e39d-9eb6-4167-ad2d-e3413f647e4e",
+            "label": "organise business documents",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "3f82a026-8a37-4b54-9ebb-7702b66eeb24",
+            "label": "perform environmental investigations",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "4134622c-c3fb-4a41-beb6-6d58ba5107db",
+            "label": "demonstrate disciplinary expertise",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "414332e4-8347-4771-b947-65bd3801a620",
+            "label": "use consulting techniques",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "415abd43-e8e5-4643-b5da-5f11307af57a",
+            "label": "use different communication channels",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "41bf7ede-fc84-4a57-8c89-b548d11b0ba1",
+            "label": "manage business knowledge",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "4211283b-617e-4ded-8636-4eed896c33b0",
+            "label": "develop professional identity in social work",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "4216e465-7baa-4884-a241-54b197bb9278",
+            "label": "perform data mining",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "426ceaba-6867-481c-bb6b-aee3933da7d2",
+            "label": "ICT safety",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "42b23922-1c40-4dbe-9e0c-7a568dfdf06b",
+            "label": "adjust engineering designs",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "4334037f-c1d8-4241-b82e-8db7e469327b",
+            "label": "electricity market",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "4339176e-3acd-4f7f-a5d9-445bee3d23f2",
+            "label": "mathematics",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "43ae58b9-5e56-4524-b45a-b422777a0576",
+            "label": "database",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "43b13058-68d0-40c6-8031-caf5a7b7d20c",
+            "label": "keep task records",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "43d1d56b-ce62-4fe8-8f18-35d92ec73023",
+            "label": "identify undetected organisational needs",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "441707bb-9ad3-406c-9975-a6bec96f537b",
+            "label": "empower individuals, families and groups",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "4463a721-69f3-413d-8321-43e3af13a4f1",
+            "label": "use databases",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "44a4f189-7414-402c-9c1d-c85743f34d0c",
+            "label": "maintain recycling records",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "44da96fe-26a3-4a32-9a0f-c49614bb7298",
+            "label": "manage student relationships",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "453b6898-de72-4ff9-b217-4a3cd377e155",
+            "label": "monitor service users' health",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "465e7c78-cd26-4503-a5ca-40009e807705",
+            "label": "assess users' interaction with ICT applications",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "469e19ed-a0bd-445a-ae2d-4ba9430e296b",
+            "label": "promote sustainability",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "46cb7282-7fb0-4d3c-b6b8-bfe81fab077e",
+            "label": "draw conclusions from market research results",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "46e1b714-94f4-462d-88e6-31f442708812",
+            "label": "define manufacturing quality criteria",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "46ec0033-3c71-415e-bcff-b065675ba2dc",
+            "label": "integrate ICT data",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "47a49cd6-097d-457a-9f7b-c290c14930d5",
+            "label": "analyse big data",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "47ca0da1-cae5-4395-ae6b-fd97b9ff48d3",
+            "label": "system backup best practice",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "486df8bc-3498-43ad-83b6-dc8a4a3b16c6",
+            "label": "provide support to social services users",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "497705d7-7a03-4a68-99f3-69d2de9366f4",
+            "label": "undertake risk assessment of social service users",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "4a112f96-72c1-47f3-aa61-4b34ea415701",
+            "label": "obtain relevant licenses",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "4a193795-fa63-414e-9f2e-bfdb3924571e",
+            "label": "handle data samples",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "4a874516-eb34-4dc1-833d-864c5a448db2",
+            "label": "support the positiveness of youths",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "4af56376-7b2f-4ced-ac58-0c3967bd1e83",
+            "label": "transport construction supplies",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "4b5d4fe3-4280-47c0-b1d2-ab08ace85557",
+            "label": "deliver social services in diverse cultural communities",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "4b5f0aeb-875b-4afb-befc-2465b45602d8",
+            "label": "inspect recycling procedures",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "4bbb309f-9162-49b9-93da-fb2c371e5c5f",
+            "label": "collect samples for analysis",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "4d39b27a-b34f-4c89-8d46-df844d42f728",
+            "label": "increase the impact of science on policy and society",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "4d614c92-0c48-4a11-a5ed-416b34fd50d2",
+            "label": "manage healthcare users' data",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "4d85b881-e490-4b4c-897a-2faa4ef53956",
+            "label": "manage ICT data architecture",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "4e097377-7950-4993-9e22-a61b067b5c00",
+            "label": "social sciences",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "4e3db6d7-88b8-492d-89e5-a93d01c3e369",
+            "label": "social development",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "4e756773-ae14-4981-838b-9fe27e81c0af",
+            "label": "carry out financial transactions",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "4f4afd0b-07e5-48fd-a7d4-0e8746c608df",
+            "label": "conduct interview in social service",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "4f5c1208-62fd-4e5a-a51e-306c06947e11",
+            "label": "manage findable accessible interoperable and reusable data",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "4fabca9a-7435-4f33-b1da-3cdb00340fdc",
+            "label": "perform scientific research",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "505e4ef3-7ce4-437d-b7b4-5c608f71c258",
+            "label": "build recommender systems",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "5063a99f-975b-4a7c-85e3-69ecb375b4d3",
+            "label": "internet governance",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "509fedda-d520-46b5-a801-b3d36221a645",
+            "label": "ensure the appropriate supply in pharmacy",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "50ac5186-bb18-4ffb-9f29-00636853c8ea",
+            "label": "design solar energy systems",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "50b100ea-74fd-4706-99db-3e4ca55e51b8",
+            "label": "perform data cleansing",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "50f2d23c-b3fb-48a5-967b-14fd0a6dd205",
+            "label": "inspect construction supplies",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "518dc04d-092d-4fa1-bd82-88b7a9278ef7",
+            "label": "manage intellectual property rights",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "51e79cb4-fab3-404c-88f3-cd4a1bd5879e",
+            "label": "deal with emergency care situations",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "52047630-b880-4939-bb19-6700187af031",
+            "label": "adolescence medicine",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "524c4331-5090-4565-a0bc-0a9ae874938d",
+            "label": "demonstrate leadership in social service cases",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "52797dce-911c-4e6d-b0cb-491f6469014f",
+            "label": "install electrical and electronic equipment",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "52e53619-fa77-4f72-b237-5e4aae784dc2",
+            "label": "financial management",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "540a1886-ab91-4324-9f63-568533fad853",
+            "label": "maintain adequate medication storage conditions",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "541561bc-510c-4a99-881c-2d8bf5a85462",
+            "label": "use technical drawing software",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "541f6f61-40ee-43d3-9f24-a1a5b31c2a34",
+            "label": "develop physiotherapy services",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "5436f06d-4cc0-42a6-8e5b-63b842cce03b",
+            "label": "disseminate general corporate information",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "54411e8e-d62f-46d8-b87b-fce23f8e3bc8",
+            "label": "disability care",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "54924a2c-daca-40d3-9716-4b38ceb04f38",
+            "label": "algorithms",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "54c9c155-9293-4329-8ed2-2e76e8b519d4",
+            "label": "define data quality criteria",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "555343c3-e580-4b3d-82dc-51af4e1b3b75",
+            "label": "define energy profiles",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "5592ab32-4e7a-4cda-8e64-ca36d5de8a10",
+            "label": "adapt to changing situations",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "5608d5a0-6d5e-43b7-be37-616501729bb4",
+            "label": "artificial neural networks",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "56a10e3e-c9e7-4d39-b6f1-6013398fcb3a",
+            "label": "use content management system software",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "56a46b02-ab98-4603-8816-c9daff1a119a",
+            "label": "kinetics",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "573d3f91-c81c-407e-a56d-0f3a63272b43",
+            "label": "adapt teaching to student's capabilities",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "574bf430-50a1-4734-9719-a823e7d80b10",
+            "label": "communicate professionally with colleagues in other fields",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "585ed991-fdab-4f3c-9187-a32bfb7ab822",
+            "label": "perform balance sheet operations",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "5898d99a-62a4-4e10-a2e3-0d815ce44248",
+            "label": "cyber attack counter-measures",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "59b2d857-dd1c-4596-925e-219c0ebf9c5d",
+            "label": "maintain reception area",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "5a42eaf5-93bb-4bca-8ebd-4d78e96e4929",
+            "label": "maintain students' discipline",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "5ce80f97-b385-4a41-9339-a6593d0709c1",
+            "label": "perform video editing",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "5d34adde-0b78-42b4-9d3d-69e9388d8398",
+            "label": "oversee quality control",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "5d3798b0-d3a3-45ef-9df2-8b8756d4d79c",
+            "label": "use thermal analysis",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "5da3c765-10a3-49eb-934c-ec401ceb1a34",
+            "label": "analyse business plans",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "5dd01a1e-7ba0-4b7f-a76c-ed811c12bfde",
+            "label": "apply numeracy skills",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "5ef0c719-5bcb-49f8-b8eb-824388225333",
+            "label": "use scripting programming",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "5f0082ab-2131-49b5-94d6-a1821daf57d6",
+            "label": "apply for research funding",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "5f1d1319-7954-4a9b-90c7-57668e3a0d4b",
+            "label": "interpret financial statements",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "5f302d63-048e-451c-b150-97c124a5a26b",
+            "label": "analyse economic trends",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "5f343989-4871-419a-9dca-52fc653dc54e",
+            "label": "plan social service process",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "6014921e-1d25-4039-adc2-04852d61880e",
+            "label": "ICT debugging tools",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "60f51172-37c0-4933-a27a-cbf55dcd7580",
+            "label": "prepare financial statements",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "624d9fff-370d-4001-9481-9c86129fd84f",
+            "label": "provide self management support",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "629685b8-5f9e-4522-8cff-b3e2c4ec625a",
+            "label": "digital data processing",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "633a3637-2c6b-40ae-ac38-289eb2a62aa6",
+            "label": "business analysis",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "634865e0-2ec2-4b7f-bb7f-c196637f0f7b",
+            "label": "older adults' needs",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "6360a934-cc87-4954-9656-b32db20592e3",
+            "label": "quantitative analysis",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "644209ac-8452-4e81-959a-2b10050023cc",
+            "label": "promote social change",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "648782e0-b5e5-4e59-bed0-627aa8ac29f0",
+            "label": "maintain records of financial transactions",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "64b0515c-98b0-4cfd-8791-2f0a74e0ca37",
+            "label": "prepare youths for adulthood",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "64be6a06-52e8-4f5c-b64d-caa516cfa291",
+            "label": "depreciation",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "64e09849-a7db-4d6b-a932-66264420eb97",
+            "label": "apply social media marketing",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "6561f116-70de-47d8-80b8-f0e2a1d2cf11",
+            "label": "perform feasibility study on solar heating",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "65ca5e3c-940c-46b2-b277-aff394cfdd4c",
+            "label": "establish daily priorities",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "65e58886-bd1e-4c5b-8ca5-8d9b353c8aa1",
+            "label": "data visualisation software",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "66db424f-2abe-420d-8e5b-186607266b61",
+            "label": "corporate social responsibility",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "68698869-c13c-4563-adc7-118b7644f45d",
+            "label": "identify customer's needs",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "692ace70-7f97-4214-92bd-88f7637d8a44",
+            "label": "physics",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "696e3b5b-8b61-45af-ae4c-3ab700f197ec",
+            "label": "information extraction",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "696e604d-53d2-4243-a6cb-a99663caa119",
+            "label": "monitor social impact",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "69bbd53f-fbb0-4476-b4b2-ef7844464e28",
+            "label": "web programming",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "6a899482-8bcf-40ca-ae67-579a1cc467ab",
+            "label": "manage engineering project",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "6acf652c-33b2-4e28-8f79-1e553f255229",
+            "label": "plan nursing care",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "6b6c1537-58c1-45e1-b4e4-f5193fb0a6dc",
+            "label": "test medicinal products",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "6c08403c-a5bb-4868-b8c2-b7d039c0e511",
+            "label": "design database scheme",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "6c3e28d6-e3cc-4b25-a5da-a0dce043cf17",
+            "label": "manage information in health care",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "6c870993-9341-438b-91c0-c7fe4f96d8f5",
+            "label": "apply strategic thinking",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "6d6fb354-ae77-4fb0-80d3-e4e52270774a",
+            "label": "provide information on the effects of physiotherapy",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "6d80a4cb-cad2-435c-b899-e0e91fda07d6",
+            "label": "prevent social problems",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "6eff134b-e34f-4d6e-a6e8-5e47cf2228d0",
+            "label": "risk management",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "6f1edc19-191f-4ba5-a048-ee69aff05bab",
+            "label": "security engineering",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "6fce8d3f-a15f-4f26-943a-d200b32f6949",
+            "label": "monitor company policy",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "6fe019dd-027f-45f3-b19c-d27f7ae00980",
+            "label": "assess students",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "70a7b3b3-31ef-4b29-a30f-bb7299dff39b",
+            "label": "sensors",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "7110bf9f-b245-4adc-9159-5081013fd64d",
+            "label": "communicate in healthcare",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "7111b95d-0ce3-441a-9d92-4c75d05c4388",
+            "label": "project management",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "713fb616-118e-40bc-9366-4a69879a49d5",
+            "label": "implement data quality processes",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "71480db1-a706-47f9-952f-bdc5036e3df3",
+            "label": "coordinate care",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "714eebcb-569a-4f1b-b592-28f70b59a9ba",
+            "label": "develop staff",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "7159e587-c7cb-4ec0-a662-03e1dee2cccb",
+            "label": "research design",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "71746a0b-e58d-4dc4-ad03-bd84082eae21",
+            "label": "collect customer feedback on applications",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "71d441c3-163a-41b6-b713-074d69362c27",
+            "label": "manage medical supply chains",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "71dde84c-0058-4c52-a556-523369333db8",
+            "label": "use office systems",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "726abd5a-d23c-44b9-abb0-f22bbe95f1d3",
+            "label": "operational research",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "72731261-d7b0-4e6d-bbde-5c76c85934d0",
+            "label": "define the corporate structure",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "72a74f69-5cf1-43c5-99b9-62a444578919",
+            "label": "engineering processes",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "72cde4b2-b2ee-41b2-a72f-ab3a970c0b8f",
+            "label": "make legislation transparent for users of social services",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "72ead619-88da-4557-8c98-607fd7e2cd47",
+            "label": "support social service users' positiveness",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "731101d9-94bc-4805-bff4-9578d1bf03b5",
+            "label": "learning difficulties",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "734187e4-650e-4a0a-a7f8-826cd4757229",
+            "label": "check payrolls",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "7361c086-443c-43c2-8215-31ef8e8895e5",
+            "label": "process medical insurance claims",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "7364cc39-b9c0-449f-9416-57723e2fd9c4",
+            "label": "utilise methodologies for user centered design",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "7369f779-4b71-4aab-8836-48b69c676eec",
+            "label": "operate relational database management system",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "736ef286-fbd3-4e5c-a4b4-d1e2008c9898",
+            "label": "plan digital marketing",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "73a023d0-888c-4d89-87e4-a03e84395da8",
+            "label": "develop therapeutic relationships",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "744442ac-c157-4350-8be0-ce454df4f5c5",
+            "label": "perform ICT troubleshooting",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "7482a123-e801-48de-9733-262125671410",
+            "label": "task algorithmisation",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "74bb0643-a15f-48ea-b12c-d98bf49cb317",
+            "label": "primary school procedures",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "74beca00-bd58-4c27-812d-0d5933c76d6f",
+            "label": "support service users in developing skills",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "74e49482-75e8-4637-bdb1-fff868d02f7a",
+            "label": "scientific literature",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "750caee5-12a0-46ba-b8aa-1e56370deaf9",
+            "label": "analyse consumer buying trends",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "750f86d2-18be-4015-84b1-d4a26d9b2d88",
+            "label": "online ads campaign techniques",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "7530bc44-f09d-4dd2-8911-92b98333e442",
+            "label": "assist students with equipment",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "758a4e08-3133-4dd5-893e-b4067a67344f",
+            "label": "negotiate with social service users",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "758e8e0c-2406-460f-b33c-36b422e018bb",
+            "label": "provide learning support in healthcare",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "75b30aeb-34c0-40f4-b77d-271d75a98b14",
+            "label": "improve business processes",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "75f312e1-622b-4751-8d93-815b32feaf8d",
+            "label": "pollution prevention",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "76395873-7fe2-4f9a-b4b6-9932f8cbd0b4",
+            "label": "follow clinical guidelines",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "76415d7f-0fde-4364-b45f-5c044580d2aa",
+            "label": "create CAD drawings",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "764db027-9063-4468-acb3-c73ecfc76f35",
+            "label": "develop manufacturing policies",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "76b9e515-715d-4a53-a702-019adad1059b",
+            "label": "install circuit breakers",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "76f22707-8d30-453f-9eb7-3376e2960311",
+            "label": "handle mail",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "77f109c4-3107-4d2a-a512-5160ac103933",
+            "label": "analyse environmental data",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "7832b684-580c-4eaf-a8b3-322164b041ab",
+            "label": "provide information on solar panels",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "797a4416-0b8d-44f3-8fcd-eb10bd0be6b4",
+            "label": "develop software prototype",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "79c012c7-4b09-497e-8152-e73e5d1d3384",
+            "label": "adapt leadership styles in healthcare",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "79e29b8b-47d1-470d-b7b1-32506bfe7d9a",
+            "label": "collect ICT data",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "79f24a62-7718-46e1-9b41-37be0560a5ca",
+            "label": "organisational resilience",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "7a34b3d9-bd3b-4f4e-a0f6-f97439901cb7",
+            "label": "apply scientific methods",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "7a63f944-6948-4ae4-9c1f-d08e492535c9",
+            "label": "apply person-centred care",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "7c3865d1-e5a9-4043-a7a4-2e9e30468c0b",
+            "label": "perform office routine activities",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "7cacd304-996d-47d1-88ef-4ddb9ce102bd",
+            "label": "microeconomics",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "7d08e3cd-3a68-4568-8273-5b53ac0cbc71",
+            "label": "collect healthcare user's general data",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "7e57eb3c-092b-4307-ad1c-c65f55adbc4e",
+            "label": "encourage social service users to preserve their independence in their daily activities",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "7f0b1a66-ebaf-4c8a-b606-4c1844eb692e",
+            "label": "attend to ICT systems quality",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "8088750d-8388-4170-a76f-48354c469c44",
+            "label": "cyber security",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "81dc035c-921b-4fea-a453-94538e86097c",
+            "label": "disseminate messages to people",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "81fad068-0a1b-4311-867f-6cb9a60f785a",
+            "label": "update licenses",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "82de2df7-0d6c-42b1-94ac-b3e9a029e917",
+            "label": "use back-up and recovery tools",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "8316979b-df5a-4dc7-98ef-61ec6a10df84",
+            "label": "conduct quantitative research",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "833289fa-3646-4010-9d9e-93ba8c9ef2d8",
+            "label": "apply research ethics and scientific integrity principles in research activities",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "83e97138-899a-4af8-9187-47823e875841",
+            "label": "follow the statutory obligations",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "84605f91-5ab4-4965-a1ad-cdc1901a820d",
+            "label": "marketing department processes",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "8570573a-937b-406a-b4b2-1def0387d0d1",
+            "label": "maintain concentrated solar power systems",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "857e8624-4db0-4725-a758-5914bd8cc350",
+            "label": "thermodynamics",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "85c11255-469f-41bd-a6d1-382bc4a87783",
+            "label": "interpret technical texts",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "8614b988-b907-473e-a701-47b525959dc8",
+            "label": "advise on heating systems energy efficiency",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "861cc783-6d4c-442e-9081-3a6e389be454",
+            "label": "install electronic communication equipment",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "862920c8-f2d0-4058-8fb8-9f06fbfc2446",
+            "label": "develop recycling programs",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "8696aff0-18c0-4ba6-a4d0-9a21861b3e5e",
+            "label": "World Wide Web Consortium standards",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "872a1632-f1db-4feb-bb27-0a6a359b7591",
+            "label": "promote open innovation in research",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "87669743-a291-4ea0-9a50-cac60d45649c",
+            "label": "rehabilitation",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "8770350e-746f-4adb-9556-18ca68104be6",
+            "label": "market research",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "880c54f9-866e-4f37-b5fa-25ef8a7d49b6",
+            "label": "accounting techniques",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "88564d2d-2dc9-4789-864a-f9cb73f389ec",
+            "label": "maintain data entry requirements",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "8881a9c2-bd07-4954-bf27-c1f8acca9af0",
+            "label": "sociology",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "88af9294-b697-4687-ae19-aefbb6234dfa",
+            "label": "economics",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "897b393f-e7e0-4248-a40d-d77119694e83",
+            "label": "distributed computing",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "89f5fa96-ae45-4906-902c-d50ca51009c6",
+            "label": "identify new recycling opportunities",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "8a06c621-adfe-41df-8fe9-6b33f1ea3f0a",
+            "label": "biomechanics",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "8a326ee1-169c-4c44-b38b-8f1bb20ec79b",
+            "label": "identify accounting errors",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "8a43795b-bb38-4f29-91df-a6c92ad4643c",
+            "label": "analyse financial performance of a company",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "8b94aa1e-89c9-459d-b3b4-1dfab8dec2df",
+            "label": "use software libraries",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "8bc1c7da-c832-4896-a441-30d087c46aad",
+            "label": "examine engineering principles",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "8bc75dce-beba-40f9-93fc-66c9708ed74b",
+            "label": "advise on efficiency improvements",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "8bdc520c-6293-4e99-bf6f-a44d5da3ebcb",
+            "label": "monitor legislation developments",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "8c4c49d4-9708-433f-8ca7-bf2c5211ee49",
+            "label": "develop creative ideas",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "8d49f760-3765-4612-8d40-a2bdd50738fe",
+            "label": "fill out forms",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "8d927aab-9202-4c02-9f39-5d478458f25c",
+            "label": "assess social service users' situation",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "8dcbcabe-09f7-4d11-940d-125af57bbc40",
+            "label": "track key performance indicators",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "8e0bfbba-6e9d-48e0-b152-2cc949e5022a",
+            "label": "implement scientific decision making in healthcare",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "8ee6763c-ca7b-4c0d-9208-b8f26f100e72",
+            "label": "manufacture medicines",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "8ef1b45e-8499-4b1b-91f7-f8278bbb7767",
+            "label": "assist social service users with physical disabilities",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "8fa840f7-e66a-4370-8e6d-7d554260c31c",
+            "label": "forecast future ICT network needs",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "901105f8-3a08-453e-b1dc-23619e317fd3",
+            "label": "create flowchart diagram",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "9013b46e-5a9b-4929-8918-fcadfdfd37ce",
+            "label": "supervise daily information operations",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "906323f4-00c4-4c3b-ab5a-8af77be3456e",
+            "label": "create data sets",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "91816e1a-d026-4d21-9b1c-59ca5cf488de",
+            "label": "analyse internal factors of companies",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "91abe492-18be-4cce-93c7-0dca07072363",
+            "label": "meet deadlines",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "91ba97f5-7518-4638-b2d2-308996db3cf8",
+            "label": "perform image editing",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "925463a7-d51f-4d5b-9f79-4d28cf30acde",
+            "label": "integrated development environment software",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "933e7ccf-5d56-46ba-aca4-857f826a6b3a",
+            "label": "administer appointments",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "93aaf65c-5aad-4e6f-a7ba-ce9bf7c0e6e6",
+            "label": "information categorisation",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "93e65de1-923c-437e-aa5b-e6002967ce71",
+            "label": "web based collaborative platforms",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "941438bd-cc03-4326-91bf-677157dca170",
+            "label": "support social service users to live at home",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "9433da85-70fa-4a25-8f96-71fa59dd1989",
+            "label": "biology",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "949ced5f-7536-4614-ac60-563ffc91a2f2",
+            "label": "strategic planning",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "953c0b65-537a-42fe-a90b-26cd36c64361",
+            "label": "manage logistics",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "95992467-644f-4178-97ad-b0e50a8ab084",
+            "label": "therapeutic massage",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "9622b720-ee2b-44fb-8cd0-37afc9c183a4",
+            "label": "evaluate scientific data concerning medicines",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "96835f47-da71-415b-8cbf-d37386dc98d4",
+            "label": "conduct environmental surveys",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "969ebc5a-e486-41b7-9a3d-15f9aa61680d",
+            "label": "evaluate company needs",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "96d901a6-c931-4e8d-b685-a47e1deaaa1b",
+            "label": "identify energy needs",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "9707091a-323b-4240-877a-5999a19286f0",
+            "label": "apply ICT system usage policies",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "9714735d-6f60-440b-bdbc-aaf45ebcbe78",
+            "label": "analyse the context of an organisation",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "976455eb-5bbe-4493-ae64-ed16c3b009ea",
+            "label": "mobile operating systems",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "979cf728-896f-4f2c-8fa8-2698ca0d4930",
+            "label": "publish academic research",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "97bd1c21-66b2-4b7e-ad0f-e3cda590e378",
+            "label": "data analytics",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "982ccb23-102c-4d7a-a899-4df50a032def",
+            "label": "install concentrated solar power systems",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "98301d4a-2cc3-439d-8d7f-0b6ac76302bb",
+            "label": "business process modelling",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "988f4ac3-a37c-4b0a-a40f-4e0e56b5919e",
+            "label": "promote the transfer of knowledge",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "98e26527-4cca-42b7-9902-5749f48e62c5",
+            "label": "convert currency",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "99207709-d076-4cce-ba38-e90d3bb28806",
+            "label": "resource description framework query language",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "996243ee-543f-4c36-a31a-e0f2403c0c5d",
+            "label": "relate empathetically",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "99b163e8-7815-43e2-83f3-a47f3076354c",
+            "label": "accounting entries",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "9a25b5b8-8b41-4dcd-8bd7-0034542836a2",
+            "label": "adjust voltage",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "9a58cd26-58eb-4a1c-b1b6-64037fe9cfa1",
+            "label": "think abstractly",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "9ba8fd27-275d-4bad-8c48-f668aa99a578",
+            "label": "balance database resources",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "9cf2856d-0375-4ec3-a51f-7f9c82119859",
+            "label": "maintain solar energy systems",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "9cf681c7-89ec-470c-b651-7fe03786f586",
+            "label": "query languages",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "9d04490c-cea5-4765-a15e-99c46b543c1d",
+            "label": "coordinate shipments of recycling materials",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "9d2e926f-53d9-41f5-98f3-19dfaa687f3f",
+            "label": "tools for software configuration management",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "9d59f4e5-20a5-428e-b8b3-645043500457",
+            "label": "create a work atmosphere of continuous improvement",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "9d916d7c-89b3-4084-a6d9-e2b0b3091404",
+            "label": "manage payroll",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "9e06bac6-6b91-48ca-8b7d-c1f48cdecd7c",
+            "label": "solve ICT system problems",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "9e84a506-df06-4be3-874a-fa01293e3dd5",
+            "label": "business processes",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "9ef0f3a0-9ce2-4ef1-a987-0366b5cb2dbe",
+            "label": "database development tools",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "9ff9db9d-d14b-426e-83f3-e7449af6c79f",
+            "label": "manage data",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "a031d739-c760-441e-955b-b667502e9af2",
+            "label": "implement traceability systems",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "a0d79341-8398-4019-ad1b-27888ec35aaa",
+            "label": "use accounting systems",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "a17286c5-238d-4f0b-bc24-29e9121345de",
+            "label": "listen actively",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "a1ce519d-6aeb-4f54-955a-beef7f08f5f0",
+            "label": "supervise physiotherapist assistants",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "a32e7fb1-af9e-4c09-8ea7-72b7442e9cda",
+            "label": "solve problems in healthcare",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "a366bfc5-8d17-4792-a9f0-db0951528dda",
+            "label": "advise on environmental risk management systems",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "a46743b7-ff8c-49b6-99f7-7fa5bc241771",
+            "label": "use electronic health records in nursing",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "a4881e54-6055-4e61-855a-0a56ced7cfa3",
+            "label": "web strategy assessment",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "a4bbd0d9-a6be-4472-b05d-291e60cf6b4b",
+            "label": "develop business case",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "a56dec32-05ef-45de-a256-ee6741f356db",
+            "label": "information confidentiality",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "a571ae14-3e16-4fd3-a615-5646e0b0b696",
+            "label": "inspect data",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "a584a638-a2c0-4b3c-bdf3-a64f87225be9",
+            "label": "mentor individuals",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "a5b0cd5c-e13a-4ab3-8d93-4d242adcfb01",
+            "label": "teamwork principles",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "a6d697d1-80ba-4175-82d4-43440ed04270",
+            "label": "process refunds",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "a762f4cd-b6bb-419b-834a-71f3ed367e5c",
+            "label": "manage ethical issues within social services",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "a7f0fbe0-c546-4f30-8e41-34a58c64567e",
+            "label": "data storage",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "a80fb090-63f4-4b05-83a5-2f090deb7757",
+            "label": "manage data collection systems",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "a8797f21-1af0-4c5e-98ca-bf1442929363",
+            "label": "interact with users to gather requirements",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "a8d24a95-47b3-4f88-92e7-06600bcd3612",
+            "label": "manage personal professional development",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "a95e0f9f-726e-4b0a-97c5-fa7a9d40ae8f",
+            "label": "review social service plan",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "a9661351-4d11-477e-9f8c-e22dab6596d6",
+            "label": "apply decision making within social work",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "a9dc215e-4e26-4ac0-b1e8-a721a88af813",
+            "label": "execute conversion testing",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "aa238394-8126-4ada-be2f-9dfe065cf314",
+            "label": "adhere to organisational guidelines",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "aafbb139-02c6-4f35-bc62-ff73faf97d6d",
+            "label": "interpret 3D plans",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "ab1e97ed-2319-4293-a8b7-072d2648822f",
+            "label": "database management systems",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "ab49f767-296b-47d5-af56-0b4a69515b03",
+            "label": "maintain ICT identity management",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "ab67fbfb-0ca7-4345-8bf6-af8f59480212",
+            "label": "design database backup specifications",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "abdc7ac8-151f-40c6-bc1a-1e9b4b073290",
+            "label": "augmented reality",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "acbb31e0-7cfb-4987-a9a7-4df119e0b83b",
+            "label": "pharmaceutical chemistry",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "acf0a78c-f4e3-4bd9-a5cc-9cf4791b3b95",
+            "label": "implement a virtual private network",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "ad28c970-6bc7-4fff-9c01-0f4d67769de3",
+            "label": "develop revenue generation strategies",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "add39442-b8ca-4412-8156-391db53b0c5d",
+            "label": "manage healthcare staff",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "ae4f0cc6-e0b9-47f5-bdca-2fc2e6316dce",
+            "label": "manage ICT virtualisation environments",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "ae965e49-06f1-442f-87bf-e48fc1e1d8b6",
+            "label": "analyse quality of nurse care",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "af0f7625-b9fc-4f97-a71d-d7c7648bfc35",
+            "label": "prepare paychecks",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "afa3b020-a48c-45a8-a2ff-77d0b9df5381",
+            "label": "apply holistic approach within social services",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "afdb41dd-5dd5-4fbb-bf9e-e041422698b4",
+            "label": "coordinate operational activities",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "afdee309-07f9-464e-ad3b-29f4e539da88",
+            "label": "conduct health related research",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "b04f377b-ee80-4b38-aca1-19d266a23b17",
+            "label": "analyse business requirements",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "b0560439-14eb-41d1-aa53-1938efc24123",
+            "label": "content marketing strategy",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "b0a3bb25-a02f-43ed-ab1f-994fa66a424a",
+            "label": "online analytical processing",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "b105ec9b-0857-41d6-8d07-a83e58b73d90",
+            "label": "ICT system programming",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "b1604a2d-c26a-427d-bda9-b8073a319fe9",
+            "label": "adjust ICT system capacity",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "b17f4305-741a-4a1c-8fe8-6f11cb3d5c0a",
+            "label": "business communication",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "b1b118c4-3291-484e-b64d-6d51fd5da8b3",
+            "label": "environmental engineering",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "b30c2dd2-996c-4984-9c68-ce05bf26f1e1",
+            "label": "train staff on recycling programs",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "b32e593b-cc7f-4f38-bf50-e69431ec7ada",
+            "label": "demonstrate when teaching",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "b4832996-b36c-40b2-b54e-780325b2546e",
+            "label": "adapt training to labour market",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "b4910ea9-578d-4767-bd68-00a315a64e09",
+            "label": "evaluate older adults' ability to take care of themselves",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "b55f61a4-5f9e-4741-ba95-9ac04b64119b",
+            "label": "work in a multicultural environment in health care",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "b63bfc0b-5b35-4019-b909-68ade8d9be66",
+            "label": "develop plans related to the transfer of care",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "b74a4387-80dc-4d78-aab4-11215c86b1dc",
+            "label": "inorganic chemistry",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "b769f524-0f25-44d7-8538-5c46710a040e",
+            "label": "manage digital documents",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "b7c8f418-08d5-45d6-b697-ab26c6ecbfb4",
+            "label": "ensure client orientation",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "b92758d4-4591-4df1-9ceb-f907aa71ebd9",
+            "label": "use measurement instruments",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "b99aa3b8-0066-46b2-a027-30afae444ad8",
+            "label": "implement sales strategies",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "b9aad733-959a-4178-984f-53e4bd05b420",
+            "label": "maintain internet protocol configuration",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "b9bb1f03-15e2-4079-943e-7e483b21725b",
+            "label": "give constructive feedback",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "b9f16465-56a9-426b-a047-0f9f1f95ec92",
+            "label": "address problems critically",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "ba2c6181-b036-40b4-8f6d-51499463ccbb",
+            "label": "develop company strategies",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "bb165899-d95f-4433-95f2-173fefd716d2",
+            "label": "develop statistical software",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "bb2b4485-2bad-402f-8517-44bf7d9afff4",
+            "label": "implement anti-virus software",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "bbcc7e1b-3d4d-4422-9fac-efd636eb9de4",
+            "label": "lead the sustainability reporting process",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "bc401d18-9bea-4300-90fd-22bfa286bd77",
+            "label": "apply socially just working principles",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "bcd2ce08-ba12-4d66-865f-f4ba36419707",
+            "label": "promote inclusion",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "bd14968e-e409-45af-b362-3495ed7b10e0",
+            "label": "cloud technologies",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "bd17a64e-a9bd-439d-9b87-01c6bb1b7e09",
+            "label": "maintain records of work with service users",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "bda0d115-f315-453e-99dc-f8b0e5862db3",
+            "label": "ensure compliance with policies",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "bdcac0c8-b77a-4640-9eaf-c0cf3efd1e23",
+            "label": "process payments",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "be20d05c-f6b4-4580-9fcf-f00f4baab562",
+            "label": "make data-driven decisions",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "be48353d-25c7-4f86-bea9-7b9e248fbc6e",
+            "label": "interpret technical requirements",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "be64bb4c-84ac-4c83-8cc7-fc8593e15136",
+            "label": "test system accessibility for users with special needs",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "bf2be07f-2290-4d5d-84ec-fbcf3b1001d1",
+            "label": "participate in medical inventory control",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "bf40aa7c-1e99-40bb-a718-1e1492aaf00f",
+            "label": "identify market niches",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "bf5d77ad-e18c-48d8-83f0-bc79c011c74a",
+            "label": "develop professional network",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "bf7ea00f-db77-4a95-9b9f-2d12b6d9fcb4",
+            "label": "implement ICT network diagnostic tools",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "c0ccbd15-36f3-4515-ae0b-b4062d225ee2",
+            "label": "abide by regulations on banned materials",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "c1f29568-f2bb-49d2-b6c2-28748bd1629b",
+            "label": "manage online content",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "c241f5a5-e23f-47bf-ad24-d83ea0010166",
+            "label": "ensure proper document management",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "c2617b44-886a-485e-8393-bc0fc6339539",
+            "label": "management consulting",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "c2999f0c-eb37-4cdf-b9b0-82107b628794",
+            "label": "style sheet languages",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "c2ce5a8e-7885-48b7-81fe-3e8a057c47a9",
+            "label": "maintain pharmacy records",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "c362f415-9cdf-4328-9cf0-651443857a48",
+            "label": "advise on government policy compliance",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "c3c2420c-ce9a-4371-8eed-1db479c3a562",
+            "label": "write scientific publications",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "c3e36d05-8ae8-447f-bb2b-6f9409f85389",
+            "label": "deliver visual presentation of data",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "c4b1f326-224a-420a-b8b3-814a8f13b6cb",
+            "label": "implement front-end website design",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "c4b626c1-e71c-44ec-9f88-042766f37fcc",
+            "label": "application usability",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "c4e9f0d0-bbdd-42d7-83a5-2c131f6d67c2",
+            "label": "develop energy policy",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "c544a9f3-5945-4b54-afed-de0697852817",
+            "label": "report analysis results",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "c58050e1-0774-4097-93d2-07dd7ba6a27a",
+            "label": "organise facilities for office personnel",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "c5a135be-218d-48e6-a422-5225a576dcd8",
+            "label": "manage project metrics",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "c5e8abde-d2ba-4e8e-a65e-720b71180666",
+            "label": "unstructured data",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "c6445183-6a52-49e0-a51c-6b3481ba5c54",
+            "label": "conduct research before survey",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "c65795f8-69cc-47e0-9ba0-427671c965e6",
+            "label": "report on social development",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "c73ea1b8-e121-4f91-b8f0-dee4ee28d6ec",
+            "label": "plan schedule",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "c7cc6dc5-d56b-4323-8e5c-47c4022f615f",
+            "label": "quality assurance methodologies",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "c94dd931-f568-48e2-9a1c-922f1ce21f67",
+            "label": "demography",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "cbe2c304-1e7d-489a-97d9-a7d3e37a9db6",
+            "label": "apply ICT systems theory",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "cc61f9e5-d4fc-470e-8606-1ce865ff8386",
+            "label": "develop professional network with researchers and scientists",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "cc7370dd-69fa-4c67-a96f-d4d135d38700",
+            "label": "data quality assessment",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "ccd0a1d9-afda-43d9-b901-96344886e14d",
+            "label": "Python (computer programming)",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "cd195aad-29dd-43f5-a5be-e6994d83215b",
+            "label": "undertake continuous professional development in social work",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "cd50d616-1f8b-481e-983f-68d2674ff82d",
+            "label": "integrate gender dimension in research",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "cd5efa8c-e44d-4cbc-91c6-796018dbed68",
+            "label": "perform project management",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "cde9911c-f92e-4de1-811f-336e177ac4ce",
+            "label": "chemistry",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "ce592b28-4467-4908-b2e6-64bbe18da631",
+            "label": "perform copywriting",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "ce5b1446-b5e3-4f05-a5ac-83f2ee142a44",
+            "label": "analyse external factors of companies",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "cedd0710-62ae-4ff4-89ae-ac52375f86ec",
+            "label": "perform classroom management",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "cf3e976d-2c3e-495c-a874-f9e8a66d3b48",
+            "label": "perform backups",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "cf532795-a1fd-43bd-8407-6e43f877e6e3",
+            "label": "mobile device management",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "d07e7d39-60f9-4ab9-ba03-73f5f8d65cc8",
+            "label": "supervise physiotherapy students",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "d0f2f8a7-d935-4a6d-8e54-dcc3e5e2cbeb",
+            "label": "present reports",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "d15ce60f-ddab-41ce-ba56-398451b77b60",
+            "label": "have computer literacy",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "d15f8745-28f8-4abf-a7b6-6cb8a304efd2",
+            "label": "tolerate stress",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "d1910ad7-0c87-4f38-8a41-7c193e5dc16d",
+            "label": "macroeconomics",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "d1ec6846-dd8a-4810-8115-474cdf271540",
+            "label": "regulations on substances",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "d1f73ae9-d348-4aac-b5d5-9b6d508401d3",
+            "label": "resource-efficient technologies",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "d2adb565-a865-424d-aeb5-9fbcbf2afe2a",
+            "label": "Joomla",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "d2c81ad1-2439-43cf-9c63-204187b8f771",
+            "label": "mitigate waste of resources",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "d37bc902-f640-48d7-9db4-544db9aa65fa",
+            "label": "prepare financial projections",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "d3e585e9-3a73-4511-b533-90f095e5aa09",
+            "label": "marketing mix",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "d3eccb86-f02d-4950-bfbd-20b9510774a1",
+            "label": "apply organisational techniques",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "d41262ae-eca1-4ede-89a8-46d2d99a7a31",
+            "label": "consider economic criteria in decision making",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "d4cc5022-7801-4885-bcff-166552788d35",
+            "label": "provide improvement strategies",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "d59d023b-8f28-4e67-9a41-aa36320e6c69",
+            "label": "interpret medical results",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "d5e1e30e-44ab-4aba-abab-b8263e801b7a",
+            "label": "assist students in their learning",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "d6cdef49-b669-4507-91d1-3f959cf98e47",
+            "label": "maintain database performance",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "d78dedfc-21d2-45fd-ba05-e56b7a8865e6",
+            "label": "network standards",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "d81a22a2-4f57-4b4d-a3eb-11767238be21",
+            "label": "engage in physiotherapy research",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "d93f9e29-9740-4231-8486-13d377b99f05",
+            "label": "develop a collaborative therapeutic relationship",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "d97880ee-434d-4085-aeff-1a76ac21071e",
+            "label": "manage medication safety issues",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "d9d3eb78-a7c6-4076-9e19-df225af2ec62",
+            "label": "manage recycling program budget",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "d9e5349e-8791-49c2-8ba4-839fdd1606c2",
+            "label": "define technical requirements",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "da042121-959d-451b-b4d0-3bbf07c1bc67",
+            "label": "analyse network bandwidth requirements",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "dad7e408-162f-46a4-8567-db560e19e2fc",
+            "label": "identify ICT system weaknesses",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "dc417e19-edb4-4401-883a-2375f67a162f",
+            "label": "manage the general ledger",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "dc72ad0a-c5dc-4abd-bc0d-ca43e82162e1",
+            "label": "build business relationships",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "dd7c9dfd-6e2c-46fd-aefc-369402d0200c",
+            "label": "create a financial report",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "dda745dd-b8d6-45d8-8c74-e05495ce90f5",
+            "label": "sustainable development goals",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "ddce2912-bc0f-4a47-aa2b-c1de48bc4b44",
+            "label": "energy conservation",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "de03f4fd-c147-4477-a048-7109e5ba2d6f",
+            "label": "marketing principles",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "de2f0ce8-f8d6-48c5-a213-4d065251cecf",
+            "label": "communicate by telephone",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "debb8d81-ed7f-447d-853a-5d107fda6fcf",
+            "label": "provide customer follow-up services",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "dfce2aba-783e-4e17-9c17-e74aca505ec2",
+            "label": "interpret 2D plans",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "e2ca587e-9018-4f80-a9f6-100bc3d384ab",
+            "label": "develop plans related to client discharge",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "e35bfbda-2b8a-4d8e-9afb-8a1862703642",
+            "label": "respiratory therapy",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "e394b68e-576e-48d3-9d8f-a7ead7dfb008",
+            "label": "supervise pharmaceutical staff",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "e3e42d54-78bd-4337-aa87-bb31a7670c9a",
+            "label": "issue sales invoices",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "e3f2c37f-e484-4b4c-ad82-f565a2b98f89",
+            "label": "environmental management monitors",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "e465a154-93f7-4973-9ce1-31659fe16dd2",
+            "label": "principles of artificial intelligence",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "e4ff825c-7376-4135-93cd-3892fd67b7c1",
+            "label": "develop environmental remediation strategies",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "e55e230e-c308-426d-a536-06176db2a651",
+            "label": "organise social work packages",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "e5635e02-2d34-4a8c-b8ca-556d45e9b20e",
+            "label": "identify potential markets for companies",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "e5b5053e-0ef6-4c4e-a3f2-42f955f4322c",
+            "label": "implement a firewall",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "e7219848-a27a-4bf4-8775-d367707be7c9",
+            "label": "sales strategies",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "e74f4f21-8d45-412c-b5c3-652e6167ee32",
+            "label": "content development processes",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "e8828961-9e8e-471f-bd24-0673a7e844ef",
+            "label": "communicate with social service users",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "e9030465-13c5-46d2-bdae-c2c1a9dbec86",
+            "label": "attach accounting certificates to accounting transactions",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "e94773c9-c4be-4a01-a81f-d033dfeb21d4",
+            "label": "support social service users with specific communication needs",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "e9575f7f-053a-439e-8074-f93df3334e92",
+            "label": "data ethics",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "e97c0d89-2f81-4840-8602-e668a949482f",
+            "label": "social justice",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "e98a5096-de98-46d2-88c8-951f4029c038",
+            "label": "evaluate nursing care",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "eaa9727c-df1e-407a-85d3-48cc71508bc2",
+            "label": "prepare trial accounting balances",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "eb2d56cf-4689-43d9-88c6-775c7bf6596d",
+            "label": "assist social service users in formulating complaints",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "eba85523-6ad2-4cd9-9b27-a0b6a39b8cfa",
+            "label": "work in multidisciplinary health teams",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "ec0bbf39-0edd-4015-a2c3-82ad563ce3a8",
+            "label": "draft corporate emails",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "ec85cc63-4e24-4631-bf92-8789db2605c0",
+            "label": "maintain database security",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "ecc18804-a466-40d9-98b4-fba5cd67dd4b",
+            "label": "accounting",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "ed392b45-1087-44a7-89a9-d514224639ff",
+            "label": "conduct mobile marketing",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "ed39edd3-44d0-4a16-9796-bfb99f92baf3",
+            "label": "ICT performance analysis methods",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "ed8de897-adbe-4f0e-b4d2-534953e64c72",
+            "label": "integrate system components",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "edebd83d-35f6-4ed5-a940-6c203d178c01",
+            "label": "data science",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "edf0690f-629d-4674-a9df-45fd89413e85",
+            "label": "assess groundwater environmental impact",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "edf5a26c-8a71-4683-99b1-a8f567a603e2",
+            "label": "maintain the trust of service users",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "ee4a78d4-af84-42df-8ca0-039c0999e87c",
+            "label": "consider social impact of actions on service users",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "ee7f90cc-922e-4da7-a7ae-83c2688fed10",
+            "label": "align efforts towards business development",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "efa141df-f382-418f-9121-bd88fd735669",
+            "label": "mechanics",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "efe5d94c-2249-4a50-8c44-6e77331c698d",
+            "label": "manage theft prevention",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "efe801a5-8704-4def-8a96-c32f7a6cb9fb",
+            "label": "maintain relations with children's parents",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "f058bf62-70d1-4f5e-be2a-8b26fac24a96",
+            "label": "design graphics",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "f08e2bd6-0366-4948-a670-1f03f130126f",
+            "label": "create new concepts",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "f0f5bb34-71df-4715-9c9e-03567b76ec8f",
+            "label": "create website wireframe",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "f12f094b-492f-4e88-b36b-50b8e58b7500",
+            "label": "conduct environmental site assessments",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "f14ff4b7-be1e-4b55-b39b-520005f8a97e",
+            "label": "liaise with managers",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "f190355a-cea5-4cd0-b6cd-a5c3d9a14985",
+            "label": "dietetics",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "f28617ad-afdd-4041-814c-216153a38998",
+            "label": "analyse software specifications",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "f2d57f41-43b4-4f5b-8100-3df5c21eda50",
+            "label": "process data",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "f2f2cd3b-6afd-482e-80af-5823250ef0b8",
+            "label": "cooperate at inter-professional level",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "f37d9f67-2e79-4958-8307-1ce9d6dcc8bd",
+            "label": "apply customer engagement strategy",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "f414dc08-35bd-4bc7-846d-88a3844d057c",
+            "label": "trendwatching",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "f54c10e4-630d-4e50-95e9-4e9e268e8f12",
+            "label": "approve engineering design",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "f5bf985b-ac78-4d23-881a-18a359234528",
+            "label": "corporate sustainability",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "f5dc20ae-8b2f-4c9b-b4fa-e9e8c81dbcf4",
+            "label": "encourage students to acknowledge their achievements",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "f5f5b244-6cea-4fbc-8a50-8f712791bc09",
+            "label": "follow company standards",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "f60c9e52-95fc-4ca1-a73c-18a491153b63",
+            "label": "make strategic business decisions",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "f6ac6241-adb2-4ce2-b35f-09832cbb11ea",
+            "label": "empirical analysis",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "f6d5f009-b188-45ef-98e0-18d700744892",
+            "label": "strategies for handling cases of elder abuse",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "f6ea35a8-4ef0-4e87-8388-491a6b49aaf8",
+            "label": "maintain physiotherapy equipment",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "f715be1d-5fc4-49d3-82a5-0b8090d12849",
+            "label": "synthesise information",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "f75b740c-b36c-495e-bc67-efe347bbc6b5",
+            "label": "company policies",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "f7b071bf-4882-4cfc-ae0a-7e0e0ab94c61",
+            "label": "conduct research across disciplines",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "f7b5d916-52f0-4865-b6a6-e1a3b711cb5e",
+            "label": "implement strategic planning",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "f7e7ccb6-fadc-4c35-935d-e1040be40dfe",
+            "label": "handle financial transactions",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "f82b05a7-128b-4a72-a815-044ff6062f62",
+            "label": "advise on waste management procedures",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "f84a433f-34f1-4083-b0a3-24802623509c",
+            "label": "web services",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "f8f1f725-0105-41fa-9887-4df9e7a7af1e",
+            "label": "manage email hosting service",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "f90d4810-8bac-4e5e-b870-3e35a4138ff7",
+            "label": "accept own accountability",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "f9670490-8aa4-4540-b121-d440a8294aab",
+            "label": "develop data processing applications",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "f9a6f35b-01a7-40c9-8b61-b6ee46f97272",
+            "label": "operating systems",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "fa465db3-56e8-4b5d-a781-e2a313a4ed2d",
+            "label": "conduct qualitative research",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "fa642fc3-5cc5-41cf-8926-6617a8b976a7",
+            "label": "promote the participation of citizens in scientific and research activities",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "faf8943c-72ff-4736-a587-25508695d6f0",
+            "label": "maintain financial records",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "fb3bc9b5-2297-4bba-85b1-60f696a92db8",
+            "label": "characteristics of services",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "fbafa41f-cd05-4109-a649-8b44d306d779",
+            "label": "create data models",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "fbdfc3bf-56a0-4454-a17d-2f513fe57b53",
+            "label": "manage stress in the work place",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "fc4fcb4b-993f-4f2c-b158-c2171ec18ed8",
+            "label": "draw design sketches",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "fd311456-d8d2-43ca-b6be-a66bbff90302",
+            "label": "handle tasks independently",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "fd33c66c-70c4-40e6-b87c-5495bd3bf26e",
+            "label": "design user interface",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "fd843a67-4662-4682-9c7e-b4d794eaff12",
+            "label": "prepare market research reports",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "fd8a70fb-1174-4263-b701-ea442fbbc324",
+            "label": "comply with legislation in social services",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "fdb44237-c0b0-4924-9439-911332e0d884",
+            "label": "build helping relationship with social service users",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "fe39d4db-4cb5-4299-bb9f-896c8fd6ab13",
+            "label": "perform market research",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "fecf8a0d-62c4-4e71-9b03-0f4fc2ad7bf5",
+            "label": "data models",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "ff599c4c-f7bc-44fc-b75f-eea4b7178692",
+            "label": "management systems standards",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "ff5e9b54-d141-4f5a-ad04-ddefd7d8843f",
+            "label": "procure time sheet approval",
+            "reason": "group has no SDG row"
+          },
+          {
+            "id": "ff64e9fc-36dd-4035-872a-83aa41dc1ad9",
+            "label": "communicate with a non-scientific audience",
+            "reason": "group has no SDG row"
+          }
+        ],
+        "noGroup": 0,
+        "groupWithoutSdg": 634
+      }
+    },
+    "kpi4": {
+      "note": "Not measured (placeholder)"
+    },
+    "kpi5": {
+      "status": "PLACEHOLDER",
+      "value": "hand-check not started (0/45 rated; wrote kpi/sdg-handcheck-50.csv)",
+      "target": "overall ≥80%, direct ≥90%, κ≥0.6",
+      "sampleSize": 45,
+      "csvPath": "kpi/sdg-handcheck-50.csv",
+      "written": true
+    }
+  }
+}
