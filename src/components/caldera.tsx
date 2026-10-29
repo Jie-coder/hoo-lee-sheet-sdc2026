@@ -106,12 +106,12 @@ export function SourceRow({
             <button
               type="button"
               onClick={howOnClick}
-              className="ml-1 font-mono text-[11px] tracking-[0.04em] text-sage-dark uppercase hover:underline"
+              className="ml-1 font-mono text-[11px] tracking-[0.04em] text-obsidian underline underline-offset-2 uppercase"
             >
               {howText}
             </button>
           ) : howHref ? (
-            <a href={howHref} className="ml-1 font-mono text-[11px] tracking-[0.04em] text-sage-dark uppercase hover:underline">
+            <a href={howHref} className="ml-1 font-mono text-[11px] tracking-[0.04em] text-obsidian underline underline-offset-2 uppercase">
               {howText}
             </a>
           ) : null}

@@ -4,17 +4,18 @@
 // a "Why" button that opens a drawer (robust badge, skills to build, demand, sources).
 "use client";
 
-import { useState } from "react";
+import { Fragment, useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import { Drawer, Perforation, SdgChip, SignalLight, Ticket } from "@/components/caldera";
 import { EASE_OUT } from "@/components/motion";
 import { SourcesDisclosure } from "@/components/sources-disclosure";
-import { isStretchRoute } from "@/lib/scoring";
+import { isStretchRoute, SCORING_PARAMS } from "@/lib/scoring";
 import { formatFitPercent, missingValue } from "@/lib/display";
 import { useT, type MessageKey } from "@/lib/i18n";
+import type { RoleBreakdown } from "@/lib/analyze";
 import { formatMonthlyRange, formatMonthlyRm, hasRealRange, salaryForRole } from "@/lib/salary";
 import { cn } from "@/lib/utils";
-import { scoreBand, type RoleResult } from "@/types/contracts";
+import { scoreBand, type RoleResult, type ScenarioId } from "@/types/contracts";
 
 const EXPOSURE_LABEL: Record<"low" | "medium" | "high", MessageKey> = {
   low: "exposure.lightLow",
@@ -22,7 +23,24 @@ const EXPOSURE_LABEL: Record<"low" | "medium" | "high", MessageKey> = {
   high: "exposure.lightHigh",
 };
 
+const SCORE_COMPONENTS = [
+  { key: "fit", label: "results.component.fit" },
+  { key: "demand", label: "results.component.demand" },
+  { key: "exposure", label: "results.component.exposure" },
+  { key: "sdg", label: "results.component.sdg" },
+] as const satisfies readonly { key: "fit" | "demand" | "exposure" | "sdg"; label: MessageKey }[];
+
+function signedPercent(value: number): string {
+  return `${value >= 0 ? "+" : ""}${(value * 100).toFixed(1)}`;
+}
+
+function signedPoints(value: number): string {
+  return `${value >= 0 ? "+" : ""}${value.toFixed(1)}`;
+}
+
 const SKILLS_COLLAPSED = 3;
+const MIN_FIT_PERCENT = Math.round(SCORING_PARAMS.minFit * 100);
+const MIN_FIT_FALLBACK_PERCENT = Math.round(SCORING_PARAMS.minFitFallback * 100);
 
 export function RoleCard({
   role,
@@ -35,6 +53,8 @@ export function RoleCard({
   relatedSkills = [],
   sdgMatch = false,
   displayFit,
+  breakdown,
+  scenario = "co",
 }: {
   role: RoleResult;
   rank: number;
@@ -50,6 +70,10 @@ export function RoleCard({
   sdgMatch?: boolean;
   /** Displayed Fit (skill fit + INTEREST_FIT_BONUS when the role matches the SDG choice). Defaults to raw skill fit. */
   displayFit?: number;
+  /** Score components, trend momentum and what-if items for the drawer. */
+  breakdown?: RoleBreakdown;
+  /** Which scenario's score breakdown to show. */
+  scenario?: ScenarioId;
 }) {
   const reduce = useReducedMotion();
   const { t } = useT();
@@ -57,7 +81,11 @@ export function RoleCard({
   const [skillsExpanded, setSkillsExpanded] = useState(false);
 
   const shownFit = displayFit ?? role.fit;
-  const fitPercent = Math.round(shownFit * 100);
+  // Headline Fit is the calibrated value (raw fit / the fixed global
+  // denominator, see calibrateFit in lib/score-breakdown.ts), so the score is
+  // comparable across users. Raw fit stays visible in the rank line and drawer.
+  const headlineFit = breakdown ? breakdown.calibratedFit : shownFit;
+  const fitPercent = Math.round(headlineFit * 100);
   // Transition route stays on raw skill fit, not the interest-blended Fit.
   const stretch = isStretchRoute(role.fit);
   const interestPart = shownFit - role.fit;
@@ -70,6 +98,18 @@ export function RoleCard({
   const salary = salaryForRole(role.occupationId);
   const visibleSkills = skillsExpanded ? role.gap : role.gap.slice(0, SKILLS_COLLAPSED);
   const extraSkillCount = role.gap.length - SKILLS_COLLAPSED;
+  const scenarioScore = breakdown?.score[scenario];
+  const trendSkills = scenarioScore
+    ? [...scenarioScore.skills]
+        .filter((skill) => skill.momentumContribution !== 0)
+        .sort((a, b) => Math.abs(b.momentumContribution) - Math.abs(a.momentumContribution))
+        .slice(0, 5)
+    : [];
+  const whatIfItems = breakdown?.whatIf[scenario] ?? [];
+  const shownWhatIf = whatIfItems.slice(0, 3);
+  const sameWhatIfDelta =
+    shownWhatIf.length > 0 &&
+    whatIfItems.every((item) => item.deltaPoints === whatIfItems[0].deltaPoints);
 
   return (
     <motion.div
@@ -92,11 +132,20 @@ export function RoleCard({
         </h3>
 
         <div className="mt-5 flex items-baseline gap-2.5">
-          <span className="font-serif text-[56px] leading-none tabular-nums">{formatFitPercent(shownFit)}</span>
+          <span className="font-serif text-[56px] leading-none tabular-nums">{formatFitPercent(headlineFit)}</span>
           <span className="font-mono text-[12px] tracking-[0.06em] text-grey uppercase">{t("results.fit")}</span>
         </div>
+        {scenarioScore && breakdown && (
+          <p className="mt-2 font-mono text-[12px] tracking-[0.06em] text-ink uppercase tabular-nums">
+            {t("results.scoreLine", {
+              score: (scenarioScore.total * 100).toFixed(1),
+            })}
+          </p>
+        )}
         {sdgMatch && (
-          <p className="mt-2 font-mono text-[11px] tracking-[0.04em] text-sage-dark uppercase">{t("results.sdgMatch")}</p>
+          <p className="mt-2 inline-flex items-center rounded-full bg-sulfur px-2 py-0.5 font-mono text-[11px] tracking-[0.04em] text-obsidian uppercase">
+            {t("results.sdgMatch")}
+          </p>
         )}
         {stretch && (
           <p className="mt-2 font-mono text-[11px] tracking-[0.04em] text-grey uppercase" title={t("results.stretchHint")}>
@@ -177,9 +226,143 @@ export function RoleCard({
         )}
 
         <p className="font-mono text-[12px] tracking-[0.06em] text-grey uppercase">{t("results.fit")}</p>
-        <p className="mt-2.5 mb-6 text-[15px] leading-relaxed">{fitBreakdown}</p>
+        {breakdown ? (
+          <>
+            <p className="mt-2.5 text-[15px] leading-relaxed">
+              {t("results.fitCalibrated", {
+                calibrated: formatFitPercent(breakdown.calibratedFit),
+                raw: formatFitPercent(role.fit),
+              })}
+            </p>
+            <p className="mt-1 font-mono text-[12px] tracking-[0.04em] text-grey uppercase tabular-nums">
+              <span className="whitespace-nowrap">
+                {t("results.drawerTotalRank", {
+                  rank: String(breakdown.totalRank[scenario]),
+                  total: String(breakdown.fitRank.total),
+                })}
+              </span>
+              {" · "}
+              <span className="whitespace-nowrap">
+                {t("results.drawerFitRank", {
+                  rank: String(breakdown.fitRank.rank),
+                  total: String(breakdown.fitRank.total),
+                })}
+              </span>
+            </p>
+            <p className="mt-1 text-[12px] text-grey">
+              {t("results.hiddenThreshold", {
+                minFit: String(MIN_FIT_PERCENT),
+                fallback: String(MIN_FIT_FALLBACK_PERCENT),
+              })}
+            </p>
+          </>
+        ) : (
+          <p className="mt-2.5 text-[15px] leading-relaxed">{fitBreakdown}</p>
+        )}
 
-        <p className="font-mono text-[12px] tracking-[0.06em] text-grey uppercase">{t("results.skillsToBuild")}</p>
+        {breakdown && scenarioScore && (
+          <>
+            <p className="mt-6 font-mono text-[12px] tracking-[0.06em] text-grey uppercase">{t("results.scoreBreakdown")}</p>
+            <p className="mt-1 text-[13px] leading-relaxed text-grey">{t("results.scoreEstimateNote")}</p>
+            <div className="mt-2.5 space-y-1.5 text-[15px]">
+              {SCORE_COMPONENTS.map((row) => {
+                const component = scenarioScore.components[row.key];
+                const value =
+                  row.key === "sdg"
+                    ? component.value === 1
+                      ? t("results.sdgYes")
+                      : t("results.sdgNo")
+                    : `${(component.value * 100).toFixed(0)}%`;
+                return (
+                  <Fragment key={row.key}>
+                    <div className="grid grid-cols-[1fr_auto_auto_auto] items-baseline gap-x-3">
+                      <span>{t(row.label)}</span>
+                      <span className="min-w-14 text-right font-data text-[12px] tracking-[0.04em] whitespace-nowrap text-grey tabular-nums">
+                        {value}
+                      </span>
+                      <span className="w-12 text-right font-data text-[12px] tracking-[0.04em] text-grey tabular-nums">
+                        × {component.weight}
+                      </span>
+                      <span className="w-14 text-right font-data text-[12px] tracking-[0.04em] text-ink tabular-nums">
+                        {signedPoints(component.points * 100)}
+                      </span>
+                    </div>
+                    {row.key === "fit" && (
+                      <p className="pl-4 text-[13px] leading-relaxed text-grey">
+                        {t("results.trendVsNoTrend", {
+                          delta: signedPoints((scenarioScore.total - scenarioScore.noTrendTotal) * 100),
+                        })}
+                      </p>
+                    )}
+                  </Fragment>
+                );
+              })}
+              <div className="grid grid-cols-[1fr_auto_auto_auto] items-baseline gap-x-3 border-t border-ink/10 pt-1.5 font-bold">
+                <span>{t("results.component.total")}</span>
+                <span className="min-w-14" />
+                <span className="w-12" />
+                <span className="w-14 text-right font-data text-[12px] tracking-[0.04em] text-ink tabular-nums">
+                  {(scenarioScore.total * 100).toFixed(1)}
+                </span>
+              </div>
+            </div>
+
+            <details className="mt-3">
+              <summary className="cursor-pointer font-mono text-[12px] tracking-[0.06em] text-grey uppercase">
+                {t("results.howCalculated")}
+              </summary>
+              <p className="mt-2 text-[13px] leading-relaxed text-grey">{t("results.formula")}</p>
+            </details>
+
+            <p className="mt-6 font-mono text-[12px] tracking-[0.06em] text-grey uppercase">
+              {t("results.trendBoost")}
+            </p>
+            {trendSkills.length === 0 && (
+              <p className="mt-2.5 text-[15px] leading-relaxed text-grey">{t("results.trendBoostNone")}</p>
+            )}
+            {trendSkills.length > 0 && (
+              <>
+                <ul className="mt-2.5 space-y-1.5 text-[15px]">
+                  {trendSkills.map((skill) => (
+                    <li key={skill.skillId} className="flex flex-wrap items-baseline justify-between gap-x-3">
+                      <span>{skill.label}</span>
+                      <span className="font-mono text-[12px] tracking-[0.04em] text-grey tabular-nums">
+                        {signedPercent(skill.momentumContribution)} {t("results.trendBoostUnit")}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              </>
+            )}
+
+            {whatIfItems.length > 0 && (
+              <>
+                <p className="mt-6 font-mono text-[12px] tracking-[0.06em] text-grey uppercase">
+                  {t("results.whatIfTitle")}
+                </p>
+                {sameWhatIfDelta ? (
+                  <p className="mt-2.5 text-[15px] leading-relaxed">
+                    {t("results.whatIfAny", {
+                      skills: shownWhatIf.map((item) => item.label).join(", "),
+                      points: whatIfItems[0].deltaPoints.toFixed(1),
+                    })}
+                  </p>
+                ) : (
+                  <ul className="mt-2.5 space-y-1.5 text-[15px]">
+                    {shownWhatIf.map((item) => (
+                      <li key={item.skillId}>
+                        {t("results.whatIfItem", { skill: item.label, points: `+${item.deltaPoints.toFixed(1)}` })}
+                      </li>
+                    ))}
+                  </ul>
+                )}
+                <p className="mt-2 text-[14px] leading-relaxed text-grey">{t("results.whatIfNote")}</p>
+              </>
+            )}
+          </>
+        )}
+
+        <p className="mt-6 font-mono text-[12px] tracking-[0.06em] text-grey uppercase">{t("results.skillsToBuild")}</p>
         <ul className="mt-2.5 space-y-1.5 text-[15px]">
           {visibleSkills.map((skill) => (
             <li key={skill.skillId}>{skill.label}</li>

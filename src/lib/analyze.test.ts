@@ -4,7 +4,14 @@ import { CATALOGUE, type Catalogue } from "./catalogue";
 import { rankRoles } from "./rank-roles";
 import { explainRole } from "./explain";
 import { resolveProfileSkills } from "./profile-skills";
-import { INTEREST_FIT_BONUS, NON_RECOMMENDED_CLUSTERS, SCORING_PARAMS, STRETCH_FIT_THRESHOLD, isStretchRoute } from "./scoring";
+import {
+  INTEREST_FIT_BONUS,
+  NON_RECOMMENDED_CLUSTERS,
+  SCORING_PARAMS,
+  STRETCH_FIT_THRESHOLD,
+  isStretchRoute,
+  scenarioRank,
+} from "./scoring";
 import { PERSONA_IDS, PERSONAS } from "@/mocks/personas";
 import { AnalyzeResponseSchema, SCENARIO_IDS } from "@/types/contracts";
 
@@ -64,10 +71,26 @@ describe("analyzeProfile on the real catalogue", () => {
 
   it("marks robust exactly the roles in the top 3 of every scenario", () => {
     const result = personaResult("aisyah");
+    // Inclusion uses the raw-fit scenario score, without the adoption-driven
+    // trend boost, so reconstruct it from the breakdown rather than byScenario.
+    const selectionScore = (role: (typeof result.roles)[number], scenario: (typeof SCENARIO_IDS)[number]) => {
+      const score = result.breakdown[role.occupationId].score[scenario];
+      return scenarioRank({
+        fit: score.fit,
+        demand: score.demand,
+        exposure: score.exposure,
+        theta: score.theta,
+        sdgMatch: score.sdgMatch === 1,
+      });
+    };
     for (const role of result.roles) {
       const inAll = SCENARIO_IDS.every((scenario) =>
         [...result.roles]
-          .sort((a, b) => b.byScenario[scenario] - a.byScenario[scenario] || (a.occupationId < b.occupationId ? -1 : 1))
+          .sort(
+            (a, b) =>
+              selectionScore(b, scenario) - selectionScore(a, scenario) ||
+              (a.occupationId < b.occupationId ? -1 : 1),
+          )
           .slice(0, 3)
           .some((item) => item.occupationId === role.occupationId),
       );
@@ -151,6 +174,84 @@ describe("analyzeProfile scoring rules (tiny catalogue)", () => {
     const demand = SCORING_PARAMS.demandByCluster.data_analytics.co;
     expect(one.byScenario.co).toBeCloseTo(0.5 * 0.5 + 0.3 * demand + 0.2 * (1 - 1.0 * 0.5));
     expect(explainRole(one, result.breakdown.x1, "co")).toContain(`Score ${one.byScenario.co.toFixed(2)}`);
+  });
+});
+
+describe("total rank", () => {
+  it.each(PERSONA_IDS)("orders %s's cards by totalRank in every scenario", (id) => {
+    const result = personaResult(id);
+    for (const scenario of SCENARIO_IDS) {
+      const ranks = rankRoles(result.roles, scenario).map(
+        (role) => result.breakdown[role.occupationId].totalRank[scenario],
+      );
+      for (let index = 1; index < ranks.length; index += 1) {
+        expect(ranks[index]).toBeGreaterThan(ranks[index - 1]);
+      }
+    }
+  });
+});
+
+describe("what-if equals a full re-run", () => {
+  it.each(PERSONA_IDS)("matches an independent analyzeProfile re-run for %s", (id) => {
+    const persona = PERSONAS[id];
+    const chips = persona.parsed.skills.map((label) => ({ label, selfReported: false }));
+    const { skills } = resolveProfileSkills(CATALOGUE, id, chips);
+    const input = { skills, currentOccupationId: persona.currentOccupationId, impactInterest: "none" as const };
+    const result = analyzeProfile(CATALOGUE, input);
+
+    const reruns = new Map<string, ReturnType<typeof analyzeProfile>>();
+    for (const role of result.roles) {
+      const breakdown = result.breakdown[role.occupationId];
+      // Re-run against a catalogue of just this role so it always stays in the
+      // result; a role's own scenario total does not depend on its competitors.
+      const focused: Catalogue = {
+        ...CATALOGUE,
+        occupations: CATALOGUE.occupations.filter((occupation) => occupation.id === role.occupationId),
+      };
+      for (const scenario of SCENARIO_IDS) {
+        const items = breakdown.whatIf[scenario];
+        expect(items.length).toBeLessThanOrEqual(5);
+        for (const item of items) {
+          const key = `${role.occupationId}:${item.skillId}`;
+          let rerun = reruns.get(key);
+          if (!rerun) {
+            rerun = analyzeProfile(focused, {
+              ...input,
+              skills: [...skills, { skillId: item.skillId, level: SCORING_PARAMS.skillLevel.full }],
+            });
+            reruns.set(key, rerun);
+          }
+          const after = rerun.roles.find((candidate) => candidate.occupationId === role.occupationId)!;
+          expect(item.deltaPoints).toBeCloseTo(
+            (after.byScenario[scenario] - role.byScenario[scenario]) * 100,
+            6,
+          );
+        }
+      }
+    }
+  });
+});
+
+describe("role-list inclusion is adoption-independent", () => {
+  it.each(PERSONA_IDS)("shows the same roles for %s at adoption 0.5, 1 and 2", (id) => {
+    const persona = PERSONAS[id];
+    const chips = persona.parsed.skills.map((label) => ({ label, selfReported: false }));
+    const { skills } = resolveProfileSkills(CATALOGUE, id, chips);
+    for (const impactInterest of ["none", "environment"] as const) {
+      const sets = [0.5, 1, 2].map(
+        (adoption) =>
+          new Set(
+            analyzeProfile(CATALOGUE, {
+              skills,
+              currentOccupationId: persona.currentOccupationId,
+              impactInterest,
+              adoption,
+            }).roles.map((role) => role.occupationId),
+          ),
+      );
+      expect(sets[1]).toEqual(sets[0]);
+      expect(sets[2]).toEqual(sets[0]);
+    }
   });
 });
 
@@ -280,5 +381,47 @@ describe("displayed Fit (INTEREST_FIT_BONUS)", () => {
     const care = result.roles.find((role) => result.breakdown[role.occupationId].interestMatch && role.fit < STRETCH_FIT_THRESHOLD)!;
     expect(result.breakdown[care.occupationId].displayFit).toBeGreaterThanOrEqual(STRETCH_FIT_THRESHOLD);
     expect(isStretchRoute(care.fit)).toBe(true);
+  });
+});
+
+describe("trend term (rankScore) moves the demo ranking", () => {
+  function run(id: (typeof PERSONA_IDS)[number], signalDate: "today" | "prior", adoption?: number) {
+    const persona = PERSONAS[id];
+    const chips = persona.parsed.skills.map((label) => ({ label, selfReported: false }));
+    const { skills } = resolveProfileSkills(CATALOGUE, id, chips);
+    return analyzeProfile(CATALOGUE, {
+      skills,
+      currentOccupationId: persona.currentOccupationId,
+      impactInterest: "none",
+      signalDate,
+      adoption,
+    });
+  }
+  const ids = (result: ReturnType<typeof run>) => rankRoles(result.roles, "co").map((role) => role.title);
+
+  it("changing momentum in the snapshot changes Pravin's scores (code generation keyword)", () => {
+    const prior = run("pravin", "prior");
+    const today = run("pravin", "today");
+    const scoreFor = (result: ReturnType<typeof run>, title: string) =>
+      result.roles.find((role) => role.title === title)!.byScenario.co;
+    expect(scoreFor(prior, "Mobile application developer")).not.toBeCloseTo(
+      scoreFor(today, "Mobile application developer"),
+      6,
+    );
+  });
+
+  it("adoption 0.5 / 1 / 2 scales the trend term without changing the role list", () => {
+    const half = run("aisyah", "today", 0.5);
+    const one = run("aisyah", "today", 1);
+    const two = run("aisyah", "today", 2);
+    expect(new Set(ids(half))).toEqual(new Set(ids(one)));
+    expect(new Set(ids(two))).toEqual(new Set(ids(one)));
+    const analyst = (r: ReturnType<typeof run>) => r.roles.find((role) => role.title === "Data analyst")!.byScenario.co;
+    expect(analyst(half)).toBeGreaterThan(analyst(one));
+    expect(analyst(one)).toBeGreaterThan(analyst(two));
+  });
+
+  it("adoption defaults to 1", () => {
+    expect(run("pravin", "today").roles).toEqual(run("pravin", "today", 1).roles);
   });
 });

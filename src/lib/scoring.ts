@@ -13,6 +13,25 @@
 //   R_{r,k} = α F_r + β D_{r,k} + γ (1 − θ_k E_r)
 //   then +SCORING_PARAMS.sdgBonus (0.1) when a direct or supporting SDG link matches impact_interest
 //
+// Role trend boost, applied to fit inside the ranking only (never to the raw
+// fit that is displayed or filtered):
+//   trendFit = rankScore(F_r, roleMomentum_r, adoption)
+//   rankScore(fit, momentum, adoption) = fit · (1 + trendBeta · tanh(adoption · momentum))
+// roleMomentum is the mean momentum over a role's essential skills that have
+// a signal, and 0 when none do. The displayed byScenario totals therefore use
+//   α · rankScore + β D + γ (1 − θ E) + SDG.
+// trendBeta is named for the trend boost because beta is already the demand
+// weight. Raw fit still drives the minFit filter and is returned as fit.
+//
+// Role-list inclusion (which roles make a scenario's top 3) is deliberately
+// adoption-independent: it ranks candidates by the same formula with raw fit
+// in place of trendFit,
+//   α · F_r + β D + γ (1 − θ E) + SDG,
+// and applies minFit/minFitFallback to that selection score. The trend boost
+// can reorder the displayed cards but never changes which roles are shown,
+// so moving the adoption slider cannot add or drop a role. The displayed
+// byScenario totals still include rankScore. See scoreRoles below.
+//
 // h_s is 1 (clear), 0.5 (partial, self-reported, or a related ESCO skill the
 // user holds — see relatedSkillCredit below), or 0 (missing).
 // A user skill matches an essential skill when cosine >= 0.82.
@@ -55,7 +74,7 @@
 // - The brief does not say which SDG targets match each impact_interest.
 //   impactGoals below is the small map used: environment 6, 7, 12–15,
 //   education 4, health 3, community 1, 10, 11.
-//   "none" matches nothing. Inferred links do not count. The +0.05 is added
+//   "none" matches nothing. Inferred links do not count. The +0.10 is added
 //   once per role, to every scenario's R, not once per link
 //   (sdgBonus, 0.10). A matching role is also eligible for a top 3 at
 //   minFitFallback (0.10) instead of minFit, so a slightly lower-fit role
@@ -64,6 +83,9 @@
 //   occupationId ascending. Ties do not expand the cut. robust means the
 //   role is inside that cut in every scenario. The returned list is the
 //   union of the three cuts, ordered by the co-pilot R then occupationId.
+// - Card order uses the same strict comparator (rankRoles in rank-roles.ts):
+//   scenario total descending, then occupationId ascending. There is no
+//   near-tie epsilon; equal totals are the only tie.
 // - Display bands stay in contracts.scoreBand. Values here are full precision;
 //   two-decimal display is a UI rule and is not applied, so rounding cannot
 //   change a rank.
@@ -111,6 +133,13 @@ export const SCORING_PARAMS = {
    * the chosen goal can surface. No choice ("none") changes nothing.
    */
   sdgBonus: 0.1,
+  /**
+   * Weight of the role trend boost in rankScore. Named trendBeta because beta
+   * is already the demand weight in R_{r,k}.
+   */
+  trendBeta: 0.3,
+  /** Adoption level used by rankScore when the caller does not pass one. */
+  defaultAdoption: 1,
   topN: 3,
   gapSize: 5,
   /** Half credit for an essential skill in the same ESCO group as a user skill, not the exact match. See the file header. */
@@ -119,6 +148,15 @@ export const SCORING_PARAMS = {
   relatedSkillCap: 10,
   /** Essential-skill count above which the fit denominator is scaled down. See the file header. */
   essentialSkillCap: 25,
+  /**
+   * Fixed denominator for the displayed calibrated fit. Derived as the p95
+   * (nearest-rank) of the non-zero raw fits (fitScore, today's signals) over
+   * the reference population: the 3 demo personas in src/mocks/personas.ts
+   * (PERSONA_IDS, skills resolved via resolveProfileSkills as in
+   * analyze.test.ts) x all occupations in CATALOGUE. Recomputed by
+   * src/lib/fit-calibration.test.ts.
+   */
+  fitCalibrationDenominator: 0.3,
   /** Minimum fit F a role needs to be eligible for a scenario's top 3. See "Minimum fit filter" in the file header. */
   minFit: 0.13,
   /** Looser fit bar used for a scenario only when minFit leaves fewer than topN roles eligible. See the file header. */
@@ -194,6 +232,8 @@ export type CandidateRole = {
   tasks: readonly WeightedTask[];
   essentialSkills: readonly EssentialSkillInput[];
   sdgLinks: readonly SdgInterestLink[];
+  /** Mean momentum of essential skills that have a signal; defaults to 0. */
+  roleMomentum?: number;
 };
 
 /** Numeric fields of a role card. SDG links, sources, and copy are added later. */
@@ -265,6 +305,38 @@ export function augmentationScore(
  */
 export function skillMomentum(recentPapers: number, previousPapers: number): number {
   return Math.log((recentPapers + 1) / (previousPapers + 1));
+}
+
+/**
+ * Mean momentum over the essential skill ids that have a signal, 0 if none.
+ * Same algorithm as the radar (src/lib/radar.ts).
+ */
+export function roleMomentum(
+  essentialSkillIds: readonly string[],
+  signals: Readonly<Record<string, { momentum: number } | undefined>>,
+): number {
+  let sum = 0;
+  let count = 0;
+  for (const id of essentialSkillIds) {
+    const signal = signals[id];
+    if (signal) {
+      sum += signal.momentum;
+      count += 1;
+    }
+  }
+  return count === 0 ? 0 : sum / count;
+}
+
+/**
+ * Fit with the role trend boost: fit · (1 + trendBeta · tanh(adoption · momentum)).
+ * Returns fit unchanged when momentum is 0.
+ */
+export function rankScore(
+  fit: number,
+  momentum: number,
+  adoption: number = SCORING_PARAMS.defaultAdoption,
+): number {
+  return fit * (1 + SCORING_PARAMS.trendBeta * Math.tanh(adoption * momentum));
 }
 
 /** imp_s = b_s (1 + λ tanh(m_s)). */
@@ -401,7 +473,10 @@ type PreparedRole = {
   fit: number;
   exposure: number;
   augmentation: number;
+  /** Displayed totals: include the adoption-driven trend boost (rankScore). */
   byScenario: ScenarioScores;
+  /** Selection totals: raw fit, no trend boost, so role inclusion cannot depend on adoption. */
+  selectionByScenario: ScenarioScores;
   gap: GapSkill[];
   sdgMatch: boolean;
 };
@@ -450,6 +525,7 @@ export function topRoleIdsForScenario(roles: readonly ScenarioRankable[], scenar
 export function scoreRoles(
   roles: readonly CandidateRole[],
   impactInterest: ImpactInterest,
+  options?: { adoption?: number },
 ): ScoredRole[] {
   const prepared: PreparedRole[] = roles.map((role) => {
     const exposure = exposureScore(role.tasks);
@@ -461,7 +537,21 @@ export function scoreRoles(
       })),
     );
     const sdgMatch = sdgInterestMatches(role.sdgLinks, impactInterest);
+    const trendFit = rankScore(fit, role.roleMomentum ?? 0, options?.adoption);
     const byScenario = Object.fromEntries(
+      SCENARIO_IDS.map((scenario) => [
+        scenario,
+        scenarioRank({
+          fit: trendFit,
+          demand: scenarioDemand(role.cluster, scenario),
+          exposure,
+          theta: SCORING_PARAMS.theta[scenario],
+          sdgMatch,
+        }),
+      ]),
+    ) as ScenarioScores;
+    // Inclusion ignores adoption: same formula with raw fit instead of trendFit.
+    const selectionByScenario = Object.fromEntries(
       SCENARIO_IDS.map((scenario) => [
         scenario,
         scenarioRank({
@@ -480,6 +570,7 @@ export function scoreRoles(
       exposure,
       augmentation,
       byScenario,
+      selectionByScenario,
       gap: skillGap(role.essentialSkills),
       sdgMatch,
     };
@@ -488,7 +579,7 @@ export function scoreRoles(
   const rankable: ScenarioRankable[] = prepared.map((item) => ({
     occupationId: item.role.occupationId,
     fit: item.fit,
-    byScenario: item.byScenario,
+    byScenario: item.selectionByScenario,
     sdgMatch: item.sdgMatch,
   }));
   const topByScenario = Object.fromEntries(
