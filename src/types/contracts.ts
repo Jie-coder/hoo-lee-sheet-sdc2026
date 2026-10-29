@@ -463,6 +463,8 @@ export const CourseSchema = z
     costType: CostTypeSchema,
     certificate: z.boolean(),
     skillIds: z.array(z.string().min(1)),
+    sdgTarget: SdgTargetIdSchema,
+    sdgReason: z.string().min(1),
     lastChecked: IsoDateSchema,
     mode: CourseModeSchema,
     aiContent: CourseAiContentSchema,

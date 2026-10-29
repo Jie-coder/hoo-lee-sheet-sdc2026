@@ -4711,6 +4711,180 @@
   "70ac2c90-656a-4fa3-886c-5b9305db2087": "processing information",
   "0231": "language acquisition"
  },
+ "groupSdg": {
+  "1021": {
+   "target": "6.2",
+   "reason": "Sanitation workers help communities gain safe and adequate sanitation and hygiene."
+  },
+  "062a9fde-cd91-44f9-9a2f-9e2bc3b281fd": {
+   "target": "12.6",
+   "reason": "Environmental advisers help companies adopt sustainable practices and report them honestly."
+  },
+  "08104c27-d4b2-4d40-ae97-dde65e71712f": {
+   "target": "8.8",
+   "reason": "Safety advisers help keep workplaces safe and protect the rights of workers."
+  },
+  "0a4c5823-8b09-4e6b-95b4-8036ef3b9c4c": {
+   "target": "10.2",
+   "reason": "Advocates help communities voice their needs and gain inclusion in public life."
+  },
+  "29fbde52-e525-4653-96d0-acd59ccb28d8": {
+   "target": "1.3",
+   "reason": "Service assistants help vulnerable people reach social protection and support."
+  },
+  "0512": {
+   "target": "3.b",
+   "reason": "Biochemists advance research on medicines and vaccines for major diseases."
+  },
+  "0732": {
+   "target": "9.1",
+   "reason": "Civil engineers build safe reliable infrastructure that supports development."
+  },
+  "969845ce-6895-44a8-a3d2-b8c2d8b5de21": {
+   "target": "4.2",
+   "reason": "Child care workers give young children a healthy start and prepare them for school."
+  },
+  "8064ae65-5d1b-44e1-9aaf-246a4285a9a6": {
+   "target": "12.6",
+   "reason": "Compliance with green standards pushes companies toward sustainable practices."
+  },
+  "5bcec244-3efe-45ac-8891-0ab4a91e9c48": {
+   "target": "8.8",
+   "reason": "Following safety rules keeps workplaces safe and protects workers."
+  },
+  "0611": {
+   "target": "4.4",
+   "reason": "These are ICT skills of the kind counted under SDG indicator 4.4.1 for youth and adults."
+  },
+  "d6a8a2a4-4e21-4ea6-b267-b5c63e687cfd": {
+   "target": "3.4",
+   "reason": "Counsellors support mental health and help people cope with personal and social problems."
+  },
+  "b2c688b0-9106-466d-8b88-eafdfe608e7d": {
+   "target": "9.1",
+   "reason": "Structural designers create safe infrastructure for economic development."
+  },
+  "db54693e-bcb0-4dae-8885-a43d510fb71f": {
+   "target": "3.8",
+   "reason": "Health programme planners extend quality health services to more people."
+  },
+  "d700aa7a-0ed8-4967-a32c-4cb6075ab3b9": {
+   "target": "3.8",
+   "reason": "Diagnosticians help patients get timely and correct treatment."
+  },
+  "61d1dab2-6007-4b7c-9380-cd88207fa30f": {
+   "target": "11.6",
+   "reason": "Waste workers keep cities clean and reduce environmental impact."
+  },
+  "0111": {
+   "target": "4.1",
+   "reason": "Education researchers improve teaching quality and learning outcomes."
+  },
+  "0713": {
+   "target": "7.1",
+   "reason": "Energy workers extend reliable and modern energy services."
+  },
+  "0521": {
+   "target": "15.1",
+   "reason": "Environmental scientists study and protect ecosystems and their services."
+  },
+  "0412": {
+   "target": "8.10",
+   "reason": "Banks and insurers widen access to financial services for all."
+  },
+  "50e42de7-4a5c-4f94-b160-765f547d840c": {
+   "target": "10.2",
+   "reason": "Assistive device specialists help people with disabilities take part fully in society."
+  },
+  "0421": {
+   "target": "16.3",
+   "reason": "Legal professionals uphold the rule of law and help people obtain fair access to justice."
+  },
+  "0914": {
+   "target": "3.8",
+   "reason": "Diagnostic technology enables quality essential health services for all."
+  },
+  "0912": {
+   "target": "3.8",
+   "reason": "Medical professionals deliver essential care that moves countries toward universal health coverage."
+  },
+  "0913": {
+   "target": "3.1",
+   "reason": "Midwives and nurses protect the health of mothers during pregnancy and birth."
+  },
+  "8bf9699c-f964-4e4b-ac3d-55aface09cbc": {
+   "target": "7.1",
+   "reason": "Energy operators deliver reliable modern energy services to households and firms."
+  },
+  "0916": {
+   "target": "3.8",
+   "reason": "Pharmacists ensure safe access to essential medicines for all."
+  },
+  "b88bddd4-210e-405f-bbdf-729bb66605a0": {
+   "target": "3.8",
+   "reason": "Appropriate prescribing supports quality essential health care."
+  },
+  "2b6e15f5-dfa0-4e7c-9687-5665b07e56a4": {
+   "target": "16.10",
+   "reason": "Privacy protection safeguards fundamental freedoms in the digital space."
+  },
+  "34691a8a-ec8e-4eaa-b6e7-f4dbf144c644": {
+   "target": "8.10",
+   "reason": "Advisers help people access banking insurance and financial services."
+  },
+  "0a400212-8693-4b1f-b0ca-d1f82c321916": {
+   "target": "3.8",
+   "reason": "Health workers deliver essential care toward universal health coverage."
+  },
+  "c75655c3-ed29-441e-b403-4dd65bc891a5": {
+   "target": "3.8",
+   "reason": "Medical advice helps people receive safe and appropriate care."
+  },
+  "73e602a0-f80f-4f56-8e21-3db4fd08709d": {
+   "target": "3.8",
+   "reason": "Clinical carers provide essential services that improve health for all."
+  },
+  "4bbdc5eb-b710-4b76-816d-04926f7ac4a1": {
+   "target": "3.4",
+   "reason": "Therapists support mental health and recovery from illness."
+  },
+  "0313": {
+   "target": "3.4",
+   "reason": "Psychologists promote mental health and wellbeing."
+  },
+  "0923": {
+   "target": "10.2",
+   "reason": "Social workers help excluded people take part fully in society."
+  },
+  "0542": {
+   "target": "17.19",
+   "reason": "Statisticians build the measures countries need to track development."
+  },
+  "335be43a-3267-400e-b5cb-c9e234dc7544": {
+   "target": "4.1",
+   "reason": "Teachers help learners complete quality primary and secondary education."
+  },
+  "caede8f1-6658-4d78-9eb4-2ad2c7ebf09b": {
+   "target": "4.4",
+   "reason": "Training builds the skills youth and adults need for decent jobs."
+  },
+  "0112": {
+   "target": "4.2",
+   "reason": "Pre-school trainers improve early childhood care and education."
+  },
+  "ee2576c0-1af5-44b5-8c0c-2002541d1ccc": {
+   "target": "3.c",
+   "reason": "Health trainers strengthen the health workforce."
+  },
+  "98fb499f-9155-412d-a8a0-95ba97126fec": {
+   "target": "4.4",
+   "reason": "These are ICT skills of the kind counted under SDG indicator 4.4.1 for youth and adults."
+  },
+  "446a36a5-2376-439f-b46b-4a214ba0acdf": {
+   "target": "4.4",
+   "reason": "These are ICT skills of the kind counted under SDG indicator 4.4.1 for youth and adults."
+  }
+ },
  "signals": {
   "9710092c-f174-4e84-95bf-2064d39ad7a0": {
    "momentum": -0.02150620522096362,
@@ -5978,6 +6152,8 @@
     "1973c966-f236-40c9-b2d4-5d71a89019be",
     "2b92a5b2-6758-4ee3-9fb4-b6387a55cc8f"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Equips learners with practical data cleaning and analysis skills for digital employment.",
    "lastChecked": "2026-10-21",
    "mode": "online",
    "aiContent": "ai"
@@ -5998,6 +6174,8 @@
     "e465a154-93f7-4973-9ce1-31659fe16dd2",
     "3c76296d-4bbd-44ba-8eaa-95bf275f79b7"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Builds foundational AI literacy for non-technical workers adapting to workplace automation.",
    "lastChecked": "2026-10-21",
    "mode": "online",
    "aiContent": "ai"
@@ -6018,6 +6196,8 @@
     "bd14968e-e409-45af-b362-3495ed7b10e0",
     "a7f0fbe0-c546-4f30-8e41-34a58c64567e"
    ],
+   "sdgTarget": "4.3",
+   "sdgReason": "Provides free access to technical cloud computing education for career transitioners.",
    "lastChecked": "2026-10-21",
    "mode": "online",
    "aiContent": "digital"
@@ -6037,6 +6217,8 @@
     "21d2f96d-35f7-4e3f-9745-c533d2dd6e97",
     "5b9cde20-f1b9-4adc-bfb3-dbf70b14138d"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Delivers zero-cost programming training to build technical skills for digital jobs.",
    "lastChecked": "2026-10-21",
    "mode": "online",
    "aiContent": "digital"
@@ -6056,6 +6238,8 @@
     "2b92a5b2-6758-4ee3-9fb4-b6387a55cc8f",
     "382c11ed-20d5-4ae7-b60e-15fec527fa6c"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Upgrades workforce analytical capabilities using modern business intelligence tools.",
    "lastChecked": "2026-10-21",
    "mode": "online",
    "aiContent": "digital"
@@ -6077,6 +6261,8 @@
     "e465a154-93f7-4973-9ce1-31659fe16dd2",
     "d15ce60f-ddab-41ce-ba56-398451b77b60"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Promotes nationwide AI literacy and generative AI safety across all Malaysian communities.",
    "lastChecked": "2026-10-21",
    "mode": "online",
    "aiContent": "ai"
@@ -6096,6 +6282,8 @@
     "2b92a5b2-6758-4ee3-9fb4-b6387a55cc8f",
     "8369c2d6-c100-4cf6-bd83-9668d8678433"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Equips learners with job-ready data science and machine learning skills for tech roles.",
    "lastChecked": "2026-10-21",
    "mode": "online",
    "aiContent": "ai"
@@ -6115,6 +6303,8 @@
     "c2296e2e-5fef-4f24-a24f-e5b3792268be",
     "0868eef3-2213-4572-9343-74931345a7d3"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Prepares non-technical job seekers for entry-level IT support roles and decent work (SDG 8.5).",
    "lastChecked": "2026-10-21",
    "mode": "online",
    "aiContent": "digital"
@@ -6134,6 +6324,8 @@
     "6833e58b-eceb-4599-9375-1b7e6ec64087",
     "21d2f96d-35f7-4e3f-9745-c533d2dd6e97"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Trains entry-level cybersecurity analysts to meet growing digital security demand (SDG 8.5).",
    "lastChecked": "2026-10-21",
    "mode": "online",
    "aiContent": "digital"
@@ -6153,6 +6345,8 @@
     "43dfbe7f-9e10-4871-b171-e5076737b4cf",
     "5303169c-75d6-4751-9136-a4b88343388c"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Empowers job seekers and micro-entrepreneurs with digital marketing skills (SDG 8.3).",
    "lastChecked": "2026-10-21",
    "mode": "online",
    "aiContent": "digital"
@@ -6173,6 +6367,8 @@
     "143769cb-b61e-47d8-a61e-eedfbec1016c",
     "2b92a5b2-6758-4ee3-9fb4-b6387a55cc8f"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Helps administrative and finance workers upskill in business intelligence reporting.",
    "lastChecked": "2026-10-21",
    "mode": "online",
    "aiContent": "digital"
@@ -6192,6 +6388,8 @@
     "21d2f96d-35f7-4e3f-9745-c533d2dd6e97",
     "8ff015a0-98ea-4d80-a23e-1f68110a919e"
    ],
+   "sdgTarget": "4.3",
+   "sdgReason": "Removes financial barriers to advanced software engineering education via zero tuition fees.",
    "lastChecked": "2026-10-21",
    "mode": "physical",
    "aiContent": "ai"
@@ -6211,6 +6409,8 @@
     "bd14968e-e409-45af-b362-3495ed7b10e0",
     "0868eef3-2213-4572-9343-74931345a7d3"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Provides unemployed Malaysians with full-time cloud training and job placement support (SDG 8.5).",
    "lastChecked": "2026-10-21",
    "mode": "hybrid",
    "aiContent": "digital"
@@ -6230,6 +6430,8 @@
     "43dfbe7f-9e10-4871-b171-e5076737b4cf",
     "b1272de4-1f5f-408b-8b26-061f2550fc72"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Equips displaced workers with practical e-commerce and digital marketing skills (SDG 8.5).",
    "lastChecked": "2026-10-21",
    "mode": "online",
    "aiContent": "ai"
@@ -6249,6 +6451,8 @@
     "7111b95d-0ce3-441a-9d92-4c75d05c4388",
     "0a9acb6b-1139-4be9-b431-3a80a959f2f4"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Helps mid-career administrative workers transition into structured project management roles.",
    "lastChecked": "2026-10-21",
    "mode": "online",
    "aiContent": "none"
@@ -6268,6 +6472,8 @@
     "7364cc39-b9c0-449f-9416-57723e2fd9c4",
     "bacbfc27-4b5d-47de-8bfd-af5fa27562a2"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Enables non-coders and creatives to transition into high-demand UI/UX product design roles.",
    "lastChecked": "2026-10-21",
    "mode": "online",
    "aiContent": "ai"
@@ -6287,6 +6493,8 @@
     "2b92a5b2-6758-4ee3-9fb4-b6387a55cc8f",
     "8369c2d6-c100-4cf6-bd83-9668d8678433"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Strengthens regional technical workforce skills in applied data science, NLP, and deep learning.",
    "lastChecked": "2026-10-21",
    "mode": "online",
    "aiContent": "ai"
@@ -6306,6 +6514,8 @@
     "2b92a5b2-6758-4ee3-9fb4-b6387a55cc8f",
     "8369c2d6-c100-4cf6-bd83-9668d8678433"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Equips Malaysian executives and SME workers with practical data science decision tools (SDG 8.2).",
    "lastChecked": "2026-10-21",
    "mode": "online",
    "aiContent": "ai"
@@ -6325,6 +6535,8 @@
     "1973c966-f236-40c9-b2d4-5d71a89019be",
     "2b92a5b2-6758-4ee3-9fb4-b6387a55cc8f"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Provides free Bahasa Melayu spreadsheet training to upgrade administrative workers' digital skills.",
    "lastChecked": "2026-10-21",
    "mode": "online",
    "aiContent": "digital"
@@ -6344,6 +6556,8 @@
     "1973c966-f236-40c9-b2d4-5d71a89019be",
     "29fb0fb5-dfc4-4098-ac9b-3a712000f48f"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Teaches digital customer database management in Bahasa Melayu for micro-businesses and clerks.",
    "lastChecked": "2026-10-21",
    "mode": "online",
    "aiContent": "digital"
@@ -6363,6 +6577,8 @@
     "b1272de4-1f5f-408b-8b26-061f2550fc72",
     "43dfbe7f-9e10-4871-b171-e5076737b4cf"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Empowers Malaysians to launch online businesses and achieve self-employment (SDG 8.3).",
    "lastChecked": "2026-10-21",
    "mode": "online",
    "aiContent": "none"
@@ -6383,6 +6599,8 @@
     "15d76317-c71a-4fa2-aadc-2ecc34e627b7",
     "0da516ee-e70e-4384-be13-f5ff80be8127"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Improves workplace English speaking confidence for Malay-speaking job seekers and graduates.",
    "lastChecked": "2026-10-21",
    "mode": "online",
    "aiContent": "none"
@@ -6403,6 +6621,8 @@
     "e465a154-93f7-4973-9ce1-31659fe16dd2",
     "21d2f96d-35f7-4e3f-9745-c533d2dd6e97"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Funds Bumiputera talent to acquire high-value semiconductor IC design and engineering AI skills (SDG 10.2).",
    "lastChecked": "2026-10-21",
    "mode": "hybrid",
    "aiContent": "digital"
@@ -6424,6 +6644,8 @@
     "b1272de4-1f5f-408b-8b26-061f2550fc72",
     "43dfbe7f-9e10-4871-b171-e5076737b4cf"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Equips Malaysian retail SMEs and founders with livestreaming, AI commerce, and omnichannel retail tech skills (SDG 8.3).",
    "lastChecked": "2026-10-21",
    "mode": "physical",
    "aiContent": "digital"
@@ -6443,6 +6665,8 @@
     "a4346013-a967-4a58-a533-6b32ad1364c5",
     "6833e58b-eceb-4599-9375-1b7e6ec64087"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Trains administrative and IT staff on Malaysian Personal Data Protection Act (PDPA) 2025 amendment compliance.",
    "lastChecked": "2026-10-21",
    "mode": "online",
    "aiContent": "none"
@@ -6462,6 +6686,8 @@
     "15d76317-c71a-4fa2-aadc-2ecc34e627b7",
     "656b2dab-4ace-4afa-bad4-d9ddef577e2b"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Builds personal career planning, SWOT self-analysis, and goal-setting competencies for Malaysian job seekers (SDG 8.5).",
    "lastChecked": "2026-10-21",
    "mode": "online",
    "aiContent": "none"
@@ -6481,6 +6707,8 @@
     "99571e68-801f-49af-a897-5f75996642e1",
     "2b92a5b2-6758-4ee3-9fb4-b6387a55cc8f"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Prepares Malaysian graduates for FinTech, sustainability, and capital market careers (SDG 8.6).",
    "lastChecked": "2026-10-21",
    "mode": "physical",
    "aiContent": "none"
@@ -6501,6 +6729,8 @@
     "15d76317-c71a-4fa2-aadc-2ecc34e627b7",
     "fd446407-b08e-49da-b8e3-7e7c79618c3f"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Builds professional English writing and presentation skills for Malay-speaking job seekers.",
    "lastChecked": "2026-10-21",
    "mode": "online",
    "aiContent": "none"
@@ -6520,6 +6750,8 @@
     "2b92a5b2-6758-4ee3-9fb4-b6387a55cc8f",
     "143769cb-b61e-47d8-a61e-eedfbec1016c"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Fast-tracks university graduates into Data Analyst, Business Analyst, Data Engineer, and Junior Data Scientist roles (SDG 8.2).",
    "lastChecked": "2026-10-21",
    "mode": "hybrid",
    "aiContent": "digital"
@@ -6540,6 +6772,8 @@
     "8369c2d6-c100-4cf6-bd83-9668d8678433",
     "21d2f96d-35f7-4e3f-9745-c533d2dd6e97"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Develops core machine learning engineering skills for software and data career transitions.",
    "lastChecked": "2026-10-21",
    "mode": "online",
    "aiContent": "ai"
@@ -6560,6 +6794,8 @@
     "15d76317-c71a-4fa2-aadc-2ecc34e627b7",
     "0da516ee-e70e-4384-be13-f5ff80be8127"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Equips Malay-speaking workers with basic Mandarin communication skills for multilingual workplaces.",
    "lastChecked": "2026-10-21",
    "mode": "online",
    "aiContent": "none"
@@ -6579,6 +6815,8 @@
     "b1272de4-1f5f-408b-8b26-061f2550fc72",
     "0a48d064-dd04-47fb-a00d-85e9b4874033"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Helps unemployed individuals and micro-entrepreneurs pivot to digital commerce (SDG 8.3).",
    "lastChecked": "2026-10-21",
    "mode": "online",
    "aiContent": "none"
@@ -6599,6 +6837,8 @@
     "0868eef3-2213-4572-9343-74931345a7d3",
     "c2296e2e-5fef-4f24-a24f-e5b3792268be"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Provides free industry-standard networking fundamentals training across Malaysian TVET and HEIs.",
    "lastChecked": "2026-10-21",
    "mode": "online",
    "aiContent": "digital"
@@ -6618,6 +6858,8 @@
     "e437eba1-3e22-41f2-8703-741e94785cba",
     "656b2dab-4ace-4afa-bad4-d9ddef577e2b"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Helps administrative workers transition into modern human resource management roles.",
    "lastChecked": "2026-10-21",
    "mode": "online",
    "aiContent": "none"
@@ -6638,6 +6880,8 @@
     "21d2f96d-35f7-4e3f-9745-c533d2dd6e97",
     "29fb0fb5-dfc4-4098-ac9b-3a712000f48f"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Teaches non-programmers foundational Python coding and data retrieval skills for tech careers.",
    "lastChecked": "2026-10-21",
    "mode": "online",
    "aiContent": "digital"
@@ -6657,6 +6901,8 @@
     "2b92a5b2-6758-4ee3-9fb4-b6387a55cc8f",
     "21d2f96d-35f7-4e3f-9745-c533d2dd6e97"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Equips Chinese-speaking learners with practical Python data acquisition, Pandas analytics, and visualization skills.",
    "lastChecked": "2026-10-21",
    "mode": "online",
    "aiContent": "digital"
@@ -6676,6 +6922,8 @@
     "21d2f96d-35f7-4e3f-9745-c533d2dd6e97",
     "0a48d064-dd04-47fb-a00d-85e9b4874033"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Builds foundational Python coding and business operations problem-solving skills for Chinese-speaking workers (SDG 8.2).",
    "lastChecked": "2026-10-21",
    "mode": "online",
    "aiContent": "digital"
@@ -6695,6 +6943,8 @@
     "2b92a5b2-6758-4ee3-9fb4-b6387a55cc8f",
     "99571e68-801f-49af-a897-5f75996642e1"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Advances Chinese-speaking learners' ability to process business files and analyze financial data in Python.",
    "lastChecked": "2026-10-21",
    "mode": "online",
    "aiContent": "digital"
@@ -6714,6 +6964,8 @@
     "5b9cde20-f1b9-4adc-bfb3-dbf70b14138d",
     "8369c2d6-c100-4cf6-bd83-9668d8678433"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Develops applied software design, web scraping, and machine learning skills in Mandarin for digital commerce roles.",
    "lastChecked": "2026-10-21",
    "mode": "online",
    "aiContent": "ai"
@@ -6733,6 +6985,8 @@
     "8369c2d6-c100-4cf6-bd83-9668d8678433",
     "382c11ed-20d5-4ae7-b60e-15fec527fa6c"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Strengthens mathematical and theoretical machine learning foundations for Chinese-speaking AI practitioners.",
    "lastChecked": "2026-10-21",
    "mode": "online",
    "aiContent": "ai"
@@ -6752,6 +7006,8 @@
     "8369c2d6-c100-4cf6-bd83-9668d8678433",
     "2b92a5b2-6758-4ee3-9fb4-b6387a55cc8f"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Trains Chinese-speaking engineers in advanced predictive modeling, ensemble algorithms, and deep neural networks.",
    "lastChecked": "2026-10-21",
    "mode": "online",
    "aiContent": "ai"
@@ -6771,6 +7027,8 @@
     "21d2f96d-35f7-4e3f-9745-c533d2dd6e97",
     "8ff015a0-98ea-4d80-a23e-1f68110a919e"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Provides foundational C programming and algorithmic problem-solving training in Mandarin for aspiring developers.",
    "lastChecked": "2026-10-21",
    "mode": "online",
    "aiContent": "digital"
@@ -6790,6 +7048,8 @@
     "99571e68-801f-49af-a897-5f75996642e1",
     "0a48d064-dd04-47fb-a00d-85e9b4874033"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Equips Malaysian SME owners, credit controllers, and finance staff with Mandarin training on CTOS corporate credit analysis (SDG 8.3).",
    "lastChecked": "2026-10-21",
    "mode": "online",
    "aiContent": "none"
@@ -6810,6 +7070,8 @@
     "6833e58b-eceb-4599-9375-1b7e6ec64087",
     "a4346013-a967-4a58-a533-6b32ad1364c5"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Builds foundational cybersecurity and data privacy skills in Simplified and Traditional Chinese for entry-level tech learners.",
    "lastChecked": "2026-10-21",
    "mode": "online",
    "aiContent": "digital"
@@ -6830,6 +7092,8 @@
     "e465a154-93f7-4973-9ce1-31659fe16dd2",
     "d15ce60f-ddab-41ce-ba56-398451b77b60"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Empowers multilingual workers with practical generative AI, computer vision, and prompt engineering skills (SDG 8.2).",
    "lastChecked": "2026-10-21",
    "mode": "online",
    "aiContent": "ai"
@@ -6849,6 +7113,8 @@
     "1973c966-f236-40c9-b2d4-5d71a89019be",
     "99571e68-801f-49af-a897-5f75996642e1"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Helps Malaysian SME owners and clerks calculate business costs and prepare financial statements in Excel (SDG 8.3).",
    "lastChecked": "2026-10-21",
    "mode": "online",
    "aiContent": "digital"
@@ -6868,6 +7134,8 @@
     "e465a154-93f7-4973-9ce1-31659fe16dd2",
     "d15ce60f-ddab-41ce-ba56-398451b77b60"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Builds foundational digital transformation and Industry 4.0 awareness in Bahasa Melayu for Malaysian workers (SDG 8.2).",
    "lastChecked": "2026-10-21",
    "mode": "online",
    "aiContent": "none"
@@ -6887,6 +7155,8 @@
     "0a48d064-dd04-47fb-a00d-85e9b4874033",
     "656b2dab-4ace-4afa-bad4-d9ddef577e2b"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Equips aspiring supervisors and administrative staff with structured organisational management skills (SDG 8.5).",
    "lastChecked": "2026-10-21",
    "mode": "online",
    "aiContent": "none"
@@ -6906,6 +7176,8 @@
     "656b2dab-4ace-4afa-bad4-d9ddef577e2b",
     "15d76317-c71a-4fa2-aadc-2ecc34e627b7"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Improves systematic work planning, focus, and workplace efficiency for support and executive staff (SDG 8.5).",
    "lastChecked": "2026-10-21",
    "mode": "online",
    "aiContent": "none"
@@ -6925,6 +7197,8 @@
     "0a48d064-dd04-47fb-a00d-85e9b4874033",
     "656b2dab-4ace-4afa-bad4-d9ddef577e2b"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Develops adaptive team leadership competencies for supervisors, shop owners, and job-seeking graduates (SDG 8.5).",
    "lastChecked": "2026-10-21",
    "mode": "online",
    "aiContent": "none"
@@ -6944,6 +7218,8 @@
     "0a48d064-dd04-47fb-a00d-85e9b4874033",
     "7111b95d-0ce3-441a-9d92-4c75d05c4388"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Trains Malaysian supervisors and SME staff in core operations management and quality systems (SDG 8.2).",
    "lastChecked": "2026-10-21",
    "mode": "online",
    "aiContent": "none"
@@ -6963,6 +7239,8 @@
     "0a48d064-dd04-47fb-a00d-85e9b4874033",
     "43dfbe7f-9e10-4871-b171-e5076737b4cf"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Fosters entrepreneurial creativity, strategic problem-solving, and business innovation among SMEs (SDG 8.3).",
    "lastChecked": "2026-10-21",
    "mode": "online",
    "aiContent": "none"
@@ -6982,6 +7260,8 @@
     "656b2dab-4ace-4afa-bad4-d9ddef577e2b",
     "15d76317-c71a-4fa2-aadc-2ecc34e627b7"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Promotes occupational safety literacy and safe working environments for Malaysian employees and employers (SDG 8.8).",
    "lastChecked": "2026-10-21",
    "mode": "online",
    "aiContent": "none"
@@ -7001,6 +7281,8 @@
     "15d76317-c71a-4fa2-aadc-2ecc34e627b7",
     "0da516ee-e70e-4384-be13-f5ff80be8127"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Enhances intermediate Mandarin business communication skills for workplace and commercial settings (SDG 8.5).",
    "lastChecked": "2026-10-21",
    "mode": "online",
    "aiContent": "none"
@@ -7020,6 +7302,8 @@
     "15d76317-c71a-4fa2-aadc-2ecc34e627b7",
     "0da516ee-e70e-4384-be13-f5ff80be8127"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Builds practical everyday and service-sector Mandarin conversation skills for beginners (SDG 8.5).",
    "lastChecked": "2026-10-21",
    "mode": "online",
    "aiContent": "none"
@@ -7040,6 +7324,8 @@
     "2b92a5b2-6758-4ee3-9fb4-b6387a55cc8f",
     "e465a154-93f7-4973-9ce1-31659fe16dd2"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Provides free bilingual entry-level data science and AI/ML literacy training for aspiring data professionals (SDG 8.2).",
    "lastChecked": "2026-10-21",
    "mode": "online",
    "aiContent": "digital"
@@ -7060,6 +7346,8 @@
     "0868eef3-2213-4572-9343-74931345a7d3",
     "6833e58b-eceb-4599-9375-1b7e6ec64087"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Equips Chinese- and English-speaking learners with foundational Windows, Linux, and mobile OS administration skills (SDG 8.5).",
    "lastChecked": "2026-10-21",
    "mode": "online",
    "aiContent": "digital"
@@ -7080,6 +7368,8 @@
     "21d2f96d-35f7-4e3f-9745-c533d2dd6e97",
     "bd14968e-e409-45af-b362-3495ed7b10e0"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Develops foundational Internet of Things, Python prototyping, and automation skills for industrial digitization (SDG 8.2).",
    "lastChecked": "2026-10-21",
    "mode": "online",
    "aiContent": "digital"
@@ -7100,6 +7390,8 @@
     "e465a154-93f7-4973-9ce1-31659fe16dd2",
     "8369c2d6-c100-4cf6-bd83-9668d8678433"
    ],
+   "sdgTarget": "4.3",
+   "sdgReason": "Provides free multilingual cloud AI and generative AI technical education for career transitioners.",
    "lastChecked": "2026-10-21",
    "mode": "online",
    "aiContent": "ai"
@@ -7120,6 +7412,8 @@
     "e45507ff-c1e2-4e0c-92fb-b6c0e6cb6245",
     "8f585def-6ade-41b3-b897-3d71fba4151d"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Builds entry-level solar knowledge for workers moving into renewable energy jobs.",
    "lastChecked": "2026-10-22",
    "mode": "online",
    "aiContent": "none"
@@ -7140,6 +7434,8 @@
     "8248a071-5307-4a64-a62d-643a35ec31e2",
     "50ac5186-bb18-4ffb-9f29-00636853c8ea"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Gives hands-on PV design skills needed for solar engineering and installation roles.",
    "lastChecked": "2026-10-22",
    "mode": "online",
    "aiContent": "none"
@@ -7161,6 +7457,8 @@
     "4e09e2d2-e317-47d2-bf5e-1d6c66be3efc",
     "29bfe2cd-f011-4f94-a3aa-f77768e60460"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Teaches building energy audits and efficiency measures used by energy managers and assessors.",
    "lastChecked": "2026-10-22",
    "mode": "online",
    "aiContent": "none"
@@ -7180,6 +7478,8 @@
     "40f65a56-ccbe-4601-9f32-1cc6cdd24f28",
     "f82b05a7-128b-4a72-a815-044ff6062f62"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Prepares learners for waste and recycling jobs in low- and middle-income countries like Malaysia.",
    "lastChecked": "2026-10-22",
    "mode": "online",
    "aiContent": "none"
@@ -7200,6 +7500,8 @@
     "5641a2af-9eb2-4209-9fc6-856f78f2d2f2",
     "081d7679-5070-4777-bece-a28c49f15636"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Builds the legal and policy knowledge environmental and recycling specialists need for compliance work.",
    "lastChecked": "2026-10-22",
    "mode": "online",
    "aiContent": "none"
@@ -7220,6 +7522,8 @@
     "dda745dd-b8d6-45d8-8c74-e05495ce90f5",
     "469e19ed-a0bd-445a-ae2d-4ba9430e296b"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Equips managers to lead sustainability and CSR work inside companies.",
    "lastChecked": "2026-10-22",
    "mode": "online",
    "aiContent": "none"
@@ -7239,6 +7543,8 @@
     "dda745dd-b8d6-45d8-8c74-e05495ce90f5",
     "8abdc43c-2bfd-417c-97c2-27fcdaf53171"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Gives a broad grounding in the SDGs for anyone moving into green or social-impact work.",
    "lastChecked": "2026-10-22",
    "mode": "online",
    "aiContent": "none"
@@ -7259,6 +7565,8 @@
     "bbcc7e1b-3d4d-4422-9fac-efd636eb9de4",
     "d53eab76-e8ff-4e28-af26-7e012951c763"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Trains CSR and finance staff to produce the ESG reports that listed companies must publish.",
    "lastChecked": "2026-10-22",
    "mode": "online",
    "aiContent": "none"
@@ -7278,6 +7586,8 @@
     "203083ca-b051-4c28-8986-fc8731bacee5",
     "469e19ed-a0bd-445a-ae2d-4ba9430e296b"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Explains how a just green transition changes jobs, policy and finance.",
    "lastChecked": "2026-10-22",
    "mode": "online",
    "aiContent": "none"
@@ -7298,6 +7608,8 @@
     "f5bf985b-ac78-4d23-881a-18a359234528",
     "b2f05068-c409-43ec-ba58-b5dfe991ca5e"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Helps Malaysian employees apply Bursa Malaysia's ESG guidance in their daily work.",
    "lastChecked": "2026-10-22",
    "mode": "online",
    "aiContent": "none"
@@ -7317,6 +7629,8 @@
     "9cf681c7-89ec-470c-b651-7fe03786f586",
     "4463a721-69f3-413d-8321-43e3af13a4f1"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Teaches SQL, one of the most requested skills in entry-level data jobs.",
    "lastChecked": "2026-10-22",
    "mode": "online",
    "aiContent": "digital"
@@ -7337,6 +7651,8 @@
     "348b74cd-49ce-4844-8bdf-ec188b497213",
     "c0326e27-5fa8-4dca-aecb-ed89ab491513"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Builds data visualisation and storytelling skills for analyst and BI roles.",
    "lastChecked": "2026-10-22",
    "mode": "online",
    "aiContent": "digital"
@@ -7357,6 +7673,8 @@
     "6360a934-cc87-4954-9656-b32db20592e3",
     "31c69100-b612-4a61-8db5-fd314318854c"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Gives the statistics foundation needed for data, finance and research roles.",
    "lastChecked": "2026-10-22",
    "mode": "online",
    "aiContent": "none"
@@ -7378,6 +7696,8 @@
     "60f51172-37c0-4933-a27a-cbf55dcd7580",
     "a0d79341-8398-4019-ad1b-27888ec35aaa"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Prepares clerical workers for bookkeeping and payroll roles that stay in demand.",
    "lastChecked": "2026-10-22",
    "mode": "online",
    "aiContent": "digital"
@@ -7397,6 +7717,8 @@
     "15a33d76-4640-438d-ae64-fdc0c1d3eebc",
     "a17286c5-238d-4f0b-bc24-29e9121345de"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Builds service skills for front-line, retail and care jobs.",
    "lastChecked": "2026-10-22",
    "mode": "online",
    "aiContent": "none"
@@ -7416,6 +7738,8 @@
     "634865e0-2ec2-4b7f-bb7f-c196637f0f7b",
     "52c19dc8-651f-4095-98fe-dcb2799d702e"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Prepares care workers for Malaysia's fast-ageing population.",
    "lastChecked": "2026-10-22",
    "mode": "online",
    "aiContent": "none"
@@ -7435,6 +7759,8 @@
     "7a63f944-6948-4ae4-9c1f-d08e492535c9",
     "fbdfc3bf-56a0-4454-a17d-2f513fe57b53"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Builds practical care skills and resilience for home care workers.",
    "lastChecked": "2026-10-22",
    "mode": "online",
    "aiContent": "none"
@@ -7455,6 +7781,8 @@
     "4e3db6d7-88b8-492d-89e5-a93d01c3e369",
     "6b58a6d2-89cf-4ab5-bb62-eb29ae968934"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Prepares learners for preschool and childcare jobs.",
    "lastChecked": "2026-10-22",
    "mode": "online",
    "aiContent": "none"
@@ -7475,6 +7803,8 @@
     "81ad8286-cc55-4a08-92a6-38474c35c893",
     "6fe019dd-027f-45f3-b19c-d27f7ae00980"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Gives new and aspiring teachers a grounding in how students learn and how to teach well.",
    "lastChecked": "2026-10-22",
    "mode": "online",
    "aiContent": "none"
@@ -7493,6 +7823,8 @@
    "skillIds": [
     "9d2e926f-53d9-41f5-98f3-19dfaa687f3f"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Teaches version control, a day-one skill in software jobs.",
    "lastChecked": "2026-10-22",
    "mode": "online",
    "aiContent": "digital"
@@ -7511,6 +7843,8 @@
    "skillIds": [
     "04fe962b-4017-4eb7-9139-7d69b6922bc9"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Builds spreadsheet skills used across administrative, cashier and accounting work.",
    "lastChecked": "2026-10-22",
    "mode": "online",
    "aiContent": "digital"
@@ -7530,6 +7864,8 @@
     "04fe962b-4017-4eb7-9139-7d69b6922bc9",
     "08371fe9-c658-4f6a-966f-71dbb0ab683d"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Builds spreadsheet and accounting process skills for bookkeeping roles.",
    "lastChecked": "2026-10-22",
    "mode": "online",
    "aiContent": "digital"
@@ -7548,6 +7884,8 @@
    "skillIds": [
     "0af062de-eb43-41e9-9b96-249e2cd22d26"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Builds web markup skills for web developer and UI roles.",
    "lastChecked": "2026-10-22",
    "mode": "online",
    "aiContent": "digital"
@@ -7566,6 +7904,8 @@
    "skillIds": [
     "0af062de-eb43-41e9-9b96-249e2cd22d26"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Builds web markup skills for web developer and UI roles.",
    "lastChecked": "2026-10-22",
    "mode": "online",
    "aiContent": "digital"
@@ -7584,6 +7924,8 @@
    "skillIds": [
     "2522a6ce-3202-4ac8-9f5b-b9cb5a3a83a1"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Builds debugging and testing skills for software development jobs.",
    "lastChecked": "2026-10-22",
    "mode": "online",
    "aiContent": "digital"
@@ -7602,6 +7944,8 @@
    "skillIds": [
     "2522a6ce-3202-4ac8-9f5b-b9cb5a3a83a1"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Builds Python debugging skills for entry-level software and data roles.",
    "lastChecked": "2026-10-22",
    "mode": "online",
    "aiContent": "digital"
@@ -7620,6 +7964,8 @@
    "skillIds": [
     "2b7a79e5-84d8-4880-be66-3d9bb05bea17"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Builds software design pattern skills for developer roles.",
    "lastChecked": "2026-10-22",
    "mode": "online",
    "aiContent": "digital"
@@ -7638,6 +7984,8 @@
    "skillIds": [
     "2b7a79e5-84d8-4880-be66-3d9bb05bea17"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Builds software design pattern skills for developer roles.",
    "lastChecked": "2026-10-22",
    "mode": "online",
    "aiContent": "none"
@@ -7658,6 +8006,8 @@
     "2ff405ec-f59c-4a7b-84b6-9776a49582c4",
     "4a460161-eaea-4fe2-bd0e-164ccc635be1"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Builds core accounting and financial reporting skills for bookkeeping jobs.",
    "lastChecked": "2026-10-22",
    "mode": "online",
    "aiContent": "none"
@@ -7676,6 +8026,8 @@
    "skillIds": [
     "4a460161-eaea-4fe2-bd0e-164ccc635be1"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Builds financial statement reading skills for accounting and finance roles.",
    "lastChecked": "2026-10-22",
    "mode": "online",
    "aiContent": "none"
@@ -7694,6 +8046,8 @@
    "skillIds": [
     "64be6a06-52e8-4f5c-b64d-caa516cfa291"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Builds depreciation accounting skills for bookkeeping roles.",
    "lastChecked": "2026-10-22",
    "mode": "online",
    "aiContent": "none"
@@ -7712,6 +8066,8 @@
    "skillIds": [
     "64be6a06-52e8-4f5c-b64d-caa516cfa291"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Builds depreciation accounting skills for bookkeeping roles.",
    "lastChecked": "2026-10-22",
    "mode": "online",
    "aiContent": "none"
@@ -7731,6 +8087,8 @@
     "08371fe9-c658-4f6a-966f-71dbb0ab683d",
     "2ff405ec-f59c-4a7b-84b6-9776a49582c4"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Builds bookkeeping, payroll and internal control skills for bookkeeper roles.",
    "lastChecked": "2026-10-22",
    "mode": "online",
    "aiContent": "none"
@@ -7749,6 +8107,8 @@
    "skillIds": [
     "089ee650-297e-4716-87d1-440743b70a0d"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Builds environmental compliance and auditing skills for environmental roles.",
    "lastChecked": "2026-10-22",
    "mode": "online",
    "aiContent": "none"
@@ -7767,6 +8127,8 @@
    "skillIds": [
     "089ee650-297e-4716-87d1-440743b70a0d"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Builds environmental compliance and auditing skills for environmental roles.",
    "lastChecked": "2026-10-22",
    "mode": "online",
    "aiContent": "none"
@@ -7785,6 +8147,8 @@
    "skillIds": [
     "415abd43-e8e5-4643-b5da-5f11307af57a"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Builds communication skills that improve employability and client-facing work.",
    "lastChecked": "2026-10-22",
    "mode": "online",
    "aiContent": "none"
@@ -7803,6 +8167,8 @@
    "skillIds": [
     "415abd43-e8e5-4643-b5da-5f11307af57a"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Builds communication skills that improve employability and client-facing work.",
    "lastChecked": "2026-10-22",
    "mode": "online",
    "aiContent": "none"
@@ -7822,6 +8188,8 @@
     "b7c8f418-08d5-45d6-b697-ab26c6ecbfb4",
     "debb8d81-ed7f-447d-853a-5d107fda6fcf"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Builds customer-support skills for entry-level service and cashier roles.",
    "lastChecked": "2026-10-22",
    "mode": "online",
    "aiContent": "digital"
@@ -7841,6 +8209,8 @@
     "b7c8f418-08d5-45d6-b697-ab26c6ecbfb4",
     "debb8d81-ed7f-447d-853a-5d107fda6fcf"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Builds CRM and customer-retention skills for customer-facing jobs.",
    "lastChecked": "2026-10-22",
    "mode": "online",
    "aiContent": "digital"
@@ -7860,6 +8230,8 @@
     "36931cb7-ca3f-4be1-8428-f38eefc8e1ed",
     "13e2378e-0d10-450d-843a-b3592575826e"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Builds job-ready digital marketing strategy and campaign skills.",
    "lastChecked": "2026-10-22",
    "mode": "online",
    "aiContent": "digital"
@@ -7878,6 +8250,8 @@
    "skillIds": [
     "13e2378e-0d10-450d-843a-b3592575826e"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Builds marketing planning skills for small-business and online marketing work.",
    "lastChecked": "2026-10-22",
    "mode": "online",
    "aiContent": "none"
@@ -7896,6 +8270,8 @@
    "skillIds": [
     "5ce80f97-b385-4a41-9339-a6593d0709c1"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Builds video editing skills for digital content and marketing roles.",
    "lastChecked": "2026-10-22",
    "mode": "online",
    "aiContent": "digital"
@@ -7914,6 +8290,8 @@
    "skillIds": [
     "5ce80f97-b385-4a41-9339-a6593d0709c1"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Builds video editing skills for digital content and marketing roles.",
    "lastChecked": "2026-10-22",
    "mode": "online",
    "aiContent": "digital"
@@ -7932,6 +8310,8 @@
    "skillIds": [
     "5dd01a1e-7ba0-4b7f-a76c-ed811c12bfde"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Builds foundational numeracy for cashier and everyday work.",
    "lastChecked": "2026-10-22",
    "mode": "online",
    "aiContent": "none"
@@ -7950,6 +8330,8 @@
    "skillIds": [
     "5dd01a1e-7ba0-4b7f-a76c-ed811c12bfde"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Builds foundational numeracy for cashier and everyday work.",
    "lastChecked": "2026-10-22",
    "mode": "online",
    "aiContent": "none"
@@ -7971,6 +8353,8 @@
     "dad7e408-162f-46a4-8567-db560e19e2fc",
     "06358891-8424-43c5-891e-d40f226bef40"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Builds job-ready cybersecurity governance, risk and vulnerability-management skills for decent ICT security work.",
    "lastChecked": "2026-10-22",
    "mode": "online",
    "aiContent": "digital"
@@ -7990,6 +8374,8 @@
     "5898d99a-62a4-4e10-a2e3-0d815ce44248",
     "2ddb1226-1117-4eb4-ae65-3a2f5a5a3c80"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Offers free foundational threat-mitigation and network-security learning that supports entry into ICT security work.",
    "lastChecked": "2026-10-22",
    "mode": "online",
    "aiContent": "none"
@@ -8011,6 +8397,8 @@
     "79f24a62-7718-46e1-9b41-37be0560a5ca",
     "2ddb1226-1117-4eb4-ae65-3a2f5a5a3c80"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Teaches governance, compliance, continuity and network-security foundations needed for resilient ICT security administration.",
    "lastChecked": "2026-10-22",
    "mode": "online",
    "aiContent": "none"
@@ -8029,6 +8417,8 @@
    "skillIds": [
     "172020d1-e151-445b-8173-e2a5fb16fe51"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Builds practical software-design and CASE-tool skills for developer roles and decent ICT work.",
    "lastChecked": "2026-10-22",
    "mode": "online",
    "aiContent": "digital"
@@ -8047,6 +8437,8 @@
    "skillIds": [
     "0b0335f3-0aa1-491e-895e-81fc8774a300"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Builds cloud migration and automation skills for software and mobile developer roles.",
    "lastChecked": "2026-10-22",
    "mode": "online",
    "aiContent": "digital"
@@ -8065,6 +8457,8 @@
    "skillIds": [
     "0b0335f3-0aa1-491e-895e-81fc8774a300"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Builds cloud migration and automation skills for software and mobile developer roles.",
    "lastChecked": "2026-10-22",
    "mode": "online",
    "aiContent": "digital"
@@ -8085,6 +8479,8 @@
     "77f109c4-3107-4d2a-a512-5160ac103933",
     "2c8199c8-4e40-49b3-b878-caee6e1c1bc0"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Builds environmental sampling and pollution analysis skills for environmental science roles.",
    "lastChecked": "2026-10-22",
    "mode": "online",
    "aiContent": "none"
@@ -8103,6 +8499,8 @@
    "skillIds": [
     "75f312e1-622b-4751-8d93-815b32feaf8d"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Builds pollution prevention and spill control skills for environmental roles.",
    "lastChecked": "2026-10-22",
    "mode": "online",
    "aiContent": "none"
@@ -8122,6 +8520,8 @@
     "5641a2af-9eb2-4209-9fc6-856f78f2d2f2",
     "081d7679-5070-4777-bece-a28c49f15636"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Builds knowledge of environmental and pollution law for environmental science roles.",
    "lastChecked": "2026-10-22",
    "mode": "online",
    "aiContent": "none"
@@ -8140,6 +8540,8 @@
    "skillIds": [
     "081d7679-5070-4777-bece-a28c49f15636"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Builds environmental policy understanding for environmental science roles.",
    "lastChecked": "2026-10-22",
    "mode": "online",
    "aiContent": "none"
@@ -8160,6 +8562,8 @@
     "426ceaba-6867-481c-bb6b-aee3933da7d2",
     "5898d99a-62a4-4e10-a2e3-0d815ce44248"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Equips learners with foundational cybersecurity safety practices and organizational threat defense skills.",
    "lastChecked": "2026-10-23",
    "mode": "online",
    "aiContent": "digital"
@@ -8181,6 +8585,8 @@
     "0a43729f-2a79-4dae-9faa-95520daae79f",
     "426ceaba-6867-481c-bb6b-aee3933da7d2"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Develops technical competencies in defending enterprise networks and applying security policies.",
    "lastChecked": "2026-10-23",
    "mode": "online",
    "aiContent": "digital"
@@ -8200,6 +8606,8 @@
     "5898d99a-62a4-4e10-a2e3-0d815ce44248",
     "0a43729f-2a79-4dae-9faa-95520daae79f"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Trains workers to identify cyber threats and implement security controls and policies in modern workplaces.",
    "lastChecked": "2026-10-23",
    "mode": "online",
    "aiContent": "digital"
@@ -8219,6 +8627,8 @@
     "426ceaba-6867-481c-bb6b-aee3933da7d2",
     "5063a99f-975b-4a7c-85e3-69ecb375b4d3"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Provides accessible digital safety and internet standards education for everyday and workplace technology users.",
    "lastChecked": "2026-10-23",
    "mode": "online",
    "aiContent": "none"
@@ -8237,6 +8647,8 @@
    "skillIds": [
     "0a43729f-2a79-4dae-9faa-95520daae79f"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Builds practical cloud administration skills for enforcing organizational security policies and standards.",
    "lastChecked": "2026-10-23",
    "mode": "online",
    "aiContent": "digital"
@@ -8255,6 +8667,8 @@
    "skillIds": [
     "4d85b881-e490-4b4c-897a-2faa4ef53956"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Develops high-demand data architecture, modeling, and data governance skills for ICT professionals.",
    "lastChecked": "2026-10-23",
    "mode": "online",
    "aiContent": "digital"
@@ -8274,6 +8688,8 @@
     "207f87c4-ac68-4987-990c-636ca19c2626",
     "af0f7625-b9fc-4f97-a71d-d7c7648bfc35"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Equips payroll and bookkeeping staff with practical skills to compute employee wages, salaries, and tax withholdings.",
    "lastChecked": "2026-10-23",
    "mode": "online",
    "aiContent": "none"
@@ -8293,6 +8709,8 @@
     "207f87c4-ac68-4987-990c-636ca19c2626",
     "4e756773-ae14-4981-838b-9fe27e81c0af"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Builds practical payroll bookkeeping skills for calculating gross and net pay and recording daily financial transactions.",
    "lastChecked": "2026-10-23",
    "mode": "online",
    "aiContent": "none"
@@ -8314,6 +8732,8 @@
     "0295b2a4-fb86-495f-9547-d479532fc4c2",
     "16f61a5b-23ba-4268-8517-82c77c4041a1"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Develops end-to-end accounting and payroll administration competencies for finance and clerical workers.",
    "lastChecked": "2026-10-23",
    "mode": "online",
    "aiContent": "none"
@@ -8334,6 +8754,8 @@
     "9d916d7c-89b3-4084-a6d9-e2b0b3091404",
     "4e756773-ae14-4981-838b-9fe27e81c0af"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Trains aspiring payroll clerks and accounting assistants in payroll verification, expense processing, and digital transaction recording.",
    "lastChecked": "2026-10-23",
    "mode": "online",
    "aiContent": "digital"
@@ -8353,6 +8775,8 @@
     "734187e4-650e-4a0a-a7f8-826cd4757229",
     "af0f7625-b9fc-4f97-a71d-d7c7648bfc35"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Provides foundational skills in preparing and interpreting pay statements, tax deductions, and identifying paycheck errors.",
    "lastChecked": "2026-10-23",
    "mode": "online",
    "aiContent": "none"
@@ -8371,6 +8795,8 @@
    "skillIds": [
     "16f61a5b-23ba-4268-8517-82c77c4041a1"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Equips finance and payroll personnel with digital tools to monitor budgets and analyze budget versus actual performance.",
    "lastChecked": "2026-10-23",
    "mode": "online",
    "aiContent": "digital"
@@ -8389,6 +8815,8 @@
    "skillIds": [
     "16f61a5b-23ba-4268-8517-82c77c4041a1"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Trains finance workers to review budget controls, monitor organizational expenditures, and evaluate available budget funds.",
    "lastChecked": "2026-10-23",
    "mode": "online",
    "aiContent": "digital"
@@ -8410,6 +8838,8 @@
     "0295b2a4-fb86-495f-9547-d479532fc4c2",
     "5dd01a1e-7ba0-4b7f-a76c-ed811c12bfde"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Provides free foundational training in accounting mathematics, double-entry transaction recording, and ledger tracking.",
    "lastChecked": "2026-10-23",
    "mode": "online",
    "aiContent": "none"
@@ -8429,6 +8859,8 @@
     "4339176e-3acd-4f7f-a5d9-445bee3d23f2",
     "5dd01a1e-7ba0-4b7f-a76c-ed811c12bfde"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Strengthens foundational mathematical and everyday numeracy skills for retail, clerical, and technical occupations.",
    "lastChecked": "2026-10-23",
    "mode": "online",
    "aiContent": "none"
@@ -8447,6 +8879,8 @@
    "skillIds": [
     "ff5e9b54-d141-4f5a-ad04-ddefd7d8843f"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Teaches payroll and administrative staff how to configure time registration and manage time sheet approval workflows.",
    "lastChecked": "2026-10-23",
    "mode": "online",
    "aiContent": "digital"
@@ -8467,6 +8901,8 @@
     "13e2378e-0d10-450d-843a-b3592575826e",
     "415abd43-e8e5-4643-b5da-5f11307af57a"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Equips marketing professionals with practical skills to plan, execute, automate, and analyze email marketing campaigns.",
    "lastChecked": "2026-10-23",
    "mode": "online",
    "aiContent": "digital"
@@ -8488,6 +8924,8 @@
     "36931cb7-ca3f-4be1-8428-f38eefc8e1ed",
     "b7c8f418-08d5-45d6-b697-ab26c6ecbfb4"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Builds foundational digital marketing, multi-channel communication, and customer-centric strategy skills for modern workplaces.",
    "lastChecked": "2026-10-23",
    "mode": "online",
    "aiContent": "digital"
@@ -8507,6 +8945,8 @@
     "13e2378e-0d10-450d-843a-b3592575826e",
     "b7c8f418-08d5-45d6-b697-ab26c6ecbfb4"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Trains marketers and retail staff to identify customer personas, build brand awareness, and execute digital engagement strategies.",
    "lastChecked": "2026-10-23",
    "mode": "online",
    "aiContent": "digital"
@@ -8525,6 +8965,8 @@
    "skillIds": [
     "36931cb7-ca3f-4be1-8428-f38eefc8e1ed"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Provides practical training in setting up email autoresponders, high-conversion forms, and segmented email marketing campaigns.",
    "lastChecked": "2026-10-23",
    "mode": "online",
    "aiContent": "digital"
@@ -8543,6 +8985,8 @@
    "skillIds": [
     "5ce80f97-b385-4a41-9339-a6593d0709c1"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Develops core video editing, visual storytelling, and software operation skills for digital media and marketing roles.",
    "lastChecked": "2026-10-23",
    "mode": "online",
    "aiContent": "digital"
@@ -8561,6 +9005,8 @@
    "skillIds": [
     "5ce80f97-b385-4a41-9339-a6593d0709c1"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Trains content creators and marketers to record, edit, and publish short-form social media videos using modern workflows.",
    "lastChecked": "2026-10-23",
    "mode": "online",
    "aiContent": "digital"
@@ -8580,6 +9026,8 @@
     "5dd01a1e-7ba0-4b7f-a76c-ed811c12bfde",
     "4339176e-3acd-4f7f-a5d9-445bee3d23f2"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Builds practical everyday numeracy skills for calculating discounts, price comparisons, percentages, and ratios in retail and cashier work.",
    "lastChecked": "2026-10-23",
    "mode": "online",
    "aiContent": "none"
@@ -8599,6 +9047,8 @@
     "09f2f811-a3fb-4de3-a70f-6420a6935575",
     "2c28fc20-8a60-4311-8899-5ef8729c05b3"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Equips intelligent systems designers with comprehensive competencies in system life-cycle models and engineering design processes.",
    "lastChecked": "2026-10-23",
    "mode": "online",
    "aiContent": "none"
@@ -8617,6 +9067,8 @@
    "skillIds": [
     "0823ccef-813f-4f22-afef-ac0d68615e8f"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Builds practical technical skills in modeling, simulating, and testing dynamic and discrete systems using industry-standard simulation software.",
    "lastChecked": "2026-10-23",
    "mode": "online",
    "aiContent": "digital"
@@ -8635,6 +9087,8 @@
    "skillIds": [
     "0823ccef-813f-4f22-afef-ac0d68615e8f"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Trains engineers and system designers to mathematically model and simulate intelligent cyber-physical systems.",
    "lastChecked": "2026-10-23",
    "mode": "online",
    "aiContent": "digital"
@@ -8654,6 +9108,8 @@
     "09f2f811-a3fb-4de3-a70f-6420a6935575",
     "2c28fc20-8a60-4311-8899-5ef8729c05b3"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Develops core software engineering competencies across the systems development life-cycle, architectural design patterns, and quality assurance.",
    "lastChecked": "2026-10-23",
    "mode": "online",
    "aiContent": "digital"
@@ -8672,6 +9128,8 @@
    "skillIds": [
     "09f2f811-a3fb-4de3-a70f-6420a6935575"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Trains software and systems engineers to apply secure systems development life-cycle phases, threat modeling, and security testing.",
    "lastChecked": "2026-10-23",
    "mode": "online",
    "aiContent": "digital"
@@ -8692,6 +9150,8 @@
     "1bba98a7-92b9-450b-9235-e0c905f8f3c4",
     "03ff0d53-573a-47a0-a0ad-1995815a4339"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Equips digital product and intelligent systems designers to structure information architecture and accelerate the end-to-end UX design process using AI tools.",
    "lastChecked": "2026-10-23",
    "mode": "online",
    "aiContent": "ai"
@@ -8711,6 +9171,8 @@
     "1bba98a7-92b9-450b-9235-e0c905f8f3c4",
     "03ff0d53-573a-47a0-a0ad-1995815a4339"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Develops foundational competencies in organizing digital content, designing structural patterns, and building intuitive information architectures.",
    "lastChecked": "2026-10-23",
    "mode": "online",
    "aiContent": "digital"
@@ -8730,6 +9192,8 @@
     "1bba98a7-92b9-450b-9235-e0c905f8f3c4",
     "03ff0d53-573a-47a0-a0ad-1995815a4339"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Trains ICT professionals to classify, structure, label, and organize complex digital information systems for optimal usability.",
    "lastChecked": "2026-10-23",
    "mode": "online",
    "aiContent": "digital"
@@ -8748,6 +9212,8 @@
    "skillIds": [
     "f75b740c-b36c-495e-bc67-efe347bbc6b5"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Equips administrative and corporate staff with knowledge of compliance frameworks, internal policies, and organizational risk management.",
    "lastChecked": "2026-10-23",
    "mode": "online",
    "aiContent": "none"
@@ -8766,6 +9232,8 @@
    "skillIds": [
     "f75b740c-b36c-495e-bc67-efe347bbc6b5"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Trains employees across administrative and business functions to understand, monitor, and uphold company policies and ethical standards.",
    "lastChecked": "2026-10-23",
    "mode": "online",
    "aiContent": "none"
@@ -8787,6 +9255,8 @@
     "1f6eac42-e5aa-4fa7-a75d-a4eea12c618e",
     "5436f06d-4cc0-42a6-8e5b-63b842cce03b"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Develops professional business writing skills for drafting corporate emails and disseminating announcements and requests across organizations.",
    "lastChecked": "2026-10-23",
    "mode": "online",
    "aiContent": "none"
@@ -8807,6 +9277,8 @@
     "1f6eac42-e5aa-4fa7-a75d-a4eea12c618e",
     "81dc035c-921b-4fea-a453-94538e86097c"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Trains administrative and corporate personnel to adapt email templates for clear internal and external stakeholder communications.",
    "lastChecked": "2026-10-23",
    "mode": "online",
    "aiContent": "none"
@@ -8828,6 +9300,8 @@
     "8d49f760-3765-4612-8d40-a2bdd50738fe",
     "f75b740c-b36c-495e-bc67-efe347bbc6b5"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Equips administrative assistants and secretaries with practical skills in handling office mail, formatting business documents, and maintaining standard operating procedures.",
    "lastChecked": "2026-10-23",
    "mode": "online",
    "aiContent": "none"
@@ -8849,6 +9323,8 @@
     "8d49f760-3765-4612-8d40-a2bdd50738fe",
     "b769f524-0f25-44d7-8538-5c46710a040e"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Develops structured document control, template usage, and electronic document management competencies for administrative and ICT roles.",
    "lastChecked": "2026-10-23",
    "mode": "online",
    "aiContent": "none"
@@ -8869,6 +9345,8 @@
     "c241f5a5-e23f-47bf-ad24-d83ea0010166",
     "43b13058-68d0-40c6-8031-caf5a7b7d20c"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Trains office staff to store, version, and secure digital documents using electronic document management workflows.",
    "lastChecked": "2026-10-23",
    "mode": "online",
    "aiContent": "digital"
@@ -8890,6 +9368,8 @@
     "ec0bbf39-0edd-4015-a2c3-82ad563ce3a8",
     "76f22707-8d30-453f-9eb7-3376e2960311"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Builds core secretarial competencies in physical and digital filing systems, professional correspondence, and daily office administration.",
    "lastChecked": "2026-10-23",
    "mode": "online",
    "aiContent": "none"
@@ -8911,6 +9391,8 @@
     "7c3865d1-e5a9-4043-a7a4-2e9e30468c0b",
     "3e04e39d-9eb6-4167-ad2d-e3413f647e4e"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Trains aspiring secretaries and office assistants in standard office routines, filing systems, record-keeping, and task management.",
    "lastChecked": "2026-10-23",
    "mode": "online",
    "aiContent": "none"
@@ -8929,6 +9411,8 @@
    "skillIds": [
     "0839eea4-c57b-4c14-b19b-923fbedb5d88"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Equips administrative, marketing, and finance assistants with structured business and market research methodologies.",
    "lastChecked": "2026-10-23",
    "mode": "online",
    "aiContent": "none"
@@ -8947,6 +9431,8 @@
    "skillIds": [
     "0839eea4-c57b-4c14-b19b-923fbedb5d88"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Develops applied business research, PESTLE/SWOT analysis, and actionable report writing skills for business support staff.",
    "lastChecked": "2026-10-23",
    "mode": "online",
    "aiContent": "none"
@@ -8967,6 +9453,8 @@
     "1f6eac42-e5aa-4fa7-a75d-a4eea12c618e",
     "81dc035c-921b-4fea-a453-94538e86097c"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Strengthens workplace written and verbal communication skills for preparing business documents, presentations, and internal team messages.",
    "lastChecked": "2026-10-23",
    "mode": "online",
    "aiContent": "none"
@@ -8987,6 +9475,8 @@
     "933e7ccf-5d56-46ba-aca4-857f826a6b3a",
     "7c3865d1-e5a9-4043-a7a4-2e9e30468c0b"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Equips front-desk and secretarial staff with professional telephone etiquette, appointment scheduling, and daily reception management skills.",
    "lastChecked": "2026-10-23",
    "mode": "online",
    "aiContent": "none"
@@ -9006,6 +9496,8 @@
     "de2f0ce8-f8d6-48c5-a213-4d065251cecf",
     "debb8d81-ed7f-447d-853a-5d107fda6fcf"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Trains administrative and customer support personnel in professional inbound and outbound telephone communication and customer care follow-up.",
    "lastChecked": "2026-10-23",
    "mode": "online",
    "aiContent": "none"
@@ -9026,6 +9518,8 @@
     "7ec3c77b-1955-4397-9bd3-7b7b9d0b8531",
     "48391ec6-42ba-4093-acf4-c7673b0c07f4"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Develops core personal assistant competencies in representing executives, preparing travel and meeting schedules, and executing delegated tasks.",
    "lastChecked": "2026-10-23",
    "mode": "online",
    "aiContent": "none"
@@ -9046,6 +9540,8 @@
     "933e7ccf-5d56-46ba-aca4-857f826a6b3a",
     "da56feea-941c-4ff6-b573-bb16ccbde670"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Builds practical digital scheduling skills for creating events, managing appointments, and sharing organizational calendars with stakeholders.",
    "lastChecked": "2026-10-23",
    "mode": "online",
    "aiContent": "digital"
@@ -9065,6 +9561,8 @@
     "c73ea1b8-e121-4f91-b8f0-dee4ee28d6ec",
     "7ec3c77b-1955-4397-9bd3-7b7b9d0b8531"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Trains administrative and remote professionals to build structured calendar systems, manage daily agendas, and organize task lists.",
    "lastChecked": "2026-10-23",
    "mode": "online",
    "aiContent": "none"
@@ -9085,6 +9583,8 @@
     "48391ec6-42ba-4093-acf4-c7673b0c07f4",
     "da56feea-941c-4ff6-b573-bb16ccbde670"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Equips secretaries and executive assistants to prioritize executive-level agendas, execute commissioned instructions, and coordinate virtual meetings.",
    "lastChecked": "2026-10-23",
    "mode": "online",
    "aiContent": "none"
@@ -9103,6 +9603,8 @@
    "skillIds": [
     "c58050e1-0774-4097-93d2-07dd7ba6a27a"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Trains administrative and facilities personnel to organize interior office spaces, manage workplace services, and procure office equipment.",
    "lastChecked": "2026-10-23",
    "mode": "online",
    "aiContent": "none"
@@ -9121,6 +9623,8 @@
    "skillIds": [
     "c58050e1-0774-4097-93d2-07dd7ba6a27a"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Develops practical office operations skills for arranging teams within workspaces, managing facility assets, and handling maintenance work orders.",
    "lastChecked": "2026-10-23",
    "mode": "online",
    "aiContent": "none"
@@ -9141,6 +9645,8 @@
     "08371fe9-c658-4f6a-966f-71dbb0ab683d",
     "eaa9727c-df1e-407a-85d3-48cc71508bc2"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Builds foundational double-entry accounting techniques and end-to-end accounting cycle competencies for bookkeeping and accounting assistants.",
    "lastChecked": "2026-10-23",
    "mode": "online",
    "aiContent": "none"
@@ -9162,6 +9668,8 @@
     "68b51538-b056-4cb3-bb15-ab8c3e576cc9",
     "880c54f9-866e-4f37-b5fa-25ef8a7d49b6"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Trains accounting assistants and retail staff to record sales transactions, track accounts receivable, and report asset depreciation.",
    "lastChecked": "2026-10-23",
    "mode": "online",
    "aiContent": "none"
@@ -9182,6 +9690,8 @@
     "658a38bd-6954-4a2a-945c-42330c5d13b9",
     "8a326ee1-169c-4c44-b38b-8f1bb20ec79b"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Equips accounting and finance assistants to reconcile bank accounts, verify ledger records, and examine financial statements for discrepancies.",
    "lastChecked": "2026-10-23",
    "mode": "online",
    "aiContent": "none"
@@ -9203,6 +9713,8 @@
     "8a326ee1-169c-4c44-b38b-8f1bb20ec79b",
     "5f1ebff6-98ec-411f-a1d4-0bf04bd03bdf"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Develops practical small-business bookkeeping skills across asset depreciation, trial balance accuracy checks, and tax compliance.",
    "lastChecked": "2026-10-23",
    "mode": "online",
    "aiContent": "none"
@@ -9223,6 +9735,8 @@
     "eaa9727c-df1e-407a-85d3-48cc71508bc2",
     "880c54f9-866e-4f37-b5fa-25ef8a7d49b6"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Trains finance and accounting staff in revenue recognition, asset depreciation analysis, year-end closing, and trial balance generation.",
    "lastChecked": "2026-10-23",
    "mode": "online",
    "aiContent": "none"
@@ -9243,6 +9757,8 @@
     "e717b036-2c0c-4c11-99e9-0cb4ce084fed",
     "658a38bd-6954-4a2a-945c-42330c5d13b9"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Equips accounting personnel with digital ERP skills for managing general ledgers, cash and bank processes, and account allocations.",
    "lastChecked": "2026-10-23",
    "mode": "online",
    "aiContent": "digital"
@@ -9264,6 +9780,8 @@
     "28a2ff4b-5f99-448e-8bd7-fb836166e95f",
     "08371fe9-c658-4f6a-966f-71dbb0ab683d"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Trains accounting assistants to manage customer invoicing, receivables collections, vendor invoice matching, and payable settlements.",
    "lastChecked": "2026-10-23",
    "mode": "online",
    "aiContent": "digital"
@@ -9283,6 +9801,8 @@
     "e3e42d54-78bd-4337-aa87-bb31a7670c9a",
     "68b51538-b056-4cb3-bb15-ab8c3e576cc9"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Develops hands-on skills for creating customer invoices, free text invoices, and tracking customer payment schedules and receivables.",
    "lastChecked": "2026-10-23",
    "mode": "online",
    "aiContent": "digital"
@@ -9301,6 +9821,8 @@
    "skillIds": [
     "28a2ff4b-5f99-448e-8bd7-fb836166e95f"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Trains accounting clerks to process vendor bills, allocate invoice payments using payment journals, and manage prepayments.",
    "lastChecked": "2026-10-23",
    "mode": "online",
    "aiContent": "digital"
@@ -9320,6 +9842,8 @@
     "658a38bd-6954-4a2a-945c-42330c5d13b9",
     "5f1ebff6-98ec-411f-a1d4-0bf04bd03bdf"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Equips accounting assistants to import corporate bank statements, verify bank ledger entries, and reconcile corporate bank accounts.",
    "lastChecked": "2026-10-23",
    "mode": "online",
    "aiContent": "digital"
@@ -9339,6 +9863,8 @@
     "e9030465-13c5-46d2-bdae-c2c1a9dbec86",
     "8a326ee1-169c-4c44-b38b-8f1bb20ec79b"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Trains accounting staff to attach external PDF invoices and receipts to accounting records and verify OCR-processed transaction data.",
    "lastChecked": "2026-10-23",
    "mode": "online",
    "aiContent": "digital"
@@ -9358,6 +9884,8 @@
     "e717b036-2c0c-4c11-99e9-0cb4ce084fed",
     "e9030465-13c5-46d2-bdae-c2c1a9dbec86"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Builds practical general ledger skills in using balance control accounts, creating voucher templates, and settling ledger transactions.",
    "lastChecked": "2026-10-23",
    "mode": "online",
    "aiContent": "digital"
@@ -9377,6 +9905,8 @@
     "d669af41-756c-48d9-a286-1443253f54b1",
     "83e97138-899a-4af8-9187-47823e875841"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Introduces accounting and tax assistants to statutory tax codes, treasury regulations, and corporate tax compliance filings.",
    "lastChecked": "2026-10-23",
    "mode": "online",
    "aiContent": "none"
@@ -9396,6 +9926,8 @@
     "83e97138-899a-4af8-9187-47823e875841",
     "047fcf0a-2936-49fb-b4eb-97cdd8d09d0b"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Equips administrative, secretarial, and accounting personnel with foundational knowledge of company formation, corporate governance, and statutory compliance.",
    "lastChecked": "2026-10-23",
    "mode": "online",
    "aiContent": "none"
@@ -9415,6 +9947,8 @@
     "83e97138-899a-4af8-9187-47823e875841",
     "d669af41-756c-48d9-a286-1443253f54b1"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Trains business and finance support staff to understand statute law, delegated legislation, and corporate legal obligations.",
    "lastChecked": "2026-10-23",
    "mode": "online",
    "aiContent": "none"
@@ -9435,6 +9969,8 @@
     "5063a99f-975b-4a7c-85e3-69ecb375b4d3",
     "3838a64c-78dc-4f3f-a0c0-9f604e33eefd"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Builds foundational networking and internet communication protocol skills for ICT and office systems support personnel.",
    "lastChecked": "2026-10-23",
    "mode": "online",
    "aiContent": "digital"
@@ -9455,6 +9991,8 @@
     "debb8d81-ed7f-447d-853a-5d107fda6fcf",
     "415abd43-e8e5-4643-b5da-5f11307af57a"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Trains service and cashier staff in active listening, multi-channel customer support, problem resolution, and post-interaction follow-up.",
    "lastChecked": "2026-10-23",
    "mode": "online",
    "aiContent": "none"
@@ -9474,6 +10012,8 @@
    "skillIds": [
     "laluan:manage-ai-chatbots"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Trains administrative and customer service workers to create, configure, monitor, and hand off AI chatbots in Microsoft Copilot Studio.",
    "lastChecked": "2026-10-23",
    "mode": "online",
    "aiContent": "ai"
@@ -9492,6 +10032,8 @@
    "skillIds": [
     "laluan:manage-ai-chatbots"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Equips non-technical staff to build, deploy, and manage customer-facing AI chatbots using IBM Watson Assistant without coding.",
    "lastChecked": "2026-10-23",
    "mode": "online",
    "aiContent": "ai"
@@ -9510,6 +10052,8 @@
    "skillIds": [
     "laluan:prompting-ai-review"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Develops practical prompt engineering and critical AI output evaluation skills for everyday workplace tasks.",
    "lastChecked": "2026-10-23",
    "mode": "online",
    "aiContent": "ai"
@@ -9529,6 +10073,8 @@
    "skillIds": [
     "laluan:prompting-ai-review"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Trains workers across all domains to write structured prompts, verify AI reasoning, and apply prompt patterns for reliable workplace outputs.",
    "lastChecked": "2026-10-23",
    "mode": "online",
    "aiContent": "ai"
@@ -9548,6 +10094,8 @@
    "skillIds": [
     "laluan:office-automation"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Equips administrative and accounting staff to automate repetitive office workflows, email notifications, and document approvals using Power Automate.",
    "lastChecked": "2026-10-23",
    "mode": "online",
    "aiContent": "digital"
@@ -9566,6 +10114,8 @@
    "skillIds": [
     "laluan:office-automation"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Trains office and project support personnel to build no-code automation rules for routine task tracking and notifications.",
    "lastChecked": "2026-10-23",
    "mode": "online",
    "aiContent": "digital"
@@ -9585,6 +10135,8 @@
     "7ee4c2ea-b349-4bd2-81a3-ec31475d4833",
     "382c11ed-20d5-4ae7-b60e-15fec527fa6c"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Builds statistical and regression analysis skills for Chinese-speaking learners moving into data roles.",
    "lastChecked": "2026-10-23",
    "mode": "online",
    "aiContent": "digital"
@@ -9605,6 +10157,8 @@
     "47a49cd6-097d-457a-9f7b-c290c14930d5",
     "edebd83d-35f6-4ed5-a940-6c203d178c01"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Introduces business uses of big data to Chinese-speaking non-specialists moving into data work.",
    "lastChecked": "2026-10-23",
    "mode": "online",
    "aiContent": "none"
@@ -9624,6 +10178,8 @@
     "4463a721-69f3-413d-8321-43e3af13a4f1",
     "9cf681c7-89ec-470c-b651-7fe03786f586"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Teaches practical database and SQL query skills for data-related digital jobs.",
    "lastChecked": "2026-10-23",
    "mode": "online",
    "aiContent": "digital"
@@ -9642,6 +10198,8 @@
    "skillIds": [
     "65e58886-bd1e-4c5b-8ca5-8d9b353c8aa1"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Introduces cloud data analysis and dashboard tools for data-related digital jobs.",
    "lastChecked": "2026-10-23",
    "mode": "online",
    "aiContent": "digital"
@@ -9660,6 +10218,8 @@
    "skillIds": [
     "13e2378e-0d10-450d-843a-b3592575826e"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Builds marketing strategy foundations for career switchers into marketing roles.",
    "lastChecked": "2026-10-23",
    "mode": "online",
    "aiContent": "none"
@@ -9679,6 +10239,8 @@
     "13e2378e-0d10-450d-843a-b3592575826e",
     "f37d9f67-2e79-4958-8307-1ce9d6dcc8bd"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Builds marketing and customer relationship skills for career switchers into marketing roles.",
    "lastChecked": "2026-10-23",
    "mode": "online",
    "aiContent": "none"
@@ -9698,6 +10260,8 @@
     "75f312e1-622b-4751-8d93-815b32feaf8d",
     "081d7679-5070-4777-bece-a28c49f15636"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Builds climate mitigation knowledge for learners moving into green and environmental roles.",
    "lastChecked": "2026-10-23",
    "mode": "online",
    "aiContent": "none"
@@ -9717,6 +10281,8 @@
     "65e58886-bd1e-4c5b-8ca5-8d9b353c8aa1",
     "143769cb-b61e-47d8-a61e-eedfbec1016c"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Gives job seekers a zero-cost Bahasa Melayu entry point into business intelligence reporting skills.",
    "lastChecked": "2026-10-23",
    "mode": "online",
    "aiContent": "digital"
@@ -9738,6 +10304,8 @@
     "65e58886-bd1e-4c5b-8ca5-8d9b353c8aa1",
     "143769cb-b61e-47d8-a61e-eedfbec1016c"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Offers low-cost Bahasa Melayu Power BI training so workers can move into data reporting roles.",
    "lastChecked": "2026-10-23",
    "mode": "online",
    "aiContent": "digital"
@@ -9759,6 +10327,8 @@
     "fecf8a0d-62c4-4e71-9b03-0f4fc2ad7bf5",
     "65e58886-bd1e-4c5b-8ca5-8d9b353c8aa1"
    ],
+   "sdgTarget": "4.4",
+   "sdgReason": "Provides HRD Corp-claimable live Bahasa Melayu data analytics training for employed workers upskilling for AI-era reporting.",
    "lastChecked": "2026-10-23",
    "mode": "online",
    "aiContent": "ai"

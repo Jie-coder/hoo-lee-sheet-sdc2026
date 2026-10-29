@@ -14,6 +14,7 @@ import { formatFitPercent, missingValue } from "@/lib/display";
 import { useT, type MessageKey } from "@/lib/i18n";
 import type { RoleBreakdown } from "@/lib/analyze";
 import { formatMonthlyRange, formatMonthlyRm, hasRealRange, salaryForRole } from "@/lib/salary";
+import { skillSdg } from "@/lib/skill-sdg";
 import { cn } from "@/lib/utils";
 import { scoreBand, type RoleResult, type ScenarioId } from "@/types/contracts";
 
@@ -364,9 +365,19 @@ export function RoleCard({
 
         <p className="mt-6 font-mono text-[12px] tracking-[0.06em] text-grey uppercase">{t("results.skillsToBuild")}</p>
         <ul className="mt-2.5 space-y-1.5 text-[15px]">
-          {visibleSkills.map((skill) => (
-            <li key={skill.skillId}>{skill.label}</li>
-          ))}
+          {visibleSkills.map((skill) => {
+            const sdg = skillSdg(skill.skillId);
+            return (
+              <li key={skill.skillId}>
+                <span>{skill.label}</span>
+                <span className="mt-0.5 block text-[12px] leading-snug text-grey/80">
+                  {sdg
+                    ? t("skillSdg.target", { target: sdg.target, reason: sdg.reason })
+                    : t("skillSdg.noDirectLink")}
+                </span>
+              </li>
+            );
+          })}
         </ul>
         {extraSkillCount > 0 && (
           <button

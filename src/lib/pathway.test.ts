@@ -26,6 +26,8 @@ function course(overrides: Partial<Course>): Course {
     costType: "free",
     certificate: false,
     skillIds: ["example-skill"],
+    sdgTarget: "4.4",
+    sdgReason: "Builds a transferable skill.",
     lastChecked: "2026-10-01",
     mode: "online",
     aiContent: "none",

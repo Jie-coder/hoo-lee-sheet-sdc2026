@@ -15,6 +15,7 @@ export const FILE_KEYS = [
   "exposure",
   "occupations",
   "occupation_skills",
+  "skill_group_sdg",
   "keywords_prior",
   "demand",
   "scenarios",
@@ -147,6 +148,13 @@ export const FILE_SPECS: Record<FileKey, FileSpec> = {
     filename: "occupation_skills.csv",
     aliases: ["occupation_skills", "occupation-skills"],
     headers: ["occupation_id", "skill_uri", "skill_label", "relation", "source_name", "as_of"],
+  },
+  // Hand-curated: one SDG target per ESCO skill group (data/skill_group_sdg.csv).
+  skill_group_sdg: {
+    key: "skill_group_sdg",
+    filename: "skill_group_sdg.csv",
+    aliases: ["skill_group_sdg", "skill-group-sdg"],
+    headers: ["group_uri", "group_label", "sdg_target", "sdg_reason", "checked_on"],
   },
   // The same keywords counted 30 days earlier (scripts/fetch-arxiv.ts --as-of … --out),
   // so the results page can compare two dated snapshots (T10).

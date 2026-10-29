@@ -16,6 +16,7 @@ import {
   OccupationSkillRowSchema,
   ScenarioRowSchema,
   SIGNAL_DIRECTIONS,
+  SkillGroupSdgRowSchema,
   SourceRowSchema,
   type DemandRow,
   type ExposureRow,
@@ -23,6 +24,7 @@ import {
   type OccupationRow,
   type OccupationSkillRow,
   type ScenarioRow,
+  type SkillGroupSdgRow,
   type SourceRow,
 } from "./row-schemas";
 import {
@@ -114,7 +116,7 @@ export type CourseRowResult = MapResult<Course> & {
   skillUris: string[];
 };
 
-/** Maps one courses.csv row. skills/skill_uris, sdg_target/sdg_reason/summary are editorial: not part of CourseSchema, but checked here. */
+/** Maps one courses.csv row. skills/skill_uris and summary are editorial: not part of CourseSchema, but checked here. */
 export function mapCourseRow(raw: Record<string, string>, row: number): CourseRowResult {
   const file = "courses.csv";
   const issues: Issue[] = [];
@@ -156,6 +158,8 @@ export function mapCourseRow(raw: Record<string, string>, row: number): CourseRo
     costType: raw.cost_type ?? "",
     certificate: certificate.ok ? certificate.value : false,
     skillIds: skillUris.map(skillRefToId),
+    sdgTarget: raw.sdg_target ?? "",
+    sdgReason: raw.sdg_reason ?? "",
     lastChecked: raw.last_checked ?? "",
     mode: (raw.mode ?? "").trim().toLowerCase(),
     aiContent: (raw.ai_content ?? "").trim().toLowerCase(),
@@ -168,7 +172,7 @@ export function mapCourseRow(raw: Record<string, string>, row: number): CourseRo
         file,
         row,
         raw,
-        columnOverrides: { skillIds: "skills" },
+        columnOverrides: { skillIds: "skills", sdgTarget: "sdg_target", sdgReason: "sdg_reason" },
       })
     );
   }
@@ -704,4 +708,32 @@ export function mapScenarioRow(raw: Record<string, string>, row: number): MapRes
   }
 
   return { issues, value: issues.length === 0 && parsed.success ? parsed.data : null };
+}
+
+/** Maps one skill_group_sdg.csv row: one SDG target per ESCO skill group. */
+export function mapSkillGroupSdgRow(raw: Record<string, string>, row: number): MapResult<SkillGroupSdgRow> {
+  const file = "skill_group_sdg.csv";
+  const candidate = {
+    groupUri: (raw.group_uri ?? "").trim(),
+    groupLabel: raw.group_label ?? "",
+    sdgTarget: (raw.sdg_target ?? "").trim(),
+    sdgReason: raw.sdg_reason ?? "",
+    checkedOn: (raw.checked_on ?? "").trim(),
+  };
+  const parsed = SkillGroupSdgRowSchema.safeParse(candidate);
+  const issues = parsed.success
+    ? []
+    : zodErrorToIssues(parsed.error, {
+        file,
+        row,
+        raw,
+        columnOverrides: {
+          groupUri: "group_uri",
+          groupLabel: "group_label",
+          sdgTarget: "sdg_target",
+          sdgReason: "sdg_reason",
+          checkedOn: "checked_on",
+        },
+      });
+  return { issues, value: parsed.success ? parsed.data : null };
 }

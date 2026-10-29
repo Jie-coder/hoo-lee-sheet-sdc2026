@@ -216,6 +216,20 @@ gap skill. Rerun after `fetch-esco-skills.ts`:
 npx tsx scripts/fetch-esco-skill-groups.ts
 ```
 
+## `skill_group_sdg.csv` (curated by the team)
+`group_uri, group_label, sdg_target, sdg_reason, checked_on`
+
+One UN SDG target per ESCO skill group (the groups in `skill_groups.csv`),
+with a one-line reason and the date it was checked. Each `group_uri` must
+already appear in `skill_groups.csv`, and `sdg_target` must be a target id such
+as `8.6` or `1.a` (the same `SdgTargetIdSchema` the app uses). The app uses it
+to show, for every skill listed on a role or pathway, the SDG target that skill
+contributes to. Rebuild the catalogue after editing:
+
+```
+npm run build-catalogue
+```
+
 ## `occupation_sdg.csv` (drafted by the team: Henry reviews in T18)
 `occupation_id, target, target_label, tier (direct / supporting), reason, source_url, checked_on`
 
@@ -261,6 +275,7 @@ it is always safe to run.
    npm run import-data -- --only keywords         # Henry: keywords.csv
    npm run import-data -- --only exposure         # Henry: exposure.csv
    npm run import-data -- --only occupations      # Peter: occupations.csv
+   npm run import-data -- --only skill_group_sdg  # team: skill_group_sdg.csv
    npm run import-data -- --only demand,scenarios  # demand.csv and scenarios.csv
    ```
    (Leave off `--only` to check every file in `data/` at once.)
