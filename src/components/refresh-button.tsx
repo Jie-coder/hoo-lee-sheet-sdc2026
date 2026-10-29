@@ -1,6 +1,7 @@
 // Real trend refresh: POST /api/refresh-signals re-counts arXiv papers, then
 // the page re-renders with the new snapshot. Shows loading and error states;
-// on failure the last good snapshot stays on screen.
+// on failure the last good snapshot stays on screen. When the server freezes
+// trend data (locked prop, or a 423 reply) it is disabled: "Snapshot frozen for finals".
 "use client";
 
 import { useState, useTransition } from "react";
@@ -12,12 +13,14 @@ import { clearRolesCache } from "@/lib/use-roles";
 
 export type RefreshResult =
   | { ok: true; active: ActiveSignals; refreshed: string[]; skipped: string[] }
-  | { ok: false; error: string };
+  | { ok: false; error: string; locked?: boolean };
 
 export async function requestRefresh(fetchImpl: typeof fetch = fetch): Promise<RefreshResult> {
   try {
     const response = await fetchImpl("/api/refresh-signals", { method: "POST" });
     const body = await response.json().catch(() => null);
+    // 423: the server froze trend data for the finals (TREND_REFRESH_LOCKED).
+    if (response.status === 423) return { ok: false, locked: true, error: body?.error ?? "Trend data is frozen." };
     if (!response.ok || !body?.active) return { ok: false, error: body?.error ?? `HTTP ${response.status}.` };
     return { ok: true, active: body.active, refreshed: body.refreshed ?? [], skipped: body.skipped ?? [] };
   } catch (error) {
@@ -25,10 +28,12 @@ export async function requestRefresh(fetchImpl: typeof fetch = fetch): Promise<R
   }
 }
 
-export function RefreshButton({ onRefreshed }: { onRefreshed?: (result: RefreshResult) => void }) {
+export function RefreshButton({ onRefreshed, locked = false }: { onRefreshed?: (result: RefreshResult) => void; locked?: boolean }) {
   const { t } = useT();
   const router = useRouter();
   const [loading, setLoading] = useState(false);
+  const [lockedByServer, setLockedByServer] = useState(false);
+  const frozen = locked || lockedByServer;
   const [message, setMessage] = useState<{ tone: "info" | "error"; text: string } | null>(null);
   const [, startTransition] = useTransition();
 
@@ -44,6 +49,9 @@ export function RefreshButton({ onRefreshed }: { onRefreshed?: (result: RefreshR
         text: t("trend.refreshDone", { count: String(result.refreshed.length), skipped: String(result.skipped.length) }),
       });
       startTransition(() => router.refresh());
+    } else if (result.locked) {
+      setLockedByServer(true);
+      setMessage(null);
     } else {
       setMessage({ tone: "error", text: t("trend.refreshError", { error: result.error }) });
     }
@@ -55,13 +63,14 @@ export function RefreshButton({ onRefreshed }: { onRefreshed?: (result: RefreshR
       <button
         type="button"
         onClick={onClick}
-        disabled={loading}
+        disabled={loading || frozen}
         aria-busy={loading}
         data-testid="trend-refresh"
+        data-locked={frozen ? "true" : undefined}
         className="inline-flex items-center gap-1.5 rounded-lg border border-line bg-btn2 px-3 py-1.5 text-[13px] font-medium whitespace-nowrap disabled:opacity-60"
       >
         <RefreshCw className={loading ? "size-3.5 animate-spin" : "size-3.5"} strokeWidth={1.6} />
-        {loading ? t("refreshButton.loading") : t("refreshButton.label")}
+        {frozen ? t("refreshButton.locked") : loading ? t("refreshButton.loading") : t("refreshButton.label")}
       </button>
       {message && (
         <p

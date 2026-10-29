@@ -3,10 +3,12 @@
 // with its fetch time, and returns it. If arXiv is unavailable nothing is
 // stored and the last good snapshot stays in use.
 // Default: the stalest keywords within ~20 s; ?full=1 re-counts all of them.
+// TREND_REFRESH_LOCKED=1 freezes it (423) unless x-refresh-key matches TREND_REFRESH_KEY.
 // Body (optional JSON): { "keywords": ["AI agents", ...] } to refresh only those.
 import { z } from "zod";
 import { FULL_BUDGET_MS, arxivTestHooks, refreshFromArxiv } from "@/lib/arxiv-live";
 import { getActiveSignals } from "@/lib/signals";
+import { REFRESH_LOCKED_MESSAGE, hasRefreshKey, isRefreshLocked } from "@/lib/refresh-lock";
 import { getActiveSnapshot, recordRefreshFailure, saveSnapshot } from "@/lib/signal-store";
 
 // A full re-count (?full=1) takes about 2.6 min at arXiv's rate limit.
@@ -43,6 +45,13 @@ async function run(keywords: string[] | undefined, full: boolean): Promise<Respo
 }
 
 export async function POST(request: Request) {
+  // Finals freeze (TREND_REFRESH_LOCKED): store nothing, call no one, unless the team's key is sent.
+  if (isRefreshLocked() && !hasRefreshKey(request)) {
+    return Response.json(
+      { error: REFRESH_LOCKED_MESSAGE, active: await getActiveSignals() },
+      { status: 423, headers: { "Cache-Control": "no-store" } },
+    );
+  }
   let body: unknown = {};
   const text = await request.text();
   if (text.trim()) {
