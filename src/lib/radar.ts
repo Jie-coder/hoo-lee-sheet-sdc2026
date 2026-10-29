@@ -8,13 +8,15 @@
 // a signal. Most roles have few such skills, so every role says how many.
 import type { SignalDate } from "@/lib/analyze";
 import type { Catalogue, CatalogueKeyword } from "@/lib/catalogue";
-import { roleMomentum } from "@/lib/scoring";
+import { roleMomentum, skillMomentum } from "@/lib/scoring";
 import type { IsoDate } from "@/types/contracts";
 
 export type RadarSkill = {
   skillId: string;
   label: string;
   momentum: number;
+  /** Uncertainty band around the momentum, from the keyword paper counts. */
+  band: MomentumBand | null;
   /** The keywords behind it, with their own counts and checkable arXiv URL. */
   keywords: CatalogueKeyword[];
 };
@@ -49,6 +51,48 @@ export type Radar = {
 /** ln(1.1) ≈ 0.095: the same ±10% band as the keyword "flat" direction. */
 export const FLAT_MOMENTUM = Math.log(1.1);
 
+/** Two-sided 95% normal critical value, for the momentum uncertainty band. */
+export const MOMENTUM_Z95 = 1.96;
+
+export type MomentumBand = {
+  momentum: number;
+  se: number;
+  low: number;
+  high: number;
+  crossesZero: boolean;
+};
+
+/**
+ * Delta-method standard error of m = ln((r + 1) / (p + 1)) when r and p are
+ * Poisson counts: sqrt(1 / (r + 1) + 1 / (p + 1)).
+ */
+export function keywordMomentumSE(recent: number, previous: number): number {
+  return Math.sqrt(1 / (recent + 1) + 1 / (previous + 1));
+}
+
+/**
+ * Keyword momentum with a 95% uncertainty band. The keywords are treated as
+ * independent, so the variance of their mean is the sum of the keyword
+ * variances divided by k². When a centre is given (the skill's stored signal),
+ * the band is centred on it instead of on the keyword mean. Returns null when
+ * there are no keywords.
+ */
+export function skillMomentumBand(
+  keywords: Pick<CatalogueKeyword, "recent" | "previous">[],
+  centre?: number,
+): MomentumBand | null {
+  if (keywords.length === 0) return null;
+  const k = keywords.length;
+  const momenta = keywords.map((keyword) => skillMomentum(keyword.recent, keyword.previous));
+  const momentum = centre ?? momenta.reduce((sum, value) => sum + value, 0) / k;
+  const variance =
+    keywords.reduce((sum, keyword) => sum + keywordMomentumSE(keyword.recent, keyword.previous) ** 2, 0) / k ** 2;
+  const se = Math.sqrt(variance);
+  const low = momentum - MOMENTUM_Z95 * se;
+  const high = momentum + MOMENTUM_Z95 * se;
+  return { momentum, se, low, high, crossesZero: low < 0 && high > 0 };
+}
+
 const TOP_ROLES = 5;
 
 export function buildRadar(catalogue: Catalogue, signalDate: SignalDate): Radar | null {
@@ -60,12 +104,16 @@ export function buildRadar(catalogue: Catalogue, signalDate: SignalDate): Radar 
   if (usable.length === 0) return null;
 
   const skills: RadarSkill[] = Object.entries(signals)
-    .map(([skillId, signal]) => ({
-      skillId,
-      label: catalogue.skills[skillId] ?? skillId,
-      momentum: signal.momentum,
-      keywords: usable.filter((keyword) => keyword.skillIds.includes(skillId)),
-    }))
+    .map(([skillId, signal]) => {
+      const skillKeywords = usable.filter((keyword) => keyword.skillIds.includes(skillId));
+      return {
+        skillId,
+        label: catalogue.skills[skillId] ?? skillId,
+        momentum: signal.momentum,
+        band: skillMomentumBand(skillKeywords, signal.momentum),
+        keywords: skillKeywords,
+      };
+    })
     .sort((a, b) => b.momentum - a.momentum || a.label.localeCompare(b.label));
 
   const roles: RadarRole[] = catalogue.occupations
@@ -98,6 +146,33 @@ export function buildRadar(catalogue: Catalogue, signalDate: SignalDate): Radar 
     decliningRoles: [...byMomentum].reverse().filter((role) => role.momentum < 0).slice(0, TOP_ROLES),
     rolesWithoutSignal: catalogue.occupations.length - roles.length,
     tooSmall: keywords.filter((keyword) => !keyword.enough),
+  };
+}
+
+export type DisplayDirection = "rising" | "flat" | "declining" | "unclear";
+
+/**
+ * The direction to show for a skill. A rising or declining momentum whose
+ * uncertainty band crosses zero is displayed as unclear, because the data
+ * cannot rule out no change; flat is never changed.
+ */
+export function displayDirection(
+  direction: "rising" | "flat" | "declining",
+  band: MomentumBand | null,
+): DisplayDirection {
+  if (direction !== "flat" && band?.crossesZero) return "unclear";
+  return direction;
+}
+
+/** How many of the rising/declining skills are shown as unclear, out of both groups. */
+export function countUnclearLabels(radar: Radar): { changed: number; total: number } {
+  const directional = [
+    ...radar.rising.map((skill) => ({ direction: "rising" as const, band: skill.band })),
+    ...radar.declining.map((skill) => ({ direction: "declining" as const, band: skill.band })),
+  ];
+  return {
+    changed: directional.filter(({ direction, band }) => displayDirection(direction, band) === "unclear").length,
+    total: directional.length,
   };
 }
 

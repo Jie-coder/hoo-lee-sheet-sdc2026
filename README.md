@@ -253,6 +253,7 @@ This repo starts from our declared starter (`Jie-coder/sdc-starter`, tag `starte
 1. **Live salary and job data**: replace the manually checked JobStreet salaries with scheduled automatic updates, and add newer DOSM releases.
 2. **More roles and Bahasa Malaysia**: expand beyond the current 40 roles and add a Bahasa Malaysia interface to reach more users.
 3. **Real-user validation**: test with real users to validate pathway gap coverage and SDG mapping accuracy, replacing the three synthetic personas.
+4. **Trend uncertainty in the rank score**: the 95% momentum band on /radar could later be propagated through role momentum into the rank score, so the trend part of a score shows a ± range. Today the band is shown on /radar only.
 
 ## Team
 
