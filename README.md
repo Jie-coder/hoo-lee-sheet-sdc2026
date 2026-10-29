@@ -110,6 +110,8 @@ From [`data/sources.csv`](./data/sources.csv) (also shown in the app at `/data-s
 | Lightcast Open Skills | Lightcast | Skills reference | Proprietary, free non-profit tier |
 | Courses ([`data/courses.csv`](./data/courses.csv)) and government programmes ([`data/programmes.csv`](./data/programmes.csv)) | Various providers, collected by the team | Pathway and course recommendations | See source terms |
 
+**Live trend refresh.** The arXiv counts can be refreshed while the app runs: the Refresh button on `/radar` and `/data-sources` calls `POST /api/refresh-signals` (`GET /api/signals` returns the snapshot in use; code loads it via `getActiveSignals()` in `src/lib/signals.ts`). Each snapshot stores its fetch time, in Supabase table `trend_snapshots` when configured, else a local file. If arXiv is down the last good snapshot stays in use, then the bundled `data/keywords.csv`. `/data-sources` also has a clearly labelled, browser-only "change the data" test panel.
+
 40 curated occupations are in [`data/occupations.csv`](./data/occupations.csv). See [`data/README.md`](./data/README.md) for the CSV spec and licensing rules. Demo CVs in `demo/cv/` are synthetic and clearly marked.
 
 ### Privacy

@@ -1,9 +1,14 @@
 // /data-sources (spec §9): one ticket per source. Dates come from the
-// catalogue (sources.csv, keywords.csv, courses.csv, occupation_sdg.csv);
-// anything without a date in the data renders as a placeholder.
+// catalogue (sources.csv, courses.csv, occupation_sdg.csv); the arXiv date is
+// the trend snapshot in use (live refresh, else keywords.csv). Anything
+// without a date in the data renders as a placeholder.
 import type { Metadata } from "next";
+import { connection } from "next/server";
+import { Suspense } from "react";
 import { DataSourcesView, type SourceDates } from "@/components/data-sources-view";
+import { trendInfo } from "@/lib/trend-info";
 import { CATALOGUE } from "@/lib/catalogue";
+import { getActiveSignals } from "@/lib/signals";
 import type { IsoDate } from "@/types/contracts";
 
 export const metadata: Metadata = {
@@ -15,7 +20,9 @@ function latest(dates: (IsoDate | null | undefined)[]): IsoDate | null {
   return known.length ? known[known.length - 1] : null;
 }
 
-export default function Page() {
+async function LiveDataSources() {
+  await connection();
+  const active = await getActiveSignals();
   const sources = CATALOGUE.sources;
   const dates: SourceDates = {
     ilo: sources["ILO GenAI Exposure 2025"]?.lastUpdated ?? null,
@@ -25,8 +32,16 @@ export default function Page() {
     jobstreet: null,
     wefJobs: sources["WEF Future of Jobs Report 2025"]?.lastUpdated ?? null,
     sdgs: latest(CATALOGUE.occupations.flatMap((occupation) => occupation.sdg.map((sdg) => sdg.checkedOn))),
-    arxiv: CATALOGUE.signalsAsOf ?? null,
+    arxiv: active.snapshot.asOf,
     courses: latest(CATALOGUE.courses.map((course) => course.lastChecked)),
   };
-  return <DataSourcesView dates={dates} />;
+  return <DataSourcesView dates={dates} trend={trendInfo(active)} signals={{ snapshot: active.snapshot, trend: active.trend }} />;
+}
+
+export default function Page() {
+  return (
+    <Suspense>
+      <LiveDataSources />
+    </Suspense>
+  );
 }

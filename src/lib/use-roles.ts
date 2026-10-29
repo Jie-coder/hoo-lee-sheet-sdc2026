@@ -11,6 +11,11 @@ import type { ImpactInterest } from "@/types/contracts";
 
 const cache = new Map<string, RolesResponse>();
 
+/** Forget cached rankings, e.g. after a trend refresh changed the data they were built from. */
+export function clearRolesCache() {
+  cache.clear();
+}
+
 export type RolesState =
   | { status: "loading" }
   | { status: "error"; message: string }

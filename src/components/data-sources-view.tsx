@@ -16,6 +16,9 @@ import { useT } from "@/lib/i18n";
 import type { MessageKey } from "@/lib/i18n-messages";
 import type { IsoDate } from "@/types/contracts";
 import { CATALOGUE } from "@/lib/catalogue";
+import type { SignalsInUse } from "@/lib/trend-override";
+import { TrendOverridePanel } from "@/components/trend-override-panel";
+import { TrendStatus, type TrendInfo } from "@/components/trend-status";
 
 export type SourceKey =
   | "ilo"
@@ -55,7 +58,15 @@ function Expander({ summary, children }: { summary: string; children: React.Reac
   );
 }
 
-export function DataSourcesView({ dates }: { dates: SourceDates }) {
+export function DataSourcesView({
+  dates,
+  trend,
+  signals,
+}: {
+  dates: SourceDates;
+  trend?: TrendInfo;
+  signals?: SignalsInUse;
+}) {
   const { t } = useT();
   return (
     <main className="mx-auto w-full max-w-[1440px] px-5 pb-24 sm:px-6 md:px-8">
@@ -65,6 +76,8 @@ export function DataSourcesView({ dates }: { dates: SourceDates }) {
         title={t("sourcesPage.heroHeading")}
         lede={t("sourcesPage.lede")}
       />
+
+      {trend && <TrendStatus info={trend} className="mt-12 md:mt-16" />}
 
       <ol className="mt-16 grid grid-cols-1 gap-4 md:mt-24 md:grid-cols-2 xl:grid-cols-3">
         {DATA_SOURCES.map((source, index) => {
@@ -123,6 +136,8 @@ export function DataSourcesView({ dates }: { dates: SourceDates }) {
           {t("aboutPage.exposureLink")} →
         </Link>
       </section>
+
+      {signals && <TrendOverridePanel signals={signals} />}
 
       {/* Custom skills are Laluan's own, not ESCO concepts: no link, marked custom. */}
       <section className="mt-4 rounded-[40px] bg-card p-8 md:p-12">
