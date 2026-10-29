@@ -179,7 +179,8 @@ describe("displayDirection", () => {
 
 describe("countUnclearLabels on the real catalogue", () => {
   it("counts the rising/declining skills whose band crosses zero", () => {
-    expect(countUnclearLabels(buildRadar(CATALOGUE, "today")!)).toEqual({ changed: 5, total: 6 });
+    // Frozen 29 Oct snapshot: 5 rising/declining skills, none with a band crossing zero (was 5 of 6 on 19 Oct).
+    expect(countUnclearLabels(buildRadar(CATALOGUE, "today")!)).toEqual({ changed: 0, total: 5 });
   });
 });
 

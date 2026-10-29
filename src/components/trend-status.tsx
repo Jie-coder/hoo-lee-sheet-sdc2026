@@ -50,7 +50,7 @@ export function TrendStatus({ info, className }: { info: TrendInfo; className?: 
         </p>
         {info.warning && <p className="text-[12px] text-signal-high">{t("trend.fallback")}</p>}
       </div>
-      <RefreshButton />
+      <RefreshButton locked={info.refreshLocked} />
     </section>
   );
 }

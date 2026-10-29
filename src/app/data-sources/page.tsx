@@ -6,6 +6,7 @@ import type { Metadata } from "next";
 import { connection } from "next/server";
 import { Suspense } from "react";
 import { DataSourcesView, type SourceDates } from "@/components/data-sources-view";
+import { isRefreshLocked } from "@/lib/refresh-lock";
 import { trendInfo } from "@/lib/trend-info";
 import { CATALOGUE } from "@/lib/catalogue";
 import { getActiveSignals } from "@/lib/signals";
@@ -35,7 +36,7 @@ async function LiveDataSources() {
     arxiv: active.snapshot.asOf,
     courses: latest(CATALOGUE.courses.map((course) => course.lastChecked)),
   };
-  return <DataSourcesView dates={dates} trend={trendInfo(active)} signals={{ snapshot: active.snapshot, trend: active.trend }} />;
+  return <DataSourcesView dates={dates} trend={trendInfo(active, { refreshLocked: isRefreshLocked() })} signals={{ snapshot: active.snapshot, trend: active.trend }} />;
 }
 
 export default function Page() {

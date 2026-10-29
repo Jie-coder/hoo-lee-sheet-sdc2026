@@ -233,8 +233,8 @@ describe("built rows match scripts/fixtures/live-schema.json", () => {
     const skillRows = signalRows.filter((row) => row.skill_id === skillId);
     expect(skillRows).toHaveLength(2);
 
-    const current = skillRows.find((row) => row.window_end === "2026-10-19");
-    const preceding = skillRows.find((row) => row.window_end !== "2026-10-19");
+    const current = skillRows.find((row) => row.window_end === "2026-10-29");
+    const preceding = skillRows.find((row) => row.window_end !== "2026-10-29");
 
     const keywords = ["sentiment analysis", "synthetic data", "anomaly detection", "time series forecasting"];
     const arxivQueries = [
@@ -244,19 +244,19 @@ describe("built rows match scripts/fixtures/live-schema.json", () => {
       '"time series forecasting"',
     ];
 
-    // Counts from scripts/fetch-arxiv.ts --as-of 2026-10-19.
+    // Counts from the frozen finals snapshot (trend_snapshots id=2, as of 2026-10-29).
     expect(current).toMatchObject({
-      value: 69 + 115 + 423 + 216,
-      window_start: "2026-07-22",
-      as_of: "2026-10-19",
+      value: 63 + 114 + 422 + 214,
+      window_start: "2026-08-01",
+      as_of: "2026-10-29",
       keywords,
       url: arxivQueryUrl(arxivQueries),
     });
     expect(preceding).toMatchObject({
-      value: 102 + 132 + 424 + 200,
-      window_start: "2026-04-23",
-      window_end: "2026-07-21",
-      as_of: "2026-10-19",
+      value: 99 + 132 + 436 + 197,
+      window_start: "2026-05-03",
+      window_end: "2026-07-31",
+      as_of: "2026-10-29",
       keywords,
       url: arxivQueryUrl(arxivQueries),
     });
