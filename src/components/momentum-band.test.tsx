@@ -93,17 +93,18 @@ describe("radar.unclear i18n", () => {
 });
 
 describe("RadarView skill list unclear labels", () => {
-  it("shows exactly the five rising/declining skills as unclear, and none of the steady ones", () => {
+  // Frozen 29 Oct snapshot: no rising/declining band crosses zero (was five on 19 Oct).
+  it("shows exactly the unclear rising/declining skills (none on the 29 Oct snapshot), and none of the steady ones", () => {
     const directional = [
       ...today.rising.map((skill) => ({ skill, direction: "rising" as const })),
       ...today.declining.map((skill) => ({ skill, direction: "declining" as const })),
     ];
     const unclear = directional.filter(({ skill, direction }) => displayDirection(direction, skill.band) === "unclear");
-    expect(unclear).toHaveLength(5);
-    expect(unclear.length).toBeLessThan(directional.length);
+    expect(unclear).toHaveLength(0);
+    expect(directional).toHaveLength(5);
     expect(today.steady.filter((skill) => displayDirection("flat", skill.band) === "unclear")).toHaveLength(0);
 
     render(<RadarView today={today} prior={null} dates={{ today: today.asOf, prior: null }} links={{}} />);
-    expect(screen.getAllByTestId("unclear-label")).toHaveLength(5);
+    expect(screen.queryAllByTestId("unclear-label")).toHaveLength(0);
   });
 });

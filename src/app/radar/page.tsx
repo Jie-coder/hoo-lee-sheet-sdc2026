@@ -7,6 +7,7 @@ import type { Metadata } from "next";
 import { connection } from "next/server";
 import { Suspense } from "react";
 import { RadarView, type SkillLinks } from "@/components/radar-view";
+import { isRefreshLocked } from "@/lib/refresh-lock";
 import { trendInfo } from "@/lib/trend-info";
 import type { Catalogue } from "@/lib/catalogue";
 import { buildRadar } from "@/lib/radar";
@@ -42,7 +43,7 @@ async function LiveRadar() {
       prior={catalogue.priorSignalsAsOf ? buildRadar(catalogue, "prior") : null}
       dates={{ today: catalogue.signalsAsOf, prior: catalogue.priorSignalsAsOf }}
       links={skillLinks(catalogue)}
-      trend={trendInfo(active)}
+      trend={trendInfo(active, { refreshLocked: isRefreshLocked() })}
     />
   );
 }
