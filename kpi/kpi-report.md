@@ -1,9 +1,10 @@
 # Laluan KPI report
 
-- Snapshot asOf: 2026-10-19
-- Git SHA: `58855882e2c3d69ed0a2093e83819f1d1449a434`
+- Snapshot asOf: 2026-10-29
+- Snapshot source: live (supabase), fetched 2026-10-29T08:05:53.810Z, 25/25 keywords refreshed (file: live-trend-run/after-full-signals.json)
+- Git SHA: `43880522bad0e175cb32b7b7c060e5abe252f9cb`
 
-> **Warning:** KPI1 depends on arXiv trend momentum and must be re-run after the persona re-run on refreshed trend data.
+> **Warning:** KPI1 depends on arXiv trend momentum; this run uses the live snapshot asOf 2026-10-29. Re-run if the trend data is refreshed again.
 
 | KPI | Value | Target | Status |
 | --- | --- | --- | --- |
@@ -11,21 +12,21 @@
 | KPI2 Dated sources | 104/104 (100.0%) | 100% | PASS |
 | KPI3 SDG coverage | occupations 100.0% (40/40); skills 25.8% (220/854) | 100% occupations, 100% skills | FAIL |
 | KPI4 Minutes to finished pathway | Not measured (placeholder) | <3 minutes | PLACEHOLDER |
-| KPI5 SDG hand-check (50 pairs) | hand-check not started (0/45 rated; wrote kpi/sdg-handcheck-50.csv) | overall ≥80%, direct ≥90%, κ≥0.6 | PLACEHOLDER |
+| KPI5 SDG hand-check (50 pairs) | hand-check 0/45 rated (rows 45/45) | overall ≥80%, direct ≥90%, κ≥0.6 | PLACEHOLDER |
 
 ## KPI1 sensitivity (rank 1–3)
 
 | Persona | Rank | Role | Co score | Gap skills | Closed | Coverage |
 | --- | --- | --- | --- | --- | --- | --- |
 | Aisyah binti Rahman | 1 | Data scientist | 0.4113 | 5 | 5 | 100.0% |
-| Aisyah binti Rahman | 2 | Data analyst | 0.4078 | 5 | 4 | 80.0% |
-| Aisyah binti Rahman | 3 | Environmental scientist | 0.4068 | 5 | 5 | 100.0% |
+| Aisyah binti Rahman | 2 | Environmental scientist | 0.4068 | 5 | 5 | 100.0% |
+| Aisyah binti Rahman | 3 | Data analyst | 0.4061 | 5 | 4 | 80.0% |
 | Lim Jia Hui | 1 | Data scientist | 0.4113 | 5 | 3 | 60.0% |
-| Lim Jia Hui | 2 | Data analyst | 0.3984 | 5 | 4 | 80.0% |
+| Lim Jia Hui | 2 | Data analyst | 0.3971 | 5 | 4 | 80.0% |
 | Lim Jia Hui | 3 | Gerontology social worker | 0.3933 | 5 | 5 | 100.0% |
 | Pravin a/l Murugan | 1 | Environmental scientist | 0.4268 | 5 | 5 | 100.0% |
-| Pravin a/l Murugan | 2 | Mobile application developer | 0.4256 | 5 | 5 | 100.0% |
-| Pravin a/l Murugan | 3 | Web developer | 0.4164 | 5 | 4 | 80.0% |
+| Pravin a/l Murugan | 2 | Mobile application developer | 0.4264 | 5 | 5 | 100.0% |
+| Pravin a/l Murugan | 3 | Web developer | 0.4171 | 5 | 4 | 80.0% |
 
 ### KPI1 rank-1 detail
 
@@ -690,5 +691,5 @@ None.
 
 - CSV: `kpi/sdg-handcheck-50.csv`
 - Sample size: 45
-- Status: PLACEHOLDER — hand-check not started (0/45 rated; wrote kpi/sdg-handcheck-50.csv)
+- Status: PLACEHOLDER — hand-check 0/45 rated (rows 45/45)
 

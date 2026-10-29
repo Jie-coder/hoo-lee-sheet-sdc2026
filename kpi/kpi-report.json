@@ -1,9 +1,10 @@
 {
   "snapshot": {
-    "asOf": "2026-10-19",
-    "gitSha": "58855882e2c3d69ed0a2093e83819f1d1449a434"
+    "asOf": "2026-10-29",
+    "source": "live (supabase), fetched 2026-10-29T08:05:53.810Z, 25/25 keywords refreshed (file: live-trend-run/after-full-signals.json)",
+    "gitSha": "43880522bad0e175cb32b7b7c060e5abe252f9cb"
   },
-  "warning": "KPI1 depends on arXiv trend momentum and must be re-run after the persona re-run on refreshed trend data.",
+  "warning": "KPI1 depends on arXiv trend momentum; this run uses the live snapshot asOf 2026-10-29. Re-run if the trend data is refreshed again.",
   "rows": [
     {
       "kpi": "KPI1 Role #1 pathway gap coverage",
@@ -31,7 +32,7 @@
     },
     {
       "kpi": "KPI5 SDG hand-check (50 pairs)",
-      "value": "hand-check not started (0/45 rated; wrote kpi/sdg-handcheck-50.csv)",
+      "value": "hand-check 0/45 rated (rows 45/45)",
       "target": "overall ≥80%, direct ≥90%, κ≥0.6",
       "status": "PLACEHOLDER"
     }
@@ -121,23 +122,23 @@
           "personaId": "aisyah",
           "personaName": "Aisyah binti Rahman",
           "rank": 2,
-          "occupationId": "o009",
-          "title": "Data analyst",
-          "co": 0.4077673758724012,
-          "gap": 5,
-          "closed": 4,
-          "coveragePct": 80
-        },
-        {
-          "personaId": "aisyah",
-          "personaName": "Aisyah binti Rahman",
-          "rank": 3,
           "occupationId": "o020",
           "title": "Environmental scientist",
           "co": 0.40682,
           "gap": 5,
           "closed": 5,
           "coveragePct": 100
+        },
+        {
+          "personaId": "aisyah",
+          "personaName": "Aisyah binti Rahman",
+          "rank": 3,
+          "occupationId": "o009",
+          "title": "Data analyst",
+          "co": 0.40612368455935155,
+          "gap": 5,
+          "closed": 4,
+          "coveragePct": 80
         },
         {
           "personaId": "lim-jia-hui",
@@ -156,7 +157,7 @@
           "rank": 2,
           "occupationId": "o009",
           "title": "Data analyst",
-          "co": 0.3984154083372393,
+          "co": 0.3970636972500171,
           "gap": 5,
           "closed": 4,
           "coveragePct": 80
@@ -189,7 +190,7 @@
           "rank": 2,
           "occupationId": "o003",
           "title": "Mobile application developer",
-          "co": 0.4256390181365881,
+          "co": 0.42643804667744584,
           "gap": 5,
           "closed": 5,
           "coveragePct": 100
@@ -200,7 +201,7 @@
           "rank": 3,
           "occupationId": "o002",
           "title": "Web developer",
-          "co": 0.4163961695350354,
+          "co": 0.41714658872733573,
           "gap": 5,
           "closed": 4,
           "coveragePct": 80
@@ -3411,11 +3412,12 @@
     },
     "kpi5": {
       "status": "PLACEHOLDER",
-      "value": "hand-check not started (0/45 rated; wrote kpi/sdg-handcheck-50.csv)",
+      "value": "hand-check 0/45 rated (rows 45/45)",
       "target": "overall ≥80%, direct ≥90%, κ≥0.6",
       "sampleSize": 45,
       "csvPath": "kpi/sdg-handcheck-50.csv",
-      "written": true
+      "written": false,
+      "rated": 0
     }
   }
 }
