@@ -8,7 +8,8 @@ import { execSync } from "node:child_process";
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { analyzeProfile } from "@/lib/analyze";
-import { CATALOGUE } from "@/lib/catalogue";
+import { CATALOGUE as BUNDLED_CATALOGUE } from "@/lib/catalogue";
+import { catalogueFromSignalsFile } from "@/lib/kpi-signals";
 import {
   cohensKappa,
   gapCoverage,
@@ -22,6 +23,15 @@ import { skillSdg } from "@/lib/skill-sdg";
 import { PERSONAS } from "@/mocks/personas";
 import type { CostType, LanguageCode, RoleResult } from "@/types/contracts";
 import { formatCsv, parseCsv } from "./lib/csv";
+
+// Optional: --signals <path> scores with a saved /api/signals response instead of the bundled snapshot.
+const signalsArg = process.argv.indexOf("--signals");
+const SIGNALS_PATH = signalsArg >= 0 ? process.argv[signalsArg + 1] : null;
+const LOADED = SIGNALS_PATH ? catalogueFromSignalsFile(JSON.parse(readFileSync(SIGNALS_PATH, "utf8")), BUNDLED_CATALOGUE) : null;
+const CATALOGUE = LOADED?.catalogue ?? BUNDLED_CATALOGUE;
+const SIGNAL_SOURCE = LOADED
+  ? `${LOADED.meta.source}, fetched ${LOADED.meta.fetchedAt}, ${LOADED.meta.refreshed}/${LOADED.meta.keywords} keywords refreshed (file: ${SIGNALS_PATH})`
+  : "bundled (src/data/catalogue.json)";
 
 const KPI_DIR = "kpi";
 const KPI_MD_PATH = join(KPI_DIR, "kpi-report.md");
@@ -447,13 +457,14 @@ function kpi5(): {
 function markdown(
   rows: KpiRow[],
   details: { kpi1: ReturnType<typeof kpi1>; kpi2: ReturnType<typeof kpi2>; kpi3: ReturnType<typeof kpi3>; kpi5: ReturnType<typeof kpi5> },
-  snapshot: { asOf: string; gitSha: string },
+  snapshot: { asOf: string; source: string; gitSha: string },
   warning: string,
 ): string {
   const lines: string[] = [
     "# Laluan KPI report",
     "",
     `- Snapshot asOf: ${snapshot.asOf}`,
+    `- Snapshot source: ${snapshot.source}`,
     `- Git SHA: \`${snapshot.gitSha}\``,
     "",
     `> **Warning:** ${warning}`,
@@ -542,9 +553,10 @@ function main(): void {
     { kpi: "KPI5 SDG hand-check (50 pairs)", value: k5.value, target: k5.target, status: k5.status },
   ];
 
-  const snapshot = { asOf: CATALOGUE.signalsAsOf, gitSha: gitSha() };
-  const warning =
-    "KPI1 depends on arXiv trend momentum and must be re-run after the persona re-run on refreshed trend data.";
+  const snapshot = { asOf: CATALOGUE.signalsAsOf, source: SIGNAL_SOURCE, gitSha: gitSha() };
+  const warning = LOADED
+    ? `KPI1 depends on arXiv trend momentum; this run uses the live snapshot asOf ${CATALOGUE.signalsAsOf}. Re-run if the trend data is refreshed again.`
+    : "KPI1 depends on arXiv trend momentum and must be re-run after the persona re-run on refreshed trend data.";
 
   mkdirSync(KPI_DIR, { recursive: true });
   writeFileSync(KPI_MD_PATH, markdown(rows, { kpi1: k1, kpi2: k2, kpi3: k3, kpi5: k5 }, snapshot, warning));
@@ -562,7 +574,7 @@ function main(): void {
     )}\n`,
   );
 
-  console.log(`Snapshot asOf: ${snapshot.asOf} · git ${snapshot.gitSha}`);
+  console.log(`Snapshot asOf: ${snapshot.asOf} · source: ${snapshot.source} · git ${snapshot.gitSha}`);
   console.table(rows);
   console.log(`Warning: ${warning}`);
   console.log(`Wrote ${KPI_MD_PATH} and ${KPI_JSON_PATH}`);
