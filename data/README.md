@@ -35,6 +35,16 @@ Evidence backing each course's `ai_content` value in `courses.csv`. Not part of 
 | evidence | quoted module/tool names or skills found on the course page |
 | check_url | the URL checked for evidence |
 
+### `course_skill_evidence.csv`
+Evidence for course→skill links added to `courses.csv` `skills`/`skill_uris` after 2026-10-29. One row per added link, quoting the course's own syllabus. Not part of the import/validation pipeline and not shown in the UI — a paper trail for reviewers only.
+| column | values |
+|---|---|
+| course_id | matches a courses.csv id |
+| skill, skill_uri | the ESCO skill added to that course |
+| evidence | quoted module titles or description text from the course page |
+| check_url | the URL checked for evidence |
+| checked_on | YYYY-MM-DD |
+
 ### `programmes.csv`
 | column | values |
 |---|---|

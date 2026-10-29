@@ -2437,6 +2437,8 @@
   "fd446407-b08e-49da-b8e3-7e7c79618c3f": "conduct public presentations",
   "0a48d064-dd04-47fb-a00d-85e9b4874033": "business management principles",
   "e437eba1-3e22-41f2-8703-741e94785cba": "human resource management",
+  "65e58886-bd1e-4c5b-8ca5-8d9b353c8aa1": "data visualisation software",
+  "7ee4c2ea-b349-4bd2-81a3-ec31475d4833": "statistics",
   "05e5e14f-ffa6-4106-b311-c6335ccc2bd2": "solar energy",
   "e45507ff-c1e2-4e0c-92fb-b6c0e6cb6245": "photovoltaic systems",
   "8f585def-6ade-41b3-b897-3d71fba4151d": "alternative energy",
@@ -2463,10 +2465,8 @@
   "b2f05068-c409-43ec-ba58-b5dfe991ca5e": "advise on corporate social responsibility",
   "9cf681c7-89ec-470c-b651-7fe03786f586": "query languages",
   "4463a721-69f3-413d-8321-43e3af13a4f1": "use databases",
-  "65e58886-bd1e-4c5b-8ca5-8d9b353c8aa1": "data visualisation software",
   "348b74cd-49ce-4844-8bdf-ec188b497213": "visual presentation techniques",
   "c0326e27-5fa8-4dca-aecb-ed89ab491513": "prepare visual data",
-  "7ee4c2ea-b349-4bd2-81a3-ec31475d4833": "statistics",
   "6360a934-cc87-4954-9656-b32db20592e3": "quantitative analysis",
   "31c69100-b612-4a61-8db5-fd314318854c": "execute analytical mathematical calculations",
   "faf8943c-72ff-4736-a587-25508695d6f0": "maintain financial records",
@@ -4716,6 +4716,10 @@
    "target": "6.2",
    "reason": "Sanitation workers help communities gain safe and adequate sanitation and hygiene."
   },
+  "1022": {
+   "target": "3.8",
+   "reason": "Hygiene and safe medicine handling in health care keep essential health services safe."
+  },
   "062a9fde-cd91-44f9-9a2f-9e2bc3b281fd": {
    "target": "12.6",
    "reason": "Environmental advisers help companies adopt sustainable practices and report them honestly."
@@ -4883,6 +4887,98 @@
   "446a36a5-2376-439f-b46b-4a214ba0acdf": {
    "target": "4.4",
    "reason": "These are ICT skills of the kind counted under SDG indicator 4.4.1 for youth and adults."
+  },
+  "0612": {
+   "target": "4.4",
+   "reason": "These are ICT skills of the kind counted under SDG indicator 4.4.1 for youth and adults (databases and data analytics or visualisation tools and networks)."
+  },
+  "0613": {
+   "target": "4.4",
+   "reason": "These are ICT skills of the kind counted under SDG indicator 4.4.1 for youth and adults (4.4.1 lists writing a computer program in a programming language)."
+  },
+  "a8c3186b-c791-4d57-8f4f-4d12c7a5c6a7": {
+   "target": "4.4",
+   "reason": "These are ICT skills of the kind counted under SDG indicator 4.4.1 for youth and adults (4.4.1 lists writing a computer program in a programming language)."
+  },
+  "b590d4e5-7c62-4b4a-abc2-c270b482e0ce": {
+   "target": "4.4",
+   "reason": "These are ICT skills of the kind counted under SDG indicator 4.4.1 for youth and adults (designing software, databases and networks)."
+  },
+  "f839b1da-78b6-4466-86f4-a5798821ea20": {
+   "target": "4.4",
+   "reason": "These are ICT skills of the kind counted under SDG indicator 4.4.1 for youth and adults (4.4.1 lists connecting, installing and configuring devices and software)."
+  },
+  "185c56ee-098f-46a1-af87-56337085da6f": {
+   "target": "4.4",
+   "reason": "These are ICT skills of the kind counted under SDG indicator 4.4.1 for youth and adults (4.4.1 lists setting up security measures to protect devices and accounts)."
+  },
+  "0b9968af-72de-470a-98e1-2d19577443fb": {
+   "target": "4.4",
+   "reason": "These are ICT skills of the kind counted under SDG indicator 4.4.1 for youth and adults (finding and fixing faults in computer systems)."
+  },
+  "6a7fc30d-af16-4cc5-a957-29d174bdb61c": {
+   "target": "4.4",
+   "reason": "These are ICT skills of the kind counted under SDG indicator 4.4.1 for youth and adults (4.4.1 lists using spreadsheet formulas and transferring files)."
+  },
+  "4d6a48ae-352e-4823-bc3a-3f3e9e2cae86": {
+   "target": "4.4",
+   "reason": "These are ICT skills of the kind counted under SDG indicator 4.4.1 for youth and adults (computer literacy and processing digital data)."
+  },
+  "39499028-35bf-4d69-9275-fb98902ed88b": {
+   "target": "4.4",
+   "reason": "These are ICT skills of the kind counted under SDG indicator 4.4.1 for youth and adults (using application software interfaces)."
+  },
+  "c53a55a1-8b2b-4d2c-b12d-626742a3833a": {
+   "target": "4.4",
+   "reason": "These are ICT skills of the kind counted under SDG indicator 4.4.1 for youth and adults (editing images and video with software)."
+  },
+  "b1115b14-fa16-4c1e-be6c-91fd49a1808b": {
+   "target": "4.4",
+   "reason": "These are ICT skills of the kind counted under SDG indicator 4.4.1 for youth and adults (using CAD and technical drawing software)."
+  },
+  "0619": {
+   "target": "4.4",
+   "reason": "These are ICT skills of the kind counted under SDG indicator 4.4.1 for youth and adults (machine learning and AI are advanced technical ICT skills for decent jobs)."
+  },
+  "0688": {
+   "target": "4.4",
+   "reason": "These are ICT skills of the kind counted under SDG indicator 4.4.1 for youth and adults (data science and digital systems)."
+  },
+  "0915": {
+   "target": "3.8",
+   "reason": "Therapists and rehabilitation workers deliver essential health services toward universal health coverage."
+  },
+  "3926ec7d-64cd-4410-8283-493a1afdd57b": {
+   "target": "3.8",
+   "reason": "Physiotherapy is an essential health service under universal health coverage."
+  },
+  "0921": {
+   "target": "10.2",
+   "reason": "Elderly and disability care helps people take part in society irrespective of age or disability."
+  },
+  "8826b057-0e80-4e3d-9efc-1e179d597f40": {
+   "target": "10.2",
+   "reason": "Helping people with physical disabilities supports their inclusion irrespective of disability."
+  },
+  "0113": {
+   "target": "4.1",
+   "reason": "Primary school procedures and support for learning difficulties help children complete quality primary education."
+  },
+  "0712": {
+   "target": "9.4",
+   "reason": "Clean, resource-efficient and pollution-prevention technologies make industry more sustainable."
+  },
+  "0531": {
+   "target": "9.5",
+   "reason": "Chemistry is core scientific research capacity that target 9.5 asks countries to enhance."
+  },
+  "0511": {
+   "target": "9.5",
+   "reason": "Biology is core scientific research capacity that target 9.5 asks countries to enhance."
+  },
+  "0533": {
+   "target": "9.5",
+   "reason": "Physics is core scientific research capacity that target 9.5 asks countries to enhance."
   }
  },
  "signals": {
@@ -6962,7 +7058,9 @@
    "certificate": false,
    "skillIds": [
     "5b9cde20-f1b9-4adc-bfb3-dbf70b14138d",
-    "8369c2d6-c100-4cf6-bd83-9668d8678433"
+    "8369c2d6-c100-4cf6-bd83-9668d8678433",
+    "65e58886-bd1e-4c5b-8ca5-8d9b353c8aa1",
+    "7ee4c2ea-b349-4bd2-81a3-ec31475d4833"
    ],
    "sdgTarget": "4.4",
    "sdgReason": "Develops applied software design, web scraping, and machine learning skills in Mandarin for digital commerce roles.",
