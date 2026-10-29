@@ -103,6 +103,22 @@ describe("PathwayView", () => {
     for (const title of titles) expect(known.has(title)).toBe(true);
   });
 
+  it("labels a course that directly lists a gap skill as covering it, not 'Related to'", async () => {
+    renderPathway();
+    await screen.findAllByRole("heading", { level: 3 });
+    const labels = screen.getAllByText(/^Covers:/).map((node) => node.closest("article")).filter(Boolean);
+    expect(labels.length).toBeGreaterThan(0);
+    expect(screen.queryByText(/Related to:/)).toBeNull();
+    for (const article of labels) {
+      const title = within(article!).getByRole("heading", { level: 3 }).textContent;
+      const skillLabel = within(article!).getByText(/^Covers:/).querySelector("span")?.textContent;
+      const gapSkill = role.gap.find((skill) => skill.label === skillLabel);
+      const course = CATALOGUE.courses.find((c) => c.title === title);
+      expect(gapSkill).toBeDefined();
+      expect(course?.skillIds).toContain(gapSkill!.skillId);
+    }
+  });
+
   it("shows a way back instead of a blank page for a role that isn't in the results", async () => {
     roleParam = "not-a-role";
     renderPathway();
