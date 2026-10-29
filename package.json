@@ -16,7 +16,8 @@
     "import-data": "tsx scripts/import-data.ts",
     "build-catalogue": "tsx scripts/build-catalogue.ts",
     "precompute-demo-cvs": "tsx --conditions=react-server scripts/precompute-demo-cvs.ts",
-    "precompute-role-embeddings": "tsx --conditions=react-server scripts/precompute-role-embeddings.ts"
+    "precompute-role-embeddings": "tsx --conditions=react-server scripts/precompute-role-embeddings.ts",
+    "kpi": "tsx scripts/kpi.ts"
   },
   "dependencies": {
     "@ai-sdk/anthropic": "^4.0.85",
