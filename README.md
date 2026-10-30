@@ -201,7 +201,7 @@ npm run dev                  # http://localhost:3000
 | `GEMINI_API_KEY` | Used by `scripts/import-data.ts --apply` |
 | `AI_INTEGRATIONS_ANTHROPIC_API_KEY`, `AI_INTEGRATIONS_ANTHROPIC_BASE_URL` | Replit AI Integrations (Claude Haiku) |
 | `TREND_SNAPSHOT_FILE` | Optional local file for trend snapshots when Supabase is not configured |
-| `TREND_REFRESH_LOCKED`, `TREND_REFRESH_KEY` | Optional. `TREND_REFRESH_LOCKED=1` freezes the trend snapshot (refresh returns 423); `TREND_REFRESH_KEY` lets a refresh through with the `x-refresh-key` header |
+| `TREND_REFRESH_LOCKED`, `TREND_REFRESH_KEY` | Optional. `TREND_REFRESH_LOCKED=1` freezes the trend snapshot (refresh returns 423). `TREND_REFRESH_KEY` would let a refresh through with the `x-refresh-key` header; it is not set in the finals deployments, so there is no bypass during judging. |
 
 Never commit `.env.local` or any key. On Replit, keys go in **Secrets**.
 
