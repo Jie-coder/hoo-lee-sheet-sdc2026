@@ -1,5 +1,6 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { parseCv, type ParsedCvResult } from "@/lib/parse-cv";
+import { parseCv, capCvExtraction, CvExtractionSchema, CV_EXTRACTION_LIMITS, type ParsedCvResult } from "@/lib/parse-cv";
+import { z } from "zod";
 
 const noopSleep = async () => {};
 
@@ -287,5 +288,25 @@ describe("parsed skill dedupe", () => {
     const dup = { ...SAMPLE_RESULT, skills: [...SAMPLE_RESULT.skills, ...SAMPLE_RESULT.skills] };
     const outcome = await parseCv(bytes, { demoResults: { [hashHex]: dup }, sleep: noopSleep });
     expect(outcome).toEqual({ ok: true, result: SAMPLE_RESULT });
+  });
+});
+
+describe("Gemini extraction schema", () => {
+  it("sends no maxItems to the model (Gemini rejects it with INVALID_ARGUMENT)", () => {
+    expect(JSON.stringify(z.toJSONSchema(CvExtractionSchema))).not.toContain("maxItems");
+  });
+
+  it("caps oversized model output after the call instead", () => {
+    const many = <T,>(n: number, f: (i: number) => T) => Array.from({ length: n }, (_, i) => f(i));
+    const capped = capCvExtraction({
+      skills: many(100, (i) => `s${i}`),
+      roles: many(30, (i) => ({ title: `r${i}`, years: 1, tasks: many(15, (j) => ({ text: `t${j}`, evidence: `e${j}` })) })),
+      education: many(20, (i) => ({ qualification: `q${i}`, field: `f${i}` })),
+    });
+    expect(capped.skills).toHaveLength(CV_EXTRACTION_LIMITS.skills);
+    expect(capped.roles).toHaveLength(CV_EXTRACTION_LIMITS.roles);
+    expect(capped.roles[0].tasks).toHaveLength(CV_EXTRACTION_LIMITS.tasksPerRole);
+    expect(capped.education).toHaveLength(CV_EXTRACTION_LIMITS.education);
+    expect(capped.skills[0]).toBe("s0");
   });
 });
