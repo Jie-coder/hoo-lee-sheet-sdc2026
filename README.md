@@ -50,17 +50,17 @@ Laluan uses AI to parse a CV and run a short interview, then matches skills to E
    exact match against ESCO labels → hand-written synonym list (`src/data/skill-synonyms.json`) → one Gemini embedding call with cosine match against skill embeddings in Supabase. Unmatched skills stay as the raw CV text, flagged `matched: false`, never invented or dropped. Parsed skills are de-duplicated by ESCO id.
 4. **AI exposure**: exposure E = sum over tasks of (share of the week × how much AI can do it). High exposure means AI touches a lot of the work, not that the job disappears. Job titles outside the 40 curated roles are mapped via exact title, an alias table (`src/data/role-aliases.json`), then the chat model choosing one of the 40 ids or "none" (`src/lib/exposure-estimate.ts`); the exposure figure is always the matched catalogue role's real value.
 5. **3-scenario ranking** (`src/lib/scoring.ts`, `src/lib/rank-roles.ts`; plain deterministic maths, no AI):
-   Rank R = 0.5·Fit + 0.3·Demand + 0.2·(1 − θ·E), plus an SDG bonus when a role's SDG link matches your chosen impact interest. R is computed under each of three scenarios (multipliers in `data/scenarios.csv`, cited from WEF reports). A role in the **top 3 of all three scenarios is marked robust**. Skill momentum from arXiv (`ln((recent+1)/(prev+1))`) can raise a skill's importance by up to 30%. All weights live in `SCORING_PARAMS`.
+   Rank R = 0.5·rankScore + 0.3·Demand + 0.2·(1 − θ·E), plus an SDG bonus (+0.10) when a role's SDG link matches your chosen impact interest. rankScore = Fit × (1 + 0.3·tanh(adoption × roleMomentum)), so the arXiv trend moves a role's score a little up or down; with momentum 0, rankScore equals Fit. R is computed under each of three scenarios (multipliers in `data/scenarios.csv`, cited from WEF reports). A role in the **top 3 of all three scenarios is marked robust**. Skill momentum from arXiv (`ln((recent+1)/(prev+1))`) can raise a skill's importance by up to 30%. All weights live in `SCORING_PARAMS`.
+   - **Finals update:** an **AI adoption-speed slider** (0.5×–2×, default 1×, labelled as an estimate) feeds `adoption` above, so the scenario is driven by a parameter applied to the trend signal (#84).
+   - **Finals update:** every role has an explainable **score breakdown** (fit, trend boost, demand, exposure, SDG) and a **what-if** list ("+ this skill" re-runs the full analysis). The card's Fit is calibrated as min(100%, raw fit ÷ 0.30) and the drawer shows the raw fit and the role's skill-match rank (#86).
 6. **Tickets**: how the results are chosen:
    - Each of the 3 futures (scenarios) takes its **top 3 roles** by R.
    - A role is **robust** only if it is in the top 3 of **all three** futures.
    - The tickets are the **distinct roles across those three top-3 lists**, so the number of tickets varies by CV (from 3, when all three futures agree, up to 9).
    - Each ticket shows why the role ranked, the top 5 skill gaps, SDG badges and source chips; switching scenario re-ranks them.
-7. **Pathway**: a learning pathway that closes the skill gaps using courses and government programmes (`src/lib/pathway.ts`, `/pathway`).
+7. **Pathway**: a learning pathway that closes the skill gaps using courses and government programmes (`src/lib/pathway.ts`, `/pathway`). Finals update: the pathway shows an **SDG total for this pathway** (`src/lib/sdg-total.ts`, #87), and a stop that directly teaches a gap skill is labelled "Covers" (#93).
 8. **Course recommendations in EN / BM / ZH**: courses are tagged with languages `en`, `ms`, `zh`; the user can select several.
-9. **SDG preference**: the user picks an impact interest; matching roles get the SDG bonus (`occupation_sdg.csv`).
-
-Other pages: `/exposure`, `/radar`, `/data-sources`, `/privacy`, `/about`, `/status`.
+9. **SDG preference**: the user picks an impact interest; matching roles get the SDG bonus (`occupation_sdg.csv`). Finals update: skills are also tagged through their ESCO skill group (`data/skill_group_sdg.csv`, one target and a one-line reason per group, #87 and #92). Today 40/40 roles and 379/854 skills (44.4%) carry an SDG target; the other 475 skills sit in generic groups (e.g. teamwork, sales, clerical, management) that we left untagged rather than guess.
 
 Other pages: `/exposure`, `/radar`, `/data-sources`, `/privacy`, `/about`, `/status`.
 
@@ -110,7 +110,9 @@ From [`data/sources.csv`](./data/sources.csv) (also shown in the app at `/data-s
 | Lightcast Open Skills | Lightcast | Skills reference | Proprietary, free non-profit tier |
 | Courses ([`data/courses.csv`](./data/courses.csv)) and government programmes ([`data/programmes.csv`](./data/programmes.csv)) | Various providers, collected by the team | Pathway and course recommendations | See source terms |
 
-**Live trend refresh.** The arXiv counts can be refreshed while the app runs: the Refresh button on `/radar` and `/data-sources` calls `POST /api/refresh-signals` (`GET /api/signals` returns the snapshot in use; code loads it via `getActiveSignals()` in `src/lib/signals.ts`). Each snapshot stores its fetch time, in Supabase table `trend_snapshots` when configured, else a local file. If arXiv is down the last good snapshot stays in use, then the bundled `data/keywords.csv`. `/data-sources` also has a clearly labelled, browser-only "change the data" test panel.
+**Live trend refresh.** The arXiv counts can be refreshed while the app runs: the Refresh button on `/radar` and `/data-sources` calls `POST /api/refresh-signals` (`GET /api/signals` returns the snapshot in use; code loads it via `getActiveSignals()` in `src/lib/signals.ts`). Each snapshot stores its fetch time, in Supabase table `trend_snapshots` when configured, else a local file. If arXiv is down the last good snapshot stays in use, then the bundled `data/keywords.csv`. `/data-sources` also has a clearly labelled, browser-only "change the data" test panel. `/radar` shows a 95% count-based uncertainty range on each skill's momentum and labels it "Unclear" when the range crosses 0 (display only, not used in the score; see [`docs/trend-uncertainty-band.md`](docs/trend-uncertainty-band.md), #88).
+
+**Finals freeze.** The trend snapshot used for the finals is the live arXiv run fetched on 29 Oct 2026, 16:05:53 (UTC+8) (25/25 keywords re-counted, window 1 Aug–29 Oct 2026). It is also bundled into `src/data/catalogue.json`, so a host without Supabase shows the same numbers. With `TREND_REFRESH_LOCKED=1`, `POST /api/refresh-signals` returns 423 and the Refresh button reads "Snapshot frozen for finals" (#91).
 
 40 curated occupations are in [`data/occupations.csv`](./data/occupations.csv). See [`data/README.md`](./data/README.md) for the CSV spec and licensing rules. Demo CVs in `demo/cv/` are synthetic and clearly marked.
 
@@ -198,6 +200,8 @@ npm run dev                  # http://localhost:3000
 | `RUNPOD_BASE_URL`, `RUNPOD_API_KEY`, `RUNPOD_ENDPOINT_ID` | Unused stub (RunPod not used); leave empty |
 | `GEMINI_API_KEY` | Used by `scripts/import-data.ts --apply` |
 | `AI_INTEGRATIONS_ANTHROPIC_API_KEY`, `AI_INTEGRATIONS_ANTHROPIC_BASE_URL` | Replit AI Integrations (Claude Haiku) |
+| `TREND_SNAPSHOT_FILE` | Optional local file for trend snapshots when Supabase is not configured |
+| `TREND_REFRESH_LOCKED`, `TREND_REFRESH_KEY` | Optional. `TREND_REFRESH_LOCKED=1` freezes the trend snapshot (refresh returns 423); `TREND_REFRESH_KEY` lets a refresh through with the `x-refresh-key` header |
 
 Never commit `.env.local` or any key. On Replit, keys go in **Secrets**.
 
@@ -210,6 +214,7 @@ Never commit `.env.local` or any key. On Replit, keys go in **Secrets**.
 | `npm run import-data` | Validate `data/*.csv`; `--apply` writes to Supabase with embeddings |
 | `npm run build-catalogue` | Build `src/data/catalogue.json` from the CSVs |
 | `npm run precompute-demo-cvs`, `npm run precompute-role-embeddings` | Precompute demo results and role embeddings |
+| `npm run kpi` | Measure the Phase 1 KPIs from the repo's own code and data (no AI, no network); writes [`kpi/kpi-report.md`](kpi/kpi-report.md) and `kpi/kpi-report.json` (#90) |
 
 ### Run Tests
 
@@ -252,7 +257,7 @@ This repo starts from our declared starter (`Jie-coder/sdc-starter`, tag `starte
 
 1. **Live salary and job data**: replace the manually checked JobStreet salaries with scheduled automatic updates, and add newer DOSM releases.
 2. **More roles and Bahasa Malaysia**: expand beyond the current 40 roles and add a Bahasa Malaysia interface to reach more users.
-3. **Real-user validation**: test with real users to validate pathway gap coverage and SDG mapping accuracy, replacing the three synthetic personas.
+3. **Real-user validation**: test with real users to validate pathway gap coverage and SDG mapping accuracy, replacing the three synthetic personas. Two Phase 1 KPIs are still not measured: minutes to a finished pathway, and the two-person SDG hand-check (`kpi/sdg-handcheck-50.csv`, 0/45 rated). Skill SDG tagging is at 44.4% (379/854), below our 100% target.
 4. **Trend uncertainty in the rank score**: the 95% momentum band on /radar could later be propagated through role momentum into the rank score, so the trend part of a score shows a ± range. Today the band is shown on /radar only.
 
 ## Team
