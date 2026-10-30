@@ -57,9 +57,9 @@ const DEFAULT_DEMO_RESULTS: Record<string, ParsedCvResult> = (() => {
  * ParsedCvEducation's level/field; the school name is not collected since
  * ParsedCvEducation has nowhere to put it.
  */
-const CvExtractionSchema = z.strictObject({
+export const CvExtractionSchema = z.strictObject({
   name: z.string().min(1).optional().describe("The person's name, only if it is written on the CV."),
-  skills: z.array(z.string().min(1)).max(60).describe("Skills and tools, exactly as written."),
+  skills: z.array(z.string().min(1)).describe("Skills and tools, exactly as written."),
   roles: z
     .array(
       z.strictObject({
@@ -75,24 +75,40 @@ const CvExtractionSchema = z.strictObject({
                 .describe("A verbatim quote copied exactly from the CV text that supports this task."),
             }),
           )
-          .max(10)
           .describe(
             "Tasks performed in this role. Every task must carry a verbatim evidence quote; " +
               "tasks without a quote found in the CV are dropped before the response is returned.",
           ),
       }),
-    )
-    .max(20),
+    ),
   education: z
     .array(
       z.strictObject({
         qualification: z.string().min(1).describe('The degree or qualification name, e.g. "Diploma in Business".'),
         field: z.string().min(1).describe('The major or field of study, e.g. "Business Administration".'),
       }),
-    )
-    .max(10),
+    ),
 });
 export type CvExtraction = z.infer<typeof CvExtractionSchema>;
+
+/**
+ * Caps on how many items we keep from the model's answer. Enforced here,
+ * after the call, NOT in CvExtractionSchema: Gemini rejects the request with
+ * 400 "Request contains an invalid argument" when the response schema carries
+ * these nested `maxItems` limits (reproduced against gemini-3.8-flash).
+ */
+export const CV_EXTRACTION_LIMITS = { skills: 60, roles: 20, tasksPerRole: 10, education: 10 } as const;
+
+export function capCvExtraction(extraction: CvExtraction): CvExtraction {
+  return {
+    ...extraction,
+    skills: extraction.skills.slice(0, CV_EXTRACTION_LIMITS.skills),
+    roles: extraction.roles
+      .slice(0, CV_EXTRACTION_LIMITS.roles)
+      .map((role) => ({ ...role, tasks: role.tasks.slice(0, CV_EXTRACTION_LIMITS.tasksPerRole) })),
+    education: extraction.education.slice(0, CV_EXTRACTION_LIMITS.education),
+  };
+}
 
 const EXTRACTION_SYSTEM_PROMPT =
   "You read a CV's plain text and extract only what is written in it: the person's name if it appears, " +
@@ -193,7 +209,7 @@ async function defaultExtractCv(text: string): Promise<CvExtraction> {
     system: EXTRACTION_SYSTEM_PROMPT,
     prompt: text,
   });
-  return object;
+  return capCvExtraction(object);
 }
 
 export type ParseCvOutcome = { ok: true; result: ParsedCvResult } | { ok: false; status: 422 | 500; error: string };
