@@ -16,7 +16,7 @@ import { RoleCard } from "@/components/role-card";
 import { ScenarioTabs, SCENARIO_LABEL } from "@/components/scenario-tabs";
 import { SignalDateToggle } from "@/components/signal-date-toggle";
 import { Skeleton } from "@/components/ui/skeleton";
-import { ADOPTION_SPEED } from "@/lib/adoption";
+import { ADOPTION_SPEED, clampAdoptionSpeed } from "@/lib/adoption";
 import type { SignalDate } from "@/lib/analyze";
 import { explainRole } from "@/lib/explain";
 import { useT, type MessageKey } from "@/lib/i18n";
@@ -32,13 +32,28 @@ const BAND_LEVEL: Record<"low" | "medium" | "high", MessageKey> = {
   high: "results.exposureLevelHigh",
 };
 
+function readSpeedFromUrl(): number {
+  if (typeof window === "undefined") return ADOPTION_SPEED.default;
+  const raw = new URLSearchParams(window.location.search).get("speed");
+  return raw === null ? ADOPTION_SPEED.default : clampAdoptionSpeed(Number(raw));
+}
+
+// Shallow URL sync: replaceState, not router navigation, so there is no server
+// round-trip or loading.tsx state, and the value survives a reload.
+function syncSpeedToUrl(speed: number) {
+  const url = new URL(window.location.href);
+  if (speed === ADOPTION_SPEED.default) url.searchParams.delete("speed");
+  else url.searchParams.set("speed", String(speed));
+  window.history.replaceState(window.history.state, "", url);
+}
+
 export function ResultsView() {
   const router = useRouter();
   const reduce = useReducedMotion();
   const { t, locale } = useT();
   const { hydrated, consent, profile, interviewAnswers, setChosenRoleId } = useFlow();
   const [signalDate, setSignalDate] = useState<SignalDate>("today");
-  const [adoptionSpeed, setAdoptionSpeed] = useState<number>(ADOPTION_SPEED.default);
+  const [adoptionSpeed, setAdoptionSpeed] = useState<number>(readSpeedFromUrl);
   const { state, retry } = useRoles(profile, interviewAnswers.impact_interest, signalDate, adoptionSpeed);
   const [scenario, setScenario] = useState<ScenarioId>("co");
   const [chosenId, setChosenId] = useState<string | null>(null);
@@ -50,9 +65,14 @@ export function ResultsView() {
     else if (!profile) router.replace("/profile");
   }, [hydrated, consent, profile, router]);
 
+  useEffect(() => {
+    syncSpeedToUrl(adoptionSpeed);
+  }, [adoptionSpeed]);
+
   if (!profile) return null;
 
   const data = state.status === "ready" ? state.data : null;
+  const stale = state.status === "ready" && state.stale;
   const ranked = data ? rankRoles(data.roles, scenario) : [];
   const persona = profile.personaId === "upload" ? null : PERSONAS[profile.personaId];
   const currentRole = profile.roles[0]?.title || persona?.jobTitle;
@@ -122,7 +142,7 @@ export function ResultsView() {
         <>
           {/* Exposure band */}
           {data.currentWork ? (
-            <section className="mt-10 grid grid-cols-1 gap-4 md:mt-16 md:grid-cols-[1.25fr_1fr]">
+            <section aria-busy={stale} className="mt-10 grid grid-cols-1 gap-4 md:mt-16 md:grid-cols-[1.25fr_1fr]">
               <div className="overflow-hidden rounded-[40px]">
               <div className="flex flex-col gap-4 bg-card px-8 py-7 md:flex-row md:items-center md:justify-between md:px-10">
                 <p className="font-mono text-[12px] tracking-[0.06em] text-ink uppercase">
@@ -190,7 +210,10 @@ export function ResultsView() {
             </p>
 
             <LayoutGroup>
-              <div className="mt-8 grid grid-cols-1 items-stretch gap-4 lg:grid-cols-3">
+              <div
+                aria-busy={stale}
+                className={`mt-8 grid grid-cols-1 items-stretch gap-4 transition-opacity lg:grid-cols-3 ${stale ? "opacity-60" : ""}`}
+              >
                 {ranked.map((role, index) => {
                   const breakdown = data.breakdown[role.occupationId];
                   return (

@@ -2,10 +2,11 @@
 // persona Aisyah, computed on the server from the same pipeline as /results.
 import { analyzeProfile } from "@/lib/analyze";
 import { CATALOGUE } from "@/lib/catalogue";
+import { summariseFreeCost, type FreeCostSummary } from "@/lib/free-cost";
 import { buildPathwayPlan } from "@/lib/pathway";
 import { resolveProfileSkills } from "@/lib/profile-skills";
 import { PERSONAS } from "@/mocks/personas";
-import type { CostType, RoleResult, Source } from "@/types/contracts";
+import type { RoleResult, Source } from "@/types/contracts";
 
 export type LandingPreview = {
   personaName: string;
@@ -17,7 +18,7 @@ export type LandingPreview = {
   targetLabels: Record<string, string>;
   planWeeks: number;
   planHoursPerWeek: number;
-  mostlyFree: boolean;
+  freeCost: FreeCostSummary;
   signalsAsOf: string;
   sources: Source[];
 };
@@ -46,13 +47,13 @@ export function landingPreview(): LandingPreview {
     skillGroups: CATALOGUE.skillGroups,
     groupLabels: CATALOGUE.groupLabels,
   });
-  const costs: CostType[] = plan.steps.map((step) => {
-    const item =
+  const freeCost = summariseFreeCost(
+    plan.steps.map((step) =>
       step.kind === "course"
         ? CATALOGUE.courses.find((course) => course.id === step.itemId)
-        : CATALOGUE.programmes.find((programme) => programme.id === step.itemId);
-    return item?.costType ?? "paid";
-  });
+        : CATALOGUE.programmes.find((programme) => programme.id === step.itemId),
+    ),
+  );
 
   return {
     personaName: persona.name,
@@ -64,7 +65,7 @@ export function landingPreview(): LandingPreview {
     targetLabels: result.targetLabels,
     planWeeks: plan.steps.reduce((max, step) => Math.max(max, step.weekEnd), 0),
     planHoursPerWeek: PREVIEW_HOURS_PER_WEEK,
-    mostlyFree: costs.filter((cost) => cost === "free").length >= costs.length / 2,
+    freeCost,
     signalsAsOf: result.signalsAsOf,
     sources: role.sources,
   };

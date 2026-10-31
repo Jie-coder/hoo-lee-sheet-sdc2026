@@ -1,8 +1,10 @@
-import { render, screen, within } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
+import { progressStorageKey } from "@/lib/programme-progress";
 import { FlowProvider } from "@/context/flow-context";
 import { analyzeProfile } from "@/lib/analyze";
 import { CATALOGUE } from "@/lib/catalogue";
+import { buildPathwayPlan } from "@/lib/pathway";
 import { resolveProfileSkills } from "@/lib/profile-skills";
 import { PERSONAS } from "@/mocks/personas";
 import { pathwayTicketNumber } from "@/lib/pathway-print";
@@ -46,10 +48,14 @@ function seedFlowState(courseLanguages: string[] = ["en"]) {
   );
 }
 
-function renderPathway(courseLanguages?: string[]) {
+function renderPathway(courseLanguages?: string[], verifyResponse?: unknown) {
   vi.stubGlobal(
     "fetch",
-    vi.fn(async () => new Response(JSON.stringify({ ...result, skillMatches: resolved.matches }), { status: 200 })),
+    vi.fn(async (input: RequestInfo | URL) =>
+      String(input).includes("/api/verify-certificate")
+        ? new Response(JSON.stringify(verifyResponse), { status: 200 })
+        : new Response(JSON.stringify({ ...result, skillMatches: resolved.matches }), { status: 200 }),
+    ),
   );
   seedFlowState(courseLanguages);
   return render(
@@ -63,8 +69,23 @@ function renderPathway(courseLanguages?: string[]) {
   );
 }
 
+// First stop of the plan for the chosen role (the one the progress tests seed).
+function firstStopId(): string {
+  return buildPathwayPlan({
+    role,
+    courses: CATALOGUE.courses,
+    programmes: CATALOGUE.programmes,
+    studyLanguages: ["en"],
+    hoursPerWeek: 6,
+    skillLinks: [],
+    skillGroups: { ...CATALOGUE.skillGroups, ...(result.breakdown[role.occupationId]?.gapGroups ?? {}) },
+    groupLabels: result.groupLabels,
+  }).steps[0].itemId;
+}
+
 afterEach(() => {
   vi.unstubAllGlobals();
+  localStorage.clear();
   sessionStorage.clear();
   roleParam = role.occupationId;
 });
@@ -171,5 +192,61 @@ describe("PathwayView CJK titles", () => {
     expect(heading).toHaveTextContent(zhCourse!.title);
     expect(within(heading.parentElement!).getByTestId("course-language-pill")).toHaveTextContent("ZH");
     expect(document.querySelector(".print-only")?.textContent).toContain(zhCourse!.title);
+  });
+
+  describe("certificate check and download", () => {
+    const CERT_URL = "https://www.coursera.org/account/accomplishments/verify/ABC";
+    const doneAt = new Date().toISOString();
+
+    it("disables the certificate download, with the requirement as a hint, until a programme is verified", async () => {
+      renderPathway();
+      await screen.findAllByRole("heading", { level: 3 });
+      const box = screen.getByTestId("certificate-download");
+      expect(within(box).getByRole("button", { name: "Download certificate" })).toBeDisabled();
+      expect(within(box).getByText(/marked done and has a verified certificate link/)).toBeInTheDocument();
+    });
+
+    it("keeps it disabled when a certificate link is saved but not verified", async () => {
+      localStorage.setItem(progressStorageKey(role.occupationId), JSON.stringify({ [firstStopId()]: { completedAt: doneAt, certificateUrl: CERT_URL } }));
+      renderPathway();
+      await screen.findAllByRole("heading", { level: 3 });
+      expect(screen.getByRole("button", { name: "Download certificate" })).toBeDisabled();
+      expect(screen.getByRole("button", { name: "Verify certificate" })).toBeInTheDocument();
+    });
+
+    it("enables the download link once a done programme has a verified certificate", async () => {
+      localStorage.setItem(
+        progressStorageKey(role.occupationId),
+        JSON.stringify({ [firstStopId()]: { completedAt: doneAt, certificateUrl: CERT_URL, verification: { status: "verified", checkedAt: doneAt, reason: "Matches." } } }),
+      );
+      renderPathway();
+      await screen.findAllByRole("heading", { level: 3 });
+      const link = screen.getByRole("link", { name: "Download certificate" });
+      expect(link).toHaveAttribute("href", `/certificate?role=${encodeURIComponent(role.occupationId)}`);
+      expect(screen.getByTestId("verify-badge")).toHaveTextContent("Verified");
+    });
+
+    it("runs the check, shows the badge and reason, and saves the verdict", async () => {
+      localStorage.setItem(progressStorageKey(role.occupationId), JSON.stringify({ [firstStopId()]: { completedAt: doneAt, certificateUrl: CERT_URL } }));
+      renderPathway(undefined, { ok: false, status: "failed", reason: "Wrong course.", checkedAt: doneAt });
+      await screen.findAllByRole("heading", { level: 3 });
+      fireEvent.click(screen.getByRole("button", { name: "Verify certificate" }));
+      expect(await screen.findByText("Not verified")).toBeInTheDocument();
+      expect(screen.getByText("Wrong course.")).toBeInTheDocument();
+      expect(screen.getByText(/original certificate remains the authoritative record/)).toBeInTheDocument();
+      await waitFor(() => {
+        const saved = JSON.parse(localStorage.getItem(progressStorageKey(role.occupationId)) ?? "{}");
+        expect(saved[firstStopId()].verification.status).toBe("failed");
+      });
+      expect(screen.getByRole("button", { name: "Download certificate" })).toBeDisabled();
+    });
+
+    it("shows 'Check unavailable' when the check could not run", async () => {
+      localStorage.setItem(progressStorageKey(role.occupationId), JSON.stringify({ [firstStopId()]: { completedAt: doneAt, certificateUrl: CERT_URL } }));
+      renderPathway(undefined, { ok: false, status: "pending", reason: "Not configured.", checkedAt: doneAt });
+      await screen.findAllByRole("heading", { level: 3 });
+      fireEvent.click(screen.getByRole("button", { name: "Verify certificate" }));
+      expect(await screen.findByText("Check unavailable")).toBeInTheDocument();
+    });
   });
 });
