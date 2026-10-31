@@ -1,4 +1,15 @@
-import { afterEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import type { LanguageModel } from "ai";
+
+// defaultExtractCv calls generateObject. Tests that exercise that path must
+// not hit a live provider (including the sponsor endpoint).
+vi.mock("ai", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("ai")>();
+  return { ...actual, generateObject: vi.fn() };
+});
+
+import { generateObject } from "ai";
+import { resetProviderLogForTests } from "@/lib/ai";
 import { parseCv, capCvExtraction, CvExtractionSchema, CV_EXTRACTION_LIMITS, type ParsedCvResult } from "@/lib/parse-cv";
 import { z } from "zod";
 
@@ -288,6 +299,122 @@ describe("parsed skill dedupe", () => {
     const dup = { ...SAMPLE_RESULT, skills: [...SAMPLE_RESULT.skills, ...SAMPLE_RESULT.skills] };
     const outcome = await parseCv(bytes, { demoResults: { [hashHex]: dup }, sleep: noopSleep });
     expect(outcome).toEqual({ ok: true, result: SAMPLE_RESULT });
+  });
+});
+
+const CV_PARSE_ENV_KEYS = [
+  "KRACKEDDEVS_API_KEY",
+  "KRACKEDDEVS_BASE_URL",
+  "KRACKEDDEVS_MODEL",
+  "AI_INTEGRATIONS_ANTHROPIC_API_KEY",
+  "AI_INTEGRATIONS_ANTHROPIC_BASE_URL",
+  "GOOGLE_GENERATIVE_AI_API_KEY",
+  "AI_PROVIDER",
+  "AI_MODEL",
+] as const;
+
+const ORIGINAL_CV_PARSE_ENV = Object.fromEntries(CV_PARSE_ENV_KEYS.map((key) => [key, process.env[key]]));
+
+function restoreCvParseEnv(): void {
+  for (const key of CV_PARSE_ENV_KEYS) {
+    const original = ORIGINAL_CV_PARSE_ENV[key];
+    if (original === undefined) delete process.env[key];
+    else process.env[key] = original;
+  }
+}
+
+function modelRoute(model: LanguageModel): { provider: string; modelId: string } {
+  return model as unknown as { provider: string; modelId: string };
+}
+
+describe("defaultExtractCv provider", () => {
+  beforeEach(() => {
+    process.env.AI_MOCK = "false";
+    resetProviderLogForTests();
+    vi.mocked(generateObject).mockReset();
+    vi.mocked(generateObject).mockResolvedValue({
+      object: { skills: [], roles: [], education: [] },
+    } as Awaited<ReturnType<typeof generateObject>>);
+  });
+
+  afterEach(() => {
+    restoreCvParseEnv();
+    vi.restoreAllMocks();
+  });
+
+  async function parseWithDefaultExtract(text = "Name: Pat Lee"): Promise<Awaited<ReturnType<typeof parseCv>>> {
+    const fetchSpy = vi.spyOn(globalThis, "fetch").mockRejectedValue(new Error("tests must not call the network"));
+    const bytes = new TextEncoder().encode("a CV that is not a demo sha256 hit");
+    const outcome = await parseCv(bytes, {
+      demoResults: {},
+      sleep: noopSleep,
+      extractPdfText: async () => text,
+      embedTexts: async () => {
+        throw new Error("no embeddings in tests");
+      },
+    });
+    expect(fetchSpy).not.toHaveBeenCalled();
+    return outcome;
+  }
+
+  it("uses the openai-compatible KrackedDevs model when KRACKEDDEVS_API_KEY is set", async () => {
+    process.env.KRACKEDDEVS_API_KEY = "test-key";
+    delete process.env.KRACKEDDEVS_BASE_URL;
+    delete process.env.KRACKEDDEVS_MODEL;
+    process.env.AI_INTEGRATIONS_ANTHROPIC_API_KEY = "test-key";
+    process.env.AI_INTEGRATIONS_ANTHROPIC_BASE_URL = "https://replit-ai-integrations.example.com";
+    const info = vi.spyOn(console, "info").mockImplementation(() => {});
+
+    const outcome = await parseWithDefaultExtract();
+
+    expect(outcome.ok).toBe(true);
+    expect(generateObject).toHaveBeenCalledTimes(1);
+    const model = vi.mocked(generateObject).mock.calls[0][0].model;
+    expect(modelRoute(model).provider).toBe("krackeddevs.chat");
+    expect(modelRoute(model).modelId).toBe("deepseek-v4.1-flash");
+    const lines = info.mock.calls.map((call) => String(call[0]));
+    expect(lines).toContain("[ai] provider=krackeddevs model=deepseek-v4.1-flash");
+    expect(lines.join("\n")).not.toContain("test-key");
+    expect(lines.join("\n")).not.toContain("http");
+  });
+
+  it("uses KRACKEDDEVS_MODEL when that override is set", async () => {
+    process.env.KRACKEDDEVS_API_KEY = "test-key";
+    process.env.KRACKEDDEVS_MODEL = "sponsor-flash";
+
+    await parseWithDefaultExtract();
+
+    const model = vi.mocked(generateObject).mock.calls[0][0].model;
+    expect(modelRoute(model).provider).toBe("krackeddevs.chat");
+    expect(modelRoute(model).modelId).toBe("sponsor-flash");
+  });
+
+  it("matches today's getModel() path when KRACKEDDEVS_API_KEY is unset", async () => {
+    delete process.env.KRACKEDDEVS_API_KEY;
+    process.env.AI_INTEGRATIONS_ANTHROPIC_API_KEY = "test-key";
+    process.env.AI_INTEGRATIONS_ANTHROPIC_BASE_URL = "https://replit-ai-integrations.example.com";
+
+    const outcome = await parseWithDefaultExtract();
+
+    expect(outcome.ok).toBe(true);
+    const model = vi.mocked(generateObject).mock.calls[0][0].model;
+    expect(modelRoute(model).provider).toBe("anthropic.messages");
+    expect(modelRoute(model).modelId).toBe("claude-haiku-4-5");
+  });
+
+  it("matches today's google fallback when the sponsor key and Anthropic integrations are unset", async () => {
+    delete process.env.KRACKEDDEVS_API_KEY;
+    delete process.env.AI_INTEGRATIONS_ANTHROPIC_API_KEY;
+    delete process.env.AI_INTEGRATIONS_ANTHROPIC_BASE_URL;
+    delete process.env.AI_PROVIDER;
+    delete process.env.AI_MODEL;
+    process.env.GOOGLE_GENERATIVE_AI_API_KEY = "google-key";
+
+    const outcome = await parseWithDefaultExtract();
+
+    expect(outcome.ok).toBe(true);
+    const model = vi.mocked(generateObject).mock.calls[0][0].model;
+    expect(modelRoute(model).provider).toBe("google.generative-ai");
   });
 });
 

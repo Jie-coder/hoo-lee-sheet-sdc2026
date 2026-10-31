@@ -15,7 +15,9 @@ Each task lists who does it, the tools, the steps, and how we know it's done. Co
 | Claude Code | writing code | shared computer terminal |
 | Node.js 24 + npm | run, test, build | `npm run dev`, `npm test`, `npm run build` |
 | Next.js + Tailwind + shadcn/ui | web app and UI | `src/` |
-| Vercel AI SDK + Gemini | CV parsing, interview, pathway ordering, embeddings | `src/lib/ai.ts` |
+| Vercel AI SDK + Gemini | interview, title mapping, embeddings; CV parse falls back here only when `KRACKEDDEVS_API_KEY` is unset | `src/lib/ai.ts` |
+
+CV parse uses KrackedDevs sponsor OpenAI-compatible credits (LiteLLM); scoring / ranking / pathway stay team formulas.
 | Zod | checking AI output and CSV rows | `src/types/contracts.ts` |
 | Supabase (Postgres + pgvector) | database and similarity search | project `lrwepzwxoeqbcxfbelee` |
 | Google Sheets | Tiffany's and Henry's data collection | team Drive |

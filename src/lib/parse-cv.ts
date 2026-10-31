@@ -1,6 +1,7 @@
 // Turns an uploaded CV (PDF bytes) into the editable profile fields on
 // /profile: sha256 short-circuit for the 3 demo CVs, otherwise unpdf text
-// extraction + one Gemini structured-extraction call + ESCO skill mapping.
+// extraction + one structured-extraction call (KrackedDevs LiteLLM when
+// KRACKEDDEVS_API_KEY is set, otherwise getModel()) + ESCO skill mapping.
 // Never logs the CV text or any API key.
 import "server-only";
 import { createHash } from "node:crypto";
@@ -8,7 +9,7 @@ import { generateObject } from "ai";
 import { getDocumentProxy, extractText } from "unpdf";
 import { z } from "zod";
 import { getEnv } from "@/lib/env";
-import { getModel } from "@/lib/ai";
+import { getCvParseModel } from "@/lib/ai";
 import { mapSkillsToEsco, type SkillMatchDeps } from "@/lib/skill-match";
 import type { ParsedCvEducation, ParsedCvRole } from "@/types/contracts";
 import demoResultsJson from "@/data/demo-cv-results.json";
@@ -199,7 +200,7 @@ async function defaultExtractPdfText(bytes: Uint8Array): Promise<string> {
 }
 
 async function defaultExtractCv(text: string): Promise<CvExtraction> {
-  const modelResult = getModel();
+  const modelResult = getCvParseModel();
   if (!modelResult.ok) {
     throw new Error(modelResult.error);
   }
@@ -219,7 +220,7 @@ export type ParseCvDeps = SkillMatchDeps & {
   demoResults?: Record<string, ParsedCvResult>;
   /** Default: unpdf. */
   extractPdfText?: (bytes: Uint8Array) => Promise<string>;
-  /** Default: Gemini generateObject. */
+  /** Default: getCvParseModel() + generateObject (KrackedDevs when its key is set). */
   extractCv?: (text: string) => Promise<CvExtraction>;
   /** Default: a real setTimeout-based delay. Tests pass a no-op so they run instantly. */
   sleep?: (ms: number) => Promise<void>;
