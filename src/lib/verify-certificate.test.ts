@@ -1,9 +1,12 @@
 import { describe, expect, it } from "vitest";
 import {
+  DEMO_CERTIFICATE_REASON,
+  DEMO_CERTIFICATE_URL,
   MAX_PAGE_TEXT_CHARS,
   buildVerificationPrompt,
   htmlToText,
   isBlockedHost,
+  isDemoCertificateUrl,
   mockVerdict,
   parsePublicHttpUrl,
   parseVerificationResponse,
@@ -140,5 +143,72 @@ describe("mockVerdict", () => {
     expect(verdict("https://www.coursera.org/learn/some-course").status).toBe("failed");
     expect(verdict("https://notcoursera.org/verify/abc").status).toBe("failed");
     expect(verdict("http://localhost/verify").status).toBe("failed");
+  });
+});
+
+describe("demo certificate URL", () => {
+  const verified = (certificateUrl: string, expectedTitle: string) =>
+    mockVerdict({ certificateUrl, expectedTitle }, AT);
+
+  it("verifies the demo URL for a mismatched programme title and a Coursera course title", () => {
+    for (const expectedTitle of ["AI untuk Rakyat Programme", "Google Data Analytics Professional Certificate"]) {
+      expect(verified(DEMO_CERTIFICATE_URL, expectedTitle)).toEqual({
+        ok: true,
+        status: "verified",
+        reason: DEMO_CERTIFICATE_REASON,
+        matchedTitle: expectedTitle,
+        checkedAt: AT,
+      });
+      expect(DEMO_CERTIFICATE_REASON).toBe("Demo certificate link (product demonstration only).");
+    }
+  });
+
+  it("treats host and path as the same demo link after normal URL parsing", () => {
+    for (const url of [
+      `  ${DEMO_CERTIFICATE_URL}  `,
+      "https://DEMO.laluan.app/example-certificate",
+      "https://demo.laluan.app/example-certificate?ref=demo",
+      "https://demo.laluan.app/example-certificate#preview",
+    ]) {
+      expect(isDemoCertificateUrl(url), url).toBe(true);
+      expect(verified(url, "AI untuk Rakyat Programme").status, url).toBe("verified");
+    }
+  });
+
+  it("does not treat lookalike links as the demo URL", () => {
+    for (const url of [
+      "http://demo.laluan.app/example-certificate",
+      "https://demo.laluan.app/example-certificate/",
+      "https://demo.laluan.app/example-certificate/extra",
+      "https://www.demo.laluan.app/example-certificate",
+      "https://demo.laluan.app.evil.example/example-certificate",
+      "https://example.com/example-certificate",
+    ]) {
+      expect(isDemoCertificateUrl(url), url).toBe(false);
+      const result = verified(url, "AI untuk Rakyat Programme");
+      expect(result.status, url).toBe("failed");
+      expect(result.reason).not.toBe(DEMO_CERTIFICATE_REASON);
+    }
+  });
+
+  it("still fails a non-demo URL on title mismatch", () => {
+    const mismatch = parseVerificationResponse(
+      '{"looksLikeCertificate":true,"matchesExpectedTitle":false,"matchedTitle":"Other course","reason":"Different course."}',
+      AT,
+    );
+    expect(mismatch).toEqual({ ok: false, status: "failed", reason: "Different course.", checkedAt: AT });
+
+    const unknownHost = mockVerdict(
+      { certificateUrl: "https://example.com/certificate/abc", expectedTitle: "AI untuk Rakyat Programme" },
+      AT,
+    );
+    expect(unknownHost).toMatchObject({ ok: false, status: "failed" });
+    expect(unknownHost.reason).not.toBe(DEMO_CERTIFICATE_REASON);
+
+    const courseraWrongShape = mockVerdict(
+      { certificateUrl: "https://www.coursera.org/learn/google-data-analytics", expectedTitle: "Google Data Analytics Professional Certificate" },
+      AT,
+    );
+    expect(courseraWrongShape.status).toBe("failed");
   });
 });
