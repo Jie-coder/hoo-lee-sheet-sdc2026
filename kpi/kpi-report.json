@@ -2,14 +2,14 @@
   "snapshot": {
     "asOf": "2026-10-29",
     "source": "bundled (src/data/catalogue.json)",
-    "gitSha": "7cfbae6cbcfde932cf24efd5ca0f5f28380855ca"
+    "gitSha": "077b40c9e7666c54fa295c2b45c4e128e2505f54"
   },
   "warning": "KPI1 depends on arXiv trend momentum and must be re-run after the persona re-run on refreshed trend data.",
   "rows": [
     {
       "kpi": "KPI1 Role #1 pathway gap coverage",
       "value": "mean 100.0% (min 100.0%)",
-      "target": "each ≥80%, mean ≥90%",
+      "target": "each \u226580%, mean \u226590%",
       "status": "PASS"
     },
     {
@@ -20,7 +20,7 @@
     },
     {
       "kpi": "KPI3 SDG coverage",
-      "value": "occupations 100.0% (40/40); skills 44.4% (379/854)",
+      "value": "occupations 100.0% (40/40); skills 46.6% (398/854)",
       "target": "100% occupations, 100% skills",
       "status": "FAIL"
     },
@@ -33,7 +33,7 @@
     {
       "kpi": "KPI5 SDG hand-check (50 pairs)",
       "value": "hand-check 0/45 rated (rows 45/45)",
-      "target": "overall ≥80%, direct ≥90%, κ≥0.6",
+      "target": "overall \u226580%, direct \u226590%, \u03ba\u22650.6",
       "status": "PLACEHOLDER"
     }
   ],
@@ -41,7 +41,7 @@
     "kpi1": {
       "status": "PASS",
       "value": "mean 100.0% (min 100.0%)",
-      "target": "each ≥80%, mean ≥90%",
+      "target": "each \u226580%, mean \u226590%",
       "mean": 100,
       "min": 100,
       "rank1": [
@@ -207,7 +207,7 @@
     },
     "kpi3": {
       "status": "FAIL",
-      "value": "occupations 100.0% (40/40); skills 44.4% (379/854)",
+      "value": "occupations 100.0% (40/40); skills 46.6% (398/854)",
       "target": "100% occupations, 100% skills",
       "occupations": {
         "tagged": 40,
@@ -216,9 +216,9 @@
         "untagged": []
       },
       "skills": {
-        "tagged": 379,
+        "tagged": 398,
         "total": 854,
-        "pct": 44.37939110070258,
+        "pct": 46.604215456674474,
         "untagged": [
           {
             "id": "000709ed-2be5-4193-b056-45a97698d828",
@@ -251,11 +251,6 @@
             "reason": "group has no SDG row"
           },
           {
-            "id": "030de41b-bb8b-4e4b-859c-9afd4c17605b",
-            "label": "check information on prescriptions",
-            "reason": "group has no SDG row"
-          },
-          {
             "id": "03b9b491-fc9b-4868-914a-bf7cd47b5041",
             "label": "create solutions to problems",
             "reason": "group has no SDG row"
@@ -281,18 +276,8 @@
             "reason": "group has no SDG row"
           },
           {
-            "id": "06670261-ea6b-4b52-a915-c7d4ff837f74",
-            "label": "identify statistical patterns",
-            "reason": "group has no SDG row"
-          },
-          {
             "id": "072a702d-70c3-4959-91c7-85e69d143894",
             "label": "manage a healthcare unit budget",
-            "reason": "group has no SDG row"
-          },
-          {
-            "id": "0760bfac-9a03-427a-ad84-ccd33a2f2ae8",
-            "label": "mathematical modelling",
             "reason": "group has no SDG row"
           },
           {
@@ -408,11 +393,6 @@
           {
             "id": "0e0c9c11-b39e-43cf-ba95-2fe646f5de64",
             "label": "identify customer requirements",
-            "reason": "group has no SDG row"
-          },
-          {
-            "id": "0f298334-ae4a-4ab7-96c2-0d90d2883768",
-            "label": "assist individuals with disabilities in community activities",
             "reason": "group has no SDG row"
           },
           {
@@ -546,11 +526,6 @@
             "reason": "group has no SDG row"
           },
           {
-            "id": "23845010-4c1e-41d3-94a3-940bcab65bce",
-            "label": "monitor nature conservation",
-            "reason": "group has no SDG row"
-          },
-          {
             "id": "2475cd27-8d6c-4318-a364-21395b23acba",
             "label": "empathise with the healthcare user",
             "reason": "group has no SDG row"
@@ -631,11 +606,6 @@
             "reason": "group has no SDG row"
           },
           {
-            "id": "2c8199c8-4e40-49b3-b878-caee6e1c1bc0",
-            "label": "investigate pollution",
-            "reason": "group has no SDG row"
-          },
-          {
             "id": "2d407c34-5699-42dc-ab58-373652d69aef",
             "label": "support social service users in skills management",
             "reason": "group has no SDG row"
@@ -688,11 +658,6 @@
           {
             "id": "339ac029-066a-4985-9f9d-b3d7c8fea0bb",
             "label": "manage staff",
-            "reason": "group has no SDG row"
-          },
-          {
-            "id": "342af3a1-4fdc-4ddc-898a-bb82a7f62efe",
-            "label": "record healthcare users' progress related to treatment",
             "reason": "group has no SDG row"
           },
           {
@@ -826,11 +791,6 @@
             "reason": "group has no SDG row"
           },
           {
-            "id": "4339176e-3acd-4f7f-a5d9-445bee3d23f2",
-            "label": "mathematics",
-            "reason": "group has no SDG row"
-          },
-          {
             "id": "43b13058-68d0-40c6-8031-caf5a7b7d20c",
             "label": "keep task records",
             "reason": "group has no SDG row"
@@ -853,11 +813,6 @@
           {
             "id": "44da96fe-26a3-4a32-9a0f-c49614bb7298",
             "label": "manage student relationships",
-            "reason": "group has no SDG row"
-          },
-          {
-            "id": "453b6898-de72-4ff9-b217-4a3cd377e155",
-            "label": "monitor service users' health",
             "reason": "group has no SDG row"
           },
           {
@@ -933,11 +888,6 @@
           {
             "id": "4d39b27a-b34f-4c89-8d46-df844d42f728",
             "label": "increase the impact of science on policy and society",
-            "reason": "group has no SDG row"
-          },
-          {
-            "id": "4d614c92-0c48-4a11-a5ed-416b34fd50d2",
-            "label": "manage healthcare users' data",
             "reason": "group has no SDG row"
           },
           {
@@ -1391,11 +1341,6 @@
             "reason": "group has no SDG row"
           },
           {
-            "id": "77f109c4-3107-4d2a-a512-5160ac103933",
-            "label": "analyse environmental data",
-            "reason": "group has no SDG row"
-          },
-          {
             "id": "7832b684-580c-4eaf-a8b3-322164b041ab",
             "label": "provide information on solar panels",
             "reason": "group has no SDG row"
@@ -1421,11 +1366,6 @@
             "reason": "group has no SDG row"
           },
           {
-            "id": "7a63f944-6948-4ae4-9c1f-d08e492535c9",
-            "label": "apply person-centred care",
-            "reason": "group has no SDG row"
-          },
-          {
             "id": "7c3865d1-e5a9-4043-a7a4-2e9e30468c0b",
             "label": "perform office routine activities",
             "reason": "group has no SDG row"
@@ -1438,11 +1378,6 @@
           {
             "id": "7d08e3cd-3a68-4568-8273-5b53ac0cbc71",
             "label": "collect healthcare user's general data",
-            "reason": "group has no SDG row"
-          },
-          {
-            "id": "7e57eb3c-092b-4307-ad1c-c65f55adbc4e",
-            "label": "encourage social service users to preserve their independence in their daily activities",
             "reason": "group has no SDG row"
           },
           {
@@ -1648,11 +1583,6 @@
           {
             "id": "953c0b65-537a-42fe-a90b-26cd36c64361",
             "label": "manage logistics",
-            "reason": "group has no SDG row"
-          },
-          {
-            "id": "9622b720-ee2b-44fb-8cd0-37afc9c183a4",
-            "label": "evaluate scientific data concerning medicines",
             "reason": "group has no SDG row"
           },
           {
@@ -1911,16 +1841,6 @@
             "reason": "group has no SDG row"
           },
           {
-            "id": "b30c2dd2-996c-4984-9c68-ce05bf26f1e1",
-            "label": "train staff on recycling programs",
-            "reason": "group has no SDG row"
-          },
-          {
-            "id": "b32e593b-cc7f-4f38-bf50-e69431ec7ada",
-            "label": "demonstrate when teaching",
-            "reason": "group has no SDG row"
-          },
-          {
             "id": "b4832996-b36c-40b2-b54e-780325b2546e",
             "label": "adapt training to labour market",
             "reason": "group has no SDG row"
@@ -2043,11 +1963,6 @@
           {
             "id": "c2617b44-886a-485e-8393-bc0fc6339539",
             "label": "management consulting",
-            "reason": "group has no SDG row"
-          },
-          {
-            "id": "c2ce5a8e-7885-48b7-81fe-3e8a057c47a9",
-            "label": "maintain pharmacy records",
             "reason": "group has no SDG row"
           },
           {
@@ -2198,11 +2113,6 @@
           {
             "id": "d4cc5022-7801-4885-bcff-166552788d35",
             "label": "provide improvement strategies",
-            "reason": "group has no SDG row"
-          },
-          {
-            "id": "d59d023b-8f28-4e67-9a41-aa36320e6c69",
-            "label": "interpret medical results",
             "reason": "group has no SDG row"
           },
           {
@@ -2373,11 +2283,6 @@
           {
             "id": "ed392b45-1087-44a7-89a9-d514224639ff",
             "label": "conduct mobile marketing",
-            "reason": "group has no SDG row"
-          },
-          {
-            "id": "edf0690f-629d-4674-a9df-45fd89413e85",
-            "label": "assess groundwater environmental impact",
             "reason": "group has no SDG row"
           },
           {
@@ -2597,7 +2502,7 @@
           }
         ],
         "noGroup": 0,
-        "groupWithoutSdg": 475
+        "groupWithoutSdg": 456
       }
     },
     "kpi4": {
@@ -2637,7 +2542,7 @@
     "kpi5": {
       "status": "PLACEHOLDER",
       "value": "hand-check 0/45 rated (rows 45/45)",
-      "target": "overall ≥80%, direct ≥90%, κ≥0.6",
+      "target": "overall \u226580%, direct \u226590%, \u03ba\u22650.6",
       "sampleSize": 45,
       "csvPath": "kpi/sdg-handcheck-50.csv",
       "written": false,
