@@ -2,7 +2,7 @@
 
 - Snapshot asOf: 2026-10-29
 - Snapshot source: bundled (src/data/catalogue.json)
-- Git SHA: `7cfbae6cbcfde932cf24efd5ca0f5f28380855ca`
+- Git SHA: `077b40c9e7666c54fa295c2b45c4e128e2505f54`
 
 > **Warning:** KPI1 depends on arXiv trend momentum and must be re-run after the persona re-run on refreshed trend data.
 
@@ -10,7 +10,7 @@
 | --- | --- | --- | --- |
 | KPI1 Role #1 pathway gap coverage | mean 100.0% (min 100.0%) | each ≥80%, mean ≥90% | PASS |
 | KPI2 Dated sources | 105/105 (100.0%) | 100% | PASS |
-| KPI3 SDG coverage | occupations 100.0% (40/40); skills 44.4% (379/854) | 100% occupations, 100% skills | FAIL |
+| KPI3 SDG coverage | occupations 100.0% (40/40); skills 46.6% (398/854) | 100% occupations, 100% skills | FAIL |
 | KPI4 Minutes to finished pathway | max 48 s (Aisyah sample 32.84 s; Jia Hui sample 26.58 s; Pravin sample 28 s; Henry resume upload 48 s) | <3 minutes | PASS |
 | KPI5 SDG hand-check (50 pairs) | hand-check 0/45 rated (rows 45/45) | overall ≥80%, direct ≥90%, κ≥0.6 | PLACEHOLDER |
 
@@ -41,8 +41,8 @@ None.
 ## KPI3 SDG coverage
 
 - Occupations: 40/40 (100.0%)
-- Skills: 379/854 (44.4%)
-- Untagged skills by cause: 0 have no ESCO group in data/skill_groups.csv; 475 have a group with no row in data/skill_group_sdg.csv
+- Skills: 398/854 (46.6%)
+- Untagged skills by cause: 0 have no ESCO group in data/skill_groups.csv; 456 have a group with no row in data/skill_group_sdg.csv
 
 ### Untagged occupations
 
@@ -56,15 +56,12 @@ None.
 - 020b3c27-bae1-4b85-9d6f-eccee0f5ed99 — manage supplies (group has no SDG row)
 - 0295b2a4-fb86-495f-9547-d479532fc4c2 — trace financial transactions (group has no SDG row)
 - 029e2bb0-6dd8-4600-bb89-ac7480ae8fb0 — contribute to quality physiotherapy services (group has no SDG row)
-- 030de41b-bb8b-4e4b-859c-9afd4c17605b — check information on prescriptions (group has no SDG row)
 - 03b9b491-fc9b-4868-914a-bf7cd47b5041 — create solutions to problems (group has no SDG row)
 - 047fcf0a-2936-49fb-b4eb-97cdd8d09d0b — maintain statutory books (group has no SDG row)
 - 049c8caf-dd12-45fc-9bfa-b64051f32a19 — respond to changing situations in health care (group has no SDG row)
 - 04e84553-2795-4098-b0ad-e7921628b32c — support harmed social service users (group has no SDG row)
 - 052b829c-67c5-466f-9300-0e0b001a68ef — prepare energy performance contracts (group has no SDG row)
-- 06670261-ea6b-4b52-a915-c7d4ff837f74 — identify statistical patterns (group has no SDG row)
 - 072a702d-70c3-4959-91c7-85e69d143894 — manage a healthcare unit budget (group has no SDG row)
-- 0760bfac-9a03-427a-ad84-ccd33a2f2ae8 — mathematical modelling (group has no SDG row)
 - 077fb5d5-a9a2-4e27-b1b0-fe3149ba3da0 — provide medicines information (group has no SDG row)
 - 08371fe9-c658-4f6a-966f-71dbb0ab683d — accounting department processes (group has no SDG row)
 - 0839eea4-c57b-4c14-b19b-923fbedb5d88 — perform business research (group has no SDG row)
@@ -88,7 +85,6 @@ None.
 - 0dc8813a-cebd-4a42-acc8-9a7c4e6e3663 — test procedures in electricity transmission (group has no SDG row)
 - 0dd4d328-f015-463d-9a7e-06b7041f0b26 — consumer goods industry (group has no SDG row)
 - 0e0c9c11-b39e-43cf-ba95-2fe646f5de64 — identify customer requirements (group has no SDG row)
-- 0f298334-ae4a-4ab7-96c2-0d90d2883768 — assist individuals with disabilities in community activities (group has no SDG row)
 - 0f3ac478-54fa-4305-b077-50e3c0baeb8c — manage physiotherapy staff (group has no SDG row)
 - 0f46a403-9606-465f-8247-8ae975ff4f35 — communicate verbal instructions (group has no SDG row)
 - 11c56452-fcec-4b00-9695-cca4728e5048 — marketing analytics (group has no SDG row)
@@ -115,7 +111,6 @@ None.
 - 21e0cad8-4eef-42be-b18b-0f8e37f0dbd0 — product life-cycle (group has no SDG row)
 - 229b10cf-6f3a-490c-9706-01c107df0562 — facilitate teamwork between students (group has no SDG row)
 - 22c45bf7-e52b-475f-847b-c32a87f65a5d — circular economy (group has no SDG row)
-- 23845010-4c1e-41d3-94a3-940bcab65bce — monitor nature conservation (group has no SDG row)
 - 2475cd27-8d6c-4318-a364-21395b23acba — empathise with the healthcare user (group has no SDG row)
 - 26a6e6d2-1c9a-4d7e-8c04-5ba16d1f53da — greet guests (group has no SDG row)
 - 270c4de9-97f9-4a7a-95d1-63670f1ec3bc — ecosystem management (group has no SDG row)
@@ -132,7 +127,6 @@ None.
 - 2b1e2927-3542-48da-9063-02925e7562c1 — disseminate results to the scientific community (group has no SDG row)
 - 2b8386c1-eed6-42ff-bd99-349eca9ea46e — meet standards of practice in social services (group has no SDG row)
 - 2c28fc20-8a60-4311-8899-5ef8729c05b3 — design process (group has no SDG row)
-- 2c8199c8-4e40-49b3-b878-caee6e1c1bc0 — investigate pollution (group has no SDG row)
 - 2d407c34-5699-42dc-ab58-373652d69aef — support social service users in skills management (group has no SDG row)
 - 2d6d4784-0992-48e7-b100-22d7229b3f0a — translate requirements into visual design (group has no SDG row)
 - 2de4572a-4724-4f76-afc2-72a568a264ac — speak different languages (group has no SDG row)
@@ -144,7 +138,6 @@ None.
 - 31c69100-b612-4a61-8db5-fd314318854c — execute analytical mathematical calculations (group has no SDG row)
 - 327d15c8-29ff-4ad4-a4fe-6536d777a45f — documentation types (group has no SDG row)
 - 339ac029-066a-4985-9f9d-b3d7c8fea0bb — manage staff (group has no SDG row)
-- 342af3a1-4fdc-4ddc-898a-bb82a7f62efe — record healthcare users' progress related to treatment (group has no SDG row)
 - 348b74cd-49ce-4844-8bdf-ec188b497213 — visual presentation techniques (group has no SDG row)
 - 34d6ed30-5d35-44b9-9498-fd15badb5f28 — advise on market strategies (group has no SDG row)
 - 36931cb7-ca3f-4be1-8428-f38eefc8e1ed — execute email marketing (group has no SDG row)
@@ -171,13 +164,11 @@ None.
 - 4211283b-617e-4ded-8636-4eed896c33b0 — develop professional identity in social work (group has no SDG row)
 - 42b23922-1c40-4dbe-9e0c-7a568dfdf06b — adjust engineering designs (group has no SDG row)
 - 4334037f-c1d8-4241-b82e-8db7e469327b — electricity market (group has no SDG row)
-- 4339176e-3acd-4f7f-a5d9-445bee3d23f2 — mathematics (group has no SDG row)
 - 43b13058-68d0-40c6-8031-caf5a7b7d20c — keep task records (group has no SDG row)
 - 43d1d56b-ce62-4fe8-8f18-35d92ec73023 — identify undetected organisational needs (group has no SDG row)
 - 441707bb-9ad3-406c-9975-a6bec96f537b — empower individuals, families and groups (group has no SDG row)
 - 44a4f189-7414-402c-9c1d-c85743f34d0c — maintain recycling records (group has no SDG row)
 - 44da96fe-26a3-4a32-9a0f-c49614bb7298 — manage student relationships (group has no SDG row)
-- 453b6898-de72-4ff9-b217-4a3cd377e155 — monitor service users' health (group has no SDG row)
 - 465e7c78-cd26-4503-a5ca-40009e807705 — assess users' interaction with ICT applications (group has no SDG row)
 - 469e19ed-a0bd-445a-ae2d-4ba9430e296b — promote sustainability (group has no SDG row)
 - 46cb7282-7fb0-4d3c-b6b8-bfe81fab077e — draw conclusions from market research results (group has no SDG row)
@@ -193,7 +184,6 @@ None.
 - 4b5f0aeb-875b-4afb-befc-2465b45602d8 — inspect recycling procedures (group has no SDG row)
 - 4bbb309f-9162-49b9-93da-fb2c371e5c5f — collect samples for analysis (group has no SDG row)
 - 4d39b27a-b34f-4c89-8d46-df844d42f728 — increase the impact of science on policy and society (group has no SDG row)
-- 4d614c92-0c48-4a11-a5ed-416b34fd50d2 — manage healthcare users' data (group has no SDG row)
 - 4e097377-7950-4993-9e22-a61b067b5c00 — social sciences (group has no SDG row)
 - 4e3db6d7-88b8-492d-89e5-a93d01c3e369 — social development (group has no SDG row)
 - 4e756773-ae14-4981-838b-9fe27e81c0af — carry out financial transactions (group has no SDG row)
@@ -284,17 +274,14 @@ None.
 - 764db027-9063-4468-acb3-c73ecfc76f35 — develop manufacturing policies (group has no SDG row)
 - 76b9e515-715d-4a53-a702-019adad1059b — install circuit breakers (group has no SDG row)
 - 76f22707-8d30-453f-9eb7-3376e2960311 — handle mail (group has no SDG row)
-- 77f109c4-3107-4d2a-a512-5160ac103933 — analyse environmental data (group has no SDG row)
 - 7832b684-580c-4eaf-a8b3-322164b041ab — provide information on solar panels (group has no SDG row)
 - 79c012c7-4b09-497e-8152-e73e5d1d3384 — adapt leadership styles in healthcare (group has no SDG row)
 - 79e29b8b-47d1-470d-b7b1-32506bfe7d9a — collect ICT data (group has no SDG row)
 - 79f24a62-7718-46e1-9b41-37be0560a5ca — organisational resilience (group has no SDG row)
 - 7a34b3d9-bd3b-4f4e-a0f6-f97439901cb7 — apply scientific methods (group has no SDG row)
-- 7a63f944-6948-4ae4-9c1f-d08e492535c9 — apply person-centred care (group has no SDG row)
 - 7c3865d1-e5a9-4043-a7a4-2e9e30468c0b — perform office routine activities (group has no SDG row)
 - 7cacd304-996d-47d1-88ef-4ddb9ce102bd — microeconomics (group has no SDG row)
 - 7d08e3cd-3a68-4568-8273-5b53ac0cbc71 — collect healthcare user's general data (group has no SDG row)
-- 7e57eb3c-092b-4307-ad1c-c65f55adbc4e — encourage social service users to preserve their independence in their daily activities (group has no SDG row)
 - 8088750d-8388-4170-a76f-48354c469c44 — cyber security (group has no SDG row)
 - 81dc035c-921b-4fea-a453-94538e86097c — disseminate messages to people (group has no SDG row)
 - 81fad068-0a1b-4311-867f-6cb9a60f785a — update licenses (group has no SDG row)
@@ -336,7 +323,6 @@ None.
 - 941438bd-cc03-4326-91bf-677157dca170 — support social service users to live at home (group has no SDG row)
 - 949ced5f-7536-4614-ac60-563ffc91a2f2 — strategic planning (group has no SDG row)
 - 953c0b65-537a-42fe-a90b-26cd36c64361 — manage logistics (group has no SDG row)
-- 9622b720-ee2b-44fb-8cd0-37afc9c183a4 — evaluate scientific data concerning medicines (group has no SDG row)
 - 96835f47-da71-415b-8cbf-d37386dc98d4 — conduct environmental surveys (group has no SDG row)
 - 969ebc5a-e486-41b7-9a3d-15f9aa61680d — evaluate company needs (group has no SDG row)
 - 96d901a6-c931-4e8d-b685-a47e1deaaa1b — identify energy needs (group has no SDG row)
@@ -388,8 +374,6 @@ None.
 - b04f377b-ee80-4b38-aca1-19d266a23b17 — analyse business requirements (group has no SDG row)
 - b0560439-14eb-41d1-aa53-1938efc24123 — content marketing strategy (group has no SDG row)
 - b17f4305-741a-4a1c-8fe8-6f11cb3d5c0a — business communication (group has no SDG row)
-- b30c2dd2-996c-4984-9c68-ce05bf26f1e1 — train staff on recycling programs (group has no SDG row)
-- b32e593b-cc7f-4f38-bf50-e69431ec7ada — demonstrate when teaching (group has no SDG row)
 - b4832996-b36c-40b2-b54e-780325b2546e — adapt training to labour market (group has no SDG row)
 - b4910ea9-578d-4767-bd68-00a315a64e09 — evaluate older adults' ability to take care of themselves (group has no SDG row)
 - b55f61a4-5f9e-4741-ba95-9ac04b64119b — work in a multicultural environment in health care (group has no SDG row)
@@ -415,7 +399,6 @@ None.
 - c0ccbd15-36f3-4515-ae0b-b4062d225ee2 — abide by regulations on banned materials (group has no SDG row)
 - c241f5a5-e23f-47bf-ad24-d83ea0010166 — ensure proper document management (group has no SDG row)
 - c2617b44-886a-485e-8393-bc0fc6339539 — management consulting (group has no SDG row)
-- c2ce5a8e-7885-48b7-81fe-3e8a057c47a9 — maintain pharmacy records (group has no SDG row)
 - c362f415-9cdf-4328-9cf0-651443857a48 — advise on government policy compliance (group has no SDG row)
 - c3c2420c-ce9a-4371-8eed-1db479c3a562 — write scientific publications (group has no SDG row)
 - c3e36d05-8ae8-447f-bb2b-6f9409f85389 — deliver visual presentation of data (group has no SDG row)
@@ -446,7 +429,6 @@ None.
 - d3eccb86-f02d-4950-bfbd-20b9510774a1 — apply organisational techniques (group has no SDG row)
 - d41262ae-eca1-4ede-89a8-46d2d99a7a31 — consider economic criteria in decision making (group has no SDG row)
 - d4cc5022-7801-4885-bcff-166552788d35 — provide improvement strategies (group has no SDG row)
-- d59d023b-8f28-4e67-9a41-aa36320e6c69 — interpret medical results (group has no SDG row)
 - d5e1e30e-44ab-4aba-abab-b8263e801b7a — assist students in their learning (group has no SDG row)
 - d81a22a2-4f57-4b4d-a3eb-11767238be21 — engage in physiotherapy research (group has no SDG row)
 - d93f9e29-9740-4231-8486-13d377b99f05 — develop a collaborative therapeutic relationship (group has no SDG row)
@@ -481,7 +463,6 @@ None.
 - ec0bbf39-0edd-4015-a2c3-82ad563ce3a8 — draft corporate emails (group has no SDG row)
 - ecc18804-a466-40d9-98b4-fba5cd67dd4b — accounting (group has no SDG row)
 - ed392b45-1087-44a7-89a9-d514224639ff — conduct mobile marketing (group has no SDG row)
-- edf0690f-629d-4674-a9df-45fd89413e85 — assess groundwater environmental impact (group has no SDG row)
 - edf5a26c-8a71-4683-99b1-a8f567a603e2 — maintain the trust of service users (group has no SDG row)
 - ee4a78d4-af84-42df-8ca0-039c0999e87c — consider social impact of actions on service users (group has no SDG row)
 - ee7f90cc-922e-4da7-a7ae-83c2688fed10 — align efforts towards business development (group has no SDG row)
