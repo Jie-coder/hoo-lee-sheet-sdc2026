@@ -36,7 +36,7 @@ export function SponsoredCard({
           </span>
           {corner && <span className="font-data text-[10.5px] tracking-[0.06em] text-grey uppercase">{corner}</span>}
         </div>
-        <h4 className="mt-3 text-[18px] leading-tight font-bold">{course.title}</h4>
+        <h4 className="mt-3 font-sans text-[15px] leading-[1.3] font-semibold normal-case tracking-normal sm:text-[17px]">{course.title}</h4>
         <div className="mt-2 flex flex-wrap gap-1.5" data-testid="sponsored-badges">
           {course.badges.map((badge) => (
             <span key={badge.label} className="sponsored-pill">
@@ -82,9 +82,11 @@ export function SponsoredCard({
         {withWhy && open && (
           <p
             role="note"
-            className="absolute right-3 bottom-14 left-3 z-10 rounded-[16px] bg-obsidian px-[18px] py-4 text-[14px] leading-[1.45] text-limestone shadow-[0_18px_40px_rgba(7,6,7,0.3)] sm:left-auto sm:w-[300px]"
+            className="absolute right-3 bottom-14 left-3 z-10 max-w-[300px] rounded-[16px] bg-obsidian px-[18px] py-4 text-[14px] leading-[1.45] text-limestone shadow-[0_18px_40px_rgba(7,6,7,0.3)] sm:left-auto sm:w-[300px] ml-auto"
           >
             {t("sponsored.whyBody")}
+            {/* Tail pointing down at the "Why am I seeing this?" trigger. */}
+            <span aria-hidden className="absolute -bottom-[7px] right-8 size-3.5 rotate-45 bg-obsidian" />
           </p>
         )}
       </div>

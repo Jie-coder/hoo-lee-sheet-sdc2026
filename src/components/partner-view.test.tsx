@@ -11,9 +11,9 @@ describe("partner form", () => {
   it("shows errors on empty submit, then the demo success ticket", () => {
     render(<PartnerView />);
     // Prefilled demo values first; clear them to see validation.
-    expect((screen.getByLabelText("Organisation name") as HTMLInputElement).value).toBe("SkillForge Academy");
-    expect((screen.getByLabelText("Contact email") as HTMLInputElement).value).toBe("partners@skillforge.my");
-    expect((screen.getByLabelText("Course link (URL)") as HTMLInputElement).value).toBe("https://skillforge.my/courses/dashboards");
+    expect((screen.getByLabelText("Organisation name") as HTMLInputElement).value).toBe("Draviqen Academy");
+    expect((screen.getByLabelText("Contact email") as HTMLInputElement).value).toBe("partners@example.my");
+    expect((screen.getByLabelText("Course link (URL)") as HTMLInputElement).value).toBe("https://example.my/courses/dashboards");
     fireEvent.change(screen.getByLabelText("Organisation name"), { target: { value: "" } });
     fireEvent.change(screen.getByLabelText("Course link (URL)"), { target: { value: "" } });
     fireEvent.change(screen.getByLabelText("Contact email"), { target: { value: "" } });
@@ -53,7 +53,7 @@ describe("partner form", () => {
     const setItem = vi.spyOn(Storage.prototype, "setItem");
     render(<PartnerView />);
     fireEvent.click(screen.getByRole("button", { name: /Submit application/ }));
-    expect(screen.getByTestId("partner-success").textContent).toContain("SkillForge Academy");
+    expect(screen.getByTestId("partner-success").textContent).toContain("Draviqen Academy");
     expect(screen.getByTestId("partner-success").textContent).toContain("Partner review");
     expect(fetchSpy).not.toHaveBeenCalled();
     expect(setItem).not.toHaveBeenCalled();

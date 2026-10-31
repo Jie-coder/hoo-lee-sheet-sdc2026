@@ -383,3 +383,9 @@ body:has(.privacy-page) { background-color: var(--color-limestone); background-i
 .sponsored-card--flat .sponsored-card__tear::after {
   display: none;
 }
+
+/* /partner hero preview: let badge pills wrap inside the narrow 390px card. */
+.sponsored-card--flat .sponsored-pill {
+  max-width: 100%;
+  white-space: normal;
+}

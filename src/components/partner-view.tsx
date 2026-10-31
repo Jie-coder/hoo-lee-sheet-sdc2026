@@ -32,9 +32,9 @@ export function validatePartnerForm(values: { org: string; url: string; skills: 
 }
 
 const PREFILL = {
-  org: "SkillForge Academy",
-  url: "https://skillforge.my/courses/dashboards",
-  email: "partners@skillforge.my",
+  org: "Draviqen Academy",
+  url: "https://example.my/courses/dashboards",
+  email: "partners@example.my",
   skills: ["data"] as SkillId[],
 };
 
@@ -85,10 +85,10 @@ export function PartnerView() {
             ◆ {t("partner.principle")}
           </p>
         </div>
-        <div className="relative h-[260px] md:h-auto" data-testid="partner-hero-preview">
+        <div className="relative flex min-h-[340px] items-center justify-center px-4 pt-6 pb-12 md:min-h-0 md:p-0" data-testid="partner-hero-preview">
           {/* Same halftone texture as the home hero, decorative only. */}
           <LandingHeroCanvas className="absolute inset-0 size-full" />
-          <div className="absolute top-1/2 left-1/2 w-[290px] -translate-x-1/2 -translate-y-1/2 -rotate-3 shadow-[0_24px_50px_rgba(7,6,7,0.35)] md:w-[330px] rounded-[24px]">
+          <div className="relative w-[calc(100%-32px)] max-w-[320px] -rotate-2 rounded-[24px] shadow-[0_24px_50px_rgba(7,6,7,0.35)] md:max-w-[330px]">
             <SponsoredCard
               t={t}
               course={HERO_PREVIEW}

@@ -17,7 +17,7 @@ describe("SponsoredRow", () => {
     expect(screen.getByText("1 of max 1 · this stop")).toBeTruthy();
     expect(screen.getByText("Statistics in Practice")).toBeTruthy();
     expect(screen.getByTestId("sponsored-badges").textContent).toContain("Certificate included");
-    expect(screen.getByText("Northbridge Learning")).toBeTruthy();
+    expect(screen.getByText("Tamaskri Learning")).toBeTruthy();
     expect(screen.getByText("RM 149")).toBeTruthy();
     expect(screen.getByText("RM 229").tagName).toBe("S");
     expect(container.textContent).not.toMatch(/PLACEHOLDER|Example|Doesn't change your recommendations\. Free/);

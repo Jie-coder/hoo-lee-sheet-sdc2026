@@ -50,7 +50,7 @@ describe("pickSponsored", () => {
 
   it("mock partners are fictional data with non-navigating links, prices and badges", () => {
     for (const course of SPONSORED_COURSES) {
-      expect(["SkillForge Academy", "Northbridge Learning"]).toContain(course.provider);
+      expect(["Draviqen Academy", "Tamaskri Learning"]).toContain(course.provider);
       expect(course.url).toBe("#");
       expect(course.price).toMatch(/^RM \d+$/);
       expect(course.listPrice).toMatch(/^RM \d+$/);
