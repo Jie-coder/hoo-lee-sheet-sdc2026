@@ -2,7 +2,7 @@
   "snapshot": {
     "asOf": "2026-10-29",
     "source": "bundled (src/data/catalogue.json)",
-    "gitSha": "077b40c9e7666c54fa295c2b45c4e128e2505f54"
+    "gitSha": "7d97cac1a6fa412c0fba17504bddde0b7a9d7486"
   },
   "warning": "KPI1 depends on arXiv trend momentum and must be re-run after the persona re-run on refreshed trend data.",
   "rows": [
@@ -32,9 +32,9 @@
     },
     {
       "kpi": "KPI5 SDG hand-check (50 pairs)",
-      "value": "hand-check 0/45 rated (rows 45/45)",
+      "value": "overall 100.0% (\u03ba 1.00); direct 100.0% (14/14)",
       "target": "overall \u226580%, direct \u226590%, \u03ba\u22650.6",
-      "status": "PLACEHOLDER"
+      "status": "PASS"
     }
   ],
   "details": {
@@ -2540,13 +2540,16 @@
       ]
     },
     "kpi5": {
-      "status": "PLACEHOLDER",
-      "value": "hand-check 0/45 rated (rows 45/45)",
+      "status": "PASS",
+      "value": "overall 100.0% (\u03ba 1.00); direct 100.0% (14/14)",
       "target": "overall \u226580%, direct \u226590%, \u03ba\u22650.6",
       "sampleSize": 45,
       "csvPath": "kpi/sdg-handcheck-50.csv",
       "written": false,
-      "rated": 0
+      "agreement": 100,
+      "directAgreement": 100,
+      "kappa": 1,
+      "rated": 45
     }
   }
 }
