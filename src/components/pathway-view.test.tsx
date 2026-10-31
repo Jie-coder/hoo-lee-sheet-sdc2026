@@ -1,5 +1,6 @@
 import { fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
+import { DEMO_CERTIFICATE_REASON, DEMO_CERTIFICATE_URL } from "@/lib/verify-certificate";
 import { progressStorageKey } from "@/lib/programme-progress";
 import { FlowProvider } from "@/context/flow-context";
 import { analyzeProfile } from "@/lib/analyze";
@@ -212,6 +213,25 @@ describe("PathwayView CJK titles", () => {
       await screen.findAllByRole("heading", { level: 3 });
       expect(screen.getByRole("button", { name: "Download certificate" })).toBeDisabled();
       expect(screen.getByRole("button", { name: "Verify certificate" })).toBeInTheDocument();
+    });
+
+    it("shows the demo-only reason when the demo certificate URL is verified", async () => {
+      localStorage.setItem(
+        progressStorageKey(role.occupationId),
+        JSON.stringify({
+          [firstStopId()]: {
+            completedAt: doneAt,
+            certificateUrl: DEMO_CERTIFICATE_URL,
+            verification: { status: "verified", checkedAt: doneAt, reason: DEMO_CERTIFICATE_REASON, matchedTitle: "AI untuk Rakyat Programme" },
+          },
+        }),
+      );
+      renderPathway();
+      await screen.findAllByRole("heading", { level: 3 });
+      expect(screen.getByTestId("verify-badge")).toHaveTextContent("Verified");
+      expect(screen.getByText(DEMO_CERTIFICATE_REASON)).toBeInTheDocument();
+      expect(screen.getByRole("link", { name: "Download certificate" })).toBeInTheDocument();
+      expect(screen.queryByText(/scan to verify/i)).not.toBeInTheDocument();
     });
 
     it("enables the download link once a done programme has a verified certificate", async () => {
