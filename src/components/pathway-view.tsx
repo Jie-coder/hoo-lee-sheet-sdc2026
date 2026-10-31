@@ -12,6 +12,7 @@ import { EASE_OUT } from "@/components/motion";
 import { useFlow } from "@/context/flow-context";
 import { formatDayMonthYear, missingValue } from "@/lib/display";
 import { useT, type MessageKey } from "@/lib/i18n";
+import { freeCostMessages, summariseFreeCost } from "@/lib/free-cost";
 import { buildPathwayPlan, courseLanguagePill, missingChineseCourse } from "@/lib/pathway";
 import { pathwaySdgTotal } from "@/lib/sdg-total";
 import { skillSdg } from "@/lib/skill-sdg";
@@ -151,8 +152,9 @@ export function PathwayView({
   );
   const totalWeeks = plan.steps.reduce((max, step) => Math.max(max, step.weekEnd), 0);
   const closedSkillIds = new Set(plan.steps.flatMap((step) => step.closesSkillIds));
-  const freeCount = plan.steps.filter((step) => resolveItem(step)?.costType === "free").length;
-  const mostlyFree = freeCount >= plan.steps.length / 2;
+  const costLabel = freeCostMessages(summariseFreeCost(plan.steps.map((step) => resolveItem(step))))
+    .map((message) => t(message.key, message.params))
+    .join(" · ");
   const fromRole = data?.currentWork?.title ?? profile.roles[0]?.title ?? null;
   const firstUrl = plan.steps.map((step) => resolveItem(step)?.url).find((url) => url) ?? null;
   const catalogueDate = plan.steps
@@ -216,7 +218,7 @@ export function PathwayView({
               <HeroStat className="max-sm:order-1" label={t("pathway.pace")} value={t("pathway.hoursPerWeek", { hours: String(hoursPerWeek) })} />
               <HeroStat
                 className="max-sm:order-3 max-sm:col-span-2"
-                label={t("pathway.cost")} value={mostlyFree ? t("pathway.mostlyFree") : t("pathway.mixedCost")} nowrap />
+                label={t("pathway.cost")} value={costLabel} />
               <HeroStat
                 className="max-sm:order-4 max-sm:col-span-2"
                 label={t("pathway.skillsClosed")}
