@@ -61,6 +61,6 @@ No change to 6.1 and 6.3. 6.2 changed in Phase 2: one new model, `deepseek-v4.1-
 ## 7. Declaration
 By submitting this proposal, the team leader confirms that the information provided is accurate to the best of the team’s knowledge and that the project will be original work created during the SDC 2026 hackathon period.
 
-Signature: ![Leader signature](leader_signature.jpg)
+Signature: Tan Bing Jie (team leader)
 
 Date: 31/10/2026
