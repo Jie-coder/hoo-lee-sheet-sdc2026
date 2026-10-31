@@ -23,7 +23,7 @@ const PEACH = "#F4CDAE";
 const ORANGE = "#EC7A2B";
 const INK = "#4A4A4A";
 
-type Fonts = { serif: string; sans: string; script: string };
+type Fonts = { termes: string; poppins: string; script: string };
 
 export function CertificateView({ titles, fonts }: { titles: Readonly<Record<string, string>>; fonts: Fonts }) {
   const { t } = useT();
@@ -168,7 +168,8 @@ function Sheet({ fonts, name, courses, dateText }: { fonts: Fonts; name: string;
         aspectRatio: "11 / 8.5",
         background: "#FDFBF8",
         color: INK,
-        fontFamily: fonts.sans,
+        fontFamily: fonts.poppins,
+        fontWeight: 400,
         boxShadow: "0 1px 12px rgba(20,20,19,0.12)",
         printColorAdjust: "exact",
         WebkitPrintColorAdjust: "exact",
@@ -223,7 +224,7 @@ function Sheet({ fonts, name, courses, dateText }: { fonts: Fonts; name: string;
               strokeDasharray="5 4"
             />
           </svg>
-          <span style={{ color: ORANGE, fontWeight: 600, fontSize: "6.2cqw", lineHeight: 1, letterSpacing: "-0.01em" }}>Laluan</span>
+          <span style={{ color: ORANGE, fontWeight: 700, fontSize: "6.2cqw", lineHeight: 1, letterSpacing: "-0.01em" }}>Laluan</span>
         </div>
         <p style={{ marginTop: "0.5cqw", marginLeft: "6.9cqw", fontSize: "1.45cqw" }}>Issued by Laluan · Team Hoo Lee Sheet</p>
       </div>
@@ -231,7 +232,7 @@ function Sheet({ fonts, name, courses, dateText }: { fonts: Fonts; name: string;
       {/* Title */}
       <h1
         className="absolute inset-x-0 text-center uppercase"
-        style={{ top: "22.5%", fontFamily: fonts.serif, fontWeight: 400, fontSize: "3.7cqw", letterSpacing: "0.04em", lineHeight: 1.1 }}
+        style={{ top: "22.5%", fontFamily: fonts.termes, fontWeight: 400, fontSize: "3.7cqw", letterSpacing: "0.04em", lineHeight: 1.1 }}
       >
         Certificate of Completion
       </h1>
@@ -256,7 +257,8 @@ function Sheet({ fonts, name, courses, dateText }: { fonts: Fonts; name: string;
       <div className="absolute text-center" style={{ right: "9.5%", bottom: "13.5%", width: "23%" }}>
         <p
           style={{
-            fontFamily: `${fonts.script}, "Snell Roundhand", "Brush Script MT", cursive`,
+            // Amsterdam One is not bundled (personal-use licence); used only if installed locally.
+            fontFamily: `"Amsterdam One", ${fonts.script}, "Snell Roundhand", "Brush Script MT", cursive`,
             fontSize: "6cqw",
             lineHeight: 1,
             color: "#141413",

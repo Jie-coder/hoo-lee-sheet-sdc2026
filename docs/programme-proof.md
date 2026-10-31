@@ -35,7 +35,23 @@ No network, no model, deterministic. `verified` when the URL host equals or is a
 - **Learner name**: saved certificate name (`laluan:certificate-name:v1`) if set, else the profile name from the current session (CV parse / persona). If neither exists the page asks for a full name first; no placeholder is ever printed. "Change name" lets the learner correct it.
 - **Date**: issue date = the day the page is opened/printed (not the completion date), formatted `DD Mon YYYY`.
 - Certificate copy is English (formal artefact); buttons, prompts and hints use the EN/MS site dictionary.
-- Logo is an inline orange mark + "Laluan" wordmark to match the design reference (the `public/brand` logos are sage/black). Signature font is Mrs Saint Delafield via `next/font/google` (cursive fallback), like the other fonts in the app.
+- Logo is an inline orange mark + "Laluan" wordmark to match the design reference (the `public/brand` logos are sage/black). Fonts: see the Fonts section below.
+
+### Fonts
+Mapping follows the Canva PDF embedding table.
+
+| Role | Font |
+| --- | --- |
+| "Laluan" wordmark (live text, orange) | Poppins Bold (700) |
+| "Issued by Laluan · Team Hoo Lee Sheet" | Poppins Regular (400) |
+| "CERTIFICATE OF COMPLETION" title (uppercase) | TeX Gyre Termes Regular (`next/font/local`, `src/fonts/tex-gyre-termes/`, GUST Font License) |
+| "This is to certify that", "has completed…", course titles, date, "Team Hoo Lee Sheet · Laluan", footer disclaimer | Poppins Regular (400) |
+| Learner name | Poppins Medium (500) |
+| "H.LSheet" signature | Amsterdam One if installed locally, else Mrs Saint Delafield (temporary fallback) |
+
+Poppins is loaded via `next/font/google` with weights 400, 500, 700 only. Amsterdam One is **not** bundled or downloaded.
+
+- [待确认] Canva uses Amsterdam One (Lettersiro, free for personal use only; web/commercial use needs a licence). The web page uses the Mrs Saint Delafield fallback until the team buys a web licence or approves using a flattened SVG of the signature exported from Canva (which also needs a licence check).
 
 ## Storage and privacy
 - `laluan:progress:v1:<roleId>` (localStorage): `{ [itemId]: { completedAt, certificateUrl?, verification?: { status, reason?, checkedAt, matchedTitle? } } }`. Sanitized on load.

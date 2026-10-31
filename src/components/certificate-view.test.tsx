@@ -10,7 +10,7 @@ vi.mock("next/navigation", () => ({
   useSearchParams: () => new URLSearchParams(`role=${roleParam}`),
 }));
 
-const fonts = { serif: "serif", sans: "sans-serif", script: "cursive" };
+const fonts = { termes: "serif", poppins: "sans-serif", script: "cursive" };
 const titles = { c1: "Course One", c2: "Course Two", c3: "Course Three" };
 const at = new Date().toISOString();
 
