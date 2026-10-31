@@ -21,6 +21,13 @@ export function SiteFooter() {
 
   return (
     <footer className="w-full bg-obsidian text-[#F4F1EA]">
+      <Link
+        href="/partner"
+        data-testid="footer-partner-strip"
+        className="block w-full bg-plasma px-4 py-2 text-center font-data text-[12px] tracking-[0.06em] text-limestone uppercase hover:underline"
+      >
+        {t("footer.partnerStrip")}
+      </Link>
       <div className="mx-auto grid max-w-[1440px] grid-cols-1 gap-8 px-4 py-16 sm:px-6 md:grid-cols-[1.2fr_1fr_1.4fr] md:gap-12 md:px-8">
         <div>
           {/* Ember logo, wordmark in Limestone for the dark background. next/image refuses SVG without extra config. */}

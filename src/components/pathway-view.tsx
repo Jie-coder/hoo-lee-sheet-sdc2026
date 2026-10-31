@@ -29,6 +29,8 @@ import {
 } from "@/lib/programme-progress";
 import { pathwaySdgTotal } from "@/lib/sdg-total";
 import { skillSdg } from "@/lib/skill-sdg";
+import { freeReferenceIndex, pickSponsored, type SponsoredPick } from "@/lib/sponsored";
+import { SponsoredCard } from "@/components/sponsored-card";
 import { useRoles } from "@/lib/use-roles";
 import { cn } from "@/lib/utils";
 import type { Course, CostType, PlanStep, Programme } from "@/types/contracts";
@@ -242,11 +244,25 @@ export function PathwayView({
     year: "numeric",
   });
 
+  // Sponsored placement reads the finished plan only; it never feeds back into
+  // the plan, stop count, weeks, free count, progress or the print ticket.
+  const sponsoredByStop = new Map(
+    pickSponsored(plan.steps, role.gap.map((skill) => skill.skillId)).map((pick) => [pick.stopIndex, pick]),
+  );
+
   const visibleSteps = showAll ? plan.steps : plan.steps.slice(0, VISIBLE_STOPS);
 
   const planItemIds = plan.steps.map((step) => step.itemId);
   const doneCount = countDone(progress, planItemIds);
   const verifiedCount = verifiedItemIds(progress).filter((id) => planItemIds.includes(id)).length;
+
+  function jumpToStop(index: number) {
+    if (index >= VISIBLE_STOPS) setShowAll(true);
+    // Wait a frame so a just-expanded stop exists before scrolling to it.
+    requestAnimationFrame(() =>
+      requestAnimationFrame(() => document.getElementById(`stop-${index + 1}`)?.scrollIntoView({ behavior: "smooth", block: "start" })),
+    );
+  }
 
   function handleDelete() {
     if (roleId) saveProgress(roleId, {});
@@ -376,7 +392,7 @@ export function PathwayView({
                 const languagePill = "languages" in item ? courseLanguagePill(item.languages, studyLanguages) : null;
                 const sdgLink = step.sdgTarget ? role.sdg.find((link) => link.target === step.sdgTarget) : undefined;
                 return (
-                  <li key={step.itemId} className="relative grid grid-cols-[20px_1fr] gap-x-3 pb-4 last:pb-0 sm:grid-cols-[32px_1fr] sm:gap-x-5">
+                  <li key={step.itemId} id={`stop-${index + 1}`} className="relative scroll-mt-6 grid grid-cols-[20px_1fr] gap-x-3 pb-4 last:pb-0 sm:grid-cols-[32px_1fr] sm:gap-x-5">
                     <span
                       aria-hidden
                       className="relative z-10 mt-7 size-5 self-start sm:size-[30px] justify-self-center rounded-full bg-card ring-4 ring-ink"
@@ -465,6 +481,32 @@ export function PathwayView({
                         }}
                       />
                     </article>
+                    {sponsoredByStop.has(index) && (() => {
+                      const pick = sponsoredByStop.get(index)!;
+                      const skillLabel = role.gap.find((skill) => skill.skillId === pick.skillId)?.label ?? pick.course.skillLabel;
+                      // Free/government stop in this pathway teaching the same skill. None → no free line.
+                      const refIndex = freeReferenceIndex(
+                        plan.steps.map((candidate) => {
+                          const candidateItem = resolveItem(candidate);
+                          return {
+                            closesSkillIds: candidate.closesSkillIds,
+                            free: !!candidateItem && candidateItem.costType !== "paid" && candidateItem.costType !== "hrdcorp_claimable",
+                          };
+                        }),
+                        pick.skillId,
+                      );
+                      return (
+                        <SponsoredRow
+                          t={t}
+                          pick={pick}
+                          skillLabel={skillLabel}
+                          refStop={refIndex >= 0 ? refIndex + 1 : null}
+                          sameStop={refIndex === index}
+                          government={refIndex >= 0 && plan.steps[refIndex].kind !== "course"}
+                          onJump={() => jumpToStop(refIndex)}
+                        />
+                      );
+                    })()}
                   </li>
                 );
               })}
@@ -711,6 +753,62 @@ export function PathwayView({
           </p>
         </footer>
       </section>
+    </div>
+  );
+}
+
+export function SponsoredRow({
+  t,
+  pick,
+  skillLabel,
+  refStop,
+  sameStop,
+  government,
+  onJump,
+}: {
+  t: ReturnType<typeof useT>["t"];
+  pick: SponsoredPick;
+  skillLabel: string;
+  /** 1-based stop holding a free/government course for this skill, or null when none exists. */
+  refStop: number | null;
+  sameStop: boolean;
+  government: boolean;
+  onJump: () => void;
+}) {
+  const stopLabel = refStop ? t("sponsored.altStop", { n: String(refStop).padStart(2, "0") }) : "";
+  return (
+    <div className="col-start-2 mt-3.5 print:hidden" data-testid="sponsored-pick">
+      {refStop !== null && (
+        <p
+          data-testid="sponsored-free-line"
+          className="flex w-fit max-w-full flex-wrap items-center gap-x-2.5 gap-y-1 rounded-[18px] bg-card px-4 py-2.5 text-[14px] sm:rounded-full"
+        >
+          <span aria-hidden className="grid size-5 place-items-center rounded-full bg-signal-low text-[12px] text-white">
+            ✓
+          </span>
+          {sameStop ? (
+            <>
+              <span className="font-data text-[11px] tracking-[0.06em] uppercase">{t("sponsored.freeFirst")}</span>
+              <span>{t(government ? "sponsored.sameGov" : "sponsored.sameFree")}</span>
+            </>
+          ) : (
+            <>
+              <span>{t("sponsored.altLine", { skill: skillLabel })}</span>
+              <a
+                href={`#stop-${refStop}`}
+                onClick={(event) => {
+                  event.preventDefault();
+                  onJump();
+                }}
+                className="font-bold text-plasma underline underline-offset-[3px]"
+              >
+                {stopLabel} →
+              </a>
+            </>
+          )}
+        </p>
+      )}
+      <SponsoredCard t={t} course={pick.course} skillLabel={skillLabel} corner={t("sponsored.slot")} className="mt-2.5 max-w-[620px]" />
     </div>
   );
 }
