@@ -22,6 +22,12 @@ Items 1, 3, 4 and 6 and the AI-use rule are unchanged ("AI only parses CVs and j
 - **Item 5, SDG mapping. Changed in Phase 2 (PR #87, #92).** Skills are tagged through their ESCO skill group (`data/skill_group_sdg.csv`, 67 group rows) and the pathway shows an SDG total. Measured: roles 40/40, skills 379/854 (44.4%); the Phase 1 promise "every role and skill" is not met for skills.
 - **Item 6, Pathway. Changed in Phase 2 (PR #92, #93).** One course (c040) gained two syllabus-backed skill links (`data/course_skill_evidence.csv`); pathway stops are labelled "Covers". Why: KPI1 for Jia Hui was 60%.
 
+### 2.3 Business Model: Be Our Partner
+
+"Be Our Partner" is Laluan's planned revenue model: training providers pay for clearly labelled visibility on relevant career pathways, never for ranking. Sponsored course cards are capped at three per pathway and one per stop. Each card is placed after the free or government course for that stop, shows a free alternative, and is kept out of progress tracking, the certificate and the PDF ticket. Scoring and ranking (based on arXiv trend signals) are completely separate from sponsorship. The pricing we will test is pay per click, pay per enrolment and a capped pathway bundle; actual prices will be set in pilots with 3–5 providers. The feature is designed to comply with Malaysia's PDPA 2010 (as amended in 2024) and the Content Code's ad-labelling rules. Any future "skill-gap insights" product would rely only on opt-in, anonymised, aggregated data and would never involve selling individual data. The current build is a front-end prototype with fictional partners and placeholder prices.
+
+Full 2-page business plan: [Laluan – Be Our Partner Business Plan](https://docs.google.com/document/d/11MN9UpsEGrSq6OzrSbLIBjtfxHKiL1pHxkFy55hHIug/edit)
+
 ## 3. Technical Architecture & Implementation Plan
 
 ### 3.1 Conceptual Tech Stack
