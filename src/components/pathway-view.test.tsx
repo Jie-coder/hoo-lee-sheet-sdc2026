@@ -172,6 +172,18 @@ describe("PathwayView print ticket (Download PDF)", () => {
     for (const badge of sheet.querySelectorAll(".pp-badge")) {
       expect(["Free", "Subsidised", "HRD Corp claimable", "Paid"]).toContain(badge.textContent);
     }
+    expect(text).not.toMatch(/MOCK/);
+    expect(sheet.querySelector(".pp-logo img")).toHaveAttribute("src", "/brand/laluan-mark.svg");
+    expect(sheet.querySelector(".pp-wordmark")).toBeTruthy();
+    expect(sheet.querySelectorAll(".pp-qr")).toHaveLength(stops.length);
+    for (const stop of stops) {
+      const href = stop.querySelector("a.pp-link")?.getAttribute("href");
+      expect(href).toMatch(/^https?:\/\//);
+      expect(stop.querySelector("a.pp-qr-link")).toHaveAttribute("href", href);
+      expect(stop.querySelector(".pp-qr")).toHaveAttribute("data-url", href);
+      expect(stop.querySelector(".pp-scan")?.textContent ?? "").not.toMatch(/[\u3400-\u9fff]/);
+      expect(stop.textContent).toContain("Scan to open");
+    }
   });
 });
 

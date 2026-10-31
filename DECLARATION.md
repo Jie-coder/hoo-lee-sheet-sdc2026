@@ -31,6 +31,7 @@ Versions below are the `^` semver ranges declared in `package.json`; the exact r
 | `lucide-react` | `^1.58.0` |
 | `next` | `16.4.2` |
 | `next-themes` | `^0.4.6` |
+| `qrcode` | `^1.5.4` (MIT; print-ticket course QR codes, added in PR #110) |
 | `react` | `19.3.0` |
 | `react-dom` | `19.3.0` |
 | `server-only` | `^0.0.1` |
@@ -46,6 +47,7 @@ Versions below are the `^` semver ranges declared in `package.json`; the exact r
 | `@tailwindcss/turbopack` | `^4` |
 | `@types/node` | `^24.19.2` |
 | `@types/react` | `^19` |
+| `@types/qrcode` | `^1.5.5` |
 | `@types/react-dom` | `^19` |
 | `eslint` | `^9` |
 | `eslint-config-next` | `16.4.2` |
