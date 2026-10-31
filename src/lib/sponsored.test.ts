@@ -10,13 +10,14 @@ import { summariseFreeCost } from "./free-cost";
 import {
   MAX_SPONSORED_PER_PATHWAY,
   MAX_SPONSORED_PER_STOP,
+  freeReferenceIndex,
   SPONSORED_COURSES,
   pickSponsored,
   type SponsoredCourse,
 } from "./sponsored";
 
 const sc = (id: string, skillId: string): SponsoredCourse => ({
-  id, title: id, provider: "Example Academy", skillId, skillLabel: skillId, examplePrice: "PLACEHOLDER", url: "#",
+  id, title: id, provider: "Example Academy", skillId, skillLabel: skillId, price: "RM 1", listPrice: "RM 2", badges: [], url: "#",
 });
 
 describe("pickSponsored", () => {
@@ -47,12 +48,25 @@ describe("pickSponsored", () => {
     expect(picks.map((p) => p.stopIndex)).toEqual([0, 2, 4]);
   });
 
-  it("mock partners use example names and non-navigating links", () => {
+  it("mock partners are fictional data with non-navigating links, prices and badges", () => {
     for (const course of SPONSORED_COURSES) {
-      expect(course.provider).toMatch(/Example|Sample|Demo/);
+      expect(["SkillForge Academy", "Northbridge Learning"]).toContain(course.provider);
       expect(course.url).toBe("#");
-      expect(course.examplePrice).toBe("PLACEHOLDER");
+      expect(course.price).toMatch(/^RM \d+$/);
+      expect(course.listPrice).toMatch(/^RM \d+$/);
+      expect(course.badges.length).toBeGreaterThan(0);
     }
+  });
+
+  it("freeReferenceIndex finds a free stop for the skill and never falls back to a paid one", () => {
+    const steps = [
+      { closesSkillIds: ["a"], free: true },
+      { closesSkillIds: ["b"], free: false },
+      { closesSkillIds: ["a", "c"], free: false },
+    ];
+    expect(freeReferenceIndex(steps, "a")).toBe(0);
+    expect(freeReferenceIndex(steps, "b")).toBe(-1);
+    expect(freeReferenceIndex(steps, "c")).toBe(-1);
   });
 });
 

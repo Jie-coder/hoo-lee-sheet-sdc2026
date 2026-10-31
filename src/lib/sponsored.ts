@@ -13,7 +13,12 @@ export type SponsoredCourse = {
   provider: string;
   skillId: string;
   skillLabel: string;
-  examplePrice: string;
+  /** Demo price shown on the card, e.g. "RM 199". Fictional. */
+  price: string;
+  /** Struck-through list price. Fictional. */
+  listPrice: string;
+  /** Social-proof pills, stored as data (not hard-coded in the UI). */
+  badges: readonly { icon: string; label: string }[];
   url: string;
 };
 
@@ -64,4 +69,15 @@ export function pickSponsored(
     }
   }
   return picks.sort((a, b) => a.stopIndex - b.stopIndex);
+}
+
+export type FreeRefStep = { closesSkillIds: readonly string[]; free: boolean };
+
+/**
+ * Index of the first stop that teaches `skillId` with a free or government
+ * course, or -1 when none does. Never falls back to the sponsored stop, so the
+ * UI cannot claim "this stop's course is free" when it is not.
+ */
+export function freeReferenceIndex(steps: readonly FreeRefStep[], skillId: string): number {
+  return steps.findIndex((step) => step.free && step.closesSkillIds.includes(skillId));
 }

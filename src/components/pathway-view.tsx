@@ -29,7 +29,8 @@ import {
 } from "@/lib/programme-progress";
 import { pathwaySdgTotal } from "@/lib/sdg-total";
 import { skillSdg } from "@/lib/skill-sdg";
-import { pickSponsored, type SponsoredPick } from "@/lib/sponsored";
+import { freeReferenceIndex, pickSponsored, type SponsoredPick } from "@/lib/sponsored";
+import { SponsoredCard } from "@/components/sponsored-card";
 import { useRoles } from "@/lib/use-roles";
 import { cn } from "@/lib/utils";
 import type { Course, CostType, PlanStep, Programme } from "@/types/contracts";
@@ -483,26 +484,25 @@ export function PathwayView({
                     {sponsoredByStop.has(index) && (() => {
                       const pick = sponsoredByStop.get(index)!;
                       const skillLabel = role.gap.find((skill) => skill.skillId === pick.skillId)?.label ?? pick.course.skillLabel;
-                      // Free/government course in this pathway that teaches the same skill (else this stop).
-                      const freeIndex = plan.steps.findIndex((candidate) => {
-                        const candidateItem = resolveItem(candidate);
-                        return (
-                          candidate.closesSkillIds.includes(pick.skillId) &&
-                          !!candidateItem &&
-                          candidateItem.costType !== "paid" &&
-                          candidateItem.costType !== "hrdcorp_claimable"
-                        );
-                      });
-                      const refIndex = freeIndex >= 0 ? freeIndex : index;
-                      const refStep = plan.steps[refIndex];
+                      // Free/government stop in this pathway teaching the same skill. None → no free line.
+                      const refIndex = freeReferenceIndex(
+                        plan.steps.map((candidate) => {
+                          const candidateItem = resolveItem(candidate);
+                          return {
+                            closesSkillIds: candidate.closesSkillIds,
+                            free: !!candidateItem && candidateItem.costType !== "paid" && candidateItem.costType !== "hrdcorp_claimable",
+                          };
+                        }),
+                        pick.skillId,
+                      );
                       return (
                         <SponsoredRow
                           t={t}
                           pick={pick}
                           skillLabel={skillLabel}
-                          refStop={refIndex + 1}
+                          refStop={refIndex >= 0 ? refIndex + 1 : null}
                           sameStop={refIndex === index}
-                          government={refStep.kind !== "course"}
+                          government={refIndex >= 0 && plan.steps[refIndex].kind !== "course"}
                           onJump={() => jumpToStop(refIndex)}
                         />
                       );
@@ -769,54 +769,46 @@ export function SponsoredRow({
   t: ReturnType<typeof useT>["t"];
   pick: SponsoredPick;
   skillLabel: string;
-  /** 1-based stop holding the free/government course for this skill. */
-  refStop: number;
+  /** 1-based stop holding a free/government course for this skill, or null when none exists. */
+  refStop: number | null;
   sameStop: boolean;
   government: boolean;
   onJump: () => void;
 }) {
-  const [open, setOpen] = useState(false);
-  const stopLabel = t("sponsored.altStop", { n: String(refStop).padStart(2, "0") });
+  const stopLabel = refStop ? t("sponsored.altStop", { n: String(refStop).padStart(2, "0") }) : "";
   return (
-    <div className="col-start-2 mt-3 print:hidden" data-testid="sponsored-pick">
-      <p className="text-[12px] leading-snug text-grey">{t("sponsored.subtitle")}</p>
-      <p data-testid="sponsored-free-line" className="mt-2 font-mono text-[12px] tracking-[0.02em] text-ink">
-        {sameStop ? (
-          t(government ? "sponsored.sameGov" : "sponsored.sameFree")
-        ) : (
-          <>
-            {t("sponsored.altLine", { skill: skillLabel })}{" "}
-            <a
-              href={`#stop-${refStop}`}
-              onClick={(event) => {
-                event.preventDefault();
-                onJump();
-              }}
-              className="font-bold underline underline-offset-4 hover:text-grey"
-            >
-              {stopLabel}
-            </a>
-          </>
-        )}
-      </p>
-      <article className="mt-2 max-w-[560px] rounded-[24px] border-[1.5px] border-ink/15 bg-paper p-5" aria-label={t("sponsored.tag")}>
-        <span className="inline-block rounded-[6px] bg-sulfur px-2 py-0.5 font-data text-[12px] tracking-[0.06em] text-ink uppercase">
-          {t("sponsored.tag")}
-        </span>
-        <h4 className="mt-2.5 font-sans text-[17px] leading-tight font-bold">{pick.course.title}</h4>
-        <p className="mt-1.5 text-[13px] leading-snug text-grey">{t("sponsored.because", { skill: skillLabel })}</p>
-        <p className="mt-1.5 text-[13px] text-ink">{pick.course.provider}</p>
-        <p className="mt-0.5 font-data text-[12px] tracking-[0.04em] text-grey">{t("sponsored.price", { price: pick.course.examplePrice })}</p>
-        <button
-          type="button"
-          aria-expanded={open}
-          onClick={() => setOpen((v) => !v)}
-          className="mt-2.5 text-[12px] text-grey underline underline-offset-4 hover:text-ink"
+    <div className="col-start-2 mt-3.5 print:hidden" data-testid="sponsored-pick">
+      {refStop !== null && (
+        <p
+          data-testid="sponsored-free-line"
+          className="flex w-fit max-w-full flex-wrap items-center gap-x-2.5 gap-y-1 rounded-[18px] bg-card px-4 py-2.5 text-[14px] sm:rounded-full"
         >
-          {t("sponsored.why")}
-        </button>
-        {open && <p className="mt-1.5 text-[12px] leading-snug text-ink">{t("sponsored.whyBody")}</p>}
-      </article>
+          <span aria-hidden className="grid size-5 place-items-center rounded-full bg-signal-low text-[12px] text-white">
+            ✓
+          </span>
+          {sameStop ? (
+            <>
+              <span className="font-data text-[11px] tracking-[0.06em] uppercase">{t("sponsored.freeFirst")}</span>
+              <span>{t(government ? "sponsored.sameGov" : "sponsored.sameFree")}</span>
+            </>
+          ) : (
+            <>
+              <span>{t("sponsored.altLine", { skill: skillLabel })}</span>
+              <a
+                href={`#stop-${refStop}`}
+                onClick={(event) => {
+                  event.preventDefault();
+                  onJump();
+                }}
+                className="font-bold text-plasma underline underline-offset-[3px]"
+              >
+                {stopLabel} →
+              </a>
+            </>
+          )}
+        </p>
+      )}
+      <SponsoredCard t={t} course={pick.course} skillLabel={skillLabel} corner={t("sponsored.slot")} className="mt-2.5 max-w-[620px]" />
     </div>
   );
 }
