@@ -6,7 +6,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { motion, useReducedMotion } from "framer-motion";
-import { ArrowLeft, ArrowUpRight, Download, Trash2 } from "lucide-react";
+import { ArrowLeft, ArrowUpRight, Award, Download, Trash2 } from "lucide-react";
 import { IllustrationPanel, Perforation, SdgChip, SourceRow } from "@/components/caldera";
 import { EASE_OUT } from "@/components/motion";
 import { useFlow } from "@/context/flow-context";
@@ -14,6 +14,18 @@ import { formatDayMonthYear, missingValue } from "@/lib/display";
 import { useT, type MessageKey } from "@/lib/i18n";
 import { freeCostMessages, summariseFreeCost } from "@/lib/free-cost";
 import { buildPathwayPlan, courseLanguagePill, missingChineseCourse } from "@/lib/pathway";
+import {
+  countDone,
+  loadProgress,
+  normalizeCertificateUrl,
+  saveProgress,
+  setCertificateUrl,
+  setCompleted,
+  setVerification,
+  verifiedItemIds,
+  type PathwayProgress,
+  type StepVerification,
+} from "@/lib/programme-progress";
 import { pathwaySdgTotal } from "@/lib/sdg-total";
 import { skillSdg } from "@/lib/skill-sdg";
 import { useRoles } from "@/lib/use-roles";
@@ -25,6 +37,12 @@ const COST_LABEL_KEY: Record<CostType, MessageKey> = {
   subsidised: "pathway.cost.subsidised",
   hrdcorp_claimable: "pathway.cost.hrdcorpClaimable",
   paid: "pathway.cost.paid",
+};
+
+const VERIFY_LABEL_KEY: Record<StepVerification["status"], MessageKey> = {
+  verified: "pathway.verify.verified",
+  failed: "pathway.verify.failed",
+  pending: "pathway.verify.unavailable",
 };
 
 const VISIBLE_STOPS = 4;
@@ -56,6 +74,45 @@ export function PathwayView({
 
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [showAll, setShowAll] = useState(false);
+  // Self-reported completion lives in localStorage; read after mount so SSR and
+  // the first client render agree.
+  const [progress, setProgress] = useState<PathwayProgress>({});
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- read persisted progress after hydration
+    if (roleId) setProgress(loadProgress(roleId));
+  }, [roleId]);
+
+  function updateProgress(next: PathwayProgress | null) {
+    if (!next || !roleId) return;
+    setProgress(next);
+    saveProgress(roleId, next);
+  }
+
+  // AI-assisted certificate check. The verdict is written against the link it
+  // was run on, so a link edited mid-check is not given the old verdict.
+  const [verifyingId, setVerifyingId] = useState<string | null>(null);
+  async function verifyCertificate(itemId: string, certificateUrl: string, expectedTitle: string, provider: string) {
+    if (!roleId) return;
+    setVerifyingId(itemId);
+    let verification: StepVerification;
+    try {
+      const response = await fetch("/api/verify-certificate", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ certificateUrl, itemId, expectedTitle, provider }),
+      });
+      const body = (await response.json()) as Partial<StepVerification> & { error?: string };
+      verification =
+        response.ok && (body.status === "verified" || body.status === "failed" || body.status === "pending")
+          ? { status: body.status, reason: body.reason, checkedAt: body.checkedAt ?? new Date().toISOString(), matchedTitle: body.matchedTitle }
+          : { status: "pending", reason: body.error, checkedAt: new Date().toISOString() };
+    } catch {
+      verification = { status: "pending", reason: t("pathway.verify.unreachable"), checkedAt: new Date().toISOString() };
+    }
+    // localStorage is written on every change, so it holds the latest progress.
+    updateProgress(setVerification(loadProgress(roleId), itemId, certificateUrl, verification));
+    setVerifyingId(null);
+  }
 
   const studyLanguagesKey = studyLanguages.join(",");
   const plan = useMemo(() => {
@@ -165,7 +222,12 @@ export function PathwayView({
 
   const visibleSteps = showAll ? plan.steps : plan.steps.slice(0, VISIBLE_STOPS);
 
+  const planItemIds = plan.steps.map((step) => step.itemId);
+  const doneCount = countDone(progress, planItemIds);
+  const verifiedCount = verifiedItemIds(progress).filter((id) => planItemIds.includes(id)).length;
+
   function handleDelete() {
+    if (roleId) saveProgress(roleId, {});
     resetFlow();
     router.push("/");
   }
@@ -234,6 +296,41 @@ export function PathwayView({
           {/* The line */}
           <section className="order-2 md:order-1">
             <h2 className="font-serif text-[clamp(40px,8vw,64px)] leading-[0.95] uppercase">{t("pathway.theLine")}</h2>
+            <p data-testid="programme-progress" className="mt-3 font-mono text-[13px] tracking-[0.04em] text-ink uppercase" aria-live="polite">
+              {t("pathway.progress.summary", { done: String(doneCount), total: String(plan.steps.length) })}
+            </p>
+            <p className="mt-1 font-mono text-[12px] tracking-[0.02em] text-grey">{t("pathway.progress.selfReported")}</p>
+            <div className="mt-4" data-testid="certificate-download">
+              {verifiedCount > 0 && roleId ? (
+                <>
+                  <a
+                    href={`/certificate?role=${encodeURIComponent(roleId)}`}
+                    className="inline-flex items-center gap-2 rounded-full bg-sage px-5 py-2.5 text-[14px] font-bold text-ink transition-colors hover:bg-sage/90"
+                  >
+                    <Award className="size-4" strokeWidth={1.6} />
+                    {t("pathway.cert.download")}
+                  </a>
+                  <p className="mt-1.5 font-mono text-[12px] tracking-[0.02em] text-grey">
+                    {t("pathway.cert.ready", { count: String(verifiedCount) })}
+                  </p>
+                </>
+              ) : (
+                <>
+                  <button
+                    type="button"
+                    disabled
+                    aria-describedby="certificate-hint"
+                    className="inline-flex cursor-not-allowed items-center gap-2 rounded-full border-[1.5px] border-ink/25 px-5 py-2.5 text-[14px] font-bold text-grey"
+                  >
+                    <Award className="size-4" strokeWidth={1.6} />
+                    {t("pathway.cert.download")}
+                  </button>
+                  <p id="certificate-hint" className="mt-1.5 font-mono text-[12px] tracking-[0.02em] text-grey">
+                    {t("pathway.cert.hint")}
+                  </p>
+                </>
+              )}
+            </div>
             {englishFallbackStepIds.size > 0 && (
               <p data-testid="no-chinese-course" className="mt-3 font-mono text-[12px] tracking-[0.02em] text-grey">
                 {t("pathway.noChineseCourse")}
@@ -330,6 +427,21 @@ export function PathwayView({
                           </div>
                         </>
                       )}
+                      <StepProof
+                        t={t}
+                        progress={progress[step.itemId]}
+                        onToggle={(done) => updateProgress(setCompleted(progress, step.itemId, done))}
+                        verifying={verifyingId === step.itemId}
+                        onVerify={() => {
+                          const url = progress[step.itemId]?.certificateUrl;
+                          if (url) void verifyCertificate(step.itemId, url, title, providerName);
+                        }}
+                        onSaveUrl={(value) => {
+                          const next = setCertificateUrl(progress, step.itemId, value);
+                          updateProgress(next);
+                          return next !== null;
+                        }}
+                      />
                     </article>
                   </li>
                 );
@@ -508,6 +620,125 @@ export function PathwayView({
           <p>{t("pathway.printSources")}</p>
         </footer>
       </section>
+    </div>
+  );
+}
+
+function StepProof({
+  t,
+  progress,
+  onToggle,
+  onSaveUrl,
+  verifying,
+  onVerify,
+}: {
+  t: ReturnType<typeof useT>["t"];
+  progress: PathwayProgress[string] | undefined;
+  onToggle: (done: boolean) => void;
+  /** Returns false when the text isn't a valid http(s) URL. */
+  onSaveUrl: (value: string) => boolean;
+  verifying: boolean;
+  onVerify: () => void;
+}) {
+  const [draft, setDraft] = useState("");
+  const [invalid, setInvalid] = useState(false);
+  const done = Boolean(progress);
+  const savedUrl = progress?.certificateUrl ? normalizeCertificateUrl(progress.certificateUrl) : null;
+
+  return (
+    <div className="mt-5 border-t border-ink/10 pt-4">
+      <label className="flex w-fit cursor-pointer items-center gap-2 text-[14px] font-bold">
+        <input
+          type="checkbox"
+          checked={done}
+          onChange={(event) => {
+            onToggle(event.target.checked);
+            setDraft("");
+            setInvalid(false);
+          }}
+          className="size-4 accent-ink"
+        />
+        {done ? t("pathway.progress.done") : t("pathway.progress.markDone")}
+      </label>
+      {done && (
+        <div className="mt-3">
+          {savedUrl ? (
+            <p className="flex flex-wrap items-center gap-x-4 gap-y-1 text-[13px]">
+              <a href={savedUrl} target="_blank" rel="noreferrer noopener" className="break-all underline underline-offset-4 hover:text-grey">
+                {t("pathway.progress.certificateView")}
+              </a>
+              <button
+                type="button"
+                onClick={() => onSaveUrl("")}
+                className="text-grey underline underline-offset-4 hover:text-ink"
+              >
+                {t("pathway.progress.certificateRemove")}
+              </button>
+            </p>
+          ) : (
+            <form
+              className="flex flex-col gap-2 sm:flex-row sm:items-center"
+              onSubmit={(event) => {
+                event.preventDefault();
+                const ok = onSaveUrl(draft);
+                setInvalid(!ok);
+                if (ok) setDraft("");
+              }}
+            >
+              <input
+                type="url"
+                inputMode="url"
+                value={draft}
+                placeholder={t("pathway.progress.certificatePlaceholder")}
+                aria-label={t("pathway.progress.certificateLabel")}
+                aria-invalid={invalid}
+                onChange={(event) => {
+                  setDraft(event.target.value);
+                  setInvalid(false);
+                }}
+                className="min-w-0 flex-1 rounded-full border-[1.5px] border-ink/30 bg-paper px-4 py-2 text-[13px]"
+              />
+              <button type="submit" className="btn-secondary shrink-0">
+                {t("pathway.progress.certificateSave")}
+              </button>
+            </form>
+          )}
+          {savedUrl && (
+            <div className="mt-2.5" data-testid="verify-certificate">
+              <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
+                <button type="button" onClick={onVerify} disabled={verifying} className="btn-secondary shrink-0">
+                  {verifying
+                    ? t("pathway.verify.checking")
+                    : progress?.verification
+                      ? t("pathway.verify.recheck")
+                      : t("pathway.verify.button")}
+                </button>
+                {progress?.verification && !verifying && (
+                  <span
+                    data-testid="verify-badge"
+                    data-status={progress.verification.status}
+                    className={cn(
+                      "rounded-full px-3 py-1 font-mono text-[11px] tracking-[0.04em] uppercase",
+                      progress.verification.status === "verified" ? "bg-sage text-ink" : "border border-ink/30 text-grey",
+                    )}
+                  >
+                    {t(VERIFY_LABEL_KEY[progress.verification.status])}
+                  </span>
+                )}
+              </div>
+              {progress?.verification?.reason && !verifying && (
+                <p className="mt-1.5 text-[12px] leading-snug text-grey">{progress.verification.reason}</p>
+              )}
+              <p className="mt-1.5 text-[12px] leading-snug text-grey">{t("pathway.verify.note")}</p>
+            </div>
+          )}
+          {invalid && (
+            <p role="alert" className="mt-1.5 text-[12px] text-grey">
+              {t("pathway.progress.certificateInvalid")}
+            </p>
+          )}
+        </div>
+      )}
     </div>
   );
 }
