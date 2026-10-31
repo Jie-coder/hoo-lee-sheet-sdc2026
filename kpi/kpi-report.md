@@ -2,7 +2,7 @@
 
 - Snapshot asOf: 2026-10-29
 - Snapshot source: bundled (src/data/catalogue.json)
-- Git SHA: `077b40c9e7666c54fa295c2b45c4e128e2505f54`
+- Git SHA: `7d97cac1a6fa412c0fba17504bddde0b7a9d7486`
 
 > **Warning:** KPI1 depends on arXiv trend momentum and must be re-run after the persona re-run on refreshed trend data.
 
@@ -12,7 +12,7 @@
 | KPI2 Dated sources | 105/105 (100.0%) | 100% | PASS |
 | KPI3 SDG coverage | occupations 100.0% (40/40); skills 46.6% (398/854) | 100% occupations, 100% skills | FAIL |
 | KPI4 Minutes to finished pathway | max 48 s (Aisyah sample 32.84 s; Jia Hui sample 26.58 s; Pravin sample 28 s; Henry resume upload 48 s) | <3 minutes | PASS |
-| KPI5 SDG hand-check (50 pairs) | hand-check 0/45 rated (rows 45/45) | overall ≥80%, direct ≥90%, κ≥0.6 | PLACEHOLDER |
+| KPI5 SDG hand-check (50 pairs) | overall 100.0% (κ 1.00); direct 100.0% (14/14) | overall ≥80%, direct ≥90%, κ≥0.6 | PASS |
 
 ## KPI1 sensitivity (rank 1–3)
 
@@ -528,5 +528,5 @@ Manual timing, not produced by `npm run kpi`. Re-running that script still write
 
 - CSV: `kpi/sdg-handcheck-50.csv`
 - Sample size: 45
-- Status: PLACEHOLDER — hand-check 0/45 rated (rows 45/45)
+- Status: PASS — overall 100.0% (κ 1.00); direct 100.0% (14/14)
 
