@@ -149,6 +149,16 @@ export function SiteHeader() {
               {t("header.builtFor")}
             </span>
           )}
+          <Link
+            href="/partner"
+            data-testid="header-partner"
+            className={cn(
+              "items-center rounded-full border-[1.5px] border-ink px-3 py-1.5 text-[12px] font-bold whitespace-nowrap text-ink transition-colors hover:bg-ink hover:text-paper sm:text-[13px]",
+              onFlow ? "hidden md:inline-flex" : "inline-flex",
+            )}
+          >
+            {t("header.partner")}
+          </Link>
           <div
             role="group"
             aria-label={t("lang.label")}
