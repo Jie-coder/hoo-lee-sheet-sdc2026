@@ -5,6 +5,7 @@ import { analyzeProfile } from "@/lib/analyze";
 import { CATALOGUE } from "@/lib/catalogue";
 import { resolveProfileSkills } from "@/lib/profile-skills";
 import { PERSONAS } from "@/mocks/personas";
+import { pathwayTicketNumber } from "@/lib/pathway-print";
 import { PathwayView } from "./pathway-view";
 
 // Aisyah's real result from the curated data; the fetch to /api/roles is
@@ -125,6 +126,30 @@ describe("PathwayView", () => {
 
     expect(await screen.findByText("That role isn’t in your results.")).toBeInTheDocument();
     expect(screen.getByRole("button", { name: /Back to roles/ })).toBeInTheDocument();
+  });
+});
+
+describe("PathwayView print ticket (Download PDF)", () => {
+  it("prints the mock v2 ticket: number, route, numbered stops, notice and skills", async () => {
+    renderPathway();
+    await screen.findAllByRole("heading", { level: 3 });
+    const sheet = screen.getByTestId("pathway-print");
+    const text = sheet.textContent ?? "";
+    expect(text).toContain(`Ticket Nº ${pathwayTicketNumber(role.occupationId)} · Admit one pathway`);
+    expect(text).toContain(`To: ${role.title}`);
+    expect(text).toContain("Pathway stops · courses");
+    expect(text).toContain("Stop 1 · Board");
+    expect(text).toContain("This PDF is your only takeaway");
+    expect(text).toContain("Team Hoo Lee Sheet");
+    const stops = sheet.querySelectorAll(".pp-stop");
+    expect(stops.length).toBeGreaterThan(1);
+    expect(stops[0].querySelector(".pp-num")?.textContent).toBe("01");
+    expect(stops[0].querySelector(".pp-num")?.className).toContain("pp-orange");
+    expect(stops[1].querySelector(".pp-num")?.className).toContain("pp-indigo");
+    expect(stops[stops.length - 1].textContent).toContain(`Stop ${stops.length} · Arrive`);
+    for (const badge of sheet.querySelectorAll(".pp-badge")) {
+      expect(["Free", "Subsidised", "HRD Corp claimable", "Paid"]).toContain(badge.textContent);
+    }
   });
 });
 

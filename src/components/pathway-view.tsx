@@ -13,6 +13,7 @@ import { useFlow } from "@/context/flow-context";
 import { formatDayMonthYear, missingValue } from "@/lib/display";
 import { useT, type MessageKey } from "@/lib/i18n";
 import { buildPathwayPlan, courseLanguagePill, missingChineseCourse } from "@/lib/pathway";
+import { pathwayStopLeg, pathwayTicketNumber, sdgGoalNumbers, shortCourseUrl } from "@/lib/pathway-print";
 import { pathwaySdgTotal } from "@/lib/sdg-total";
 import { skillSdg } from "@/lib/skill-sdg";
 import { useRoles } from "@/lib/use-roles";
@@ -24,6 +25,12 @@ const COST_LABEL_KEY: Record<CostType, MessageKey> = {
   subsidised: "pathway.cost.subsidised",
   hrdcorp_claimable: "pathway.cost.hrdcorpClaimable",
   paid: "pathway.cost.paid",
+};
+
+const LEG_KEY: Record<ReturnType<typeof pathwayStopLeg>, MessageKey> = {
+  board: "pathway.print.leg.board",
+  skillUp: "pathway.print.leg.skillUp",
+  arrive: "pathway.print.leg.arrive",
 };
 
 const VISIBLE_STOPS = 4;
@@ -160,6 +167,21 @@ export function PathwayView({
     .filter((date): date is string => Boolean(date))
     .sort()
     .at(-1);
+
+  // Print ticket ("Download PDF") values.
+  const totalHours = plan.steps.reduce((sum, step) => {
+    const item = resolveItem(step);
+    const hours = step.merged?.hours ?? (item && "hours" in item ? item.hours : undefined);
+    return sum + (hours ?? 0);
+  }, 0);
+  const closedSkills = role.gap.filter((skill) => closedSkillIds.has(skill.skillId));
+  const sdgGoals = sdgGoalNumbers(sdgTotal.goals.flatMap((goal) => goal.targets.map((target) => target.target)));
+  const ticketNumber = pathwayTicketNumber(role.occupationId);
+  const printDate = new Date().toLocaleDateString(locale === "ms" ? "ms-MY" : "en-GB", {
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+  });
 
   const visibleSteps = showAll ? plan.steps : plan.steps.slice(0, VISIBLE_STOPS);
 
@@ -452,58 +474,127 @@ export function PathwayView({
         />
       </main>
 
-      {/* window.print() surface: all stops expanded, no chrome (globals.css @media print). */}
-      <section className="print-only">
-        <div className="print-brand">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/brand/laluan-logo-ember.svg" alt="Laluan" width={90} height={20} />
-          <p>
-            {profile?.name ? `${profile.name} · ` : ""}
-            {fromRole ? `${fromRole} → ${role.title}` : role.title}
+      {/* window.print() surface ("Download PDF"): Laluan pathway ticket, mock v2
+          (docs/design/Laluan-Pathway-Download-PDF-mock-v2.png). Styles: globals.css @media print. */}
+      <section className="print-only" data-testid="pathway-print">
+        <div className="pp-brand">
+          <span className="pp-logo">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/brand/laluan-mark.svg" alt="" width={22} height={22} />
+            Laluan
+          </span>
+          <p className="pp-gen pp-mono">
+            {t("pathway.print.generated", { date: printDate })}
+            <br />
+            {t("pathway.print.notSaved")}
           </p>
         </div>
-        <h1 className="print-h1">{t("pathway.printTitle", { title: role.title })}</h1>
-        <p>
-          {t("pathway.printDate", {
-            date: new Date().toLocaleDateString(locale === "ms" ? "ms-MY" : "en-GB", {
-              day: "numeric",
-              month: "long",
-              year: "numeric",
-            }),
-          })}
-        </p>
-        <ol>
+
+        <div className="pp-hero">
+          <span aria-hidden className="pp-orb pp-orb-a" />
+          <span aria-hidden className="pp-orb pp-orb-b" />
+          <span aria-hidden className="pp-orb pp-orb-c" />
+          <div className="pp-pills">
+            <span className="pp-pill pp-mono">{t("pathway.print.ticket", { number: ticketNumber })}</span>
+            {sdgGoals.length > 0 && (
+              <span className="pp-pill pp-mono">{sdgGoals.map((goal) => `SDG ${goal}`).join(" · ")}</span>
+            )}
+          </div>
+          <div className="pp-route">
+            <span aria-hidden className="pp-dot" />
+            <span className="pp-route-text pp-mono">
+              {t("pathway.print.route", { from: fromRole ?? t("pathway.print.today"), to: role.title })}
+            </span>
+            <span aria-hidden className="pp-dot" />
+          </div>
+          <div className="pp-meta">
+            <span className="pp-chip">
+              {plan.steps.length === 1
+                ? t("pathway.print.courseOne")
+                : t("pathway.print.courseMany", { count: String(plan.steps.length) })}
+            </span>
+            {totalHours > 0 && <span className="pp-chip">{t("pathway.print.hours", { hours: String(Math.round(totalHours)) })}</span>}
+            <span className="pp-chip">
+              {totalWeeks === 1 ? t("pathway.print.weekOne") : t("pathway.print.weekMany", { weeks: String(totalWeeks) })}
+            </span>
+            <span className="pp-chip">{t("pathway.hoursPerWeek", { hours: String(hoursPerWeek) })}</span>
+          </div>
+        </div>
+
+        <h2 className="pp-section">{t("pathway.print.section")}</h2>
+        <ol className="pp-stops">
           {plan.steps.map((step, index) => {
             const item = resolveItem(step);
             if (!item) return null;
+            const title = "title" in item ? item.title : item.name;
             const providerName = "provider" in item ? item.provider : item.agency;
             const weeksLabel =
               step.weekStart === step.weekEnd
                 ? t("pathway.week", { week: String(step.weekStart) })
                 : t("pathway.weeksRange", { start: String(step.weekStart), end: String(step.weekEnd) });
+            const displayHours = step.merged?.hours ?? ("hours" in item ? item.hours : undefined);
+            const related = role.gap.find((skill) => step.closesSkillIds.includes(skill.skillId));
+            const languagePill = "languages" in item ? courseLanguagePill(item.languages, studyLanguages) : null;
+            const leg = pathwayStopLeg(index, plan.steps.length);
             return (
-              <li key={step.itemId} className="print-ticket">
-                <span className="print-num">{index + 1}</span>
-                <span className="print-name">{"title" in item ? item.title : item.name}</span>
-                <span>{providerName}</span>
-                <span>{weeksLabel}</span>
-                <span>{t(COST_LABEL_KEY[item.costType])}</span>
-                {(() => {
-                  const related = role.gap.find((skill) => step.closesSkillIds.includes(skill.skillId));
-                  return related ? (
-                    <span>
-                      {t("pathway.closes")}: <strong>{related.label}</strong>
-                    </span>
-                  ) : null;
-                })()}
-                <span className="print-url">{item.url}</span>
+              <li key={step.itemId} className="pp-stop">
+                <div className="pp-stop-top">
+                  <span className={cn("pp-num", index % 2 === 0 ? "pp-orange" : "pp-indigo")}>
+                    {String(index + 1).padStart(2, "0")}
+                  </span>
+                  <div className="pp-info">
+                    <p className="pp-title">
+                      {title}
+                      {languagePill && <span className="pp-lang pp-mono">{languagePill}</span>}
+                    </p>
+                    <p className="pp-provider">
+                      {providerName} · {weeksLabel}
+                      {displayHours != null ? ` · ${t("pathway.hoursShort", { hours: String(displayHours) })}` : ""}
+                    </p>
+                    {related && (
+                      <p className="pp-closes">
+                        {t("pathway.closes")}: <strong>{related.label}</strong>
+                      </p>
+                    )}
+                    <a className="pp-link" href={item.url}>
+                      {shortCourseUrl(item.url)}
+                    </a>
+                  </div>
+                  <span className={cn("pp-badge", `pp-badge-${item.costType}`)}>{t(COST_LABEL_KEY[item.costType])}</span>
+                </div>
+                <div className="pp-stub">
+                  <span className="pp-stub-label pp-mono">
+                    {t("pathway.print.stop", { n: String(index + 1), leg: t(LEG_KEY[leg]) })}
+                  </span>
+                  <span aria-hidden className="pp-stub-dots">
+                    <i />
+                    <i />
+                    <i />
+                  </span>
+                </div>
               </li>
             );
           })}
         </ol>
+
+        <p className="pp-notice">{t("pathway.print.notice")}</p>
+
+        {closedSkills.length > 0 && (
+          <div className="pp-skills">
+            <span className="pp-skills-k pp-mono">{t("pathway.print.skills")}</span>
+            {closedSkills.map((skill) => (
+              <span key={skill.skillId} className="pp-skill">
+                {skill.label}
+              </span>
+            ))}
+          </div>
+        )}
+
         <footer className="print-foot">
-          <p>{t("footer.disclaimer")}</p>
-          <p>{t("pathway.printSources")}</p>
+          <p>{t("pathway.print.footer")}</p>
+          <p className="pp-fine">
+            {t("footer.disclaimer")} {t("pathway.printSources")}
+          </p>
         </footer>
       </section>
     </div>

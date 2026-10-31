@@ -215,10 +215,14 @@
 /* Privacy page: plain Limestone, no dot grid. */
 body:has(.privacy-page) { background-color: var(--color-limestone); background-image: none; }
 
-/* Pathway print / "Download PDF" (window.print). Screen: hidden. */
+/* Pathway print / "Download PDF" (window.print). Screen: hidden.
+   Ticket design: docs/design/Laluan-Pathway-Download-PDF-mock-v2.png. Every
+   pathway rule is scoped to .print-only / :has(.print-only) and a named page,
+   so other print surfaces (e.g. a certificate page) keep their own @page. */
 .print-only { display: none; }
 @media print {
   @page { size: A4 portrait; margin: 16mm; }
+  @page laluan-pathway { size: A4 portrait; margin: 11mm 0; }
   html, body { background: #fff !important; color: #000 !important; }
   header, nav, footer:not(.print-foot), canvas, video, button,
   .print-hide, [data-sonner-toaster] { display: none !important; }
@@ -226,16 +230,71 @@ body:has(.privacy-page) { background-color: var(--color-limestone); background-i
   body:has(.print-only) * { visibility: hidden !important; }
   body:has(.print-only) .print-only, body:has(.print-only) .print-only * { visibility: visible !important; }
   body:has(.print-only) .print-only { position: absolute; top: 0; left: 0; right: 0; }
-  .print-only { display: block !important; color: #000; font-family: var(--font-dm-sans), "DM Sans", var(--font-noto-sans-sc), "Noto Sans SC", "Noto Sans CJK SC", sans-serif; font-size: 11pt; }
-  .print-only .print-h1 { font-family: var(--font-anton), "Anton", sans-serif; font-size: 26pt; line-height: 1.1; margin: 0 0 4pt; text-transform: uppercase; }
-  .print-only ol { list-style: none; padding: 0; margin: 14pt 0; }
-  .print-only .print-ticket { width: auto; max-width: 100%; box-sizing: border-box; display: grid; grid-template-columns: 22pt 1fr; column-gap: 8pt; row-gap: 2pt; border: 0.75pt solid #000; border-radius: 10pt; padding: 8pt 10pt; margin-bottom: 8pt; break-inside: avoid; page-break-inside: avoid; background: #fff; }
-  .print-only .print-ticket > span { grid-column: 2; }
-  .print-only .print-num { grid-column: 1 !important; grid-row: 1 / span 6; font-family: var(--font-anton), "Anton", sans-serif; font-size: 16pt; }
-  .print-only .print-name { font-weight: 600; font-size: 12pt; }
-  .print-only .print-brand { display: flex; align-items: center; gap: 10pt; margin-bottom: 10pt; font-size: 10pt; }
-  .print-only .print-brand img { height: 16pt; width: auto; }
-  .print-only .print-brand p { margin: 0; }
-  .print-only .print-url { font-size: 9pt; word-break: break-all; }
-  .print-only .print-foot { border-top: 0.75pt solid #000; padding-top: 6pt; font-size: 9pt; break-inside: avoid; }
+
+  html:has(.print-only), body:has(.print-only) {
+    background-color: #e4e4de !important;
+    background-image: radial-gradient(#cfcfc8 0.7px, transparent 0.7px) !important;
+    background-size: 10px 10px !important;
+  }
+  html:has(.print-only) { page: laluan-pathway; }
+  .print-only, .print-only * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+  .print-only {
+    display: block !important; page: laluan-pathway; box-sizing: border-box;
+    padding: 1mm 11mm 0; color: #222;
+    background-color: #e4e4de; background-image: radial-gradient(#cfcfc8 0.7px, transparent 0.7px); background-size: 10px 10px;
+    font-family: var(--font-dm-sans), "DM Sans", var(--font-noto-sans-sc), "Noto Sans SC", "Noto Sans CJK SC", sans-serif; font-size: 10pt;
+  }
+  .print-only p { margin: 0; }
+  .print-only .pp-mono { font-family: var(--font-geist-mono), ui-monospace, "SF Mono", Menlo, monospace; letter-spacing: 0.04em; text-transform: uppercase; }
+
+  .print-only .pp-brand { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+  .print-only .pp-logo { display: flex; align-items: center; gap: 7px; color: #fc5000; font-weight: 800; font-size: 18px; }
+  .print-only .pp-logo img { width: 22px; height: 22px; }
+  .print-only .pp-gen { font-size: 8px; color: #666; text-align: right; line-height: 1.4; }
+
+  .print-only .pp-hero { position: relative; overflow: hidden; margin-bottom: 14px; padding: 14px 16px 16px; border-radius: 18px; background: #524ae9; color: #fff; break-inside: avoid; }
+  .print-only .pp-hero > :not(.pp-orb) { position: relative; z-index: 1; }
+  .print-only .pp-orb { position: absolute; z-index: 0; border-radius: 50%; }
+  .print-only .pp-orb-a { width: 200px; height: 200px; left: 4%; top: -40px; background: rgba(252, 80, 0, 0.5); }
+  .print-only .pp-orb-b { width: 220px; height: 220px; left: 56%; top: -70px; background: rgba(252, 80, 0, 0.35); }
+  .print-only .pp-orb-c { width: 26px; height: 26px; left: 55%; top: 62%; background: rgba(255, 255, 255, 0.2); }
+  .print-only .pp-pills { display: flex; justify-content: space-between; gap: 8px; margin-bottom: 10px; }
+  .print-only .pp-pill { background: #111; color: #fff; border-radius: 999px; font-size: 7.5px; font-weight: 700; padding: 4px 9px; white-space: nowrap; }
+  .print-only .pp-route { display: flex; align-items: center; gap: 8px; margin-top: 8px; padding-top: 10px; border-top: 2px dotted rgba(255, 255, 255, 0.75); }
+  .print-only .pp-dot { width: 8px; height: 8px; flex-shrink: 0; border-radius: 50%; background: #fff; }
+  .print-only .pp-route-text { font-size: 10px; font-weight: 700; }
+  .print-only .pp-meta { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+  .print-only .pp-chip { padding: 3px 8px; border: 1px solid rgba(255, 255, 255, 0.3); border-radius: 999px; background: rgba(255, 255, 255, 0.14); font-size: 9px; }
+
+  .print-only .pp-section { margin: 4px 0 10px; font-family: var(--font-dm-sans), "DM Sans", sans-serif; font-size: 13px; font-weight: 800; letter-spacing: 0.02em; text-transform: uppercase; }
+  .print-only .pp-stops { display: flex; flex-direction: column; gap: 9px; margin: 0; padding: 0; list-style: none; }
+  .print-only .pp-stop { position: relative; padding: 12px 14px 0; border-radius: 20px; background: #f8f6f0; break-inside: avoid; page-break-inside: avoid; }
+  .print-only .pp-stop-top { display: grid; grid-template-columns: 54px 1fr auto; gap: 10px; align-items: start; padding-bottom: 12px; }
+  .print-only .pp-num { font-family: var(--font-anton), "Anton", sans-serif; font-size: 28px; line-height: 1; }
+  .print-only .pp-orange { color: #fc5000; }
+  .print-only .pp-indigo { color: #524ae9; }
+  .print-only .pp-info { min-width: 0; }
+  .print-only .pp-title { margin-bottom: 2px; font-size: 11.5px; font-weight: 800; line-height: 1.25; color: #111; }
+  .print-only .pp-lang { display: inline-block; margin-left: 6px; padding: 1px 5px; border: 1px solid #bbb; border-radius: 999px; font-size: 7px; font-weight: 400; color: #555; vertical-align: middle; }
+  .print-only .pp-provider { font-size: 9.5px; color: #555; }
+  .print-only .pp-closes { font-size: 9px; color: #555; }
+  .print-only .pp-closes strong { color: #111; }
+  .print-only .pp-link { display: block; margin-top: 2px; font-size: 8.5px; color: #999; text-decoration: none; word-break: break-all; }
+  .print-only .pp-badge { align-self: center; padding: 3px 9px; border: 1.5px solid #fc5000; border-radius: 999px; background: #fff; color: #fc5000; font-size: 8.5px; font-weight: 800; white-space: nowrap; }
+  .print-only .pp-badge-free { border-color: #16a34a; color: #15803d; }
+  .print-only .pp-badge-subsidised, .print-only .pp-badge-hrdcorp_claimable { border-color: #524ae9; color: #524ae9; }
+  .print-only .pp-stub { position: relative; display: flex; justify-content: space-between; align-items: center; padding: 8px 14px 10px; border-top: 2px dotted #cfcfc8; }
+  .print-only .pp-stub::before, .print-only .pp-stub::after { content: ""; position: absolute; top: -7px; width: 14px; height: 14px; border-radius: 50%; background: #e4e4de; }
+  .print-only .pp-stub::before { left: -21px; }
+  .print-only .pp-stub::after { right: -21px; }
+  .print-only .pp-stub-label { font-size: 8px; font-weight: 700; color: #555; }
+  .print-only .pp-stub-dots { display: flex; gap: 4px; }
+  .print-only .pp-stub-dots i { display: block; width: 5px; height: 5px; border-radius: 50%; background: #bbb; }
+
+  .print-only .pp-notice { margin-top: 12px; padding: 9px 11px; border-left: 4px solid #fc5000; border-radius: 0 10px 10px 0; background: #fff; font-size: 9.5px; font-weight: 600; color: #333; break-inside: avoid; }
+  .print-only .pp-skills { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-top: 10px; break-inside: avoid; }
+  .print-only .pp-skills-k { font-size: 8px; font-weight: 800; color: #777; }
+  .print-only .pp-skill { padding: 3px 8px; border: 1px solid #d6d3d1; border-radius: 999px; background: #f8f6f0; font-size: 9px; color: #333; }
+  .print-only .print-foot { margin-top: 12px; padding-top: 8px; border-top: 1px solid #cfcfc8; font-size: 8.5px; color: #777; break-inside: avoid; }
+  .print-only .pp-fine { margin-top: 3px; font-size: 7px; line-height: 1.4; color: #999; }
 }
