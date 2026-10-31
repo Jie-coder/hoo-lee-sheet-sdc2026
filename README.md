@@ -23,8 +23,9 @@
 | Live Demo (primary) | https://hoo-lee-sheet-sdc-2026.replit.app (Replit, Autoscale deployment) |
 | Backup | https://laluan.vercel.app (Vercel, use only if Replit is down) |
 | RunPod Endpoint | Not used |
-| Slide Deck | [Laluan Pitch v3 - Hoo Lee Sheet (Canva)](https://www.canva.com/d/jGApWWKX2GBuTul) |
+| Slide Deck | [Laluan Pitch v3 - Hoo Lee Sheet (Canva)](https://canva.link/wpe6f2b0x79mo0l) |
 | Demo Video | https://youtu.be/ZLO1yevPaB8 |
+| Backup Demo Video | [https://youtu.be/Gx1NboLjquM?si=L-sEC4tFW2_isk1s] |
 
 ---
 
