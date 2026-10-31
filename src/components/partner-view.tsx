@@ -5,6 +5,7 @@
 
 import { useState, type FormEvent, type ReactNode } from "react";
 import { Perforation } from "@/components/caldera";
+import { LandingHeroCanvas } from "@/components/landing-hero-canvas";
 import { useT, type MessageKey } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 
@@ -71,11 +72,17 @@ export function PartnerView() {
 
   return (
     <main className="mx-auto max-w-[1440px] px-4 pt-6 pb-20 sm:px-6 md:px-8">
-      <section className="rounded-[40px] bg-plasma px-7 py-10 text-limestone md:px-14 md:py-14">
-        <p className="font-data text-[12px] tracking-[0.06em] text-limestone/70 uppercase">{t("partner.eyebrow")}</p>
-        <h1 className="mt-4 font-serif text-[clamp(40px,7vw,88px)] leading-[1] uppercase">{t("partner.title")}</h1>
-        <p className="mt-4 max-w-[640px] text-[18px] leading-snug">{t("partner.lede")}</p>
-        <p className="mt-3 font-data text-[12px] tracking-[0.04em] text-limestone/80 uppercase">{t("partner.principle")}</p>
+      <section className="grid overflow-hidden rounded-[40px] bg-plasma text-limestone md:grid-cols-2">
+        <div className="px-7 py-10 md:px-14 md:py-14">
+          <p className="font-data text-[12px] tracking-[0.06em] text-limestone/70 uppercase">{t("partner.eyebrow")}</p>
+          <h1 className="mt-4 font-serif text-[clamp(40px,7vw,88px)] leading-[1] uppercase">{t("partner.title")}</h1>
+          <p className="mt-4 max-w-[640px] text-[18px] leading-snug">{t("partner.lede")}</p>
+          <p className="mt-3 font-data text-[12px] tracking-[0.04em] text-limestone/80 uppercase">{t("partner.principle")}</p>
+        </div>
+        {/* Same halftone texture as the home hero, decorative only. */}
+        <div aria-hidden className="relative hidden min-h-[320px] md:block">
+          <LandingHeroCanvas className="absolute inset-0 size-full" />
+        </div>
       </section>
 
       <div className="mt-8 grid gap-4 md:grid-cols-3">

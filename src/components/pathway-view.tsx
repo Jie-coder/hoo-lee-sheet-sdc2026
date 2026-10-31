@@ -255,6 +255,14 @@ export function PathwayView({
   const doneCount = countDone(progress, planItemIds);
   const verifiedCount = verifiedItemIds(progress).filter((id) => planItemIds.includes(id)).length;
 
+  function jumpToStop(index: number) {
+    if (index >= VISIBLE_STOPS) setShowAll(true);
+    // Wait a frame so a just-expanded stop exists before scrolling to it.
+    requestAnimationFrame(() =>
+      requestAnimationFrame(() => document.getElementById(`stop-${index + 1}`)?.scrollIntoView({ behavior: "smooth", block: "start" })),
+    );
+  }
+
   function handleDelete() {
     if (roleId) saveProgress(roleId, {});
     resetFlow();
@@ -383,7 +391,7 @@ export function PathwayView({
                 const languagePill = "languages" in item ? courseLanguagePill(item.languages, studyLanguages) : null;
                 const sdgLink = step.sdgTarget ? role.sdg.find((link) => link.target === step.sdgTarget) : undefined;
                 return (
-                  <li key={step.itemId} className="relative grid grid-cols-[20px_1fr] gap-x-3 pb-4 last:pb-0 sm:grid-cols-[32px_1fr] sm:gap-x-5">
+                  <li key={step.itemId} id={`stop-${index + 1}`} className="relative scroll-mt-6 grid grid-cols-[20px_1fr] gap-x-3 pb-4 last:pb-0 sm:grid-cols-[32px_1fr] sm:gap-x-5">
                     <span
                       aria-hidden
                       className="relative z-10 mt-7 size-5 self-start sm:size-[30px] justify-self-center rounded-full bg-card ring-4 ring-ink"
@@ -486,15 +494,16 @@ export function PathwayView({
                         );
                       });
                       const refIndex = freeIndex >= 0 ? freeIndex : index;
-                      const refItem = resolveItem(plan.steps[refIndex]);
+                      const refStep = plan.steps[refIndex];
                       return (
                         <SponsoredRow
                           t={t}
                           pick={pick}
                           skillLabel={skillLabel}
                           refStop={refIndex + 1}
-                          refTitle={refItem ? ("title" in refItem ? refItem.title : refItem.name) : ""}
-                          refCost={refItem ? t(COST_LABEL_KEY[refItem.costType]) : ""}
+                          sameStop={refIndex === index}
+                          government={refStep.kind !== "course"}
+                          onJump={() => jumpToStop(refIndex)}
                         />
                       );
                     })()}
@@ -753,46 +762,61 @@ export function SponsoredRow({
   pick,
   skillLabel,
   refStop,
-  refTitle,
-  refCost,
+  sameStop,
+  government,
+  onJump,
 }: {
   t: ReturnType<typeof useT>["t"];
   pick: SponsoredPick;
   skillLabel: string;
+  /** 1-based stop holding the free/government course for this skill. */
   refStop: number;
-  refTitle: string;
-  refCost: string;
+  sameStop: boolean;
+  government: boolean;
+  onJump: () => void;
 }) {
   const [open, setOpen] = useState(false);
+  const stopLabel = t("sponsored.altStop", { n: String(refStop).padStart(2, "0") });
   return (
     <div className="col-start-2 mt-3 print:hidden" data-testid="sponsored-pick">
       <p className="text-[12px] leading-snug text-grey">{t("sponsored.subtitle")}</p>
-      <div className="mt-2 grid gap-3 sm:grid-cols-2">
-        <div className="rounded-[24px] bg-card p-5">
-          <p className="font-mono text-[11px] tracking-[0.04em] text-grey uppercase">{t("sponsored.freeFirst")} · {refCost}</p>
-          <p className="mt-2 text-[14px] leading-snug">
-            {t("sponsored.freeRef", { n: String(refStop).padStart(2, "0"), skill: skillLabel, title: refTitle })}
-          </p>
-        </div>
-        <article className="rounded-[24px] border-[1.5px] border-ink/15 bg-paper p-5" aria-label={t("sponsored.tag")}>
-          <span className="inline-block rounded-[6px] bg-sulfur px-2 py-0.5 font-data text-[12px] tracking-[0.06em] text-ink uppercase">
-            {t("sponsored.tag")}
-          </span>
-          <h4 className="mt-2.5 font-sans text-[17px] leading-tight font-bold">{pick.course.title}</h4>
-          <p className="mt-1.5 text-[13px] leading-snug text-grey">{t("sponsored.because", { skill: skillLabel })}</p>
-          <p className="mt-1.5 text-[13px] text-ink">{pick.course.provider}</p>
-          <p className="mt-0.5 font-data text-[12px] tracking-[0.04em] text-grey">{t("sponsored.price", { price: pick.course.examplePrice })}</p>
-          <button
-            type="button"
-            aria-expanded={open}
-            onClick={() => setOpen((v) => !v)}
-            className="mt-2.5 text-[12px] text-grey underline underline-offset-4 hover:text-ink"
-          >
-            {t("sponsored.why")}
-          </button>
-          {open && <p className="mt-1.5 text-[12px] leading-snug text-ink">{t("sponsored.whyBody")}</p>}
-        </article>
-      </div>
+      <p data-testid="sponsored-free-line" className="mt-2 font-mono text-[12px] tracking-[0.02em] text-ink">
+        {sameStop ? (
+          t(government ? "sponsored.sameGov" : "sponsored.sameFree")
+        ) : (
+          <>
+            {t("sponsored.altLine", { skill: skillLabel })}{" "}
+            <a
+              href={`#stop-${refStop}`}
+              onClick={(event) => {
+                event.preventDefault();
+                onJump();
+              }}
+              className="font-bold underline underline-offset-4 hover:text-grey"
+            >
+              {stopLabel}
+            </a>
+          </>
+        )}
+      </p>
+      <article className="mt-2 max-w-[560px] rounded-[24px] border-[1.5px] border-ink/15 bg-paper p-5" aria-label={t("sponsored.tag")}>
+        <span className="inline-block rounded-[6px] bg-sulfur px-2 py-0.5 font-data text-[12px] tracking-[0.06em] text-ink uppercase">
+          {t("sponsored.tag")}
+        </span>
+        <h4 className="mt-2.5 font-sans text-[17px] leading-tight font-bold">{pick.course.title}</h4>
+        <p className="mt-1.5 text-[13px] leading-snug text-grey">{t("sponsored.because", { skill: skillLabel })}</p>
+        <p className="mt-1.5 text-[13px] text-ink">{pick.course.provider}</p>
+        <p className="mt-0.5 font-data text-[12px] tracking-[0.04em] text-grey">{t("sponsored.price", { price: pick.course.examplePrice })}</p>
+        <button
+          type="button"
+          aria-expanded={open}
+          onClick={() => setOpen((v) => !v)}
+          className="mt-2.5 text-[12px] text-grey underline underline-offset-4 hover:text-ink"
+        >
+          {t("sponsored.why")}
+        </button>
+        {open && <p className="mt-1.5 text-[12px] leading-snug text-ink">{t("sponsored.whyBody")}</p>}
+      </article>
     </div>
   );
 }

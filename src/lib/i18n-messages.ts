@@ -815,8 +815,10 @@ export const EN = {
   "sponsored.price": "Example price: {price}",
   "sponsored.why": "Why am I seeing this?",
   "sponsored.whyBody": "Paid placement. Matches a skill gap in your pathway. Does not change your ranking or pathway.",
-  "sponsored.freeFirst": "Free / government first",
-  "sponsored.freeRef": "Stop {n} in your plan teaches {skill}: {title}",
+  "sponsored.sameFree": "Free / government first ✓ This stop's course is free",
+  "sponsored.sameGov": "Free / government first ✓ This stop's course is government-funded",
+  "sponsored.altLine": "Free alternative · also covers {skill}:",
+  "sponsored.altStop": "Stop {n}",
 } as const;
 
 export type MessageKey = keyof typeof EN;
@@ -1643,8 +1645,10 @@ export const MS: Record<MessageKey, string> = {
   "sponsored.price": "Harga contoh: {price}",
   "sponsored.why": "Kenapa saya melihat ini?",
   "sponsored.whyBody": "Penempatan berbayar. Sepadan dengan jurang kemahiran dalam laluan anda. Tidak mengubah kedudukan atau laluan anda.",
-  "sponsored.freeFirst": "Percuma / kerajaan dahulu",
-  "sponsored.freeRef": "Hentian {n} dalam pelan anda mengajar {skill}: {title}",
+  "sponsored.sameFree": "Percuma / kerajaan dahulu ✓ Kursus hentian ini percuma",
+  "sponsored.sameGov": "Percuma / kerajaan dahulu ✓ Kursus hentian ini dibiayai kerajaan",
+  "sponsored.altLine": "Alternatif percuma · turut merangkumi {skill}:",
+  "sponsored.altStop": "Hentian {n}",
 };
 
 const COUNT_WORDS: Record<SiteLocale, readonly string[]> = {
