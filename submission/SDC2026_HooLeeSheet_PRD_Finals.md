@@ -2,7 +2,7 @@
 
 Handbook 6.6.4.1: "A revised version of the original PRD reflecting any refinements made during the Phase 2 Upgrading Round (28–30 October 2026). Should highlight what changed since the preliminary submission and why, based on judge/mentor feedback."
 
-Our original PRD is the Phase 1 proposal (`submission/SDC2026_HooLeeSheet_Preliminary.pdf`). This revision keeps its sections and wording, and marks every change inline as **Changed in Phase 2** with the PR and the reason. Sections with no change say so. [TBC: the judge/mentor feedback behind each change; the reasons below are the rubric criteria quoted in each PR, not recorded feedback.] Not a PDF; the team exports. Build: `main` at `bfd1663`, 750 tests passing. Live demo: Replit (primary), Vercel (backup).
+Our original PRD is the Phase 1 proposal (`submission/SDC2026_HooLeeSheet_Preliminary.pdf`). This revision keeps its sections and wording, and marks every change inline as **Changed in Phase 2** with the PR and the reason. Sections with no change say so. [TBC: the judge/mentor feedback behind each change; the reasons below are the rubric criteria quoted in each PR, not recorded feedback.] Not a PDF; the team exports. Build: `main` at `72c1b14`, 756 tests passing. Live demo: Replit (primary), Vercel (backup).
 
 ## 1. Team & Project Overview
 
@@ -20,7 +20,7 @@ Item 1 keeps its Phase 1 wording; changes below. Scores, explanations and pathwa
 - **Item 4, Scenarios (PR #84, #86).** An AI adoption-speed slider (0.5×–2×) drives rankScore = fit × (1 + 0.3·tanh(adoption × roleMomentum)). Why: scenarios must come from explicit parameters.
 - **Item 3, Explainable matching (PR #86).** Each role shows a score breakdown (fit 50% + demand 30% + AI-exposure resilience 20% + SDG bonus) and a what-if list.
 - **Item 5, SDG mapping (PR #87, #92).** Skills are tagged via ESCO skill groups: roles 40/40, skills 379/854 (44.4%), short of "every skill".
-- **Item 6, Pathway (PR #92, #93, #103, #104).** Stops are labelled "Covers"; users can verify certificates (including an AI check of a certificate page) and download a PDF ticket. Why: KPI1 for Jia Hui was 60%.
+- **Item 6, Pathway (PR #92, #93, #103, #104).** Stops are labelled "Covers"; users can verify certificates (including an AI check of a certificate page) and download a PDF ticket; a labelled demo link always verifies for product demos (#105). Why: KPI1 for Jia Hui was 60%.
 - **CV parsing (PR #100).** Uses KrackedDevs sponsor credits (LiteLLM, `deepseek-v4.1-flash`).
 
 **Business model: Be Our Partner (PR #106).** Training providers pay for labelled visibility, not ranking. Sponsored cards are capped at 3 per pathway and 1 per stop, sit after the free or government course, show a free alternative, and are excluded from progress, the certificate and the PDF ticket. Partner names, badges, ratings and prices are fictional, for demonstration only. [Business plan](https://docs.google.com/document/d/11MN9UpsEGrSq6OzrSbLIBjtfxHKiL1pHxkFy55hHIug/edit).
