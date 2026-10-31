@@ -180,12 +180,13 @@ function Sheet({ fonts, name, courses, dateText }: { fonts: Fonts; name: string;
           body:has(.cert-sheet) * { visibility: hidden !important; }
           body:has(.cert-sheet) .cert-sheet, body:has(.cert-sheet) .cert-sheet * { visibility: visible !important; }
           .cert-sheet { position: fixed !important; inset: 0 auto auto 0 !important; width: 11in !important; height: 8.5in !important; margin: 0 !important; box-shadow: none !important; }
+          .cert-border { display: block !important; box-sizing: border-box; print-color-adjust: exact; -webkit-print-color-adjust: exact; }
         }
       `}</style>
 
       {/* Double peach border */}
-      <div aria-hidden className="absolute" style={{ inset: "2.2cqw", border: `0.28cqw solid ${PEACH}` }} />
-      <div aria-hidden className="absolute" style={{ inset: "2.9cqw", border: `0.1cqw solid ${PEACH}` }} />
+      <div aria-hidden className="absolute cert-border" style={{ inset: "2.2cqw", border: `max(2px, 0.28cqw) solid ${PEACH}` }} />
+      <div aria-hidden className="absolute cert-border" style={{ inset: "2.9cqw", border: `max(1px, 0.1cqw) solid ${PEACH}` }} />
 
       {/* Winding road, lower left */}
       <svg
@@ -210,8 +211,17 @@ function Sheet({ fonts, name, courses, dateText }: { fonts: Fonts; name: string;
         <div className="flex items-center" style={{ gap: "1.2cqw" }}>
           <svg aria-hidden viewBox="0 0 100 100" style={{ width: "5.8cqw", height: "5.8cqw" }}>
             <rect x="2" y="2" width="96" height="96" rx="14" fill={ORANGE} />
-            <path d="M28 84 C28 56 72 66 72 38" fill="none" stroke="#FDFBF8" strokeWidth="11" strokeLinecap="round" />
-            <circle cx="72" cy="22" r="7" fill="#FDFBF8" />
+            <path
+              d="M18 86 C18 66 62 66 44 50 C28 38 34 30 70 22 L80 28 C50 36 52 40 64 50 C86 66 50 70 52 86 Z"
+              fill="#FDFBF8"
+            />
+            <path
+              d="M35 86 C36 68 74 66 54 50 C40 38 50 32 75 25"
+              fill="none"
+              stroke={ORANGE}
+              strokeWidth="1.8"
+              strokeDasharray="5 4"
+            />
           </svg>
           <span style={{ color: ORANGE, fontWeight: 600, fontSize: "6.2cqw", lineHeight: 1, letterSpacing: "-0.01em" }}>Laluan</span>
         </div>
@@ -233,8 +243,7 @@ function Sheet({ fonts, name, courses, dateText }: { fonts: Fonts; name: string;
         <p style={{ marginTop: "1.3cqw", fontSize: "3.1cqw", fontWeight: 500, lineHeight: 1.15, padding: "0 8cqw" }}>{name}</p>
         <p style={{ marginTop: "1.4cqw", fontSize: "1.65cqw" }}>has completed the following course(s) on the Laluan platform</p>
         <ul
-          className="mx-auto"
-          style={{ marginTop: "1.5cqw", fontSize: crowded ? "1.5cqw" : "2cqw", lineHeight: crowded ? 1.5 : 1.6, listStylePosition: "inside", listStyleType: "disc", padding: "0 10cqw" }}
+          style={{ display: "table", margin: "1.5cqw auto 0", textAlign: "left", fontSize: crowded ? "1.5cqw" : "2cqw", lineHeight: crowded ? 1.5 : 1.6, listStylePosition: "inside", listStyleType: "disc", padding: 0 }}
         >
           {courses.map((title) => (
             <li key={title}>{title}</li>
