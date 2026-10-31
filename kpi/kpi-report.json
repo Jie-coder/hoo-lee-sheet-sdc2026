@@ -26,9 +26,9 @@
     },
     {
       "kpi": "KPI4 Minutes to finished pathway",
-      "value": "Not measured (placeholder)",
+      "value": "max 48 s (Aisyah sample 32.84 s; Jia Hui sample 26.58 s; Pravin sample 28 s; Henry resume upload 48 s)",
       "target": "<3 minutes",
-      "status": "PLACEHOLDER"
+      "status": "PASS"
     },
     {
       "kpi": "KPI5 SDG hand-check (50 pairs)",
@@ -2601,7 +2601,38 @@
       }
     },
     "kpi4": {
-      "note": "Not measured (placeholder)"
+      "status": "PASS",
+      "value": "max 48 s (Aisyah sample 32.84 s; Jia Hui sample 26.58 s; Pravin sample 28 s; Henry resume upload 48 s)",
+      "target": "<3 minutes",
+      "note": "Measured 2026-10-31 (Asia/Kuala_Lumpur, UTC+8) by Tiffany with a stopwatch on https://hoo-lee-sheet-sdc-2026.replit.app. Clock starts at upload or start analyze and stops when the pathway page is ready. All four runs are under 3 minutes (PASS). Not produced by npm run kpi.",
+      "measuredOn": "2026-10-31",
+      "timezone": "Asia/Kuala_Lumpur",
+      "utcOffset": "+08:00",
+      "site": "https://hoo-lee-sheet-sdc-2026.replit.app",
+      "rater": "Tiffany",
+      "method": "Stopwatch from upload or start analyze until the pathway page is ready",
+      "runs": [
+        {
+          "label": "Aisyah sample",
+          "seconds": 32.84,
+          "status": "PASS"
+        },
+        {
+          "label": "Jia Hui sample",
+          "seconds": 26.58,
+          "status": "PASS"
+        },
+        {
+          "label": "Pravin sample",
+          "seconds": 28,
+          "status": "PASS"
+        },
+        {
+          "label": "Henry resume upload",
+          "seconds": 48,
+          "status": "PASS"
+        }
+      ]
     },
     "kpi5": {
       "status": "PLACEHOLDER",

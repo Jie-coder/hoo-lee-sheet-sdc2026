@@ -214,7 +214,7 @@ Never commit `.env.local` or any key. On Replit, keys go in **Secrets**.
 | `npm run import-data` | Validate `data/*.csv`; `--apply` writes to Supabase with embeddings |
 | `npm run build-catalogue` | Build `src/data/catalogue.json` from the CSVs |
 | `npm run precompute-demo-cvs`, `npm run precompute-role-embeddings` | Precompute demo results and role embeddings |
-| `npm run kpi` | Measure the Phase 1 KPIs from the repo's own code and data (no AI, no network); writes [`kpi/kpi-report.md`](kpi/kpi-report.md) and `kpi/kpi-report.json` (#90) |
+| `npm run kpi` | Measure the Phase 1 KPIs from the repo's own code and data (no AI, no network); writes [`kpi/kpi-report.md`](kpi/kpi-report.md) and `kpi/kpi-report.json` (#90). The script still leaves KPI4 as a placeholder. The committed KPI4 block is Tiffany's 31 Oct 2026 stopwatch and has to be copied back if the script is re-run. |
 
 ### Run Tests
 
@@ -257,7 +257,7 @@ This repo starts from our declared starter (`Jie-coder/sdc-starter`, tag `starte
 
 1. **Live salary and job data**: replace the manually checked JobStreet salaries with scheduled automatic updates, and add newer DOSM releases.
 2. **More roles and Bahasa Malaysia**: expand beyond the current 40 roles and add a Bahasa Malaysia interface to reach more users.
-3. **Real-user validation**: test with real users to validate pathway gap coverage and SDG mapping accuracy, replacing the three synthetic personas. Two Phase 1 KPIs are still not measured: minutes to a finished pathway, and the two-person SDG hand-check (`kpi/sdg-handcheck-50.csv`, 0/45 rated). Skill SDG tagging is at 44.4% (379/854), below our 100% target.
+3. **Real-user validation**: test with real users to validate pathway gap coverage and SDG mapping accuracy, replacing the three synthetic personas. Time to a finished pathway was measured on 31 Oct 2026 by Tiffany (stopwatch, https://hoo-lee-sheet-sdc-2026.replit.app, upload or start analyze → pathway page ready): Aisyah sample 32.84 s, Jia Hui sample 26.58 s, Pravin sample 28 s, Henry resume upload 48 s, all under 3 minutes. The two-person SDG hand-check is still not measured (`kpi/sdg-handcheck-50.csv`, 0/45 rated). Skill SDG tagging is at 44.4% (379/854), below our 100% target.
 4. **Trend uncertainty in the rank score**: the 95% momentum band on /radar could later be propagated through role momentum into the rank score, so the trend part of a score shows a ± range. Today the band is shown on /radar only.
 
 ## Team
