@@ -8,6 +8,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { motion, useReducedMotion } from "framer-motion";
 import { ArrowLeft, ArrowUpRight, Award, Download, Trash2 } from "lucide-react";
 import { IllustrationPanel, Perforation, SdgChip, SourceRow } from "@/components/caldera";
+import { CourseQr } from "@/components/course-qr";
 import { EASE_OUT } from "@/components/motion";
 import { useFlow } from "@/context/flow-context";
 import { formatDayMonthYear, missingValue } from "@/lib/display";
@@ -55,6 +56,13 @@ const VERIFY_LABEL_KEY: Record<StepVerification["status"], MessageKey> = {
 };
 
 const VISIBLE_STOPS = 4;
+
+/**
+ * Scan cue on the print ticket (Tiffany mock v2): 扫码开课 above "Scan to open".
+ * The Chinese line is a fixed sticker, not dictionary copy — EN and BM strings
+ * stay free of CJK. The Latin line is `pathway.print.scan`.
+ */
+const PRINT_SCAN_ZH = "扫码开课";
 
 export function PathwayView({
   courses,
@@ -630,14 +638,18 @@ export function PathwayView({
         />
       </main>
 
-      {/* window.print() surface ("Download PDF"): Laluan pathway ticket, mock v2
-          (docs/design/Laluan-Pathway-Download-PDF-mock-v2.png). Styles: globals.css @media print. */}
+      {/* window.print() surface ("Download PDF"): Laluan pathway ticket.
+          Each stop's QR encodes that course's full URL (Tiffany mock v2).
+          The designer "MOCK · QR PROPOSAL" badge is not part of this sheet.
+          Styles: globals.css @media print. */}
       <section className="print-only" data-testid="pathway-print">
         <div className="pp-brand">
-          <span className="pp-logo">
+          <span className="pp-logo" role="img" aria-label={t("header.logoAlt")}>
+            {/* Official orange mark. The wordmark is the ember lockup, masked to the
+                letters and filled #fc5000 so the print header matches the orange wordmark. */}
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src="/brand/laluan-mark.svg" alt="" width={22} height={22} />
-            Laluan
+            <span className="pp-wordmark" aria-hidden="true" />
           </span>
           <p className="pp-gen pp-mono">
             {t("pathway.print.generated", { date: printDate })}
@@ -716,7 +728,19 @@ export function PathwayView({
                       {shortCourseUrl(item.url)}
                     </a>
                   </div>
-                  <span className={cn("pp-badge", `pp-badge-${item.costType}`)}>{t(COST_LABEL_KEY[item.costType])}</span>
+                  <div className="pp-scan">
+                    <div className="pp-scan-copy">
+                      <span className={cn("pp-badge", `pp-badge-${item.costType}`)}>{t(COST_LABEL_KEY[item.costType])}</span>
+                      <span className="pp-scan-zh">{PRINT_SCAN_ZH}</span>
+                      <span className="pp-scan-en pp-mono">
+                        {t("pathway.print.scan")}
+                        <span aria-hidden="true"> →</span>
+                      </span>
+                    </div>
+                    <a className="pp-qr-link" href={item.url} aria-label={t("pathway.print.scan")}>
+                      <CourseQr url={item.url} />
+                    </a>
+                  </div>
                 </div>
                 <div className="pp-stub">
                   <span className="pp-stub-label pp-mono">
