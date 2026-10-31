@@ -20,8 +20,8 @@
 | Resource | Link |
 |---|---|
 | GitHub Repository | https://github.com/Jie-coder/hoo-lee-sheet-sdc2026 |
-| Live Demo | https://hoo-lee-sheet-sdc-2026.replit.app (Replit, Autoscale deployment) |
-| Backup | https://laluan.vercel.app (Vercel) |
+| Live Demo (primary) | https://hoo-lee-sheet-sdc-2026.replit.app (Replit, Autoscale deployment) |
+| Backup | https://laluan.vercel.app (Vercel, use only if Replit is down) |
 | RunPod Endpoint | Not used |
 | Slide Deck | [Laluan Pitch v3 - Hoo Lee Sheet (Canva)](https://www.canva.com/d/jGApWWKX2GBuTul) |
 | Demo Video | https://youtu.be/ZLO1yevPaB8 |
@@ -62,7 +62,14 @@ Laluan uses AI to parse a CV and run a short interview, then matches skills to E
 8. **Course recommendations in EN / BM / ZH**: courses are tagged with languages `en`, `ms`, `zh`; the user can select several.
 9. **SDG preference**: the user picks an impact interest; matching roles get the SDG bonus (`occupation_sdg.csv`). Finals update: skills are also tagged through their ESCO skill group (`data/skill_group_sdg.csv`, one target and a one-line reason per group, #87 and #92). Today 40/40 roles and 379/854 skills (44.4%) carry an SDG target; the other 475 skills sit in generic groups (e.g. teamwork, sales, clerical, management) that we left untagged rather than guess.
 
-Other pages: `/exposure`, `/radar`, `/data-sources`, `/privacy`, `/about`, `/status`.
+10. **Certificate verification** (#103): users can mark pathway courses done and verify a certificate. The AI certificate check (`POST /api/verify-certificate`) fetches the certificate URL the user enters and sends the page text to the model; results are kept only in the browser (localStorage). For product demos, `https://demo.laluan.app/example-certificate` always shows verified, labelled "Demo certificate link (product demonstration only)."; every other link gets the normal check (#105, see [`docs/programme-proof.md`](docs/programme-proof.md)).
+11. **Download PDF ticket** (#104): the pathway and role ticket can be saved as a PDF.
+
+Other pages: `/partner`, `/exposure`, `/radar`, `/data-sources`, `/privacy`, `/about`, `/status`.
+
+### Be Our Partner
+
+Be Our Partner (#106) is Laluan's planned business model: training providers pay for clearly labelled visibility on relevant pathways. **Paying buys visibility, not ranking.** Role ranking (fit 50% + demand 30% + AI-exposure resilience 20% + SDG bonus; the arXiv trend only nudges fit) never reads sponsorship data. Sponsored course cards are capped at 3 per pathway and 1 per stop, appear after the free or government course for that stop, show a free alternative, and carry a "Sponsored" / "Ditaja" tag with a "Why am I seeing this?" note. They are excluded from stops, weeks, progress and the certificate, and hidden in the PDF ticket. The [`/partner`](https://hoo-lee-sheet-sdc-2026.replit.app/partner) page lists the tiers (RM 0.80 per click, RM 25 per enrolment, RM 1,500 per month) with a front-end-only enquiry form. Partner names, badges, ratings and prices are fictional, for demonstration only. Skill-gap insights are future work and would be opt-in and anonymised.
 
 ### Tech Stack
 
@@ -86,7 +93,7 @@ Provider selection is in [`src/lib/ai.ts`](./src/lib/ai.ts) (`getModel()`):
 - **Vercel (backup) / fallback:** **Google Gemini** (default `gemini-3.8-flash`, overridable with `AI_MODEL`).
 - **Embeddings:** Gemini `gemini-embedding-001`, 768 dimensions (skill matching and precompute scripts).
 - **Mock mode:** `AI_MOCK=true` returns fixtures instead of calling any provider.
-- **CV parse:** CV parse uses KrackedDevs sponsor OpenAI-compatible credits (LiteLLM); scoring / ranking / pathway stay team formulas. Other chat calls stay on `getModel()`.
+- **CV parse:** CV parse uses KrackedDevs sponsor OpenAI-compatible credits (LiteLLM); scoring / ranking / pathway stay team formulas. The AI certificate check uses the same endpoint. Model: **`deepseek-v4.1-flash`** via the KrackedDevs LiteLLM endpoint (sponsor credits). Other chat calls stay on `getModel()`.
 
 The scoring and ranking are not AI: they are deterministic formulas so the same input always gives the same output.
 
@@ -226,6 +233,8 @@ Never commit `.env.local` or any key. On Replit, keys go in **Secrets**.
 npm test
 ```
 
+At `72c1b14` (main), 756 tests pass.
+
 ---
 
 ## How We Use Replit *(Required)*
@@ -251,7 +260,7 @@ RunPod was **not used** in this prototype. Inference uses Replit AI Integrations
 ### AI tools used in development
 
 - **Development:** Grok (AI agents), Claude Code, OpenCode and Cursor helped write code and docs. The team reviewed all changes through pull requests.
-- **In the product:** Claude Haiku 4.5 (`claude-haiku-4-5`, via Replit AI Integrations on Replit), Gemini (`gemini-3.8-flash`, on Vercel and as default) and `gemini-embedding-001` (embeddings).
+- **In the product:** Claude Haiku 4.5 (`claude-haiku-4-5`, via Replit AI Integrations on Replit), Gemini (`gemini-3.8-flash`, on Vercel and as default), `gemini-embedding-001` (embeddings) and `deepseek-v4.1-flash` via KrackedDevs LiteLLM (CV parse and certificate check).
 
 ### Pre-existing code
 

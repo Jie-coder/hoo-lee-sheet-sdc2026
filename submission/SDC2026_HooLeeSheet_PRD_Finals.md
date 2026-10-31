@@ -1,8 +1,8 @@
-# DRAFT: Updated PRD (Phase 2 Upgrading Round, 28–30 Oct 2026)
+# Updated PRD (Phase 2 Upgrading Round, 28–30 Oct 2026)
 
 Handbook 6.6.4.1: "A revised version of the original PRD reflecting any refinements made during the Phase 2 Upgrading Round (28–30 October 2026). Should highlight what changed since the preliminary submission and why, based on judge/mentor feedback."
 
-Our original PRD is the Phase 1 proposal (`submission/SDC2026_HooLeeSheet_Preliminary.pdf`). This revision keeps its sections and wording, and marks every change inline as **Changed in Phase 2** with the PR and the reason. Sections with no change say so. [TBC: the judge/mentor feedback behind each change; the reasons below are the rubric criteria quoted in each PR, not recorded feedback.] Not a PDF; the team exports.
+Our original PRD is the Phase 1 proposal (`submission/SDC2026_HooLeeSheet_Preliminary.pdf`). This revision keeps its sections and wording, and marks every change inline as **Changed in Phase 2** with the PR and the reason. Sections with no change say so. [TBC: the judge/mentor feedback behind each change; the reasons below are the rubric criteria quoted in each PR, not recorded feedback.] Not a PDF; the team exports. Build: `main` at `72c1b14`, 756 tests passing. Live demo: Replit (primary), Vercel (backup).
 
 ## 1. Team & Project Overview
 
@@ -14,19 +14,16 @@ No change. Team Hoo Lee Sheet; Domain 1; SDG 8 primary (8.5), SDG 4 (4.4) and SD
 No change.
 
 ### 2.2 The Proposed AI Solution
-Items 1, 3, 4 and 6 and the AI-use rule are unchanged ("AI only parses CVs and job titles; code handles scores, explanations and pathways").
+Item 1 keeps its Phase 1 wording; changes below. Scores, explanations and pathways stay team formulas; AI only reads CVs, job titles and certificate pages.
 
-- **Item 2, Future Skills Radar. Changed in Phase 2 (PR #85, #88, #91).** Was: "an arXiv fetch script (run manually)". Now: the in-app Refresh re-counts arXiv live (`POST /api/refresh-signals`), stores each dated snapshot in Supabase `trend_snapshots`, and falls back to the last good snapshot and then the bundled data if arXiv is down. `/radar` shows a 95% uncertainty range per skill and marks it "Unclear" when the range crosses 0. For the finals the snapshot fetched on 29 Oct 2026, 16:05:53 (UTC+8) is frozen. Why: the Domain 1 guide asks that the trend source can be updated and results follow the data.
-- **Item 4, Scenarios. Changed in Phase 2 (PR #84, #86).** An AI adoption-speed slider (0.5×–2×) is applied to the trend signal: rankScore = fit × (1 + 0.3·tanh(adoption × roleMomentum)). Why: technical expectation "drive scenarios from explicit parameters, such as the speed of AI adoption, applied to the trend signals".
-- **Item 3, Explainable matching. Changed in Phase 2 (PR #86).** Each role has a score breakdown (fit, trend boost, demand, exposure, SDG) and a what-if list; Fit is calibrated as min(100%, raw fit ÷ 0.30). Why: rubric "ranked roles with an explainable score and skills gap".
-- **Item 5, SDG mapping. Changed in Phase 2 (PR #87, #92).** Skills are tagged through their ESCO skill group (`data/skill_group_sdg.csv`, 67 group rows) and the pathway shows an SDG total. Measured: roles 40/40, skills 379/854 (44.4%); the Phase 1 promise "every role and skill" is not met for skills.
-- **Item 6, Pathway. Changed in Phase 2 (PR #92, #93).** One course (c040) gained two syllabus-backed skill links (`data/course_skill_evidence.csv`); pathway stops are labelled "Covers". Why: KPI1 for Jia Hui was 60%.
+- **Item 2, Future Skills Radar (PR #85, #88, #91).** Refresh now re-counts arXiv live, stores dated snapshots in Supabase and falls back to the last good snapshot. `/radar` shows a 95% range per skill ("Unclear" if it crosses 0). The 29 Oct 2026 snapshot is frozen for the finals. Why: the trend source must be updatable.
+- **Item 4, Scenarios (PR #84, #86).** An AI adoption-speed slider (0.5×–2×) drives rankScore = fit × (1 + 0.3·tanh(adoption × roleMomentum)). Why: scenarios must come from explicit parameters.
+- **Item 3, Explainable matching (PR #86).** Each role shows a score breakdown (fit 50% + demand 30% + AI-exposure resilience 20% + SDG bonus) and a what-if list.
+- **Item 5, SDG mapping (PR #87, #92).** Skills are tagged via ESCO skill groups: roles 40/40, skills 379/854 (44.4%), short of "every skill".
+- **Item 6, Pathway (PR #92, #93, #103, #104).** Stops are labelled "Covers"; users can verify certificates (including an AI check of a certificate page) and download a PDF ticket; a labelled demo link always verifies for product demos (#105). Why: KPI1 for Jia Hui was 60%.
+- **CV parsing (PR #100).** Uses KrackedDevs sponsor credits (LiteLLM, `deepseek-v4.1-flash`).
 
-### 2.3 Business Model: Be Our Partner
-
-"Be Our Partner" is Laluan's planned revenue model: training providers pay for clearly labelled visibility on relevant career pathways, never for ranking. Sponsored course cards are capped at three per pathway and one per stop. Each card is placed after the free or government course for that stop, shows a free alternative, and is kept out of progress tracking, the certificate and the PDF ticket. Scoring and ranking (based on skill fit, labour-market demand, AI exposure and SDG match, with arXiv trend signals as a modifier) are completely separate from sponsorship. The pricing we will test is pay per click, pay per enrolment and a capped pathway bundle; actual prices will be set in pilots with 3–5 providers. The feature is designed to comply with Malaysia's PDPA 2010 (as amended in 2024) and the Content Code's ad-labelling rules. Any future "skill-gap insights" product would rely only on opt-in, anonymised, aggregated data and would never involve selling individual data. The current build is a front-end prototype with fictional partners and placeholder prices.
-
-Full 2-page business plan: [Laluan – Be Our Partner Business Plan](https://docs.google.com/document/d/11MN9UpsEGrSq6OzrSbLIBjtfxHKiL1pHxkFy55hHIug/edit)
+**Business model: Be Our Partner (PR #106).** Training providers pay for labelled visibility, not ranking. Sponsored cards are capped at 3 per pathway and 1 per stop, sit after the free or government course, show a free alternative, and are excluded from progress, the certificate and the PDF ticket. Partner names, badges, ratings and prices are fictional, for demonstration only. [Business plan](https://docs.google.com/document/d/11MN9UpsEGrSq6OzrSbLIBjtfxHKiL1pHxkFy55hHIug/edit).
 
 ## 3. Technical Architecture & Implementation Plan
 
@@ -34,8 +31,8 @@ Full 2-page business plan: [Laluan – Be Our Partner Business Plan](https://doc
 - **AI-trend signal row. Changed in Phase 2 (PR #85, #91).** Was: "arXiv API, fetched by a script (scripts/fetch-arxiv.ts) run manually; the in-app Refresh button re-reads the stored snapshot". Now: `POST /api/refresh-signals` re-counts arXiv in the app; snapshots go to Supabase `trend_snapshots` (or a local file); `TREND_REFRESH_LOCKED=1` freezes the finals snapshot.
 - **Scoring engine row. Changed in Phase 2 (PR #84, #86, #90).** Adds rankScore with trendBeta 0.3, adoption speed, score breakdown and `npm run kpi` (deterministic KPI report, `kpi/kpi-report.md`).
 - Block diagram: the "arXiv fetch script (manual)" box becomes "Refresh → /api/refresh-signals → trend_snapshots (Supabase) → fallback last good → bundled". [TBC: redraw for the PDF]
-- Other rows, sponsor use (Replit, Claude Haiku via Replit AI Integrations; RunPod not used) and must-haves 1 and 4: no change. Must-haves 2, 3, 5 and 6 change as in 2.2 above.
-- Live links: https://hoo-lee-sheet-sdc-2026.replit.app (main), https://laluan.vercel.app (backup). Repo: https://github.com/Jie-coder/hoo-lee-sheet-sdc2026.
+- Sponsor use: Replit (hosting, Claude Haiku via Replit AI Integrations), KrackedDevs LiteLLM (`deepseek-v4.1-flash`, CV parsing and certificate check, PR #100, #103); RunPod not used. Other rows and must-haves 1 and 4: no change. Must-haves 2, 3, 5 and 6 change as in 2.2 above.
+- Live links: https://hoo-lee-sheet-sdc-2026.replit.app (primary), https://laluan.vercel.app (backup). Repo: https://github.com/Jie-coder/hoo-lee-sheet-sdc2026.
 
 ### 3.2 Design-Thinking & Deployment Strategy
 - **Test. Changed in Phase 2 (PR #90, #92).** The KPIs are now measured by script on the three synthetic personas (see section 4). [TBC: real user sessions, if any.]
@@ -59,7 +56,11 @@ The Phase 1 "[TBC]" pathway target is now set at ≥80% each and ≥90% mean, an
 No change.
 
 ## 6. IP & Originality Declaration
-No change to 6.1 and 6.3. 6.2: no new third-party libraries, datasets or models were added in Phase 2. [TBC: confirm against the updated Technical & Tools Declaration and DECLARATION.md (#83).]
+No change to 6.1 and 6.3. 6.2 changed in Phase 2: one new model, `deepseek-v4.1-flash` via the KrackedDevs LiteLLM endpoint (sponsor credits), used for CV parsing (PR #100) and the AI certificate check (PR #103). No new datasets.
 
 ## 7. Declaration
-[TBC: leader to re-sign and date for the final submission.]
+By submitting this proposal, the team leader confirms that the information provided is accurate to the best of the team’s knowledge and that the project will be original work created during the SDC 2026 hackathon period.
+
+Signature: ![Leader signature](leader_signature.jpg)
+
+Date: 31/10/2026

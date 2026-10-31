@@ -11,6 +11,7 @@ import {
   FETCH_TIMEOUT_MS,
   MAX_PAGE_BYTES,
   buildVerificationPrompt,
+  demoCertificateVerdict,
   htmlToText,
   isBlockedHost,
   mockVerdict,
@@ -80,6 +81,10 @@ export async function verifyCertificate(
   now: () => Date = () => new Date(),
 ): Promise<VerifyCertificateResult> {
   const checkedAt = now().toISOString();
+  // Demo link verifies before mock, fetch, API key, or title matching.
+  const demo = demoCertificateVerdict(input.certificateUrl, input.expectedTitle, checkedAt);
+  if (demo) return demo;
+
   const env = getEnv();
   if (env.aiMock) return mockVerdict(input, checkedAt);
 

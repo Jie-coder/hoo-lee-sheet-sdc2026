@@ -24,8 +24,16 @@ Changing or removing the link clears its verdict. A verdict that comes back for 
 - **No key is ever logged**; neither the page text nor the URL is logged.
 - Code: `src/lib/verify-certificate.ts` (pure helpers + tests), `src/lib/verify-certificate-run.ts` (fetch + model), `src/app/api/verify-certificate/route.ts`.
 
+### Demo certificate URL (product demonstration only)
+
+Paste this exact link on any pathway stop (any course or programme title):
+
+`https://demo.laluan.app/example-certificate`
+
+When the URL normalizes to that host and path (`demo.laluan.app` + `/example-certificate`, https only; a query string or fragment is ignored), both the live check and `AI_MOCK=true` skip title and provider matching and return `verified` with reason `Demo certificate link (product demonstration only).` The pathway shows that reason under the verification badge. It does not add a QR code or a verification ID. This is not a real certificate and not accreditation. Every other URL is checked exactly as before.
+
 ### `AI_MOCK=true` rule
-No network, no model, deterministic. `verified` when the URL host equals or is a subdomain of a known provider domain (coursera.org, edx.org, udemy.com, linkedin.com, google.com, grow.google, skills.google, credly.com, credential.net, freecodecamp.org, microsoft.com, ibm.com, futurelearn.com) **and** the path contains one of `certif`, `verif`, `accomplish`, `credential`, `badge`, `achievement`. Otherwise `failed`. The mock never reads the page and never compares the course title (`matchedTitle` just echoes the expected title).
+No network, no model, deterministic. `verified` when the URL host equals or is a subdomain of a known provider domain (coursera.org, edx.org, udemy.com, linkedin.com, google.com, grow.google, skills.google, credly.com, credential.net, freecodecamp.org, microsoft.com, ibm.com, futurelearn.com) **and** the path contains one of `certif`, `verif`, `accomplish`, `credential`, `badge`, `achievement`. Otherwise `failed`. The mock never reads the page and never compares the course title (`matchedTitle` just echoes the expected title). The demo URL above is the only extra `verified` case, and it applies in the live check as well.
 
 ## Certificate eligibility rule
 "Download certificate" is enabled once **at least one** programme in the pathway is **marked done AND has an AI-verified certificate link**. Before that it is a disabled button with a hint explaining this. The certificate lists **only verified** completed titles (done but unverified or failed items are left off). `/certificate` shows the same explanation if opened without any verified item.

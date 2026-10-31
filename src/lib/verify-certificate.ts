@@ -75,6 +75,50 @@ export function parsePublicHttpUrl(input: string): URL | null {
   return url;
 }
 
+// --- Demo certificate (product demonstration only) ----------------------------
+
+/**
+ * Fixed public https URL that always verifies, on any pathway stop.
+ * Product demonstration only: it is not a real certificate and does not
+ * change the check for any other link.
+ */
+export const DEMO_CERTIFICATE_URL = "https://demo.laluan.app/example-certificate";
+
+export const DEMO_CERTIFICATE_REASON = "Demo certificate link (product demonstration only).";
+
+function hostAndPath(url: URL): string {
+  const host = url.hostname.toLowerCase().replace(/\.$/, "");
+  return `${host}${url.pathname}`;
+}
+
+const DEMO_HOST_PATH = hostAndPath(new URL(DEMO_CERTIFICATE_URL));
+
+/** True when the link is exactly the demo certificate (https, same host and path). */
+export function isDemoCertificateUrl(input: string): boolean {
+  const url = parsePublicHttpUrl(input);
+  if (!url || url.protocol !== "https:") return false;
+  return hostAndPath(url) === DEMO_HOST_PATH;
+}
+
+/**
+ * Verified verdict for the demo URL, or null for every other link.
+ * Skips title and provider matching. `matchedTitle` echoes the stop's title.
+ */
+export function demoCertificateVerdict(
+  certificateUrl: string,
+  expectedTitle: string,
+  checkedAt: string,
+): VerifyCertificateResult | null {
+  if (!isDemoCertificateUrl(certificateUrl)) return null;
+  return {
+    ok: true,
+    status: "verified",
+    reason: DEMO_CERTIFICATE_REASON,
+    matchedTitle: expectedTitle,
+    checkedAt,
+  };
+}
+
 // --- HTML to text -------------------------------------------------------------
 
 const ENTITIES: Record<string, string> = {
@@ -198,6 +242,7 @@ export const MOCK_PATH_PATTERN = /certif|verif|accomplish|credential|badge|achie
  * Deterministic verdict for AI_MOCK=true, no network: verified when the host is
  * a known provider domain AND the path looks like a certificate/verify link.
  * It never inspects the page and never checks the course title.
+ * The fixed demo URL is the one exception: it verifies for any expected title.
  */
 export function mockVerdict(
   input: Pick<VerifyCertificateInput, "certificateUrl" | "expectedTitle">,
@@ -205,6 +250,8 @@ export function mockVerdict(
 ): VerifyCertificateResult {
   const url = parsePublicHttpUrl(input.certificateUrl);
   if (!url) return { ok: false, status: "failed", reason: "The link is not a public http(s) URL.", checkedAt };
+  const demo = demoCertificateVerdict(input.certificateUrl, input.expectedTitle, checkedAt);
+  if (demo) return demo;
   const host = url.hostname.toLowerCase();
   const knownHost = MOCK_PROVIDER_DOMAINS.some((domain) => host === domain || host.endsWith(`.${domain}`));
   if (!knownHost) {
