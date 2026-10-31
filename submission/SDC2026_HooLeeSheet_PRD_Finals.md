@@ -56,7 +56,7 @@ The Phase 1 "[TBC]" pathway target is now set at ≥80% each and ≥90% mean, an
 No change.
 
 ## 6. IP & Originality Declaration
-No change to 6.1 and 6.3. 6.2 changed in Phase 2: one new model, `deepseek-v4.1-flash` via the KrackedDevs LiteLLM endpoint (sponsor credits), used for CV parsing (PR #100) and the AI certificate check (PR #103). No new datasets.
+No change to 6.1 and 6.3. 6.2 changed in Phase 2: one new model, `deepseek-v4.1-flash` via the KrackedDevs LiteLLM endpoint (sponsor credits), used for CV parsing (PR #100) and the AI certificate check (PR #103). One new library, `qrcode` (MIT), draws the course QR codes on the PDF ticket (PR #110). No new datasets.
 
 ## 7. Declaration
 By submitting this proposal, the team leader confirms that the information provided is accurate to the best of the team’s knowledge and that the project will be original work created during the SDC 2026 hackathon period.

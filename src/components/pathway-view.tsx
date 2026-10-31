@@ -57,13 +57,6 @@ const VERIFY_LABEL_KEY: Record<StepVerification["status"], MessageKey> = {
 
 const VISIBLE_STOPS = 4;
 
-/**
- * Scan cue on the print ticket (Tiffany mock v2): 扫码开课 above "Scan to open".
- * The Chinese line is a fixed sticker, not dictionary copy — EN and BM strings
- * stay free of CJK. The Latin line is `pathway.print.scan`.
- */
-const PRINT_SCAN_ZH = "扫码开课";
-
 export function PathwayView({
   courses,
   programmes,
@@ -731,7 +724,6 @@ export function PathwayView({
                   <div className="pp-scan">
                     <div className="pp-scan-copy">
                       <span className={cn("pp-badge", `pp-badge-${item.costType}`)}>{t(COST_LABEL_KEY[item.costType])}</span>
-                      <span className="pp-scan-zh">{PRINT_SCAN_ZH}</span>
                       <span className="pp-scan-en pp-mono">
                         {t("pathway.print.scan")}
                         <span aria-hidden="true"> →</span>

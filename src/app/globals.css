@@ -301,7 +301,6 @@ body:has(.privacy-page) { background-color: var(--color-limestone); background-i
   .print-only .pp-badge { align-self: flex-start; padding: 3px 9px; border: 1.5px solid #fc5000; border-radius: 999px; background: #fff; color: #fc5000; font-size: 8.5px; font-weight: 800; white-space: nowrap; }
   .print-only .pp-scan { display: flex; align-items: flex-start; gap: 7px; }
   .print-only .pp-scan-copy { display: flex; flex-direction: column; align-items: flex-start; }
-  .print-only .pp-scan-zh { margin-top: 4px; font-size: 8px; font-weight: 700; line-height: 1.15; color: #222; }
   .print-only .pp-scan-en { margin-top: 1px; font-size: 6.5px; font-weight: 700; letter-spacing: 0.06em; color: #8a8a8a; white-space: nowrap; }
   .print-only .pp-qr-link { display: block; flex: none; padding: 3px; border: 1px solid #eceae4; border-radius: 6px; background: #fff; line-height: 0; text-decoration: none; }
   .print-only .pp-qr { display: block; width: 52px; height: 52px; }

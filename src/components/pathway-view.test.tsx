@@ -181,7 +181,7 @@ describe("PathwayView print ticket (Download PDF)", () => {
       expect(href).toMatch(/^https?:\/\//);
       expect(stop.querySelector("a.pp-qr-link")).toHaveAttribute("href", href);
       expect(stop.querySelector(".pp-qr")).toHaveAttribute("data-url", href);
-      expect(stop.textContent).toContain("扫码开课");
+      expect(stop.querySelector(".pp-scan")?.textContent ?? "").not.toMatch(/[\u3400-\u9fff]/);
       expect(stop.textContent).toContain("Scan to open");
     }
   });
