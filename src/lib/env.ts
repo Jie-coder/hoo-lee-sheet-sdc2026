@@ -12,6 +12,12 @@ export type EnvReport = {
   runpodApiKey: string;
   anthropicApiKey: string;
   anthropicBaseUrl: string;
+  /** CV parse only. Empty means defaultExtractCv falls back to getModel(). */
+  krackeddevsApiKey: string;
+  /** OpenAI-compatible base URL. Default is the KrackedDevs LiteLLM endpoint. */
+  krackeddevsBaseUrl: string;
+  /** Model id for CV parse. Default is a Flash model to spare the sponsor credit. */
+  krackeddevsModel: string;
   missing: string[];
   errors: string[];
 };
@@ -30,6 +36,14 @@ export function getEnv(): EnvReport {
   // instead of the default Gemini provider. Optional, so neither is validated below.
   const anthropicApiKey = process.env.AI_INTEGRATIONS_ANTHROPIC_API_KEY ?? "";
   const anthropicBaseUrl = process.env.AI_INTEGRATIONS_ANTHROPIC_BASE_URL ?? "";
+  // CV parse only (KrackedDevs / LiteLLM). Optional: when the key is empty,
+  // defaultExtractCv uses getModel() (Gemini, RunPod, or Replit Claude).
+  // Not added to `missing` — ranking and other chat calls do not need it.
+  // Values stay in this object for the server; never log the key or the URL.
+  const krackeddevsApiKey = (process.env.KRACKEDDEVS_API_KEY ?? "").trim();
+  const krackeddevsBaseUrl =
+    (process.env.KRACKEDDEVS_BASE_URL ?? "").trim() || "https://litellm.rapidscreen.io/v1";
+  const krackeddevsModel = (process.env.KRACKEDDEVS_MODEL ?? "").trim() || "deepseek-v4.1-flash";
 
   const missing: string[] = [];
   const errors: string[] = [];
@@ -63,6 +77,9 @@ export function getEnv(): EnvReport {
     runpodApiKey,
     anthropicApiKey,
     anthropicBaseUrl,
+    krackeddevsApiKey,
+    krackeddevsBaseUrl,
+    krackeddevsModel,
     missing,
     errors,
   };

@@ -59,6 +59,7 @@ Versions below are the `^` semver ranges declared in `package.json`; the exact r
 - **Supabase** — hosted Postgres database for the `items` test table.
 - **Google Gemini API via Google AI Studio** — the AI provider called from
   `src/lib/ai.ts` for live (non-mock) analysis requests.
+- **KrackedDevs (LiteLLM)** — CV parse uses KrackedDevs sponsor OpenAI-compatible credits (LiteLLM); scoring / ranking / pathway stay team formulas.
 - **npm registry** — source of all packages listed above.
 - **Google Fonts via `next/font`** — the Geist and Geist Mono font families,
   loaded in `src/app/layout.tsx`.
@@ -82,6 +83,7 @@ Versions below are the `^` semver ranges declared in `package.json`; the exact r
   as fallback; `gemini-embedding-001` embeddings for skill matching.
 - **Anthropic Claude Haiku 4.5** (`claude-haiku-4-5`) — chat model on Replit,
   via Replit AI Integrations.
+- **KrackedDevs (LiteLLM, OpenAI-compatible)** — CV parse uses KrackedDevs sponsor OpenAI-compatible credits (LiteLLM); scoring / ranking / pathway stay team formulas.
 
 All AI-generated code is reviewed by the team before it is merged, and the
 code is kept simple and commented so team members can explain every file.

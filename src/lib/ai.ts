@@ -23,17 +23,19 @@ const MOCK_DELAY_MS = 800;
 
 const ANTHROPIC_MODEL = "claude-haiku-4-5";
 
-// Logs the selected provider/model once per process (never keys or URLs).
-let providerLogged = false;
+// Logs each selected provider/model once per process (never keys or URLs).
+// CV parse can use KrackedDevs while ranking stays on getModel(), so each
+// provider is recorded once instead of only the first call in the process.
+const loggedProviders = new Set<string>();
 function logProviderOnce(provider: string, model: string): void {
-  if (providerLogged) return;
-  providerLogged = true;
+  if (loggedProviders.has(provider)) return;
+  loggedProviders.add(provider);
   console.info(`[ai] provider=${provider} model=${model}`);
 }
 
 // Test-only: lets tests observe the log line again.
 export function resetProviderLogForTests(): void {
-  providerLogged = false;
+  loggedProviders.clear();
 }
 
 type GetModelResult =
@@ -109,6 +111,27 @@ export function getModel(): GetModelResult {
   const modelId = env.aiModel || DEFAULT_GOOGLE_MODEL;
   logProviderOnce("google", modelId);
   return { ok: true, model: google(modelId) };
+}
+
+// CV parse only. Replit sets AI_INTEGRATIONS_ANTHROPIC_*, and getModel()
+// prefers that over AI_PROVIDER, so flipping AI_PROVIDER would not reach the
+// sponsor endpoint. When KRACKEDDEVS_API_KEY is set, this uses the KrackedDevs
+// OpenAI-compatible proxy (LiteLLM). analyze(), exposure estimates, and
+// ranking stay on getModel().
+export function getCvParseModel(): GetModelResult {
+  const env = getEnv();
+  if (!env.krackeddevsApiKey) return getModel();
+
+  const krackeddevs = createOpenAICompatible({
+    name: "krackeddevs",
+    baseURL: env.krackeddevsBaseUrl,
+    apiKey: env.krackeddevsApiKey,
+    // generateObject only attaches the Zod schema when this is true.
+    // Otherwise the proxy is asked for a bare JSON object.
+    supportsStructuredOutputs: true,
+  });
+  logProviderOnce("krackeddevs", env.krackeddevsModel);
+  return { ok: true, model: krackeddevs(env.krackeddevsModel) };
 }
 
 function delay(ms: number): Promise<void> {

@@ -86,6 +86,7 @@ Provider selection is in [`src/lib/ai.ts`](./src/lib/ai.ts) (`getModel()`):
 - **Vercel (backup) / fallback:** **Google Gemini** (default `gemini-3.8-flash`, overridable with `AI_MODEL`).
 - **Embeddings:** Gemini `gemini-embedding-001`, 768 dimensions (skill matching and precompute scripts).
 - **Mock mode:** `AI_MOCK=true` returns fixtures instead of calling any provider.
+- **CV parse:** CV parse uses KrackedDevs sponsor OpenAI-compatible credits (LiteLLM); scoring / ranking / pathway stay team formulas. Other chat calls stay on `getModel()`.
 
 The scoring and ranking are not AI: they are deterministic formulas so the same input always gives the same output.
 
@@ -200,6 +201,9 @@ npm run dev                  # http://localhost:3000
 | `RUNPOD_BASE_URL`, `RUNPOD_API_KEY`, `RUNPOD_ENDPOINT_ID` | Unused stub (RunPod not used); leave empty |
 | `GEMINI_API_KEY` | Used by `scripts/import-data.ts --apply` |
 | `AI_INTEGRATIONS_ANTHROPIC_API_KEY`, `AI_INTEGRATIONS_ANTHROPIC_BASE_URL` | Replit AI Integrations (Claude Haiku) |
+| `KRACKEDDEVS_API_KEY` | CV parse only. Set on Replit Secrets (primary demo) and Vercel env (backup). Empty keeps today's `getModel()` fallback. |
+| `KRACKEDDEVS_BASE_URL` | Optional OpenAI-compatible base URL for CV parse. Empty uses the KrackedDevs LiteLLM default. |
+| `KRACKEDDEVS_MODEL` | Optional model id for CV parse. Empty uses `deepseek-v4.1-flash`. |
 | `TREND_SNAPSHOT_FILE` | Optional local file for trend snapshots when Supabase is not configured |
 | `TREND_REFRESH_LOCKED`, `TREND_REFRESH_KEY` | Optional. `TREND_REFRESH_LOCKED=1` freezes the trend snapshot (refresh returns 423). `TREND_REFRESH_KEY` would let a refresh through with the `x-refresh-key` header; it is not set in the finals deployments, so there is no bypass during judging. |
 
@@ -227,7 +231,7 @@ npm test
 ## How We Use Replit *(Required)*
 
 - **Hosting:** the main deployment is on Replit at the Live Demo link, as an **Autoscale** deployment configured in `.replit`.
-- **AI:** Replit AI Integrations provide Anthropic **`claude-haiku-4-5`** for the chat model in production.
+- **AI:** Replit AI Integrations provide Anthropic **`claude-haiku-4-5`** for the chat model in production. CV parse uses KrackedDevs sponsor OpenAI-compatible credits (LiteLLM); scoring / ranking / pathway stay team formulas.
 - **Secrets:** keys are stored in Replit Secrets, never in the code.
 
 📄 Proof of use: [`submission/SDC2026_Hoo_Lee_Sheet_Replit_POU.pdf`](submission/SDC2026_Hoo_Lee_Sheet_Replit_POU.pdf)

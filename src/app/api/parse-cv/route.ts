@@ -1,6 +1,7 @@
 // POST /api/parse-cv: accepts one PDF (multipart/form-data, field "file")
 // and returns the parsed profile fields. See src/lib/parse-cv.ts for the
-// sha256 demo short-circuit, text extraction, Gemini call and ESCO mapping.
+// sha256 demo short-circuit, text extraction, one CV-parse model call
+// (KrackedDevs when KRACKEDDEVS_API_KEY is set) and ESCO mapping.
 import { CV_MIME_TYPE, MAX_CV_BYTES } from "@/lib/cv-upload-limits";
 import { parseCv } from "@/lib/parse-cv";
 
