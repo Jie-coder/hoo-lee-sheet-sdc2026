@@ -1,4 +1,5 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
+import { DEMO_CERTIFICATE_REASON, DEMO_CERTIFICATE_URL } from "@/lib/verify-certificate";
 import { POST } from "./route";
 
 const ENV_KEYS = ["AI_MOCK", "KRACKEDDEVS_API_KEY"] as const;
@@ -53,6 +54,37 @@ describe("POST /api/verify-certificate", () => {
 
     const body = await (await call(GOOD)).json();
     expect(body).toMatchObject({ ok: false, status: "pending" });
+    expect(fetchSpy).not.toHaveBeenCalled();
+  });
+
+  it("verifies the demo URL for any title on both the mock and live paths, without fetching", async () => {
+    const fetchSpy = vi.fn();
+    vi.stubGlobal("fetch", fetchSpy);
+
+    for (const aiMock of ["true", "false"] as const) {
+      process.env.AI_MOCK = aiMock;
+      if (aiMock === "false") process.env.KRACKEDDEVS_API_KEY = "not-used-for-the-demo-link";
+      else delete process.env.KRACKEDDEVS_API_KEY;
+
+      for (const expectedTitle of ["AI untuk Rakyat Programme", "Google Data Analytics Professional Certificate"]) {
+        const body = await (
+          await call({ ...GOOD, certificateUrl: DEMO_CERTIFICATE_URL, expectedTitle, provider: "Coursera" })
+        ).json();
+        expect(body, `${aiMock} ${expectedTitle}`).toMatchObject({
+          ok: true,
+          status: "verified",
+          reason: DEMO_CERTIFICATE_REASON,
+          matchedTitle: expectedTitle,
+        });
+        expect(body.checkedAt).toEqual(expect.any(String));
+      }
+    }
+
+    process.env.AI_MOCK = "true";
+    delete process.env.KRACKEDDEVS_API_KEY;
+    const mismatch = await (await call({ ...GOOD, certificateUrl: "https://example.com/my-cert" })).json();
+    expect(mismatch).toMatchObject({ ok: false, status: "failed" });
+    expect(mismatch.reason).not.toBe(DEMO_CERTIFICATE_REASON);
     expect(fetchSpy).not.toHaveBeenCalled();
   });
 });
