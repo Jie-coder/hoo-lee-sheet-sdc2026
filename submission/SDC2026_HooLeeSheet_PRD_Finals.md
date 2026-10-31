@@ -37,14 +37,14 @@ Items 1, 3, 4 and 6 and the AI-use rule are unchanged ("AI only parses CVs and j
 
 ## 4. Preliminary Environmental & SDG Impact Framework
 
-Targets, baseline and KPI definitions: no change. **Changed in Phase 2: measured results added** (`npm run kpi`, snapshot asOf 2026-10-29):
+Targets, baseline and KPI definitions: no change. **Changed in Phase 2: measured results added** (`npm run kpi`, snapshot asOf 2026-10-29; time to pathway timed by hand on 31 Oct 2026):
 
 | KPI | Phase 2 target | Measured | Status |
 |---|---|---|---|
 | Pathway gap coverage | ≥80% each, ≥90% mean | mean 100%, min 100% | Met |
 | (a) Dated sources | 100% | 105/105 | Met |
 | (b) SDG tagging | 100% roles and skills | roles 40/40; skills 379/854 (44.4%) | Roles met; skills not met |
-| (c) Time to pathway | <3 min | [TBC: not measured] | — |
+| (c) Time to pathway | <3 min | Aisyah sample 32.84 s; Jia Hui sample 26.58 s; Pravin sample 28 s; Henry resume upload 48 s. Tiffany stopwatch, 31 Oct 2026 (Asia/Kuala_Lumpur, UTC+8), https://hoo-lee-sheet-sdc-2026.replit.app; upload or start analyze → pathway page ready | Met |
 | (d) Hand-check agreement | ≥80% overall, ≥90% direct, κ≥0.6 | [TBC: 0 of 45 rated] | — |
 
 The Phase 1 "[TBC]" pathway target is now set at ≥80% each and ≥90% mean, and hand-check at ≥80% / ≥90% / κ≥0.6. Source [9] (arXiv API) is now called live.

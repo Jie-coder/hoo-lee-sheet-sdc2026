@@ -11,7 +11,7 @@
 | KPI1 Role #1 pathway gap coverage | mean 100.0% (min 100.0%) | each ≥80%, mean ≥90% | PASS |
 | KPI2 Dated sources | 105/105 (100.0%) | 100% | PASS |
 | KPI3 SDG coverage | occupations 100.0% (40/40); skills 44.4% (379/854) | 100% occupations, 100% skills | FAIL |
-| KPI4 Minutes to finished pathway | Not measured (placeholder) | <3 minutes | PLACEHOLDER |
+| KPI4 Minutes to finished pathway | max 48 s (Aisyah sample 32.84 s; Jia Hui sample 26.58 s; Pravin sample 28 s; Henry resume upload 48 s) | <3 minutes | PASS |
 | KPI5 SDG hand-check (50 pairs) | hand-check 0/45 rated (rows 45/45) | overall ≥80%, direct ≥90%, κ≥0.6 | PLACEHOLDER |
 
 ## KPI1 sensitivity (rank 1–3)
@@ -525,6 +525,23 @@ None.
 - ff599c4c-f7bc-44fc-b75f-eea4b7178692 — management systems standards (group has no SDG row)
 - ff5e9b54-d141-4f5a-ad04-ddefd7d8843f — procure time sheet approval (group has no SDG row)
 - ff64e9fc-36dd-4035-872a-83aa41dc1ad9 — communicate with a non-scientific audience (group has no SDG row)
+
+## KPI4 Time to finished pathway
+
+Manual timing, not produced by `npm run kpi`. Re-running that script still writes the placeholder for KPI4 and would remove this section.
+
+- Status: PASS (target <3 minutes; longest run 48 s)
+- Date: 2026-10-31, Asia/Kuala_Lumpur (UTC+8)
+- Site: https://hoo-lee-sheet-sdc-2026.replit.app
+- Rater: Tiffany (stopwatch)
+- Method: upload or start analyze → pathway page ready
+
+| Run | Time | Result |
+| --- | --- | --- |
+| Aisyah sample | 32.84 s | PASS |
+| Jia Hui sample | 26.58 s | PASS |
+| Pravin sample | 28 s | PASS |
+| Henry resume upload | 48 s | PASS |
 
 ## KPI5 SDG hand-check
 
