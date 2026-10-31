@@ -62,7 +62,7 @@ Laluan uses AI to parse a CV and run a short interview, then matches skills to E
 8. **Course recommendations in EN / BM / ZH**: courses are tagged with languages `en`, `ms`, `zh`; the user can select several.
 9. **SDG preference**: the user picks an impact interest; matching roles get the SDG bonus (`occupation_sdg.csv`). Finals update: skills are also tagged through their ESCO skill group (`data/skill_group_sdg.csv`, one target and a one-line reason per group, #87 and #92). Today 40/40 roles and 379/854 skills (44.4%) carry an SDG target; the other 475 skills sit in generic groups (e.g. teamwork, sales, clerical, management) that we left untagged rather than guess.
 
-10. **Certificate verification** (#103): users can mark pathway courses done and verify a certificate. The AI certificate check (`POST /api/verify-certificate`) fetches the certificate URL the user enters and sends the page text to the model; results are kept only in the browser (localStorage).
+10. **Certificate verification** (#103): users can mark pathway courses done and verify a certificate. The AI certificate check (`POST /api/verify-certificate`) fetches the certificate URL the user enters and sends the page text to the model; results are kept only in the browser (localStorage). For product demos, `https://demo.laluan.app/example-certificate` always shows verified, labelled "Demo certificate link (product demonstration only)."; every other link gets the normal check (#105, see [`docs/programme-proof.md`](docs/programme-proof.md)).
 11. **Download PDF ticket** (#104): the pathway and role ticket can be saved as a PDF.
 
 Other pages: `/partner`, `/exposure`, `/radar`, `/data-sources`, `/privacy`, `/about`, `/status`.
@@ -233,7 +233,7 @@ Never commit `.env.local` or any key. On Replit, keys go in **Secrets**.
 npm test
 ```
 
-At `bfd1663` (main), 750 tests pass.
+At `72c1b14` (main), 756 tests pass.
 
 ---
 
